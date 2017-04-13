@@ -1,0 +1,26 @@
+from rattle import Run, ReadGroup
+
+
+RUN = Run(config)
+
+
+rule all:
+    input:
+        [RUN.output("{sample}/{read_group}/qc/fastqc-{pair}/fqd.txt", fmt=True,
+                    sample=unit.sample, read_group=unit.read_group, pair=pair)
+         for unit in RUN.unit_names for pair in ("r1", "r2")]
+
+rule fastqc:
+    """Runs FastQC for each pair of each read group of each sample given in the config file."""
+    input:
+        fq=RUN.config_input_func(ReadGroup, "{pair}"),
+    output:
+        dir=RUN.output("{sample}/{read_group}/qc/fastqc-{{pair}}", fmt=True),
+        txt=RUN.output("{sample}/{read_group}/qc/fastqc-{{pair}}/fqd.txt", fmt=True),
+    threads: 4
+    conda: "envs/fastqc.yml"
+    shell:
+        """
+        fastqc -o {output.dir} --extract --nogroup -f fastq --threads {threads} {input.fq}
+        find {output.dir} -name "fastqc_data.txt" -exec ln --relative -s {{}} {output.txt} \; -exec touch -h {output.txt} \;
+        """
