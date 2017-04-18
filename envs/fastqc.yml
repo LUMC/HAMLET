@@ -7,3 +7,5 @@ dependencies:
 - fastqc=0.11.5=1
 - java-jdk=8.0.92=1
 - libpng=1.6.27=0
+- crimson=0.3.0=py35_0
+- click=6.7=py35_0

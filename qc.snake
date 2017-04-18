@@ -6,21 +6,20 @@ RUN = Run(config)
 
 rule all:
     input:
-        [RUN.output("{sample}/{read_group}/qc/fastqc-{pair}/fqd.txt", fmt=True,
+        [RUN.output("{sample}/{read_group}/qc/fastqc-{pair}-raw.json", fmt=True,
                     sample=unit.sample, read_group=unit.read_group, pair=pair)
          for unit in RUN.unit_names for pair in ("r1", "r2")]
 
-rule fastqc:
+rule fastqc_raw:
     """Runs FastQC for each pair of each read group of each sample given in the config file."""
     input:
         fq=RUN.config_input_func(ReadGroup, "{pair}"),
     output:
-        dir=RUN.output("{sample}/{read_group}/qc/fastqc-{{pair}}", fmt=True),
-        txt=RUN.output("{sample}/{read_group}/qc/fastqc-{{pair}}/fqd.txt", fmt=True),
+        dir=RUN.output("{sample}/{read_group}/qc/fastqc-{{pair}}-raw", fmt=True),
+        json=RUN.output("{sample}/{read_group}/qc/fastqc-{{pair}}-raw.json", fmt=True),
     threads: 4
     conda: "envs/fastqc.yml"
     shell:
-        """
-        fastqc -o {output.dir} --extract --nogroup -f fastq --threads {threads} {input.fq}
-        find {output.dir} -name "fastqc_data.txt" -exec ln --relative -s {{}} {output.txt} \; -exec touch -h {output.txt} \;
-        """
+        "mkdir -p {output.dir}"
+        " && fastqc -o {output.dir} --extract --nogroup -f fastq --threads {threads} {input.fq}"
+        " && crimson fastqc {output.dir} > {output.json}"
