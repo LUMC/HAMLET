@@ -1,0 +1,12 @@
+channels:
+- bioconda
+- r
+- defaults
+- conda-forge
+dependencies:
+- pip=9.0.1=py35_1
+- python=3.5.3=1
+- sickle-trim=1.33=0
+- seqtk=1.2=0
+- pip:
+  - cutadapt==1.5
