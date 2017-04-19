@@ -6,9 +6,12 @@ RUN = Run(config)
 
 rule all:
     input:
-        [RUN.output("{sample}/{read_group}/qc/fastqc-{pair}-raw.json", fmt=True,
-                    sample=unit.sample, read_group=unit.read_group, pair=pair)
-         for unit in RUN.unit_names for pair in ("r1", "r2")]
+        fqs=[RUN.output("{sample}/{sample}-{pair}.fq.gz", fmt=True,
+                        sample=unit.sample, pair=pair)
+             for unit in RUN.unit_names for pair in ("R1", "R2")],
+        fqc_jsons=[RUN.output("{sample}/{read_group}/qc/fastqc-{pair}-processed.json", fmt=True,
+                              sample=unit.sample, read_group=unit.read_group, pair=pair)
+                   for unit in RUN.unit_names for pair in ("R1", "R2")],
 
 rule fastqc_raw:
     """Runs FastQC for each pair of each read group of each sample given in the config file."""
@@ -23,3 +26,47 @@ rule fastqc_raw:
         "mkdir -p {output.dir}"
         " && fastqc -o {output.dir} --extract --nogroup -f fastq --threads {threads} {input.fq}"
         " && crimson fastqc {output.dir} > {output.json}"
+
+rule clip_trim_sync_seq:
+    """Clips FastQC-detected adapter sequences and then trims low quality bases from all read pairs."""
+    input:
+        fq1=RUN.config_input_func(ReadGroup, "R1"),
+        fq2=RUN.config_input_func(ReadGroup, "R2"),
+        fqc_json1=RUN.output("{sample}/{read_group}/qc/fastqc-R1-raw.json", fmt=True),
+        fqc_json2=RUN.output("{sample}/{read_group}/qc/fastqc-R2-raw.json", fmt=True),
+        contams_file=RUN.settings["contaminants_file"],
+    output:
+        fq1=temp(RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}-R1.fq.gz")),
+        fq2=temp(RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}-R2.fq.gz")),
+    threads: 2
+    conda: "envs/clip_trim_sync.yml"
+    shell:
+        "python helper/clip_trim_sync.py --i1 {input.fq1} --i2 {input.fq2}"
+        " --fqc1 {input.fqc_json1} --fqc2 {input.fqc_json2}"
+        " --o1 {output.fq1} --o2 {output.fq2} --contaminants {input.contams_file}"
+
+rule fastqc_processed:
+    """Runs FastQC for each pair of QC-ed inputs."""
+    input:
+        fq=RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}-{pair}.fq.gz"),
+    output:
+        dir=RUN.output("{sample}/{read_group}/qc/fastqc-{pair}-processed"),
+        json=RUN.output("{sample}/{read_group}/qc/fastqc-{pair}-processed.json"),
+    threads: 4
+    conda: "envs/fastqc.yml"
+    shell:
+        "mkdir -p {output.dir}"
+        " && fastqc -o {output.dir} --extract --nogroup -f fastq --threads {threads} {input.fq}"
+        " && crimson fastqc {output.dir} > {output.json}"
+
+rule merge_fastqs:
+    """Merges all FASTQ files for a given sample from its read groups."""
+    input:
+        fqs=lambda wildcards: [RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}-{pair}.fq.gz",
+                                          fmt=True, sample=wildcards.sample, read_group=rgn, pair=wildcards.pair)
+                               for rgn in RUN.samples[wildcards.sample].read_groups]
+    output:
+        fq=RUN.output("{sample}/{sample}-{pair}.fq.gz"),
+    threads: 1
+    shell:
+        "zcat {input.fqs} | gzip -c > {output.fq}"
