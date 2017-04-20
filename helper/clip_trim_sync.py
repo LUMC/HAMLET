@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
-"""Snakemake helper for clipping, trimming, and syncing paired-end FASTQ files."""
+"""Snakemake helper for clipping, trimming, and syncing paired-end FASTQs."""
 
 import argparse
 import concurrent.futures
 import os
-import shutil
 import subprocess
 import sys
 
@@ -18,7 +17,7 @@ from crimson import fastqc
 # and sickle source (src/sickle.h)
 FQ_SICKLE_ENC_MAP = {
     "Sanger / Illumina 1.9": ("sanger", 33),
-      "Illumina <1.3": ("solexa", 59),
+    "Illumina <1.3": ("solexa", 59),
     "Illumina 1.3": ("illumina", 64),
     "Illumina 1.5": ("illumina", 64),
 }
@@ -30,10 +29,10 @@ def parse_contam_file(contam_file, delimiter="\t"):
     with open(contam_file, "r") as source:
         # read only lines not beginning with "#" and discard empty lines
         lines = filter(None, (line.strip() for line in source if not
-            line.startswith("#")))
+                       line.startswith("#")))
         # parse contam seq lines into lists of [id, sequence]
-        parse = lambda line: filter(None, line.split(delimiter))
-        parsed = (parse(line) for line in lines)
+        parsed = (filter(None, line.split(delimiter))
+                  for line in lines)
         # and create a dictionary, key=sequence id and value=sequence
         contam_ref = {name: seq for name, seq in parsed}
 
@@ -44,9 +43,9 @@ def get_contams_present(fqcd, contamd):
     """Returns the full sequence of found FastQC contaminants."""
     contam_names = {x["Possible Source"]
                     for x in fqcd["Overrepresented sequences"]["contents"]}
-    in_sample = lambda rid: any([cid.startswith(rid)
-                                 for cid in contam_names if cid != "No Hit"])
-    contams_present = {x: y for x, y in contamd.items() if in_sample(x)}
+    contams_present = {name: seq for name, seq in contamd.items()
+                       if any([cid.startswith(name)
+                               for cid in contam_names if cid != "No Hit"])}
     return contams_present
 
 
@@ -63,22 +62,24 @@ def construct_command(in_fname, out_fname, enc, enc_offset, adapters):
             cutadapt_toks.extend(["-a", adapter])
         cutadapt_toks.append(in_fname)
 
-        cutadapt_proc = subprocess.Popen(
-            cutadapt_toks, stdout=cutadapt_fifo, stderr=open(cutadapt_stderr, "w"))
+        subprocess.Popen(
+            cutadapt_toks, stdout=cutadapt_fifo,
+            stderr=open(cutadapt_stderr, "w"))
 
         in_fname = cutadapt_fifop
 
     sickle_fifop = out_fname + ".sickle.fifop"
-    sickle_fifo = os.mkfifo(sickle_fifop)
+    os.mkfifo(sickle_fifop)
     sickle_stdout = out_fname + ".sickle"
     fifos.append(sickle_fifop)
 
-    sickle_proc = subprocess.Popen(
+    subprocess.Popen(
         ["sickle", "se", "-f", in_fname, "-o", sickle_fifop, "-t", "sanger"],
         stdout=open(sickle_stdout, "w"))
 
     gzip_proc = subprocess.Popen(
-        ["gzip", "-c"], stdout=open(out_fname, "w"), stdin=open(sickle_fifop, "r"))
+        ["gzip", "-c"], stdout=open(out_fname, "w"),
+        stdin=open(sickle_fifop, "r"))
 
     return gzip_proc, fifos
 
@@ -91,7 +92,8 @@ def process_read(in_fname, in_fqc_dir, out_fname, contams_fname):
     enc, enc_offset = FQ_SICKLE_ENC_MAP[raw_enc]
     adapters = get_contams_present(fqcd, contamd)
 
-    cmd, fifos = construct_command(in_fname, out_fname, enc, enc_offset, adapters)
+    cmd, fifos = construct_command(in_fname, out_fname, enc, enc_offset,
+                                   adapters)
 
     try:
         cmd.wait()
@@ -107,9 +109,10 @@ def clip_sync_trim(input_r1, input_r2, input_fqc_r1, input_fqc_r2,
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=2) as executor:
 
-        futures = {executor.submit(process_read, i, j, o, contams_fname): (i, j, o)
-                   for i, j, o in ((input_r1, input_fqc_r1, output_r1),
-                                   (input_r2, input_fqc_r2, output_r2))}
+        futures = {
+            executor.submit(process_read, i, j, o, contams_fname): (i, j, o)
+            for i, j, o in ((input_r1, input_fqc_r1, output_r1),
+                            (input_r2, input_fqc_r2, output_r2))}
 
         for future in concurrent.futures.as_completed(futures):
             in_fname, _, out_fname = futures[future]

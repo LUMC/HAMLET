@@ -22,7 +22,7 @@ rule fastqc_raw:
         "mkdir -p {output.dir}"
         " && fastqc -o {output.dir} --extract --nogroup -f fastq --threads {threads} {input.fq}"
 
-rule clip_trim_sync_seq:
+rule clip_trim_sync:
     """Clips FastQC-detected adapter sequences and then trims low quality bases from all read pairs."""
     input:
         fq1=RUN.config_input_func(ReadGroup, "R1"),
