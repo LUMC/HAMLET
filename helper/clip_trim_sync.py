@@ -52,25 +52,24 @@ def get_contams_present(fqcd, contamd):
 def construct_command(in_fname, out_fname, enc, enc_offset, adapters):
     fifos = []
     if adapters:
-        cutadapt_fifop = out_fname + ".cutadapt.fifo"
-        cutadapt_fifo = os.mkfifo(cutadapt_fifop)
-        fifos.append(cutadapt_fifop)
         cutadapt_stderr = out_fname + ".cutadapt"
+        cutadapt_fifop = out_fname + ".cutadapt.fifo"
+        os.mkfifo(cutadapt_fifop)
+        fifos.append(cutadapt_fifop)
 
-        cutadapt_toks = ["adapters"]
+        cutadapt_toks = ["cutadapt"]
         for adapter in adapters:
             cutadapt_toks.extend(["-a", adapter])
+        cutadapt_toks.extend(["-o", cutadapt_fifop])
         cutadapt_toks.append(in_fname)
 
-        subprocess.Popen(
-            cutadapt_toks, stdout=cutadapt_fifo,
-            stderr=open(cutadapt_stderr, "w"))
+        subprocess.Popen(cutadapt_toks, stderr=open(cutadapt_stderr, "w"))
 
         in_fname = cutadapt_fifop
 
-    sickle_fifop = out_fname + ".sickle.fifop"
-    os.mkfifo(sickle_fifop)
     sickle_stdout = out_fname + ".sickle"
+    sickle_fifop = out_fname + ".sickle.fifo"
+    os.mkfifo(sickle_fifop)
     fifos.append(sickle_fifop)
 
     subprocess.Popen(
