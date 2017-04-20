@@ -3,10 +3,10 @@
 """Snakemake helper for clipping, trimming, and syncing paired-end FASTQs."""
 
 import argparse
-import concurrent.futures
 import os
 import subprocess
 import sys
+from os import path
 
 from crimson import fastqc
 
@@ -22,6 +22,12 @@ FQ_SICKLE_ENC_MAP = {
     "Illumina 1.5": ("illumina", 64),
 }
 
+
+FQ_EXTS = (
+    ".fq.gzip", ".fastq.gzip",
+    ".fq.gz", ".fastq.gz",
+    ".fq", ".fastq",
+)
 
 def parse_contam_file(contam_file, delimiter="\t"):
     """Returns a dictionary of contaminant sequences names and their
@@ -49,11 +55,12 @@ def get_contams_present(fqcd, contamd):
     return contams_present
 
 
-def construct_command(in_fname, out_fname, enc, enc_offset, adapters):
+def construct_command(in_fname, out_fname_unsynced, enc, enc_offset, adapters):
+    os.mkfifo(out_fname_unsynced)
     fifos = []
     if adapters:
-        cutadapt_stderr = out_fname + ".cutadapt"
-        cutadapt_fifop = out_fname + ".cutadapt.fifo"
+        cutadapt_stderr = out_fname_unsynced + ".cutadapt"
+        cutadapt_fifop = out_fname_unsynced + ".cutadapt.fifo"
         os.mkfifo(cutadapt_fifop)
         fifos.append(cutadapt_fifop)
 
@@ -67,20 +74,13 @@ def construct_command(in_fname, out_fname, enc, enc_offset, adapters):
 
         in_fname = cutadapt_fifop
 
-    sickle_stdout = out_fname + ".sickle"
-    sickle_fifop = out_fname + ".sickle.fifo"
-    os.mkfifo(sickle_fifop)
-    fifos.append(sickle_fifop)
+    sickle_stdout = out_fname_unsynced + ".sickle"
 
     subprocess.Popen(
-        ["sickle", "se", "-f", in_fname, "-o", sickle_fifop, "-t", "sanger"],
+        ["sickle", "se", "-f", in_fname, "-o", out_fname_unsynced, "-t", "sanger"],
         stdout=open(sickle_stdout, "w"))
 
-    gzip_proc = subprocess.Popen(
-        ["gzip", "-c"], stdout=open(out_fname, "w"),
-        stdin=open(sickle_fifop, "r"))
-
-    return gzip_proc, fifos
+    return fifos
 
 
 def process_read(in_fname, in_fqc_dir, out_fname, contams_fname):
@@ -91,39 +91,53 @@ def process_read(in_fname, in_fqc_dir, out_fname, contams_fname):
     enc, enc_offset = FQ_SICKLE_ENC_MAP[raw_enc]
     adapters = get_contams_present(fqcd, contamd)
 
-    cmd, fifos = construct_command(in_fname, out_fname, enc, enc_offset,
-                                   adapters)
+    return construct_command(in_fname, out_fname, enc, enc_offset, adapters)
 
-    try:
-        cmd.wait()
-    except:
-        raise
-    finally:
-        for fifo in fifos:
-            os.unlink(fifo)
+
+def splitext_fq(fname):
+    fnamel = fname.lower()
+    for pext in FQ_EXTS:
+        if fnamel.endswith(pext):
+            lpext = len(pext)
+            return fname[:-lpext], fname[-lpext:]
+    return fname
+
+
+def mark_unsynced(fname):
+    dname, bname_fq = path.dirname(fname), path.basename(fname)
+    bname, _ = splitext_fq(bname_fq)
+    return path.join(dname, bname + ".unsynced.fq")
 
 
 def clip_sync_trim(input_r1, input_r2, input_fqc_r1, input_fqc_r2,
-                   output_r1, output_r2, contams_fname):
+                   output_r1, output_r2, contams_fname, sync_scr_fname,
+                   stats_fname):
 
-    with concurrent.futures.ProcessPoolExecutor(max_workers=2) as executor:
+    output_r1_unsynced = mark_unsynced(output_r1)
+    output_r2_unsynced = mark_unsynced(output_r2)
 
-        futures = {
-            executor.submit(process_read, i, j, o, contams_fname): (i, j, o)
-            for i, j, o in ((input_r1, input_fqc_r1, output_r1),
-                            (input_r2, input_fqc_r2, output_r2))}
+    fifos = [output_r1_unsynced, output_r2_unsynced]
+    for i, j, o in ((input_r1, input_fqc_r1, output_r1_unsynced),
+                    (input_r2, input_fqc_r2, output_r2_unsynced)):
+        fifo_handles = process_read(i, j, o, contams_fname)
+        fifos.extend(fifo_handles)
 
-        for future in concurrent.futures.as_completed(futures):
-            in_fname, _, out_fname = futures[future]
-            try:
-                future.result()
-            except Exception as exc:
-                print("processing of {!r} generated an exception: {}"
-                      .format(in_fname, exc), file=sys.stderr)
-                raise
-            else:
-                print("processed {!r} to {!r}".format(in_fname, out_fname),
-                      file=sys.stderr)
+    sync_toks = [
+        "python", sync_scr_fname, "--ori", input_r1,
+         "--i1", output_r1_unsynced, "--i2", output_r2_unsynced,
+         "--o1", output_r1, "--o2", output_r2]
+    if stats_fname is not None:
+        sync_toks.extend(["--stats", stats_fname])
+
+    sync_proc = subprocess.Popen(sync_toks)
+
+    try:
+        sync_proc.wait()
+    except:
+        raise
+    finally:
+        for temp_out in fifos:
+            os.unlink(temp_out)
 
 
 if __name__ == "__main__":
@@ -143,8 +157,13 @@ if __name__ == "__main__":
                         help="path to output R2 FASTQ file")
     parser.add_argument("--contaminants", type=str, required=True,
                         help="path to FastQC contaminants file")
+    parser.add_argument("--sync-scr", type=str, required=True,
+                        help="path to sync script")
+    parser.add_argument("--stats", type=str, required=False,
+                        help="path to output stats JSON file")
 
     args = parser.parse_args()
 
     clip_sync_trim(args.i1, args.i2, args.fqc1, args.fqc2,
-                   args.o1, args.o2, args.contaminants)
+                   args.o1, args.o2, args.contaminants,
+                   args.sync_scr, args.stats)

@@ -33,12 +33,15 @@ rule clip_trim_sync:
     output:
         fq1=temp(RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}-R1.fq.gz")),
         fq2=temp(RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}-R2.fq.gz")),
+        stats=RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}.cts-stats.json"),
     threads: 2
     conda: "rule_envs/clip_trim_sync.yml"
     shell:
         "python helper/clip_trim_sync.py --i1 {input.fq1} --i2 {input.fq2}"
         " --fqc1 {input.fqc1} --fqc2 {input.fqc2}"
         " --o1 {output.fq1} --o2 {output.fq2} --contaminants {input.contams_file}"
+        " --sync-scr helper/sync_fq.py --stats {output.stats}"
+
 
 rule fastqc_processed:
     """Runs FastQC for each pair of QC-ed inputs."""
