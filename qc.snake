@@ -17,7 +17,7 @@ rule fastqc_raw:
     output:
         dir=RUN.output("{sample}/{read_group}/qc/fastqc-{{pair}}-raw", fmt=True),
     threads: 4
-    conda: "envs/fastqc.yml"
+    conda: "rule_envs/fastqc.yml"
     shell:
         "mkdir -p {output.dir}"
         " && fastqc -o {output.dir} --extract --nogroup -f fastq --threads {threads} {input.fq}"
@@ -34,7 +34,7 @@ rule clip_trim_sync:
         fq1=temp(RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}-R1.fq.gz")),
         fq2=temp(RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}-R2.fq.gz")),
     threads: 2
-    conda: "envs/clip_trim_sync.yml"
+    conda: "rule_envs/clip_trim_sync.yml"
     shell:
         "python helper/clip_trim_sync.py --i1 {input.fq1} --i2 {input.fq2}"
         " --fqc1 {input.fqc1} --fqc2 {input.fqc2}"
@@ -47,7 +47,7 @@ rule fastqc_processed:
     output:
         dir=RUN.output("{sample}/{read_group}/qc/fastqc-{pair}-processed"),
     threads: 4
-    conda: "envs/fastqc.yml"
+    conda: "rule_envs/fastqc.yml"
     shell:
         "mkdir -p {output.dir}"
         " && fastqc -o {output.dir} --extract --nogroup -f fastq --threads {threads} {input.fq}"
