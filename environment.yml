@@ -1,0 +1,36 @@
+channels:
+- bioconda
+- r
+- conda-forge
+- defaults
+dependencies:
+- dropbox=5.2.1=py35_0
+- filechunkio=1.6=py35_0
+- ftputil=3.2=py35_0
+- pysftp=0.2.9=py35_0
+- snakemake=3.11.2=py35_0
+- urllib3=1.12=py35_0
+- cffi=1.9.1=py35_0
+- cryptography=1.7.1=py35_0
+- docutils=0.13.1=py35_0
+- drmaa=0.7.6=py35_0
+- idna=2.2=py35_0
+- libffi=3.2.1=1
+- openssl=1.0.2k=1
+- paramiko=2.1.2=py35_0
+- pip=9.0.1=py35_1
+- pyasn1=0.2.3=py35_0
+- pycparser=2.17=py35_0
+- python=3.5.3=1
+- pyyaml=3.12=py35_0
+- readline=6.2=2
+- requests=2.13.0=py35_0
+- setuptools=27.2.0=py35_0
+- six=1.10.0=py35_0
+- sqlite=3.13.0=0
+- tk=8.5.18=0
+- wheel=0.29.0=py35_0
+- wrapt=1.10.10=py35_0
+- xz=5.2.2=1
+- yaml=0.1.6=0
+- zlib=1.2.8=3
