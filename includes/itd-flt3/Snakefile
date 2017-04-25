@@ -1,0 +1,59 @@
+from os import path
+from rattle import Run, ReadGroup
+
+
+RUN = Run(config)
+
+
+RUN.set_default_setting("extract_sc_flt3",
+                        srcdir(path.join("scripts", "extract_sc_flt3.py")))
+RUN.set_default_setting("plot_sc_linear_flt3",
+                        srcdir(path.join("scripts", "plot_sc_linear_flt3.py")))
+
+
+rule all_flt3:
+    input:
+        flt3_sc_jsons=expand(RUN.output("{sample}/{sample}.flt3-sc.json"), sample=RUN.samples),
+        flt3_sc_plots=expand(RUN.output("{sample}/{sample}.flt3-sc.png"), sample=RUN.samples),
+
+rule align_flt3:
+    input:
+        fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
+        fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
+        index=RUN.settings["flt3_ref"]
+    output:
+        bam=RUN.output("{sample}/{sample}.flt3.sorted.bam"),
+        bai=RUN.output("{sample}/{sample}.flt3.sorted.bai"),
+    params:
+        rg="@RG\tID:{sample}\tSM:{sample}"
+    threads: 3
+    conda: srcdir("envs/align_flt3.yml")
+    shell:
+        "bwa mem -t {threads} -L 2,2 {input.index} {input.fq1} {input.fq2}"
+        " | samtools view -Sbh -F 0x4 -"
+        " | picard SortSam I=/dev/stdin O={output.bam} SO=coordinate CREATE_INDEX=true"
+
+rule extract_sc_flt3:
+    input:
+        bam=RUN.output("{sample}/{sample}.flt3.sorted.bam"),
+        bai=RUN.output("{sample}/{sample}.flt3.sorted.bai"),
+        ref=RUN.settings["flt3_ref"],
+        scr=RUN.settings["extract_sc_flt3"],
+    output:
+        json=RUN.output("{sample}/{sample}.flt3-sc.json"),
+    conda: srcdir("envs/extract_sc_flt3.yml")
+    threads: 2
+    shell:
+        "python {input.scr} --nthreads {threads} --region FLT3-001 --sample-id {wildcards.sample} {input.ref} {input.bam}"
+        " > {output.json}"
+
+rule plot_sc_linear_flt3:
+    input:
+        counts=RUN.output("{sample}/{sample}.flt3-sc.json"),
+        scr=RUN.settings["plot_sc_linear_flt3"],
+    output:
+        png=RUN.output("{sample}/{sample}.flt3-sc.png"),
+    conda: srcdir("envs/plot_sc_linear_flt3")
+    shell:
+        "python {input.scr} --min-sc-count 2 --min-insert-count 2 --fuzziness 12 --padding 50"
+        " {input.counts} 1680 2135 {output.png}"
