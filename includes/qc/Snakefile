@@ -5,8 +5,8 @@ from rattle import Run, ReadGroup
 RUN = Run(config)
 
 RUN.set_default_setting("contaminants_file", srcdir(path.join("defaults", "contaminant_list_fastqc_v0115.txt")))
-RUN.set_default_setting("cts_script", srcdir(path.join("helpers", "clip_trim_sync.py")))
-RUN.set_default_setting("sync_script", srcdir(path.join("helpers", "sync_fq.py")))
+RUN.set_default_setting("cts_helper", srcdir(path.join("helpers", "clip_trim_sync.py")))
+RUN.set_default_setting("sync_script", srcdir(path.join("scripts", "sync_fq.py")))
 
 
 rule all_qc:
@@ -37,8 +37,8 @@ rule clip_trim_sync:
         fqc1=RUN.output("{sample}/{read_group}/qc/fastqc-R1-raw", fmt=True),
         fqc2=RUN.output("{sample}/{read_group}/qc/fastqc-R2-raw", fmt=True),
         contams_file=RUN.settings["contaminants_file"],
-        cts_helper=RUN.settings["cts_script"],
-        sync_helper=RUN.settings["sync_script"],
+        cts_helper=RUN.settings["cts_helper"],
+        sync_script=RUN.settings["sync_script"],
     output:
         fq1=temp(RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}-R1.fq.gz")),
         fq2=temp(RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}-R2.fq.gz")),
@@ -49,7 +49,7 @@ rule clip_trim_sync:
         "python {input.cts_helper} --i1 {input.fq1} --i2 {input.fq2}"
         " --fqc1 {input.fqc1} --fqc2 {input.fqc2}"
         " --o1 {output.fq1} --o2 {output.fq2} --contaminants {input.contams_file}"
-        " --sync-scr {input.sync_helper} --stats {output.stats}"
+        " --sync-scr {input.sync_script} --stats {output.stats}"
 
 
 rule fastqc_processed:
