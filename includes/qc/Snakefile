@@ -1,14 +1,19 @@
+from os import path
 from rattle import Run, ReadGroup
 
 
 RUN = Run(config)
 
+RUN.set_default_setting("contaminants_file", srcdir(path.join("defaults", "contaminant_list_fastqc_v0115.txt")))
+RUN.set_default_setting("cts_script", srcdir(path.join("helpers", "clip_trim_sync.py")))
 
-rule all:
+
+rule all_qc:
     input:
         fqs=[RUN.output("{sample}/{sample}-{pair}.fq.gz", fmt=True,
                         sample=unit.sample, pair=pair)
              for unit in RUN.unit_names for pair in ("R1", "R2")],
+
 
 rule fastqc_raw:
     """Runs FastQC for each pair of each read group of each sample given in the config file."""
@@ -17,10 +22,11 @@ rule fastqc_raw:
     output:
         dir=RUN.output("{sample}/{read_group}/qc/fastqc-{{pair}}-raw", fmt=True),
     threads: 4
-    conda: "rule_envs/fastqc.yml"
+    conda: srcdir("envs/fastqc.yml")
     shell:
         "mkdir -p {output.dir}"
         " && fastqc -o {output.dir} --extract --nogroup -f fastq --threads {threads} {input.fq}"
+
 
 rule clip_trim_sync:
     """Clips FastQC-detected adapter sequences and then trims low quality bases from all read pairs."""
@@ -30,14 +36,15 @@ rule clip_trim_sync:
         fqc1=RUN.output("{sample}/{read_group}/qc/fastqc-R1-raw", fmt=True),
         fqc2=RUN.output("{sample}/{read_group}/qc/fastqc-R2-raw", fmt=True),
         contams_file=RUN.settings["contaminants_file"],
+        cts_helper=RUN.settings["cts_script"],
     output:
         fq1=temp(RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}-R1.fq.gz")),
         fq2=temp(RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}-R2.fq.gz")),
         stats=RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}.cts-stats.json"),
     threads: 2
-    conda: "rule_envs/clip_trim_sync.yml"
+    conda: srcdir("envs/clip_trim_sync.yml")
     shell:
-        "python helper/clip_trim_sync.py --i1 {input.fq1} --i2 {input.fq2}"
+        "python {input.cts_helper} --i1 {input.fq1} --i2 {input.fq2}"
         " --fqc1 {input.fqc1} --fqc2 {input.fqc2}"
         " --o1 {output.fq1} --o2 {output.fq2} --contaminants {input.contams_file}"
         " --sync-scr helper/sync_fq.py --stats {output.stats}"
@@ -50,10 +57,11 @@ rule fastqc_processed:
     output:
         dir=RUN.output("{sample}/{read_group}/qc/fastqc-{pair}-processed"),
     threads: 4
-    conda: "rule_envs/fastqc.yml"
+    conda: srcdir("envs/fastqc.yml")
     shell:
         "mkdir -p {output.dir}"
         " && fastqc -o {output.dir} --extract --nogroup -f fastq --threads {threads} {input.fq}"
+
 
 rule merge_fastqs:
     """Merges all FASTQ files for a given sample from its read groups."""
