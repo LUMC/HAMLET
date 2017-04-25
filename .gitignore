@@ -18,9 +18,6 @@ config.yml
 config-cluster.yml
 .drmaa-logs
 
-# conda / pip #
-src/
-
 # R #
 *.RData
 *.RHistory
