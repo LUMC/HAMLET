@@ -16,6 +16,7 @@ htmlcov/
 .snakemake
 config.yml
 config-cluster.yml
+.drmaa-logs
 
 # R #
 *.RData

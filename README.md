@@ -10,3 +10,4 @@ Hamlet is a pipeline for analysis of human acute myeloid leukemia RNA-seq sample
         --cluster-config config-cluster.yml --jobname 'hamlet.{jobid}' \
         --jobs 100 -w 120 --max-jobs-per-second 3 \
         --drmaa ' -pe BWA {cluster.threads} -l h_vmem={cluster.vmem} -cwd -V' \
+        --drmaa-log-dir .drmaa-logs
