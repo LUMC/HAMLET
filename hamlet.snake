@@ -2,7 +2,7 @@ from rattle import Run
 
 RUN = Run(config)
 
-include: "includes/qc/Snakefile"
+include: "includes/qc-seq/Snakefile"
 include: "includes/itd-flt3/Snakefile"
 
 rule all:

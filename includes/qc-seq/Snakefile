@@ -21,7 +21,7 @@ rule fastqc_raw:
     input:
         fq=RUN.config_input_func(ReadGroup, "{pair}"),
     output:
-        dir=RUN.output("{sample}/{read_group}/qc/fastqc-{{pair}}-raw", fmt=True),
+        dir=RUN.output("{sample}/qc-seq/{read_group}/fastqc-{{pair}}-raw", fmt=True),
     threads: 4
     conda: srcdir("envs/fastqc.yml")
     shell:
@@ -34,15 +34,15 @@ rule clip_trim_sync:
     input:
         fq1=RUN.config_input_func(ReadGroup, "R1"),
         fq2=RUN.config_input_func(ReadGroup, "R2"),
-        fqc1=RUN.output("{sample}/{read_group}/qc/fastqc-R1-raw", fmt=True),
-        fqc2=RUN.output("{sample}/{read_group}/qc/fastqc-R2-raw", fmt=True),
+        fqc1=RUN.output("{sample}/qc-seq/{read_group}/fastqc-R1-raw", fmt=True),
+        fqc2=RUN.output("{sample}/qc-seq/{read_group}/fastqc-R2-raw", fmt=True),
         contams_file=RUN.settings["contaminants_file"],
         cts_helper=RUN.settings["cts_helper"],
         sync_script=RUN.settings["sync_script"],
     output:
-        fq1=temp(RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}-R1.fq.gz")),
-        fq2=temp(RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}-R2.fq.gz")),
-        stats=RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}.cts-stats.json"),
+        fq1=temp(RUN.output("{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz")),
+        fq2=temp(RUN.output("{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz")),
+        stats=RUN.output("{sample}/qc-seq/{read_group}/{sample}-{read_group}.cts-stats.json"),
     threads: 2
     conda: srcdir("envs/clip_trim_sync.yml")
     shell:
@@ -55,9 +55,9 @@ rule clip_trim_sync:
 rule fastqc_processed:
     """Runs FastQC for each pair of QC-ed inputs."""
     input:
-        fq=RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}-{pair}.fq.gz"),
+        fq=RUN.output("{sample}/qc-seq/{read_group}/{sample}-{read_group}-{pair}.fq.gz"),
     output:
-        dir=RUN.output("{sample}/{read_group}/qc/fastqc-{pair}-processed"),
+        dir=RUN.output("{sample}/qc-seq/{read_group}/fastqc-{pair}-processed"),
     threads: 4
     conda: srcdir("envs/fastqc.yml")
     shell:
@@ -68,7 +68,7 @@ rule fastqc_processed:
 rule merge_fastqs:
     """Merges all FASTQ files for a given sample from its read groups."""
     input:
-        fqs=lambda wildcards: [RUN.output("{sample}/{read_group}/qc/{sample}-{read_group}-{pair}.fq.gz",
+        fqs=lambda wildcards: [RUN.output("{sample}/qc-seq/{read_group}/{sample}-{read_group}-{pair}.fq.gz",
                                           fmt=True, sample=wildcards.sample, read_group=rgn, pair=wildcards.pair)
                                for rgn in RUN.samples[wildcards.sample].read_groups]
     output:
