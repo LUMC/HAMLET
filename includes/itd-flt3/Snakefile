@@ -13,8 +13,8 @@ RUN.set_default_setting("plot_sc_linear_flt3",
 
 rule all_flt3:
     input:
-        flt3_sc_jsons=expand(RUN.output("{sample}/{sample}.flt3-sc.json"), sample=RUN.samples),
-        flt3_sc_plots=expand(RUN.output("{sample}/{sample}.flt3-sc.png"), sample=RUN.samples),
+        flt3_sc_jsons=expand(RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.json"), sample=RUN.samples),
+        flt3_sc_plots=expand(RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.png"), sample=RUN.samples),
 
 rule align_flt3:
     input:
@@ -22,8 +22,8 @@ rule align_flt3:
         fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
         index=RUN.settings["flt3_ref"]
     output:
-        bam=RUN.output("{sample}/{sample}.flt3.sorted.bam"),
-        bai=RUN.output("{sample}/{sample}.flt3.sorted.bai"),
+        bam=RUN.output("{sample}/itd-flt3/{sample}.flt3.sorted.bam"),
+        bai=RUN.output("{sample}/itd-flt3/{sample}.flt3.sorted.bai"),
     params:
         rg="@RG\tID:{sample}\tSM:{sample}"
     threads: 3
@@ -35,12 +35,12 @@ rule align_flt3:
 
 rule extract_sc_flt3:
     input:
-        bam=RUN.output("{sample}/{sample}.flt3.sorted.bam"),
-        bai=RUN.output("{sample}/{sample}.flt3.sorted.bai"),
+        bam=RUN.output("{sample}/itd-flt3/{sample}.flt3.sorted.bam"),
+        bai=RUN.output("{sample}/itd-flt3/{sample}.flt3.sorted.bai"),
         ref=RUN.settings["flt3_ref"],
         scr=RUN.settings["extract_sc_flt3"],
     output:
-        json=RUN.output("{sample}/{sample}.flt3-sc.json"),
+        json=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.json"),
     conda: srcdir("envs/extract_sc_flt3.yml")
     threads: 2
     shell:
@@ -49,10 +49,10 @@ rule extract_sc_flt3:
 
 rule plot_sc_linear_flt3:
     input:
-        counts=RUN.output("{sample}/{sample}.flt3-sc.json"),
+        counts=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.json"),
         scr=RUN.settings["plot_sc_linear_flt3"],
     output:
-        png=RUN.output("{sample}/{sample}.flt3-sc.png"),
+        png=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.png"),
     conda: srcdir("envs/plot_sc_linear_flt3.yml")
     shell:
         "python {input.scr} --min-sc-count 2 --min-insert-count 2 --fuzziness 12 --padding 50"
