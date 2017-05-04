@@ -1,0 +1,8 @@
+channels:
+- bioconda
+- r
+- defaults
+- conda-forge
+dependencies:
+- picard=2.9.0=py35_0
+- gmap=2014.12.23=pl5.22.0_3
