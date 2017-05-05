@@ -13,3 +13,4 @@ rule all:
         flt3_sc_jsons=expand(RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.json"), sample=RUN.samples),
         flt3_sc_plots=expand(RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.png"), sample=RUN.samples),
         smallvars_bam=expand(RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"), sample=RUN.samples),
+        smallvars_vcf=expand(RUN.output("{sample}/snv-indels/{sample}.raw.vcf.gz"), sample=RUN.samples),

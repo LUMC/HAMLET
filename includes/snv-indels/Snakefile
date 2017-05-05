@@ -25,3 +25,18 @@ rule align_vars:
         " --format sam --gunzip {input.fq1} {input.fq2}"
         " | picard SortSam I=/dev/stdin O={output.bam} SORT_ORDER=coordinate"
         " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true"
+
+rule call_vars:
+    input:
+        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
+        ref=RUN.settings["genome_fasta"],
+    output:
+        vcf=RUN.output("{sample}/snv-indels/{sample}.raw.vcf.gz")
+    threads: 3
+    conda: srcdir("envs/call_vars.yml")
+    shell:
+        "samtools mpileup -f {input.ref} -d 1000000 -s -B {input.bam}"
+        " | grep -vP '\\t\\t'"
+        " | varscan mpileup2cns --strand-filter 0 --output-vcf 1 --min-var-freq 0.1 --p-value 0.05"
+        " | grep -vP '\\t\./\.|\\t0/0'"
+        " | bgzip -c > {output.vcf}"
