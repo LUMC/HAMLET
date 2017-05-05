@@ -20,7 +20,7 @@ rule align_flt3:
     input:
         fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
         fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
-        index=RUN.settings["flt3_ref"]
+        index=RUN.settings["flt3_bwa_index"]
     output:
         bam=RUN.output("{sample}/itd-flt3/{sample}.flt3.bam"),
         bai=RUN.output("{sample}/itd-flt3/{sample}.flt3.bai"),
@@ -37,7 +37,7 @@ rule extract_sc_flt3:
     input:
         bam=RUN.output("{sample}/itd-flt3/{sample}.flt3.bam"),
         bai=RUN.output("{sample}/itd-flt3/{sample}.flt3.bai"),
-        ref=RUN.settings["flt3_ref"],
+        ref=RUN.settings["flt3_fasta"],
         scr=RUN.settings["extract_sc_flt3"],
     output:
         json=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.json"),
