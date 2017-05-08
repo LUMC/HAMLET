@@ -1,5 +1,5 @@
 from os import path
-from rattle import Run, ReadGroup
+from rattle import Run
 
 
 RUN = Run(config)
