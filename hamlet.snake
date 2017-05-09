@@ -7,12 +7,18 @@ include: "includes/itd-flt3/Snakefile"
 include: "includes/snv-indels/Snakefile"
 include: "includes/fusion/Snakefile"
 
+OUTPUTS = {
+    "fqs": "{sample}/{sample}-{pair}.fq.gz",
+    "flt3_bam": "{sample}/itd-flt3/{sample}.flt3.bam",
+    "flt3_sc_jsons": "{sample}/itd-flt3/{sample}.flt3-sc.json",
+    "flt3_sc_plots": "{sample}/itd-flt3/{sample}.flt3-sc.png",
+    "smallvars_bam": "{sample}/snv-indels/{sample}.snv-indel.bam",
+    "smallvars_vcf": "{sample}/snv-indels/{sample}.raw.vcf.gz",
+    "star_fusion_txt": "{sample}/fusion/{sample}.star-fusion",
+}
+
+
 rule all:
     input:
-        fqs=expand(RUN.output("{sample}/{sample}-{pair}.fq.gz"), sample=RUN.samples, pair={"R1", "R2"}),
-        flt3_bam=expand(RUN.output("{sample}/itd-flt3/{sample}.flt3.bam"), sample=RUN.samples),
-        flt3_sc_jsons=expand(RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.json"), sample=RUN.samples),
-        flt3_sc_plots=expand(RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.png"), sample=RUN.samples),
-        smallvars_bam=expand(RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"), sample=RUN.samples),
-        smallvars_vcf=expand(RUN.output("{sample}/snv-indels/{sample}.raw.vcf.gz"), sample=RUN.samples),
-        star_fusion_txt=expand(RUN.output("{sample}/fusion/{sample}.star-fusion"), sample=RUN.samples),
+        [expand(RUN.output(p), sample=RUN.samples, pair={"R1", "R2"})
+         for p in OUTPUTS.values()]
