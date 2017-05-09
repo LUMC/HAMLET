@@ -3,7 +3,7 @@ from rattle import Run
 RUN = Run(config)
 
 
-localrules: star_fusion_cp
+localrules: star_fusion_cp fusioncatcher_cp
 
 rule star_fusion:
     input:
@@ -25,5 +25,25 @@ rule star_fusion_cp:
         txt=RUN.output("{sample}/fusion/star-fusion/star-fusion.fusion_candidates.final"),
     output:
         txt=RUN.output("{sample}/fusion/{sample}.star-fusion"),
+    shell:
+        "cp {input.txt} {output.txt}"
+
+rule fusioncatcher:
+    input:
+        fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
+        fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
+        exe=RUN.settings["fusioncatcher_exe"]
+    output:
+        dir=RUN.output("{sample}/fusion/fusioncatcher"),
+        txt=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate_fusion_genes.txt")
+    threads: 8
+    shell:
+        "{input.exe} --threads {threads} -i {input.fq1},{input.fq2} -o {output.dir}"
+
+rule fusioncatcher_cp:
+    input:
+        txt=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate_fusion_genes.txt"),
+    output:
+        txt=RUN.output("{sample}/fusion/{sample}.fusioncatcher"),
     shell:
         "cp {input.txt} {output.txt}"

@@ -15,6 +15,7 @@ OUTPUTS = {
     "smallvars_bam": "{sample}/snv-indels/{sample}.snv-indel.bam",
     "smallvars_vcf": "{sample}/snv-indels/{sample}.raw.vcf.gz",
     "star_fusion_txt": "{sample}/fusion/{sample}.star-fusion",
+    "fusioncatcher_txt": "{sample}/fusion/{sample}.fusioncatcher",
 }
 
 
