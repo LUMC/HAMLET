@@ -1,0 +1,7 @@
+channels:
+- bioconda
+- r
+- defaults
+- conda-forge
+dependencies:
+- star-fusion=0.5.4=2

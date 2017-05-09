@@ -5,6 +5,7 @@ RUN = Run(config)
 include: "includes/qc-seq/Snakefile"
 include: "includes/itd-flt3/Snakefile"
 include: "includes/snv-indels/Snakefile"
+include: "includes/fusion/Snakefile"
 
 rule all:
     input:
@@ -14,3 +15,4 @@ rule all:
         flt3_sc_plots=expand(RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.png"), sample=RUN.samples),
         smallvars_bam=expand(RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"), sample=RUN.samples),
         smallvars_vcf=expand(RUN.output("{sample}/snv-indels/{sample}.raw.vcf.gz"), sample=RUN.samples),
+        star_fusion_txt=expand(RUN.output("{sample}/fusion/{sample}.star-fusion"), sample=RUN.samples),
