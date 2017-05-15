@@ -16,6 +16,8 @@ OUTPUTS = {
     "smallvars_vcf": "{sample}/snv-indels/{sample}.raw.vcf.gz",
     "star_fusion_txt": "{sample}/fusion/{sample}.star-fusion",
     "fusioncatcher_txt": "{sample}/fusion/{sample}.fusioncatcher",
+    "star_fusion_svg": "{sample}/fusion/{sample}.star-fusion.svg",
+    "fusioncatcher_svg": "{sample}/fusion/{sample}.fusioncatcher.svg",
 }
 
 

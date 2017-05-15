@@ -3,7 +3,7 @@ from rattle import Run
 RUN = Run(config)
 
 
-localrules: star_fusion_cp fusioncatcher_cp
+localrules: star_fusion_cp fusioncatcher_cp plot_cp
 
 rule star_fusion:
     input:
@@ -49,3 +49,20 @@ rule fusioncatcher_cp:
         txt=RUN.output("{sample}/fusion/{sample}.fusioncatcher"),
     shell:
         "cp {input.txt} {output.txt}"
+
+rule plot_fusion:
+    input:
+        txt=RUN.output("{sample}/fusion/{sample}.{ext}"),
+    output:
+        svg=RUN.output("{sample}/fusion/{sample}.{ext}-circos/fsnviz.svg"),
+    conda: srcdir("envs/plot_fusion.yml")
+    shell:
+        "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` -k human.hg38 {wildcards.ext} {input.txt}"
+
+rule plot_cp:
+    input:
+        svg=RUN.output("{sample}/fusion/{sample}.{ext}-circos/fsnviz.svg"),
+    output:
+        svg=RUN.output("{sample}/fusion/{sample}.{ext}.svg"),
+    shell:
+        "cp {input.svg} {output.svg}"

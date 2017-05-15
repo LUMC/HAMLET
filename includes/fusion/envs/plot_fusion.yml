@@ -1,0 +1,9 @@
+channels:
+- bioconda
+- r
+- defaults
+- conda-forge
+dependencies:
+- fsnviz=0.2.0
+- circos=0.69.4
+- icu=56.1=4
