@@ -66,3 +66,20 @@ rule plot_cp:
         svg=RUN.output("{sample}/fusion/{sample}.{ext}.svg"),
     shell:
         "cp {input.svg} {output.svg}"
+
+rule intersect_fusions:
+    input:
+        sf=RUN.output("{sample}/fusion/{sample}.star-fusion"),
+        fc=RUN.output("{sample}/fusion/{sample}.fusioncatcher"),
+        bed=RUN.settings["transcripts_bed"],
+    output:
+        txt=RUN.output("{sample}/fusion/{sample}.fusions"),
+    conda: srcdir("envs/intersect_fusions.yml")
+    shell:
+        "fuma -a hg38:{input.bed} -s"
+        " fc-{wildcards.sample}:fusion-catcher_final:{input.fc}"
+        " sf-{wildcards.sample}:star-fusion_final:{input.sf}"
+        " -l \"fc-{wildcards.sample}:hg38\" \"sf-{wildcards.sample}:hg38\""
+        " -f extensive -o -"
+        " | grep -vP \"FuMa::\""
+        " > {output.txt}"

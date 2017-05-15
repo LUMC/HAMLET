@@ -1,0 +1,10 @@
+channels:
+- bioconda
+- r
+- defaults
+- conda-forge
+dependencies:
+- pip=9.0.1
+- python=2.7
+- grep=2.14
+- fuma=3.0.5
