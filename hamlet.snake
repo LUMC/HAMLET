@@ -18,7 +18,10 @@ OUTPUTS = {
     "fusioncatcher_txt": "{sample}/fusion/{sample}.fusioncatcher",
     "star_fusion_svg": "{sample}/fusion/{sample}.star-fusion.svg",
     "fusioncatcher_svg": "{sample}/fusion/{sample}.fusioncatcher.svg",
-    "fusions_txt": "{sample}/fusion/{sample}.fusions",
+    "fusions_txt": "{sample}/fusion/{sample}.fuma",
+    "isect_svg": "{sample}/fusion/{sample}.sf-isect.svg",
+    "isect_txt": "{sample}/fusion/{sample}.sf-isect",
+    "fusions_svg": "{sample}/fusion/{sample}.fusions-combined.svg",
 }
 
 

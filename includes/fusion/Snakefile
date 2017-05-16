@@ -2,6 +2,9 @@ from rattle import Run
 
 RUN = Run(config)
 
+RUN.set_default_setting("sf_subset_script", srcdir(path.join("scripts", "subset_sf.py")))
+RUN.set_default_setting("plot_combined_script", srcdir(path.join("scripts", "combine_svgs.py")))
+
 
 localrules: star_fusion_cp fusioncatcher_cp plot_cp
 
@@ -28,6 +31,15 @@ rule star_fusion_cp:
     shell:
         "cp {input.txt} {output.txt}"
 
+rule plot_sf:
+    input:
+        txt=RUN.output("{sample}/fusion/{sample}.star-fusion"),
+    output:
+        svg=RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg"),
+    conda: srcdir("envs/plot_fusion.yml")
+    shell:
+        "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` -k human.hg38 star-fusion {input.txt}"
+
 rule fusioncatcher:
     input:
         fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
@@ -50,14 +62,14 @@ rule fusioncatcher_cp:
     shell:
         "cp {input.txt} {output.txt}"
 
-rule plot_fusion:
+rule plot_fc:
     input:
-        txt=RUN.output("{sample}/fusion/{sample}.{ext}"),
+        txt=RUN.output("{sample}/fusion/{sample}.fusioncatcher"),
     output:
-        svg=RUN.output("{sample}/fusion/{sample}.{ext}-circos/fsnviz.svg"),
+        svg=RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg"),
     conda: srcdir("envs/plot_fusion.yml")
     shell:
-        "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` -k human.hg38 {wildcards.ext} {input.txt}"
+        "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` -k human.hg38 fusioncatcher {input.txt}"
 
 rule plot_cp:
     input:
@@ -73,7 +85,7 @@ rule intersect_fusions:
         fc=RUN.output("{sample}/fusion/{sample}.fusioncatcher"),
         bed=RUN.settings["transcripts_bed"],
     output:
-        txt=RUN.output("{sample}/fusion/{sample}.fusions"),
+        txt=RUN.output("{sample}/fusion/{sample}.fuma"),
     conda: srcdir("envs/intersect_fusions.yml")
     shell:
         "fuma -a hg38:{input.bed} -s"
@@ -83,3 +95,37 @@ rule intersect_fusions:
         " -f extensive -o -"
         " | grep -vP \"FuMa::\""
         " > {output.txt}"
+
+rule subset_sf:
+    input:
+        sf=RUN.output("{sample}/fusion/{sample}.star-fusion"),
+        isect=RUN.output("{sample}/fusion/{sample}.fuma"),
+        subset_script=RUN.settings["sf_subset_script"],
+    output:
+        sf=RUN.output("{sample}/fusion/{sample}.sf-isect")
+    conda: srcdir("envs/subset_sf.yml")
+    shell:
+        "python {input.subset_script} {input.isect} {input.sf} > {output.sf} || rm -f {output.sf}"
+
+rule plot_isect:
+    input:
+        txt=RUN.output("{sample}/fusion/{sample}.sf-isect"),
+    output:
+        svg=RUN.output("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.svg"),
+    conda: srcdir("envs/plot_fusion.yml")
+    shell:
+        "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` -k human.hg38 star-fusion {input.txt}"
+
+rule combine_plots:
+    input:
+        sf=RUN.output("{sample}/fusion/{sample}.star-fusion.svg"),
+        fc=RUN.output("{sample}/fusion/{sample}.fusioncatcher.svg"),
+        isect=RUN.output("{sample}/fusion/{sample}.sf-isect.svg"),
+        combine_script=RUN.settings["plot_combined_script"]
+    output:
+        svg=RUN.output("{sample}/fusion/{sample}.fusions-combined.svg"),
+    conda: srcdir("envs/combine_plots.yml")
+    shell:
+        "python {input.combine_script}"
+        " 'STAR-Fusion':{input.sf} 'FusionCatcher':{input.fc}"
+        " 'Intersection':{input.isect} {output.svg}"

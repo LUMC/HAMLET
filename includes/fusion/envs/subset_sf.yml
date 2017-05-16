@@ -1,0 +1,7 @@
+channels:
+- bioconda
+- r
+- defaults
+- conda-forge
+dependencies:
+- python=2.7

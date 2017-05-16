@@ -1,0 +1,13 @@
+channels:
+- bioconda
+- r
+- defaults
+- conda-forge
+dependencies:
+- click=6.7=py35_0
+- libxml2=2.9.4
+- libxslt=1.1.29
+- pip=9.0.1=py35_1
+- python=3.5.3=1
+- pip:
+  - svgutils==0.2.0
