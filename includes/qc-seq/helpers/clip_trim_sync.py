@@ -5,7 +5,6 @@
 import argparse
 import os
 import subprocess
-import sys
 from os import path
 
 from crimson import fastqc
@@ -28,6 +27,7 @@ FQ_EXTS = (
     ".fq.gz", ".fastq.gz",
     ".fq", ".fastq",
 )
+
 
 def parse_contam_file(contam_file, delimiter="\t"):
     """Returns a dictionary of contaminant sequences names and their
@@ -77,7 +77,8 @@ def construct_command(in_fname, out_fname_unsynced, enc, enc_offset, adapters):
     sickle_stdout = out_fname_unsynced + ".sickle"
 
     subprocess.Popen(
-        ["sickle", "se", "-f", in_fname, "-o", out_fname_unsynced, "-t", "sanger"],
+        ["sickle", "se", "-f", in_fname, "-o", out_fname_unsynced,
+         "-t", "sanger"],
         stdout=open(sickle_stdout, "w"))
 
     return fifos
@@ -124,8 +125,8 @@ def clip_sync_trim(input_r1, input_r2, input_fqc_r1, input_fqc_r2,
 
     sync_toks = [
         "python", sync_scr_fname, "--ori", input_r1,
-         "--i1", output_r1_unsynced, "--i2", output_r2_unsynced,
-         "--o1", output_r1, "--o2", output_r2]
+        "--i1", output_r1_unsynced, "--i2", output_r2_unsynced,
+        "--o1", output_r1, "--o2", output_r2]
     if stats_fname is not None:
         sync_toks.extend(["--stats", stats_fname])
 
