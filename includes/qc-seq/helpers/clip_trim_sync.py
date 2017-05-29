@@ -64,7 +64,7 @@ def construct_command(in_fname, out_fname_unsynced, enc, enc_offset, adapters):
         os.mkfifo(cutadapt_fifop)
         fifos.append(cutadapt_fifop)
 
-        cutadapt_toks = ["cutadapt"]
+        cutadapt_toks = ["cutadapt", "-m", "20"]
         for adapter in adapters:
             cutadapt_toks.extend(["-a", adapter])
         cutadapt_toks.extend(["-o", cutadapt_fifop])
