@@ -4,5 +4,5 @@ channels:
 - defaults
 - conda-forge
 dependencies:
-- picard=2.9.0=py35_0
+- picard=1.141=3
 - gmap=2014.12.23=pl5.22.0_3
