@@ -7,6 +7,8 @@ RUN = Run(config)
 RUN.set_default_setting("contaminants_file", srcdir(path.join("defaults", "contaminant_list_fastqc_v0115.txt")))
 RUN.set_default_setting("cts_helper", srcdir(path.join("helpers", "clip_trim_sync.py")))
 RUN.set_default_setting("sync_script", srcdir(path.join("scripts", "sync_fq.py")))
+RUN.set_default_setting("rg_stats_script", srcdir(path.join("scripts", "gather_rg_stats.py")))
+RUN.set_default_setting("sample_stats_script", srcdir(path.join("scripts", "gather_sample_stats.py")))
 
 
 rule all_qc:
@@ -14,6 +16,8 @@ rule all_qc:
         fqs=[RUN.output("{sample}/{sample}-{pair}.fq.gz", fmt=True,
                         sample=unit.sample, pair=pair)
              for unit in RUN.unit_names for pair in ("R1", "R2")],
+        stats=expand(RUN.output("{sample}/qc-seq/{sample}-seq-stats.json"),
+                     sample=RUN.samples),
 
 
 rule fastqc_raw:
@@ -65,6 +69,37 @@ rule fastqc_processed:
         " && fastqc -o {output.dir} --extract --nogroup -f fastq --threads {threads} {input.fq}"
 
 
+rule rg_stats:
+    """Gathers read statistics on the read group level."""
+    input:
+        raw1=RUN.output("{sample}/qc-seq/{read_group}/fastqc-R1-raw"),
+        raw2=RUN.output("{sample}/qc-seq/{read_group}/fastqc-R2-raw"),
+        proc1=RUN.output("{sample}/qc-seq/{read_group}/fastqc-R1-processed"),
+        proc2=RUN.output("{sample}/qc-seq/{read_group}/fastqc-R2-processed"),
+        rg_stats_script=RUN.settings["rg_stats_script"],
+    output:
+        stats=temp(RUN.output("{sample}/qc-seq/{read_group}/stats.json")),
+    conda: srcdir("envs/rg_stats.yml")
+    shell:
+        "python {input.rg_stats_script} --name {wildcards.read_group}"
+        " {input.raw1} {input.raw2} {input.proc1} {input.proc2}"
+        " > {output.stats}"
+
+
+rule sample_stats:
+    """Gathers read statistics on the sample level."""
+    input:
+        rg_stats=lambda wildcards: [RUN.output("{sample}/qc-seq/{read_group}/stats.json",
+                                               fmt=True, sample=wildcards.sample, read_group=rgn)
+                                    for rgn in RUN.samples[wildcards.sample].read_groups],
+        sample_stats_script=RUN.settings["sample_stats_script"],
+    output:
+        stats=RUN.output("{sample}/qc-seq/{sample}-seq-stats.json")
+    shell:
+        "python {input.sample_stats_script} --name {wildcards.sample}"
+        " {input.rg_stats} > {output.stats}"
+
+
 rule merge_fastqs:
     """Merges all FASTQ files for a given sample from its read groups."""
     input:
@@ -73,6 +108,5 @@ rule merge_fastqs:
                                for rgn in RUN.samples[wildcards.sample].read_groups]
     output:
         fq=RUN.output("{sample}/{sample}-{pair}.fq.gz"),
-    threads: 1
     shell:
         "zcat {input.fqs} | gzip -c > {output.fq}"

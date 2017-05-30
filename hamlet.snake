@@ -9,6 +9,7 @@ include: "includes/fusion/Snakefile"
 
 OUTPUTS = {
     "fqs": "{sample}/{sample}-{pair}.fq.gz",
+    "fqs_stats": "{sample}/qc-seq/{sample}-seq-stats.json",
     "flt3_bam": "{sample}/itd-flt3/{sample}.flt3.bam",
     "flt3_sc_jsons": "{sample}/itd-flt3/{sample}.flt3-sc.json",
     "flt3_sc_plots": "{sample}/itd-flt3/{sample}.flt3-sc.png",
