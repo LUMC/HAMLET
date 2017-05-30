@@ -8,7 +8,7 @@ dependencies:
 - filechunkio=1.6=py35_0
 - ftputil=3.2=py35_0
 - pysftp=0.2.9=py35_0
-- snakemake=3.12.0=py35_0
+- snakemake=3.12.0=py35_1
 - urllib3=1.12=py35_0
 - cffi=1.9.1=py35_0
 - cryptography=1.7.1=py35_0
