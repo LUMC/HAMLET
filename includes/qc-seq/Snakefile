@@ -95,6 +95,7 @@ rule sample_stats:
         sample_stats_script=RUN.settings["sample_stats_script"],
     output:
         stats=RUN.output("{sample}/qc-seq/{sample}-seq-stats.json")
+    conda: srcdir("envs/sample_stats.yml")
     shell:
         "python {input.sample_stats_script} --name {wildcards.sample}"
         " {input.rg_stats} > {output.stats}"
