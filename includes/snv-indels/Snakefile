@@ -8,7 +8,7 @@ rule align_vars:
     input:
         fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
         fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
-        index=RUN.settings["genome_gmap_index"]
+        index=RUN.settings["genome_star_index"]
     output:
         bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
         bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
@@ -17,11 +17,13 @@ rule align_vars:
     threads: 8
     conda: srcdir("envs/align_vars.yml")
     shell:
-        "gsnap --dir `dirname {input.index}` --db `basename {input.index}`"
-        " --batch 4 --nthreads {threads}"
-        " --novelsplicing 1 --npaths 1 --quiet-if-excessive"
-        " --read-group-name={params.rg_sample} --read-group-id={params.rg_sample}"
-        " --format sam --gunzip {input.fq1} {input.fq2}"
+        "rm -rf `dirname {output.bam}`/alignment && "
+        "mkdir -p `dirname {output.bam}`/alignment && "
+        "STAR --outFileNamePrefix `dirname {output.bam}`/alignment/"
+        " --genomeDir {input.index} --readFilesIn {input.fq1} {input.fq2}"
+        " --readFilesCommand zcat --runThreadN {threads}"
+        " --outStd SAM --outSAMunmapped Within --outFilterMultimapNmax 1"
+        " --outSAMattrRGline ID:{params.rg_sample} SM:{params.rg_sample}"
         " | picard SortSam I=/dev/stdin O={output.bam} SORT_ORDER=coordinate"
         " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true"
 
