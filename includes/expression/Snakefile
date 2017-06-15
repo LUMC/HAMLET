@@ -1,0 +1,60 @@
+from rattle import Run
+
+RUN = Run(config)
+
+# TODO: ensure gtf exists
+RUN.set_default_setting("base_count_script", srcdir(path.join("scripts", "hist2count.py")))
+RUN.set_default_setting("aggr_base_count_script", srcdir(path.join("scripts", "aggr_base_count.R")))
+
+rule count_fragments:
+    input:
+        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
+        gtf=RUN.settings["expression_gtf"],
+    output:
+        count=RUN.output("{sample}/expression/{sample}.fragments_per_gene"),
+    threads: 1
+    conda: srcdir("envs/count_fragments.yml")
+    shell:
+        "htseq-count --format bam --order pos --stranded no"
+        " {input.bam} {input.gtf} > {output.count}"
+
+rule count_raw_bases:
+    input:
+        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
+        bed=RUN.settings["expression_bed"],
+        count_script=RUN.settings["base_count_script"],
+    output:
+        raw_base_count=RUN.output("{sample}/expression/{sample}.raw_base"),
+    threads: 1
+    conda: srcdir("envs/count_bases.yml")
+    shell:
+        "bedtools coverage -split -hist -abam {input.bam} -b {input.bed}"
+        " | python {input.count_script} -c 3 > {output.raw_base_count}"
+
+rule count_bases_exon:
+    input:
+        raw=RUN.output("{sample}/expression/{sample}.raw_base"),
+        aggr_script=RUN.settings["aggr_base_count_script"],
+    output:
+        count=RUN.output("{sample}/expression/{sample}.bases_per_exon"),
+    params:
+        sample="{sample}"
+    threads: 1
+    conda: srcdir("envs/count_bases.yml")
+    shell:
+        "Rscript {input.aggr_script} -I {input.raw} -N {params.sample}"
+        " -E {output.count}"
+
+rule count_bases_gene:
+    input:
+        raw=RUN.output("{sample}/expression/{sample}.raw_base"),
+        aggr_script=RUN.settings["aggr_base_count_script"],
+    output:
+        count=RUN.output("{sample}/expression/{sample}.bases_per_gene"),
+    params:
+        sample="{sample}"
+    threads: 1
+    conda: srcdir("envs/count_bases.yml")
+    shell:
+        "Rscript {input.aggr_script} -I {input.raw} -N {params.sample}"
+        " -G {output.count}"

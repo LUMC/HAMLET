@@ -1,0 +1,11 @@
+channels:
+- bioconda
+- r
+- defaults
+- conda-forge
+dependencies:
+- bedtools=2.17.0=0
+- r=3.3.2=r3.3.2_0
+- r-getopt=1.20.0=r3.3.2_0
+- python=2.7.13=0
+- pip=9.0.1=py27_1

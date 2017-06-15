@@ -6,6 +6,7 @@ include: "includes/qc-seq/Snakefile"
 include: "includes/itd-flt3/Snakefile"
 include: "includes/snv-indels/Snakefile"
 include: "includes/fusion/Snakefile"
+include: "includes/expression/Snakefile"
 
 OUTPUTS = {
     "fqs": "{sample}/{sample}-{pair}.fq.gz",
@@ -23,6 +24,9 @@ OUTPUTS = {
     "isect_svg": "{sample}/fusion/{sample}.sf-isect.svg",
     "isect_txt": "{sample}/fusion/{sample}.sf-isect",
     "fusions_svg": "{sample}/fusion/{sample}.fusions-combined.svg",
+    "count_fragments_per_gene": "{sample}/expression/{sample}.fragments_per_gene",
+    "count_bases_per_gene": "{sample}/expression/{sample}.bases_per_gene",
+    "count_bases_per_exon": "{sample}/expression/{sample}.bases_per_exon",
     "rna_stats": "{sample}/snv-indels/{sample}.rna_stats",
     "aln_stats": "{sample}/snv-indels/{sample}.aln_stats",
 }
