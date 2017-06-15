@@ -3,6 +3,7 @@ from rattle import Run
 RUN = Run(config)
 
 # TODO: ensure db indices exist
+RUN.settings["genome_fasta_dict"] = RUN.settings["genome_fasta"].rsplit(".", 1)[0] + ".dict"
 
 rule align_vars:
     input:
@@ -41,3 +42,34 @@ rule call_vars:
         " | varscan mpileup2cns --strand-filter 0 --output-vcf 1 --min-var-freq 0.1 --p-value 0.05"
         " | grep -vP '\\t\./\.|\\t0/0'"
         " | bgzip -c > {output.vcf}"
+
+rule aln_stats:
+    input:
+        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
+        bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
+        ref=RUN.settings["genome_fasta"],
+        ref_dict=RUN.settings["genome_fasta_dict"],
+    output:
+        stats=RUN.output("{sample}/snv-indels/{sample}.aln_stats")
+    threads: 1
+    conda: srcdir("envs/bam_stats.yml")
+    shell:
+        "picard -Xmx2G CollectAlignmentSummaryMetrics"
+        " R={input.ref} I={input.bam} O={output.stats}"
+
+rule rna_stats:
+    input:
+        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
+        bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
+        ref=RUN.settings["genome_fasta"],
+        ref_dict=RUN.settings["genome_fasta_dict"],
+        annot=RUN.settings["annotation_refflat"],
+    output:
+        stats=RUN.output("{sample}/snv-indels/{sample}.rna_stats")
+    threads: 1
+    conda: srcdir("envs/bam_stats.yml")
+    shell:
+        "picard -Xmx4G CollectRnaSeqMetrics"
+        " R={input.ref} REF_FLAT={input.annot}"
+        " STRAND_SPECIFICITY=NONE ASSUME_SORTED=true"
+        " CHART_OUTPUT={output.stats}.pdf I={input.bam} O={output.stats}"

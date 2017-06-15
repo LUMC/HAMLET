@@ -23,6 +23,8 @@ OUTPUTS = {
     "isect_svg": "{sample}/fusion/{sample}.sf-isect.svg",
     "isect_txt": "{sample}/fusion/{sample}.sf-isect",
     "fusions_svg": "{sample}/fusion/{sample}.fusions-combined.svg",
+    "rna_stats": "{sample}/snv-indels/{sample}.rna_stats",
+    "aln_stats": "{sample}/snv-indels/{sample}.aln_stats",
 }
 
 
