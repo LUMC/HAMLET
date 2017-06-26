@@ -223,7 +223,7 @@ def process_read(read, target_reg, ref, min_sc_length, min_insertion_length):
         if envelops(sc_reg, target_reg) and sc_reg.length >= min_sc_length:
             alt_sc_coords = get_alt_sc_coords(
                 read.seq[:sc_reg.length],
-                ref, query_pos, target_reg.end, SCType.start)
+                ref, query_pos - sc_reg.length, target_reg.end, SCType.start)
             for asc in (alt_sc_coords or {None}):
                 scs.append((query_pos - 1, asc))
 
@@ -234,7 +234,7 @@ def process_read(read, target_reg, ref, min_sc_length, min_insertion_length):
         if envelops(sc_reg, target_reg) and sc_reg.length >= min_sc_length:
             alt_sc_coords = get_alt_sc_coords(
                 read.seq[adv_query_pos:],
-                ref, target_reg.start, adv_ref_pos, SCType.end)
+                ref, target_reg.start, adv_ref_pos + sc_reg.length, SCType.end)
             for asc in (alt_sc_coords or {None}):
                 scs.append((adv_ref_pos, asc))
 
