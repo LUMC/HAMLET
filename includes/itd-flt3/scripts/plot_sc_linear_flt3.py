@@ -42,12 +42,7 @@ def calc_insert_ratio(insert_count, pileup_count):
         return math.nan
 
 
-def msize_func(sc_ratio):
-    """Function for marker size of the soft clip scatter plot."""
-    return max(10, 100 / math.log(1 / sc_ratio))
-
-
-def make_sc_sample_df(countd, region, min_count=2):
+def make_sc_sample_df(countd, region, sc_bg=None, min_scl_count=2):
     """Converts the given count dictionary into a data frame of soft clip
     event counts in the given region.
 
@@ -75,20 +70,36 @@ def make_sc_sample_df(countd, region, min_count=2):
     sample = countd["sampleName"]
     raw_pileups = {item["pos"]: item["count"] for item in countd["pileups"]}
     raw_scs = {item["pos"]:
-               {"count": item["count"],
-                "altPosCount": [subitem for subitem in item["altPosCount"]
-                                if subitem["count"] >= min_count]}
-               for item in countd["scs"] if item["count"] >= min_count}
-    pileups = [raw_pileups.get(p, 0) for p in region]
-    scs = [(raw_scs.get(p, {}).get("count") or None) for p in region]
-    df = pd.DataFrame({
-        "sample": [sample] * len(region),
-        "pos": region,
-        "pileup_count": pileups,
-        "sc_count": scs,
-        "sc_ratio": [calc_sc_ratio(a, b) for a, b in zip(scs, pileups)],
-        "asc": [raw_scs.get(p, {}).get("altPosCount", list()) for p in region],
-    })
+               {"count": item["count"], "altPosCount": item["altPosCount"]}
+               for item in countd["scs"]}
+
+    dps = []
+    for p in region:
+        pileup_count = raw_pileups.get(p, 0)
+        sc_count = raw_scs.get(p, {}).get("count", None)
+        if sc_bg is not None:
+            try:
+                bg = sc_bg.loc[p].threshold
+            except KeyError:
+                sc_ratio = math.nan
+            else:
+                sc_ratio = calc_sc_ratio(sc_count, pileup_count)
+                if sc_ratio * 100.0 <= bg:
+                    sc_ratio = math.nan
+        else:
+            sc_ratio = calc_sc_ratio(sc_count, pileup_count)
+        dp = {
+            "sample": sample,
+            "pos": p,
+            "pileup_count": raw_pileups.get(p, 0),
+            "sc_count": raw_scs.get(p, {}).get("count"),
+            "sc_ratio": sc_ratio,
+            "asc": [item for item in raw_scs.get(p, {}).get("altPosCount", list())
+                    if item["count"] >= min_scl_count],
+        }
+        dps.append(dp)
+
+    df = pd.DataFrame(dps)
     df.set_index("pos", inplace=True, drop=False)
     return df
 
@@ -159,7 +170,7 @@ def adjust_pair_fuzz(pair, scd, fuzziness):
     fuzz_origin = range(pair[0]-fuzziness, pair[0]+fuzziness+1)
     fuzz_dest = range(pair[1]-fuzziness, pair[1]+fuzziness+1)
     fuzz_scs = scd.loc[[p for p in fuzz_dest]][["sc_count", "pos"]]
-    cands = sorted([(p, abs(count_asc - c))
+    cands = sorted([(p, count_asc - c)
                     for p, c in zip(fuzz_scs["pos"], fuzz_scs["sc_count"])
                     if not math.isnan(c) and
                     {item["pos"]
@@ -201,7 +212,10 @@ def calc_scs_pairs(scd, region, fuzziness):
     for ap in all_alt_pairs:
         np = adjust_pair_fuzz(ap, scd, fuzziness)
         if np is not None:
-            adj_arc_pairs[np] = (sc_ratios[np[0]], sc_ratios[np[1]])
+            try:
+                adj_arc_pairs[np] = (sc_ratios[np[0]], sc_ratios[np[1]])
+            except KeyError:
+                pass
 
     # only return reciprocal ones
     larger_starts = [p for p in adj_arc_pairs.keys() if p[0] > p[1]]
@@ -209,7 +223,7 @@ def calc_scs_pairs(scd, region, fuzziness):
             if (k[1], k[0]) in larger_starts}
 
 
-def plot_sample_df(countd, region, sc_fuzziness, min_sc_count,
+def plot_sample_df(countd, region, sc_fuzziness, sc_bg,
                    min_insert_count, output_fname=None):
     """Plots the given count data over the given region.
 
@@ -218,15 +232,15 @@ def plot_sample_df(countd, region, sc_fuzziness, min_sc_count,
     :param int sc_fuzziness: Length of 5' and 3' extension between which
                              each reciprocating soft clip event will be
                              searched.
-    :param int min_sc_count: Minimum number of count for a soft clip event
-                             to be considered.
+    # :param int min_sc_count: Minimum number of count for a soft clip event
+    #                          to be considered.
     :param int min_insert_count: Mininum number of for an insertion event
                                  to be considered.
     :param str output_fname: Name of output file of the plot.
 
     """
     sample = countd["sampleName"]
-    scd = make_sc_sample_df(countd, region, min_count=min_sc_count)
+    scd = make_sc_sample_df(countd, region, sc_bg=sc_bg)
     ind = make_insert_sample_df(countd, region, min_count=min_insert_count)
     scs_pairs = calc_scs_pairs(scd, region, sc_fuzziness)
 
@@ -248,7 +262,7 @@ def plot_sample_df(countd, region, sc_fuzziness, min_sc_count,
     else:
         ax1 = scd.plot.scatter(x="pos", y="sc_ratio",
                                marker="o", color="#4C72B0",
-                               s=scd["sc_ratio"].apply(msize_func),
+                               s=25,
                                zorder=2, ax=axes[0])
 
         yspan = max(0.15, scd["sc_ratio"].max(), ind["insert_ratio"].max())
@@ -316,13 +330,12 @@ def plot_sample_df(countd, region, sc_fuzziness, min_sc_count,
 @click.option("--fuzziness", type=int, default=12,
               help="Length of 5' and 3' extension when considering soft"
                    " clip matching.")
-@click.option("--min-sc-count", type=int, default=2,
-              help="Minimum count of soft clip event to consider.")
+@click.option("--sc-bg", type=click.Path(exists=True, dir_okay=False))
 @click.option("--min-insert-count", type=int, default=2,
               help="Minimum count of insertion event to consider.")
 @click.option("--padding", type=int, default=10,
               help="Length of 5' and 3' extension of the given region.")
-def main(input, start, end, output, fuzziness, min_sc_count,
+def main(input, start, end, output, fuzziness, sc_bg,
          min_insert_count, padding):
 
     ext = output.lower().rsplit(".", 1)
@@ -346,7 +359,11 @@ def main(input, start, end, output, fuzziness, min_sc_count,
                    min(countd["region"]["end"], end + padding + 1))
 
     plt.style.use("seaborn-colorblind")
-    plot_sample_df(countd, region, fuzziness, min_sc_count, min_insert_count,
+    if sc_bg is not None:
+        bg = pd.DataFrame.from_csv(sc_bg, parse_dates=False)
+    else:
+        bg = None
+    plot_sample_df(countd, region, fuzziness, bg, min_insert_count,
                    output_fname=output)
 
 
