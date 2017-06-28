@@ -1,0 +1,9 @@
+channels:
+- bioconda
+- r
+- defaults
+- conda-forge
+dependencies:
+- click=6.7=py35_0
+- pip=9.0.1=py35_1
+- python=3.5.3=1

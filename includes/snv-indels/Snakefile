@@ -4,6 +4,9 @@ RUN = Run(config)
 
 # TODO: ensure db indices exist
 RUN.settings["genome_fasta_dict"] = RUN.settings["genome_fasta"].rsplit(".", 1)[0] + ".dict"
+RUN.set_default_setting("extract_script", srcdir(path.join("scripts", "vcf2json.py")))
+RUN.set_default_setting("csv_script", srcdir(path.join("scripts", "json2csv.py")))
+RUN.set_default_setting("plot_script", srcdir(path.join("scripts", "plotVariants.R")))
 
 if RUN.settings.get("gsnap_exe") is not None:
     # To reproduce paper results, relies on a non-conda GSNAP 2014.12.23 with SIMD
@@ -114,3 +117,80 @@ rule rna_stats:
         " R={input.ref} REF_FLAT={input.annot}"
         " STRAND_SPECIFICITY=NONE ASSUME_SORTED=true"
         " CHART_OUTPUT={output.stats}.pdf I={input.bam} O={output.stats}"
+
+rule annotate_vars:
+    input:
+        vcf=RUN.output("{sample}/snv-indels/{sample}.raw.vcf.gz"),
+        ref_1kg=RUN.settings["vcf_1kg"],
+        ref_gonl=RUN.settings["vcf_gonl"],
+        cache_vep=RUN.settings["cache_vep"],
+        fasta_vep=RUN.settings["fasta_vep"],
+        vep_exe=RUN.settings["vep_exe"],
+        bgzip_exe=RUN.settings["bgzip_exe"],
+    output:
+        vcf=RUN.output("{sample}/snv-indels/{sample}.annotated.vcf.gz"),
+        stats=RUN.output("{sample}/snv-indels/{sample}.vep.stats"),
+    threads: 8
+    shell:
+        "PATH=/usr/bin:${{PATH}} {input.vep_exe} -i {input.vcf}"
+        " --fasta {input.fasta_vep} --dir {input.cache_vep}"
+        " --custom {input.ref_1kg},P3,vcf,exact,0,AF,AFR_AF,AMR_AF,EAS_AF,EUR_AF,SAS_AF"
+        " --custom {input.ref_gonl},GONL,vcf,exact,0,AF"
+        " --fork {threads} --offline --cache_version 77 --assembly GRCh38 --everything --merged"
+        " --allele_number --stats_text --vcf --cache --force_overwrite"
+        " --stats_file {output.stats} -o STDOUT | {input.bgzip_exe} -c > {output.vcf}"
+
+rule extract_vars:
+    input:
+        vcf=RUN.output("{sample}/snv-indels/{sample}.annotated.vcf.gz"),
+        ref_hotspots=RUN.settings["bed_variant_hotspots"],
+        ref_id_mapping=RUN.settings["ref_id_mapping"],
+        scr=RUN.settings["extract_script"],
+    output:
+        json=RUN.output("{sample}/snv-indels/{sample}.variants.json"),
+    threads: 1
+    conda: srcdir("envs/extract_vars.yml")
+    shell:
+        "python {input.scr} --hotspots {input.ref_hotspots} --sample-id {wildcards.sample}"
+        " {input.ref_id_mapping} {input.vcf} > {output.json}"
+
+rule table_vars_all:
+    input:
+        json=RUN.output("{sample}/snv-indels/{sample}.variants.json"),
+        scr=RUN.settings["csv_script"],
+    output:
+        csv=RUN.output("{sample}/snv-indels/{sample}.variants_all.csv"),
+    threads: 1
+    conda: srcdir("envs/json_to_csv.yml")
+    shell:
+        "python {input.scr} {input.json} > {output.csv}"
+
+rule table_vars_hi:
+    input:
+        json=RUN.output("{sample}/snv-indels/{sample}.variants.json"),
+        scr=RUN.settings["csv_script"],
+    output:
+        csv=RUN.output("{sample}/snv-indels/{sample}.variants_hi.csv"),
+    threads: 1
+    conda: srcdir("envs/json_to_csv.yml")
+    shell:
+        "python {input.scr} --hi {input.json} > {output.csv}"
+
+rule plot_vars:
+    input:
+        json=RUN.output("{sample}/snv-indels/{sample}.variants.json"),
+        scr=RUN.settings["plot_script"],
+        ref_id_mapping=RUN.settings["ref_id_mapping"],
+        ref_hotspots=RUN.settings["bed_variant_hotspots"],
+        ref_amplicons=RUN.settings["ref_amplicons"],
+        ref_annot_goi=RUN.settings["ref_annot_goi"],
+    output:
+        plotd=RUN.output("{sample}/snv-indels/variant_plots"),
+    threads: 1
+    conda: srcdir("envs/plot_variants.yml")
+    shell:
+        "Rscript {input.scr} -j {input.json}"
+        " -i {input.ref_id_mapping} -m {input.ref_annot_goi}"
+        " -a {input.ref_amplicons} -t {input.ref_hotspots}"
+        " -o `dirname {output.plotd}`"
+        " || rm -rf {output.plotd}"
