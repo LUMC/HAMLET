@@ -195,9 +195,9 @@ def get_alt_sc_coords(sc_seq, ref, start_ref, end_ref, sc_type):
     alns = [aln
             for aln in aligner(sc_seq, ref[start_ref:end_ref],
                                matrix="DNAFULL", method="glocal",
-                               gap_open=-7, gap_extend=-1,
-                               gap_double=-7, max_hits=None)
-            # Filter for alignments with at most 2 hits and at most
+                               gap_open=-10, gap_extend=-8,
+                               gap_double=-10, max_hits=None)
+            # Filter for alignments with at most 2 gaps and at most
             # 10% mismatches, rounded up.
             if aln.n_gaps1 <= 2 and aln.n_mismatches <= round(0.1 * sc_len)]
     # Also ensure we are using regular Python types from here on.
