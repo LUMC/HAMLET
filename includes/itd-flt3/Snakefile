@@ -10,6 +10,10 @@ RUN.set_default_setting("extract_sc_flt3",
 RUN.set_default_setting("plot_sc_linear_flt3",
                         srcdir(path.join("scripts", "plot_sc_linear_flt3.py")))
 
+# Region of interest ~ exon 14-15 in transcript coordinates.
+RUN.set_default_setting("flt3_start", 1787)
+RUN.set_default_setting("flt3_end", 2024)
+
 
 rule all_flt3:
     input:
@@ -54,7 +58,10 @@ rule plot_sc_linear_flt3:
         bg=RUN.settings["bg_soft_clip_csv"],
     output:
         png=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.png"),
+    params:
+        start=RUN.settings["flt3_start"],
+        end=RUN.settings["flt3_end"],
     conda: srcdir("envs/plot_sc_linear_flt3.yml")
     shell:
         "python {input.scr} --sc-bg {input.bg} --min-scl-count 2 --min-insert-count 2"
-        " --fuzziness 12 --padding 0 {input.counts} 1787 2024 {output.png}"
+        " --fuzziness 12 --padding 0 {input.counts} {params.start} {params.end} {output.png}"
