@@ -264,6 +264,8 @@ def plot_sample_df(countd, region, sc_fuzziness, sc_bg,
         axes[0].xaxis.grid(False)
         has_scs = False
     else:
+        # Convert coordinate to 1-based, fully closed.
+        scd["pos"] = scd["pos"].apply(lambda p: p + 1)
         ax1 = scd.plot.scatter(x="pos", y="sc_ratio",
                                marker="o", color="#4C72B0",
                                s=25,
@@ -287,6 +289,10 @@ def plot_sample_df(countd, region, sc_fuzziness, sc_bg,
         ax1.set_ylabel("% of Total Coverage")
 
         for ((p0, p1), (v0, v1)) in scs_pairs.items():
+            # Convert coordinate to 1-based, fully closed.
+            p0 += 1
+            p1 += 1
+
             codes = [pth.MOVETO, pth.CURVE4, pth.CURVE4, pth.CURVE4]
             verts = [(p0, v0), (p0, v0+(yspan*0.3)),
                      (p1, v1+(yspan*0.3)), (p1, v1)]
@@ -302,6 +308,8 @@ def plot_sample_df(countd, region, sc_fuzziness, sc_bg,
             axes[1].set_yticklabels([])
         axes[1].xaxis.grid(False)
     else:
+        # Convert coordinate to 1-based, fully closed.
+        ind["pos"] = ind["pos"].apply(lambda p: p + 1)
         ax2 = ind.plot.bar(x="insert_seq", y="insert_ratio",
                            width=0.9, color="#55A868",
                            edgecolor="none",
@@ -361,7 +369,7 @@ def main(input, start, end, output, fuzziness, sc_bg, min_scl_count,
     if end > countd["region"]["end"]:
         raise click.BadParameter("Invalid end coordinate: {0!r}."
                                  "".format(end))
-    region = range(max(0, start - padding),
+    region = range(max(0, start - padding - 1),
                    min(countd["region"]["end"], end + padding + 1))
 
     plt.style.use("seaborn-colorblind")
