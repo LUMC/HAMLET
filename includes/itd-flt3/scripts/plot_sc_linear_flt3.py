@@ -232,8 +232,10 @@ def plot_sample_df(countd, region, sc_fuzziness, sc_bg,
     :param int sc_fuzziness: Length of 5' and 3' extension between which
                              each reciprocating soft clip event will be
                              searched.
-    # :param int min_sc_count: Minimum number of count for a soft clip event
-    #                          to be considered.
+    :param pd.DataFrame sc_bg: Pandas `DataFrame` containing the negative
+                               sample background. This must be a two-column
+                               data frame of 0-based position and threshold
+                               values.
     :param int min_insert_count: Mininum number of for an insertion event
                                  to be considered.
     :param str output_fname: Name of output file of the plot.
