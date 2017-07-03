@@ -9,6 +9,8 @@ RUN.set_default_setting("extract_sc_flt3",
                         srcdir(path.join("scripts", "extract_sc_flt3.py")))
 RUN.set_default_setting("plot_sc_linear_flt3",
                         srcdir(path.join("scripts", "plot_sc_linear_flt3.py")))
+RUN.set_default_setting("json2csv",
+                        srcdir(path.join("scripts", "json2csv.py")))
 
 # Region of interest ~ exon 14-15 in transcript coordinates.
 RUN.set_default_setting("flt3_start", 1787)
@@ -65,3 +67,16 @@ rule plot_sc_linear_flt3:
     shell:
         "python {input.scr} --sc-bg {input.bg} --min-scl-count 2 --min-insert-count 2"
         " --fuzziness 12 --padding 0 {input.counts} {params.start} {params.end} {output.png}"
+
+rule flt3_json_to_csv:
+    input:
+        counts=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.json"),
+        scr=RUN.settings["json2csv"],
+    output:
+        csv=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.roi.csv"),
+    params:
+        start=RUN.settings["flt3_start"],
+        end=RUN.settings["flt3_end"],
+    conda: srcdir("envs/flt3_csv.yml")
+    shell:
+        "python {input.scr} {wildcards.sample} --start {params.start} --end {params.end} > {output.csv}"
