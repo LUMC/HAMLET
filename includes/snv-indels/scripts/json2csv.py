@@ -21,6 +21,8 @@ __contact__ = "w.arindrarto@lumc.nl"
 
 __all__ = []
 
+# TODO: use the csv module
+
 
 def make_csv(grouped, meta, fallback="NA", csq_info_name="CSQ",
              with_header=True, toi_filter=True, af_filter=False,
@@ -31,8 +33,10 @@ def make_csv(grouped, meta, fallback="NA", csq_info_name="CSQ",
         ["1KG_P3" + x for x in ["", "_AF", "_AFR_AF", "_AMR_AF",
                                 "_EAS_AF", "_EUR_AF", "_SAS_AF"]] + \
         meta["format_keys"]
-    header_cols = ["sample_id", "gene_symbol", "gene_id"] + var_keys + vep_keys
-    header_fmt = "{" + "}\t{".join(header_cols) + "}"
+    header_cols = [
+        '"{}"'.format(x) if isinstance(x, str) and "," in x else x
+        for x in ["sample_id", "gene_symbol", "gene_id"] + var_keys + vep_keys]
+    header_fmt = "{" + "},{".join(header_cols) + "}"
 
     def vep_ok(vep):
         cond = True
@@ -43,7 +47,7 @@ def make_csv(grouped, meta, fallback="NA", csq_info_name="CSQ",
         return cond
 
     if with_header:
-        yield "#" + "\t".join(header_cols)
+        yield ",".join(header_cols)
 
     for sample_id, sampled in grouped.items():
         for gene_id, gened in sampled.items():
@@ -72,7 +76,10 @@ def make_csv(grouped, meta, fallback="NA", csq_info_name="CSQ",
                             to_print.append((k, fallback))
                         else:
                             to_print.append((k, v))
-                    row = header_fmt.format(**dict(to_print))
+                    row = header_fmt.format(**{
+                        k: '"{}"'.format(v)
+                           if isinstance(v, str) and "," in v else v
+                        for k, v in to_print})
                     yield row
 
 
