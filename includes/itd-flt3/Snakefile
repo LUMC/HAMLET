@@ -51,9 +51,10 @@ rule plot_sc_linear_flt3:
     input:
         counts=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.json"),
         scr=RUN.settings["plot_sc_linear_flt3"],
+        bg=RUN.settings["bg_soft_clip_csv"],
     output:
         png=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.png"),
     conda: srcdir("envs/plot_sc_linear_flt3.yml")
     shell:
-        "python {input.scr} --min-sc-count 2 --min-insert-count 2 --fuzziness 12 --padding 50"
-        " {input.counts} 1680 2135 {output.png}"
+        "python {input.scr} --sc-bg {input.bg} --min-scl-count 2 --min-insert-count 2"
+        " --fuzziness 12 --padding 50 {input.counts} 1680 2135 {output.png}"

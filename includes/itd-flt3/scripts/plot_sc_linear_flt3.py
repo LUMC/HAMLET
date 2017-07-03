@@ -224,7 +224,7 @@ def calc_scs_pairs(scd, region, fuzziness):
 
 
 def plot_sample_df(countd, region, sc_fuzziness, sc_bg,
-                   min_insert_count, output_fname=None):
+                   min_scl_count, min_insert_count, output_fname=None):
     """Plots the given count data over the given region.
 
     :param dict countd: Dictionary of soft clip and insertion event counts.
@@ -236,13 +236,15 @@ def plot_sample_df(countd, region, sc_fuzziness, sc_bg,
                                sample background. This must be a two-column
                                data frame of 0-based position and threshold
                                values.
+    :param int min_scl_count: Minimum number of linked soft clip event to
+                              be considered.
     :param int min_insert_count: Mininum number of for an insertion event
                                  to be considered.
     :param str output_fname: Name of output file of the plot.
 
     """
     sample = countd["sampleName"]
-    scd = make_sc_sample_df(countd, region, sc_bg=sc_bg)
+    scd = make_sc_sample_df(countd, region, sc_bg=sc_bg, min_scl_count=min_scl_count)
     ind = make_insert_sample_df(countd, region, min_count=min_insert_count)
     scs_pairs = calc_scs_pairs(scd, region, sc_fuzziness)
 
@@ -333,11 +335,13 @@ def plot_sample_df(countd, region, sc_fuzziness, sc_bg,
               help="Length of 5' and 3' extension when considering soft"
                    " clip matching.")
 @click.option("--sc-bg", type=click.Path(exists=True, dir_okay=False))
+@click.option("--min-scl-count", type=int, default=2,
+              help="Minimum count of linked soft clip event to consider.")
 @click.option("--min-insert-count", type=int, default=2,
               help="Minimum count of insertion event to consider.")
 @click.option("--padding", type=int, default=10,
               help="Length of 5' and 3' extension of the given region.")
-def main(input, start, end, output, fuzziness, sc_bg,
+def main(input, start, end, output, fuzziness, sc_bg, min_scl_count,
          min_insert_count, padding):
 
     ext = output.lower().rsplit(".", 1)
@@ -365,8 +369,8 @@ def main(input, start, end, output, fuzziness, sc_bg,
         bg = pd.DataFrame.from_csv(sc_bg, parse_dates=False)
     else:
         bg = None
-    plot_sample_df(countd, region, fuzziness, bg, min_insert_count,
-                   output_fname=output)
+    plot_sample_df(countd, region, fuzziness, bg, min_scl_count,
+                   min_insert_count, output_fname=output)
 
 
 if __name__ == "__main__":
