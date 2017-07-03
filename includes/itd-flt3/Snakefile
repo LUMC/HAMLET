@@ -70,7 +70,7 @@ rule plot_sc_linear_flt3:
 
 rule flt3_json_to_csv:
     input:
-        counts=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.json"),
+        json=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.json"),
         scr=RUN.settings["json2csv"],
     output:
         csv=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.roi.csv"),
@@ -79,4 +79,4 @@ rule flt3_json_to_csv:
         end=RUN.settings["flt3_end"],
     conda: srcdir("envs/flt3_csv.yml")
     shell:
-        "python {input.scr} {wildcards.sample} --start {params.start} --end {params.end} > {output.csv}"
+        "python {input.scr} {input.json} {wildcards.sample} --start {params.start} --end {params.end} > {output.csv}"
