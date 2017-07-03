@@ -4,6 +4,6 @@ channels:
 - defaults
 - conda-forge
 dependencies:
-- python=3.6.1=2
-- pip=9.0.1=py36_1
-- htseq=0.7.2=py36_0
+- python=2.7.13=0
+- htseq=0.6.1p1=py27_1
+- pysam=0.11.2.2=htslib1.5_2

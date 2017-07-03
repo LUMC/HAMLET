@@ -6,16 +6,27 @@ RUN = Run(config)
 RUN.set_default_setting("base_count_script", srcdir(path.join("scripts", "hist2count.py")))
 RUN.set_default_setting("aggr_base_count_script", srcdir(path.join("scripts", "aggr_base_count.R")))
 
-rule count_fragments:
+rule idsort_aln:
     input:
         bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
+    output:
+        bam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.idsorted.bam")),
+    threads: 1
+    conda: srcdir("envs/idsort_aln.yml")
+    shell:
+        "picard SortSam I={input.bam} O={output.bam} SORT_ORDER=queryname"
+        " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=false"
+
+rule count_fragments:
+    input:
+        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.idsorted.bam"),
         gtf=RUN.settings["expression_gtf"],
     output:
         count=RUN.output("{sample}/expression/{sample}.fragments_per_gene"),
     threads: 1
     conda: srcdir("envs/count_fragments.yml")
     shell:
-        "htseq-count --format bam --order pos --stranded no"
+        "htseq-count --format bam --order name --stranded no"
         " {input.bam} {input.gtf} > {output.count}"
 
 rule count_raw_bases:
