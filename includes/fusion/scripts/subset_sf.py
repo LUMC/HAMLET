@@ -19,12 +19,12 @@ if __name__ == "__main__":
             rights = cols[1].split(":")
             for l in lefts:
                 for r in rights:
-                    isect.add((l, r))
+                    isect.add(tuple(sorted([l, r])))
 
     with open(sf_fname, "r") as src:
         print(src.readline().strip())
         for line in (raw_line.strip() for raw_line in src):
             cols = line.split("\t")
-            fusion = (cols[4].split("^")[0], cols[6].split("^")[0])
+            fusion = tuple(sorted([cols[4].split("^")[0], cols[6].split("^")[0]]))
             if fusion in isect:
                 print(line)
