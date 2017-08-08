@@ -184,13 +184,15 @@ rule plot_vars:
         ref_hotspots=RUN.settings["bed_variant_hotspots"],
         ref_amplicons=RUN.settings["ref_amplicons"],
         ref_annot_goi=RUN.settings["ref_annot_goi"],
-    output:
+    params:
         plotd=RUN.output("{sample}/snv-indels/variant_plots"),
+    output:
+        plots_mark=RUN.output("{sample}/snv-indels/variant_plots/.done"),
     threads: 1
     conda: srcdir("envs/plot_variants.yml")
     shell:
-        "Rscript {input.scr} -j {input.json}"
+        "(Rscript {input.scr} -j {input.json}"
         " -i {input.ref_id_mapping} -m {input.ref_annot_goi}"
         " -a {input.ref_amplicons} -t {input.ref_hotspots}"
-        " -o `dirname {output.plotd}`"
-        " || rm -rf {output.plotd}"
+        " -o `dirname {params.plotd}` && touch {params.plotd}/.done)"
+        " || rm -rf {params.plotd}"
