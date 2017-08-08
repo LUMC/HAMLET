@@ -1,5 +1,5 @@
 from os import path
-from rattle import Run, ReadGroup
+from rattle import Run, ReadGroup, Sample
 
 
 RUN = Run(config)
@@ -109,5 +109,16 @@ rule merge_fastqs:
                                for rgn in RUN.samples[wildcards.sample].read_groups]
     output:
         fq=RUN.output("{sample}/{sample}-{pair}.fq.gz"),
+    shell:
+        "zcat {input.fqs} | gzip -c > {output.fq}"
+
+
+rule merge_fastqs_raw:
+    """Merges all raw FASTQ files for a given sample from its read groups."""
+    input:
+        fqs=lambda wildcards: [rg._raw[wildcards.pair]
+                               for rg in RUN.samples[wildcards.sample].read_groups.values()]
+    output:
+        fq=temp(RUN.output("{sample}/{sample}-{pair}.raw.fq.gz")),
     shell:
         "zcat {input.fqs} | gzip -c > {output.fq}"

@@ -42,8 +42,8 @@ rule plot_sf:
 
 rule fusioncatcher:
     input:
-        fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
-        fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
+        fq1=RUN.output("{sample}/{sample}-R1.raw.fq.gz"),
+        fq2=RUN.output("{sample}/{sample}-R2.raw.fq.gz"),
         exe=RUN.settings["fusioncatcher_exe"]
     output:
         dir=RUN.output("{sample}/fusion/fusioncatcher"),
