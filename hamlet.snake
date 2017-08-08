@@ -8,32 +8,32 @@ include: "includes/snv-indels/Snakefile"
 include: "includes/fusion/Snakefile"
 include: "includes/expression/Snakefile"
 
-OUTPUTS = {
-    "fqs": "{sample}/{sample}-{pair}.fq.gz",
-    "fqs_stats": "{sample}/qc-seq/{sample}-seq-stats.json",
-    "flt3_bam": "{sample}/itd-flt3/{sample}.flt3.bam",
-    "flt3_sc_json": "{sample}/itd-flt3/{sample}.flt3-sc.json",
-    "flt3_sc_csv": "{sample}/itd-flt3/{sample}.flt3-sc.roi.csv",
-    "flt3_sc_plots": "{sample}/itd-flt3/{sample}.flt3-sc.png",
-    "smallvars_bam": "{sample}/snv-indels/{sample}.snv-indel.bam",
-    "smallvars_vcf": "{sample}/snv-indels/{sample}.annotated.vcf.gz",
-    "smallvars_csv_all": "{sample}/snv-indels/{sample}.variants_all.csv",
-    "smallvars_csv_hi": "{sample}/snv-indels/{sample}.variants_hi.csv",
-    "smallvars_plots": "{sample}/snv-indels/variant_plots",
-    "star_fusion_txt": "{sample}/fusion/{sample}.star-fusion",
-    "fusioncatcher_txt": "{sample}/fusion/{sample}.fusioncatcher",
-    "star_fusion_svg": "{sample}/fusion/{sample}.star-fusion.svg",
-    "fusioncatcher_svg": "{sample}/fusion/{sample}.fusioncatcher.svg",
-    "fusions_txt": "{sample}/fusion/{sample}.fuma",
-    "isect_svg": "{sample}/fusion/{sample}.sf-isect.svg",
-    "isect_txt": "{sample}/fusion/{sample}.sf-isect",
-    "fusions_svg": "{sample}/fusion/{sample}.fusions-combined.svg",
-    "count_fragments_per_gene": "{sample}/expression/{sample}.fragments_per_gene",
-    "count_bases_per_gene": "{sample}/expression/{sample}.bases_per_gene",
-    "count_bases_per_exon": "{sample}/expression/{sample}.bases_per_exon",
-    "rna_stats": "{sample}/snv-indels/{sample}.rna_stats",
-    "aln_stats": "{sample}/snv-indels/{sample}.aln_stats",
-}
+OUTPUTS = dict(
+    fqs="{sample}/{sample}-{pair}.fq.gz",
+    fqs_stats="{sample}/qc-seq/{sample}-seq-stats.json",
+    flt3_bam="{sample}/itd-flt3/{sample}.flt3.bam",
+    flt3_sc_json="{sample}/itd-flt3/{sample}.flt3-sc.json",
+    flt3_sc_csv="{sample}/itd-flt3/{sample}.flt3-sc.roi.csv",
+    flt3_sc_plots="{sample}/itd-flt3/{sample}.flt3-sc.png",
+    smallvars_bam="{sample}/snv-indels/{sample}.snv-indel.bam",
+    smallvars_vcf="{sample}/snv-indels/{sample}.annotated.vcf.gz",
+    smallvars_csv_all="{sample}/snv-indels/{sample}.variants_all.csv",
+    smallvars_csv_hi="{sample}/snv-indels/{sample}.variants_hi.csv",
+    smallvars_plots="{sample}/snv-indels/variant_plots",
+    star_fusion_txt="{sample}/fusion/{sample}.star-fusion",
+    fusioncatcher_txt="{sample}/fusion/{sample}.fusioncatcher",
+    star_fusion_svg="{sample}/fusion/{sample}.star-fusion.svg",
+    fusioncatcher_svg="{sample}/fusion/{sample}.fusioncatcher.svg",
+    fusions_txt="{sample}/fusion/{sample}.fuma",
+    isect_svg="{sample}/fusion/{sample}.sf-isect.svg",
+    isect_txt="{sample}/fusion/{sample}.sf-isect",
+    fusions_svg="{sample}/fusion/{sample}.fusions-combined.svg",
+    count_fragments_per_gene="{sample}/expression/{sample}.fragments_per_gene",
+    count_bases_per_gene="{sample}/expression/{sample}.bases_per_gene",
+    count_bases_per_exon="{sample}/expression/{sample}.bases_per_exon",
+    rna_stats="{sample}/snv-indels/{sample}.rna_stats",
+    aln_stats="{sample}/snv-indels/{sample}.aln_stats",
+ )
 
 
 rule all:
