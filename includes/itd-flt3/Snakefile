@@ -4,15 +4,10 @@ from rattle import Run
 
 RUN = Run(config)
 
-
-RUN.set_default_setting("extract_sc_flt3",
-                        srcdir(path.join("scripts", "extract_sc_flt3.py")))
-RUN.set_default_setting("plot_sc_linear_flt3",
-                        srcdir(path.join("scripts", "plot_sc_linear_flt3.py")))
-RUN.set_default_setting("json2csv",
-                        srcdir(path.join("scripts", "json2csv.py")))
+# TODO: deploy fidus_exe and plot script properly
 
 # Region of interest ~ exon 14-15 in transcript coordinates.
+RUN.set_default_setting("flt3_name", "FLT3-001")
 RUN.set_default_setting("flt3_start", 1787)
 RUN.set_default_setting("flt3_end", 2024)
 
@@ -39,44 +34,32 @@ rule align_flt3:
         " | samtools view -Sbh -F 0x4 -"
         " | picard SortSam I=/dev/stdin O={output.bam} SO=coordinate CREATE_INDEX=true"
 
-rule extract_sc_flt3:
+rule detect_flt3:
     input:
         bam=RUN.output("{sample}/itd-flt3/{sample}.flt3.bam"),
         bai=RUN.output("{sample}/itd-flt3/{sample}.flt3.bai"),
         ref=RUN.settings["flt3_fasta"],
-        scr=RUN.settings["extract_sc_flt3"],
+        exe=RUN.settings["fidus_exe"],
     output:
-        json=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.json"),
-    conda: srcdir("envs/extract_sc_flt3.yml")
-    threads: 2
-    shell:
-        "python {input.scr} --nthreads {threads} --region FLT3-001 --sample-id {wildcards.sample} {input.ref} {input.bam}"
-        " > {output.json}"
-
-rule plot_sc_linear_flt3:
-    input:
-        counts=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.json"),
-        scr=RUN.settings["plot_sc_linear_flt3"],
-        bg=RUN.settings["bg_soft_clip_csv"],
-    output:
-        png=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.png"),
+        csv=RUN.output("{sample}/itd-flt3/{sample}.flt3.csv"),
+        bg_csv=RUN.output("{sample}/itd-flt3/{sample}.bg.csv"),
+    threads: 1
     params:
+        trx_name=RUN.settings["flt3_name"],
         start=RUN.settings["flt3_start"],
         end=RUN.settings["flt3_end"],
-    conda: srcdir("envs/plot_sc_linear_flt3.yml")
     shell:
-        "python {input.scr} --sc-bg {input.bg} --min-scl-count 2 --min-insert-count 2"
-        " --fuzziness 12 --padding 0 {input.counts} {params.start} {params.end} {output.png}"
+        "{input.exe} -r {params.trx_name}:{params.start}-{params.end} --bg-counts {output.bg_csv} {input.ref} {input.bam} > {output.csv}"
 
-rule flt3_json_to_csv:
+rule plot_itd:
     input:
-        json=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.json"),
-        scr=RUN.settings["json2csv"],
+        csv=RUN.output("{sample}/itd-flt3/{sample}.flt3.csv"),
+        bg_csv=RUN.output("{sample}/itd-flt3/{sample}.bg.csv"),
+        scr=RUN.settings["plot_itd"],
     output:
-        csv=RUN.output("{sample}/itd-flt3/{sample}.flt3-sc.roi.csv"),
-    params:
-        start=RUN.settings["flt3_start"],
-        end=RUN.settings["flt3_end"],
-    conda: srcdir("envs/flt3_csv.yml")
+        png=RUN.output("{sample}/itd-flt3/{sample}.flt3.png"),
+    threads: 1
+    conda: RUN.settings["plot_itd_conda"]
     shell:
-        "python {input.scr} {input.json} {wildcards.sample} --start {params.start} --end {params.end} > {output.csv}"
+        "python {input.scr} tracks {input.csv} {input.bg_csv}"
+        " --sample-id {wildcards.sample} {output.png}"
