@@ -4,6 +4,8 @@ channels:
 - defaults
 - conda-forge
 dependencies:
-- fsnviz=0.2.0
 - circos=0.69.4
 - icu=56.1=4
+- pip=9.0.1
+- pip:
+  - fsnviz==0.3.0

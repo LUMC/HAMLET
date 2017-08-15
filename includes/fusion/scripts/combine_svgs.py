@@ -4,7 +4,7 @@ import click
 import svgutils.transform as sg
 
 
-def load_single_fig(fname, width="4000px", height="4000px"):
+def load_single_fig(fname, width="4300px", height="4300px"):
     """Loads the SVG of a single figure and adjusts its size."""
     fig = sg.fromfile(fname)
     fig.width = width
