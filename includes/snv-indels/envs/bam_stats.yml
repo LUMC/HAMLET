@@ -4,4 +4,4 @@ channels:
 - defaults
 - conda-forge
 dependencies:
-- picard=1.141=3
+- picard=2.10.6=py36_0
