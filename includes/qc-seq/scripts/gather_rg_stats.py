@@ -7,7 +7,7 @@ import click
 from crimson import fastqc
 
 
-def parse_stats(fastqc_dir):
+def parse_fastqc_stats(fastqc_dir):
     raw = fastqc.parse(fastqc_dir)
     stats = {
         "pct_gc": raw["Basic Statistics"]["contents"]["%GC"],
@@ -31,12 +31,12 @@ def main(raw_fastqc_r1_dir, raw_fastqc_r2_dir,
     stats = {
         "name": name,
         "raw": {
-            "R1": parse_stats(raw_fastqc_r1_dir),
-            "R2": parse_stats(raw_fastqc_r2_dir),
+            "R1": parse_fastqc_stats(raw_fastqc_r1_dir),
+            "R2": parse_fastqc_stats(raw_fastqc_r2_dir),
         },
         "proc": {
-            "R1": parse_stats(proc_fastqc_r1_dir),
-            "R2": parse_stats(proc_fastqc_r2_dir),
+            "R1": parse_fastqc_stats(proc_fastqc_r1_dir),
+            "R2": parse_fastqc_stats(proc_fastqc_r2_dir),
         },
     }
     json.dump(stats, sys.stdout, separators=(",", ":"))
