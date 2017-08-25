@@ -5,6 +5,7 @@ RUN = Run(config)
 # TODO: ensure gtf exists
 RUN.set_default_setting("base_count_script", srcdir(path.join("scripts", "hist2count.py")))
 RUN.set_default_setting("aggr_base_count_script", srcdir(path.join("scripts", "aggr_base_count.R")))
+RUN.set_default_setting("calc_ratio_script", srcdir(path.join("scripts", "calc_ratio.py")))
 
 rule idsort_aln:
     input:
@@ -69,3 +70,17 @@ rule count_bases_gene:
     shell:
         "Rscript {input.aggr_script} -I {input.raw} -N {params.sample}"
         " -G {output.count}"
+
+rule calc_exon_ratios:
+    input:
+        table=RUN.output("{sample}/expression/{sample}.bases_per_exon"),
+        calc_script=RUN.settings["calc_ratio_script"],
+    output:
+        table=RUN.output("{sample}/expression/{sample}.exon_ratios"),
+    params:
+        exon_names=" ".join(RUN.settings.get("exon_names", []))
+    threads: 1
+    conda: srcdir("envs/calc_ratio.yml")
+    shell:
+        "cat {input.table} | python {input.calc_script} -"
+        " {params.exons_names} > {output.table}"
