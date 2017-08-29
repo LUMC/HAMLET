@@ -101,6 +101,21 @@ rule aln_stats:
         "picard -Xmx2G CollectAlignmentSummaryMetrics"
         " R={input.ref} I={input.bam} O={output.stats}"
 
+rule insert_stats:
+    input:
+        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
+        bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
+        ref=RUN.settings["genome_fasta"],
+        ref_dict=RUN.settings["genome_fasta_dict"],
+    output:
+        stats=RUN.output("{sample}/snv-indels/{sample}.insert_stats")
+        histo=RUN.output("{sample}/snv-indels/{sample}.insert_stats.pdf")
+    threads: 1
+    conda: srcdir("envs/bam_stats.yml")
+    shell:
+        "picard -Xmx2G CollectInsertSizeMetrics"
+        " R={input.ref} I={input.bam} O={output.stats} H={output.histo}"
+
 rule rna_stats:
     input:
         bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
