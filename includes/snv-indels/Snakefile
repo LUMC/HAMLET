@@ -108,7 +108,7 @@ rule insert_stats:
         ref=RUN.settings["genome_fasta"],
         ref_dict=RUN.settings["genome_fasta_dict"],
     output:
-        stats=RUN.output("{sample}/snv-indels/{sample}.insert_stats")
+        stats=RUN.output("{sample}/snv-indels/{sample}.insert_stats"),
         histo=RUN.output("{sample}/snv-indels/{sample}.insert_stats.pdf")
     threads: 1
     conda: srcdir("envs/bam_stats.yml")
