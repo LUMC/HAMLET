@@ -31,6 +31,7 @@ OUTPUTS = dict(
     count_fragments_per_gene="{sample}/expression/{sample}.fragments_per_gene",
     count_bases_per_gene="{sample}/expression/{sample}.bases_per_gene",
     count_bases_per_exon="{sample}/expression/{sample}.bases_per_exon",
+    ratio_exons="{sample}/expression/{sample}.exon_ratios",
     rna_stats="{sample}/snv-indels/{sample}.rna_stats",
     aln_stats="{sample}/snv-indels/{sample}.aln_stats",
     insert_stats="{sample}/snv-indels/{sample}.insert_stats",

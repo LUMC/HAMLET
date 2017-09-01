@@ -7,6 +7,14 @@ RUN.set_default_setting("base_count_script", srcdir(path.join("scripts", "hist2c
 RUN.set_default_setting("aggr_base_count_script", srcdir(path.join("scripts", "aggr_base_count.R")))
 RUN.set_default_setting("calc_ratio_script", srcdir(path.join("scripts", "calc_ratio.py")))
 
+RUN.set_default_setting("relative_gene_name", "HMBS")
+
+exon_names = RUN.settings.get("exon_names", [])
+if not exon_names:
+    raise ValueError("No exon names for exon ratio calculation defined")
+
+exon_ratio_names = [RUN.settings["relative_gene_name"]] + exon_names
+
 rule idsort_aln:
     input:
         bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
@@ -78,9 +86,9 @@ rule calc_exon_ratios:
     output:
         table=RUN.output("{sample}/expression/{sample}.exon_ratios"),
     params:
-        exon_names=" ".join(RUN.settings.get("exon_names", []))
+        exon_ratio_names=" ".join(exon_ratio_names)
     threads: 1
     conda: srcdir("envs/calc_ratio.yml")
     shell:
         "cat {input.table} | python {input.calc_script} -"
-        " {params.exons_names} > {output.table}"
+        " {params.exons_ratio_names} > {output.table}"
