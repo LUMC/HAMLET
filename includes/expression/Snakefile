@@ -9,11 +9,9 @@ RUN.set_default_setting("calc_ratio_script", srcdir(path.join("scripts", "calc_r
 
 RUN.set_default_setting("relative_gene_name", "HMBS")
 
-exon_names = RUN.settings.get("exon_names", [])
-if not exon_names:
+if not RUN.settings.get("exon_names", []):
     raise ValueError("No exon names for exon ratio calculation defined")
 
-exon_ratio_names = [RUN.settings["relative_gene_name"]] + exon_names
 
 rule idsort_aln:
     input:
@@ -86,9 +84,10 @@ rule calc_exon_ratios:
     output:
         table=RUN.output("{sample}/expression/{sample}.exon_ratios"),
     params:
-        exon_ratio_names=" ".join(exon_ratio_names)
+        exon_ratio_names=" ".join([RUN.settings["relative_gene_name"]] +
+                                  RUN.settings.get("exon_names"))
     threads: 1
     conda: srcdir("envs/calc_ratio.yml")
     shell:
         "cat {input.table} | python {input.calc_script} -"
-        " {params.exons_ratio_names} > {output.table}"
+        " {params.exon_ratio_names} > {output.table}"
