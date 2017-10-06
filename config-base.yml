@@ -1,0 +1,105 @@
+# Base configuration file for a Hamlet run.
+#
+# This file contains the required configuration values for a Hamlet run. You must define the values before using
+# this file in any Hamlet runs.
+
+settings:
+
+  # The directory in which all output files will be created.
+  #output_dir:
+
+  # Path to a human genome FASTA file.
+  #genome_fasta:
+
+  # Path to a STAR-Fusion lib directory.
+  #genome_star_fusion_lib:
+
+  # BED file containing the transcripts.
+  # This is used for fusion gene detection. Each BED entry represents a transcript end-to-end (including its introns).
+  #transcripts_bed:
+
+  # refFlat file of the transcriptome -- used for run metrics gathering.
+  #annotation_refflat:
+
+  # BED file of non-overlapping exons in the transcriptome.
+  # This BED file must be created by merging overlapping exons in the transcriptome.
+  #expression_bed:
+
+  # GTF file of the transcriptome.
+  #expression_gtf:
+
+  # Name of the exons whose base counts will be gathered by the pipeline.
+  #exon_names: []
+
+  # Path to the FASTA file containing the FLT3 transcript sequence.
+  # This may contain more than one transcripts (up to the entire transcriptome).
+  #flt3_fasta:
+
+  # Path to a BWA index containing the FLT3 transcript sequence.
+  # This must be generated from the `flt3_fasta` file.
+  #flt3_bwa_index:
+
+  # Name of the FLT3 transcript in `flt3_fasta`.
+  #flt3_name:
+
+  # Start and end coordinates (1-based, fully closed) of the region in the FLT3 transcript for ITD detection.
+  #flt3_start:
+  #flt3_end:
+
+  # Path to the `fidus` executable used for detection of FLT3 ITD.
+  #fidus_exe:
+
+  # Path to the `fidus-plot.py` script used for plotting FLT3 ITD detection results.
+  #plot_itd:
+
+  # Path to the conda environment file specifying the `fidus-plot.py` script dependencies.
+  #plot_itd_conda:
+
+  # STAR aligner index of the genome.
+  #genome_star_index:
+
+  # Path to FusionCatcher executable.
+  # This is unfortunately required since FusionCatcher is not available in Conda so we have to install it beforehand.
+  #fusioncatcher_exe:
+
+  # Path to GSNAP executable, required to reproduce paper results
+  #gsnap_exe:
+  #genome_gmap_index:
+
+  # bgzip executable
+  #bgzip_exe:
+
+  # VEP executable
+  #vep_exe:
+
+  # VEP cache directory.
+  #cache_vep:
+
+  # Path to the FASTA file used by VEP.
+  #fasta_vep:
+
+  # 1000 Genomes Project Phase 3 VCF file.
+  #vcf_1kg:
+
+  # GoNL VCF file.
+  #vcf_gonl:
+
+  # BED file containing hotspots region of the genes of interest.
+  #bed_variant_hotspots:
+
+  # Tab-delimited file of mapping between three values of a given gene:
+  #ref_id_mapping:
+
+  # BED file containing regions amplified for Sanger sequencing of genes of interest.
+  #ref_amplicons:
+
+  # GTF file containing the genes of interest.
+  #ref_annot_goi:
+
+# The entries here must have the following structure:
+# <sample_name>:
+#   read_groups:
+#     <read_group_name>:
+#         R1: <absolute_path_to_first_pair_gzipped_fastq>
+#         R2: <absolute_path_to_first_pair_gzipped_fastq>
+#samples: {}
