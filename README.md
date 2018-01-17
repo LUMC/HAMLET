@@ -5,7 +5,7 @@ Hamlet is a pipeline for analysis of human acute myeloid leukemia RNA-seq sample
 
 ## Running Hamlet
 
-    snakemake -p -T --use-conda -s hamlet.snake --configfile config.yml \
+    snakemake -p -T --use-conda -s Snakefile --configfile config.yml \
         --rerun-incomplete --restart-times 3 \
         --cluster-config config-cluster.yml --jobname 'hamlet.{jobid}' \
         --jobs 100 -w 120 --max-jobs-per-second 3 \
