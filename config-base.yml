@@ -46,6 +46,21 @@ settings:
   #flt3_start:
   #flt3_end:
 
+  # Path to the FASTA file containing the KMT2A transcript sequence.
+  # This may contain more than one transcripts (up to the entire transcriptome).
+  #kmt2a_fasta:
+
+  # Path to a BWA index containing the KMT2A transcript sequence.
+  # This must be generated from the `kmt2a_fasta` file.
+  #kmt2a_bwa_index:
+
+  # Name of the KMT2A transcript in `kmt2a_fasta`.
+  #kmt2a_name:
+
+  # Start and end coordinates (1-based, fully closed) of the region in the KMT2A transcript for ITD detection.
+  # kmt2a_start: 456
+  # kmt2a_end: 4719
+
   # Path to the `fidus` executable used for detection of FLT3 ITD.
   #fidus_exe:
 

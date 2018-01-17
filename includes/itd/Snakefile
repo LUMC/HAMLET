@@ -1,0 +1,2 @@
+include: srcdir("Snakefile.flt3")
+include: srcdir("Snakefile.kmt2a")

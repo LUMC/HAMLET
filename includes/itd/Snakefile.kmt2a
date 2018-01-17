@@ -1,0 +1,63 @@
+from os import path
+from rattle import Run
+
+
+RUN = Run(config)
+
+# Region of interest ~ exon 2-10 in transcript coordinates.
+RUN.set_default_setting("kmt2a_name", "KMT2A-213")
+RUN.set_default_setting("kmt2a_start", 456)
+RUN.set_default_setting("kmt2a_end", 4719)
+
+
+rule all_kmt2a:
+    input:
+        kmt2a_sc_jsons=expand(RUN.output("{sample}/itd/{sample}.kmt2a-sc.json"), sample=RUN.samples),
+        kmt2a_sc_plots=expand(RUN.output("{sample}/itd/{sample}.kmt2a-sc.png"), sample=RUN.samples),
+
+rule align_kmt2a:
+    input:
+        fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
+        fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
+        index=RUN.settings["kmt2a_bwa_index"]
+    output:
+        bam=RUN.output("{sample}/itd/{sample}.kmt2a.bam"),
+        bai=RUN.output("{sample}/itd/{sample}.kmt2a.bai"),
+    params:
+        rg="@RG\\tID:{sample}\\tSM:{sample}"
+    threads: 3
+    conda: srcdir("envs/align_itd.yml")
+    shell:
+        "bwa mem -R \'{params.rg}\' -t {threads} -L 2,2 {input.index} {input.fq1} {input.fq2}"
+        " | samtools view -Sbh -F 0x4 -"
+        " | picard SortSam I=/dev/stdin O={output.bam} SO=coordinate CREATE_INDEX=true"
+
+rule detect_kmt2a:
+    input:
+        bam=RUN.output("{sample}/itd/{sample}.kmt2a.bam"),
+        bai=RUN.output("{sample}/itd/{sample}.kmt2a.bai"),
+        ref=RUN.settings["kmt2a_fasta"],
+        exe=RUN.settings["fidus_exe"],
+    output:
+        csv=RUN.output("{sample}/itd/{sample}.kmt2a.csv"),
+        bg_csv=RUN.output("{sample}/itd/{sample}.kmt2a.bg.csv"),
+    threads: 1
+    params:
+        trx_name=RUN.settings["kmt2a_name"],
+        start=RUN.settings["kmt2a_start"],
+        end=RUN.settings["kmt2a_end"],
+    shell:
+        "{input.exe} -r {params.trx_name}:{params.start}-{params.end} --bg-counts {output.bg_csv} {input.ref} {input.bam} > {output.csv}"
+
+rule plot_itd_kmt2a:
+    input:
+        csv=RUN.output("{sample}/itd/{sample}.kmt2a.csv"),
+        bg_csv=RUN.output("{sample}/itd/{sample}.kmt2a.bg.csv"),
+        scr=RUN.settings["plot_itd"],
+    output:
+        png=RUN.output("{sample}/itd/{sample}.kmt2a.png"),
+    threads: 1
+    conda: RUN.settings["plot_itd_conda"]
+    shell:
+        "python {input.scr} tracks {input.csv} {input.bg_csv}"
+        " --sample-id {wildcards.sample} {output.png}"
