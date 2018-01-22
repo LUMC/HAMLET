@@ -19,9 +19,10 @@ rule star_fusion:
     threads: 8
     conda: srcdir("envs/star_fusion.yml")
     shell:
-        "STAR-Fusion --genome_lib_dir {input.lib}"
-        " --output_dir {output.dir}"
-        " --left_fq {input.fq1} --right_fq {input.fq2}"
+        "(rm -rf {output.dir}"
+        " && STAR-Fusion --genome_lib_dir {input.lib}"
+        "   --output_dir {output.dir}"
+        "   --left_fq {input.fq1} --right_fq {input.fq2})"
 
 rule star_fusion_cp:
     input:
