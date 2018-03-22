@@ -122,6 +122,7 @@ rule rna_stats:
         bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
         ref=RUN.settings["genome_fasta"],
         ref_dict=RUN.settings["genome_fasta_dict"],
+        ref_rrna=RUN.settings["rrna_refflat"],
         annot=RUN.settings["annotation_refflat"],
     output:
         stats=RUN.output("{sample}/snv-indels/{sample}.rna_stats")
@@ -130,6 +131,7 @@ rule rna_stats:
     shell:
         "picard -Xmx4G CollectRnaSeqMetrics"
         " R={input.ref} REF_FLAT={input.annot}"
+        " RIBOSOMAL_INTERVALS={input.ref_rrna}"
         " STRAND_SPECIFICITY=NONE ASSUME_SORTED=true"
         " CHART_OUTPUT={output.stats}.pdf I={input.bam} O={output.stats}"
 

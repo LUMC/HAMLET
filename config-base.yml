@@ -21,6 +21,9 @@ settings:
   # refFlat file of the transcriptome -- used for run metrics gathering.
   #annotation_refflat:
 
+  # refFlat for rRNA -- used for run metrics gathering.
+  #rrna_refflat:
+
   # BED file of non-overlapping exons in the transcriptome.
   # This BED file must be created by merging overlapping exons in the transcriptome.
   #expression_bed:
