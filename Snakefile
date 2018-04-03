@@ -53,7 +53,7 @@ OUTPUTS = dict(
     ratio_exons=expr_output(".exon_ratios"),
 
     # Stats
-    fqs_stats=seqqc_output("-seq-stats.json"),
+    fqs_stats=seqqc_output(".seq_stats.json"),
     rna_stats=var_output(".rna_stats"),
     aln_stats=var_output(".aln_stats"),
     insert_stats=var_output(".insert_stats"),
