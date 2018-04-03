@@ -146,7 +146,7 @@ rule annotate_vars:
         bgzip_exe=RUN.settings["bgzip_exe"],
     output:
         vcf=RUN.output("{sample}/snv-indels/{sample}.annotated.vcf.gz"),
-        stats=RUN.output("{sample}/snv-indels/{sample}.vep.stats"),
+        stats=RUN.output("{sample}/snv-indels/{sample}.vep_stats"),
     threads: 8
     shell:
         "PATH=/usr/bin:${{PATH}} {input.vep_exe} -i {input.vcf}"
