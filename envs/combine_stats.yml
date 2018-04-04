@@ -1,0 +1,10 @@
+channels:
+- bioconda
+- r
+- defaults
+- conda-forge
+dependencies:
+- crimson=0.3.0=py36_0
+- click=6.7=py36h5253387_0
+- python=3.6.2=0
+- pyyaml=3.12=py36hafb9ca4_1
