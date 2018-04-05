@@ -130,9 +130,9 @@ def process_var_stats(path):
         "polyphen": {
             "num_benign_variants": pd["PolyPhen summary"].get("benign", 0),
             "num_possibly_damaging_variants":
-            pd["PolyPhen summary"].get("possibly_damaging", 0),
+            pd["PolyPhen summary"].get("possibly damaging", 0),
             "num_probably_damaging_variants":
-            pd["PolyPhen summary"].get("probably_damaging", 0),
+            pd["PolyPhen summary"].get("probably damaging", 0),
             "num_unknown_variants": pd["PolyPhen summary"].get("unknown", 0),
         },
         "sift": {
