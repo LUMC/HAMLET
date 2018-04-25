@@ -5,6 +5,9 @@ RUN = Run(config)
 RUN.set_default_setting("sf_subset_script", srcdir(path.join("scripts", "subset_sf.py")))
 RUN.set_default_setting("plot_combined_script", srcdir(path.join("scripts", "combine_svgs.py")))
 
+# Whether to detect fusions using FusionCatcher or not.
+do_fusioncatcher = "fusioncatcher_exe" in RUN.settings
+
 
 localrules: star_fusion_cp fusioncatcher_cp plot_cp
 
@@ -41,37 +44,6 @@ rule plot_sf:
     shell:
         "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` -k human.hg38 star-fusion {input.txt}"
 
-rule fusioncatcher:
-    input:
-        fq1=RUN.output("{sample}/{sample}-R1.raw.fq.gz"),
-        fq2=RUN.output("{sample}/{sample}-R2.raw.fq.gz"),
-        exe=RUN.settings["fusioncatcher_exe"]
-    output:
-        dir=RUN.output("{sample}/fusion/fusioncatcher"),
-        txt=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt")
-    threads: 8
-    shell:
-        "(rm -rf {output.dir}"
-        " && {input.exe} --threads {threads} -i {input.fq1},{input.fq2} -o {output.dir})"
-        " || test -f {output.txt}"
-
-rule fusioncatcher_cp:
-    input:
-        txt=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"),
-    output:
-        txt=RUN.output("{sample}/fusion/{sample}.fusioncatcher"),
-    shell:
-        "cp {input.txt} {output.txt}"
-
-rule plot_fc:
-    input:
-        txt=RUN.output("{sample}/fusion/{sample}.fusioncatcher"),
-    output:
-        svg=RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg"),
-    conda: srcdir("envs/plot_fusion.yml")
-    shell:
-        "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` -k human.hg38 fusioncatcher {input.txt}"
-
 rule plot_cp:
     input:
         svg=RUN.output("{sample}/fusion/{sample}.{ext}-circos/fsnviz.svg"),
@@ -80,53 +52,93 @@ rule plot_cp:
     shell:
         "cp {input.svg} {output.svg}"
 
-rule intersect_fusions:
-    input:
-        sf=RUN.output("{sample}/fusion/{sample}.star-fusion"),
-        fc=RUN.output("{sample}/fusion/{sample}.fusioncatcher"),
-        bed=RUN.settings["transcripts_bed"],
-    output:
-        txt=RUN.output("{sample}/fusion/{sample}.fuma"),
-    conda: srcdir("envs/intersect_fusions.yml")
-    shell:
-        "fuma -a hg38:{input.bed} -s"
-        " fc-{wildcards.sample}:fusion-catcher_final:{input.fc}"
-        " sf-{wildcards.sample}:star-fusion_final:{input.sf}"
-        " -l \"fc-{wildcards.sample}:hg38\" \"sf-{wildcards.sample}:hg38\""
-        " -f extensive -o -"
-        " | grep -vP \"FuMa::\""
-        " > {output.txt}"
+if do_fusioncatcher:
+    rule fusioncatcher:
+        input:
+            fq1=RUN.output("{sample}/{sample}-R1.raw.fq.gz"),
+            fq2=RUN.output("{sample}/{sample}-R2.raw.fq.gz"),
+            exe=RUN.settings.get("fusioncatcher_exe")
+        output:
+            dir=RUN.output("{sample}/fusion/fusioncatcher"),
+            txt=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt")
+        threads: 8
+        shell:
+            "(rm -rf {output.dir}"
+            " && {input.exe} --threads {threads} -i {input.fq1},{input.fq2} -o {output.dir})"
+            " || test -f {output.txt}"
 
-rule subset_sf:
-    input:
-        sf=RUN.output("{sample}/fusion/{sample}.star-fusion"),
-        isect=RUN.output("{sample}/fusion/{sample}.fuma"),
-        subset_script=RUN.settings["sf_subset_script"],
-    output:
-        sf=RUN.output("{sample}/fusion/{sample}.sf-isect")
-    conda: srcdir("envs/subset_sf.yml")
-    shell:
-        "python {input.subset_script} {input.isect} {input.sf} > {output.sf} || rm -f {output.sf}"
+    rule fusioncatcher_cp:
+        input:
+            txt=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"),
+        output:
+            txt=RUN.output("{sample}/fusion/{sample}.fusioncatcher"),
+        shell:
+            "cp {input.txt} {output.txt}"
 
-rule plot_isect:
-    input:
-        txt=RUN.output("{sample}/fusion/{sample}.sf-isect"),
-    output:
-        svg=RUN.output("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.svg"),
-    conda: srcdir("envs/plot_fusion.yml")
-    shell:
-        "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` -k human.hg38 star-fusion {input.txt}"
+    rule plot_fc:
+        input:
+            txt=RUN.output("{sample}/fusion/{sample}.fusioncatcher"),
+        output:
+            svg=RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg"),
+        conda: srcdir("envs/plot_fusion.yml")
+        shell:
+            "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` -k human.hg38 fusioncatcher {input.txt}"
 
-rule combine_plots:
-    input:
-        sf=RUN.output("{sample}/fusion/{sample}.star-fusion.svg"),
-        fc=RUN.output("{sample}/fusion/{sample}.fusioncatcher.svg"),
-        isect=RUN.output("{sample}/fusion/{sample}.sf-isect.svg"),
-        combine_script=RUN.settings["plot_combined_script"]
-    output:
-        svg=RUN.output("{sample}/fusion/{sample}.fusions-combined.svg"),
-    conda: srcdir("envs/combine_plots.yml")
-    shell:
-        "python {input.combine_script}"
-        " 'STAR-Fusion':{input.sf} 'FusionCatcher':{input.fc}"
-        " 'Intersection':{input.isect} {output.svg}"
+    rule intersect_fusions:
+        input:
+            sf=RUN.output("{sample}/fusion/{sample}.star-fusion"),
+            fc=RUN.output("{sample}/fusion/{sample}.fusioncatcher"),
+            bed=RUN.settings["transcripts_bed"],
+        output:
+            txt=RUN.output("{sample}/fusion/{sample}.fuma"),
+        conda: srcdir("envs/intersect_fusions.yml")
+        shell:
+            "fuma -a hg38:{input.bed} -s"
+            " fc-{wildcards.sample}:fusion-catcher_final:{input.fc}"
+            " sf-{wildcards.sample}:star-fusion_final:{input.sf}"
+            " -l \"fc-{wildcards.sample}:hg38\" \"sf-{wildcards.sample}:hg38\""
+            " -f extensive -o -"
+            " | grep -vP \"FuMa::\""
+            " > {output.txt}"
+
+    rule subset_sf:
+        input:
+            sf=RUN.output("{sample}/fusion/{sample}.star-fusion"),
+            isect=RUN.output("{sample}/fusion/{sample}.fuma"),
+            subset_script=RUN.settings["sf_subset_script"],
+        output:
+            sf=RUN.output("{sample}/fusion/{sample}.sf-isect")
+        conda: srcdir("envs/subset_sf.yml")
+        shell:
+            "python {input.subset_script} {input.isect} {input.sf} > {output.sf} || rm -f {output.sf}"
+
+    rule plot_isect:
+        input:
+            txt=RUN.output("{sample}/fusion/{sample}.sf-isect"),
+        output:
+            svg=RUN.output("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.svg"),
+        conda: srcdir("envs/plot_fusion.yml")
+        shell:
+            "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` -k human.hg38 star-fusion {input.txt}"
+
+    rule combine_plots:
+        input:
+            sf=RUN.output("{sample}/fusion/{sample}.star-fusion.svg"),
+            fc=RUN.output("{sample}/fusion/{sample}.fusioncatcher.svg"),
+            isect=RUN.output("{sample}/fusion/{sample}.sf-isect.svg"),
+            combine_script=RUN.settings["plot_combined_script"]
+        output:
+            svg=RUN.output("{sample}/fusion/{sample}.fusions-combined.svg"),
+        conda: srcdir("envs/combine_plots.yml")
+        shell:
+            "python {input.combine_script}"
+            " 'STAR-Fusion':{input.sf} 'FusionCatcher':{input.fc}"
+            " 'Intersection':{input.isect} {output.svg}"
+else:
+    rule combine_plots:
+        input:
+            sf=RUN.output("{sample}/fusion/{sample}.star-fusion.svg"),
+        output:
+            co=RUN.output("{sample}/fusion/{sample}.fusions-combined.svg"),
+        shell:
+            "cp {input.sf} {output.co}"
