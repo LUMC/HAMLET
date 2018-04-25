@@ -16,7 +16,7 @@ rule all_qc:
         fqs=[RUN.output("{sample}/{sample}-{pair}.fq.gz", fmt=True,
                         sample=unit.sample, pair=pair)
              for unit in RUN.unit_names for pair in ("R1", "R2")],
-        stats=expand(RUN.output("{sample}/qc-seq/{sample}-seq-stats.json"),
+        stats=expand(RUN.output("{sample}/qc-seq/{sample}.seq_stats.json"),
                      sample=RUN.samples),
 
 
@@ -94,7 +94,7 @@ rule sample_stats:
                                     for rgn in RUN.samples[wildcards.sample].read_groups],
         sample_stats_script=RUN.settings["sample_stats_script"],
     output:
-        stats=RUN.output("{sample}/qc-seq/{sample}-seq-stats.json")
+        stats=RUN.output("{sample}/qc-seq/{sample}.seq_stats.json")
     conda: srcdir("envs/sample_stats.yml")
     shell:
         "python {input.sample_stats_script} --name {wildcards.sample}"
