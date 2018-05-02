@@ -54,6 +54,7 @@ OUTPUTS = dict(
     rna_stats=var_output(".rna_stats"),
     insert_stats=var_output(".insert_stats"),
     vep_stats=var_output(".vep_stats"),
+    exon_covs=var_output(".exon_cov.json"),
 
     # ITD module
     flt3_bam=itd_output(".flt3.bam"),

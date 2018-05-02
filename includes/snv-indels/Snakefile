@@ -3,10 +3,12 @@ from rattle import Run
 RUN = Run(config)
 
 # TODO: ensure db indices exist
-RUN.settings["genome_fasta_dict"] = RUN.settings["genome_fasta"].rsplit(".", 1)[0] + ".dict"
+RUN.set_default_setting("genome_dict", RUN.settings["genome_fasta"].rsplit(".", 1)[0] + ".dict")
 RUN.set_default_setting("extract_script", srcdir(path.join("scripts", "vcf2json.py")))
 RUN.set_default_setting("csv_script", srcdir(path.join("scripts", "json2csv.py")))
 RUN.set_default_setting("plot_script", srcdir(path.join("scripts", "plotVariants.R")))
+RUN.set_default_setting("exon_cov_script", srcdir(path.join("scripts", "aggr_exon_cov.py")))
+RUN.set_default_setting("genome_fai", RUN.settings["genome_fasta"] + ".fai")
 
 if RUN.settings.get("gsnap_exe") is not None:
     # To reproduce paper results, relies on a non-conda GSNAP 2014.12.23 with SIMD
@@ -37,7 +39,7 @@ if RUN.settings.get("gsnap_exe") is not None:
             bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.bam"),
             bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.bai"),
             ref=RUN.settings["genome_fasta"],
-            refd=RUN.settings["genome_fasta_dict"],
+            refd=RUN.settings["genome_dict"],
         output:
             bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
             bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
@@ -72,6 +74,48 @@ else:
             " | picard SortSam I=/dev/stdin O={output.bam} SORT_ORDER=coordinate"
             " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true"
 
+rule genome_txt:
+    input:
+        ref_dict=RUN.settings["genome_dict"],
+    output:
+        genome=temp(RUN.output(".tmp.genome.txt"))
+    shell:
+        " cat {input.ref_dict}"
+        " | grep -P \"@SQ\\tSN:\""
+        " | sed 's/@SQ\\tSN://'"
+        " | sed 's/\\tLN:/\\t/'"
+        " | cut -f1,2"
+        " > {output.genome}"
+
+rule exon_cov_ref:
+    input:
+        ref_fai=RUN.settings["genome_fai"],
+        ref_refflat=RUN.settings["annotation_refflat"],
+    output:
+        bed=temp(RUN.output(".tmp.exon_cov_ref.bed"))
+    conda: srcdir("envs/exon_covs.yml")
+    shell:
+        "cat {input.ref_refflat}"
+        " | grep -vP \"chr.*alt\t\""
+        " | awk '{{ split($10, starts, \",\"); split($11, ends, \",\"); for (i=1; i < length(starts); i++) {{ print $3\"\\t\"starts[i]\"\\t\"ends[i]\"\\t\"gensub(/(\.[0-9]+)/,\"\", \"g\", $2)\"\\t\"i\"\\t\"$4 }} }}'"
+        " | bedtools sort -faidx {input.ref_fai}"
+        " > {output.bed}"
+
+rule exon_cov:
+    input:
+        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
+        bed=RUN.output(".tmp.exon_cov_ref.bed"),
+        genome=RUN.output(".tmp.genome.txt"),
+        idm=RUN.settings["ref_id_mapping"],
+        scr=RUN.settings["exon_cov_script"]
+    output:
+        json=RUN.output("{sample}/snv-indels/{sample}.exon_cov.json")
+    conda: srcdir("envs/exon_covs.yml")
+    shell:
+        "bedtools coverage -d -sorted -g {input.genome} -a {input.bed} -b {input.bam}"
+        " | cut -f1,2,3,4,5,8,7"
+        " | python {input.scr} --id-mapping {input.idm} - {output.json}"
+
 rule call_vars:
     input:
         bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
@@ -92,7 +136,7 @@ rule aln_stats:
         bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
         bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
         ref=RUN.settings["genome_fasta"],
-        ref_dict=RUN.settings["genome_fasta_dict"],
+        ref_dict=RUN.settings["genome_dict"],
     output:
         stats=RUN.output("{sample}/snv-indels/{sample}.aln_stats")
     threads: 1
@@ -106,7 +150,7 @@ rule insert_stats:
         bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
         bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
         ref=RUN.settings["genome_fasta"],
-        ref_dict=RUN.settings["genome_fasta_dict"],
+        ref_dict=RUN.settings["genome_dict"],
     output:
         stats=RUN.output("{sample}/snv-indels/{sample}.insert_stats"),
         histo=RUN.output("{sample}/snv-indels/{sample}.insert_stats.pdf")
@@ -121,7 +165,7 @@ rule rna_stats:
         bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
         bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
         ref=RUN.settings["genome_fasta"],
-        ref_dict=RUN.settings["genome_fasta_dict"],
+        ref_dict=RUN.settings["genome_dict"],
         ref_rrna=RUN.settings["rrna_refflat"],
         annot=RUN.settings["annotation_refflat"],
     output:
