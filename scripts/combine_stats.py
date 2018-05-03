@@ -144,6 +144,28 @@ def process_var_stats(path):
     }
 
 
+def process_exon_cov_stats(path):
+    with open(path, "r") as src:
+        raw = json.load(src)
+
+    tempd = {}
+    for val in raw.values():
+        gene = val.pop("gx")
+        if gene not in tempd:
+            tempd[gene] = {}
+        trx = val.pop("trx")
+        if trx not in tempd[gene]:
+            tempd[gene][trx] = {}
+        exon = int(val["exon_num"])
+        assert exon not in tempd[gene][trx], f"{gene}:{trx}:{exon}"
+        tempd[gene][trx][exon] = val
+
+    return {gid: {tid: sorted([exn for exn in tv.values()],
+                               key=lambda x: int(x["exon_num"]))
+                  for tid, tv in gv.items()}
+            for gid, gv in tempd.items()}
+
+
 def post_process(cs):
     cs["aln"]["num_total_bases"] = (cs["rna"]
                                           .pop("num_total_bases"))
@@ -162,12 +184,14 @@ def post_process(cs):
                 type=click.Path(exists=True, dir_okay=False))
 @click.argument("insert_stats_path",
                 type=click.Path(exists=True, dir_okay=False))
+@click.argument("exon_cov_stats_path",
+                type=click.Path(exists=True, dir_okay=False))
 @click.argument("vep_stats_path",
                 type=click.Path(exists=True, dir_okay=False))
 @click.option("-n", "--sample-name", type=str,
               help="Name of the sample from which the stats were generated.")
 def main(seq_stats_path, aln_stats_path, rna_stats_path, insert_stats_path,
-         vep_stats_path, sample_name):
+         exon_cov_stats_path, vep_stats_path, sample_name):
     """Helper script for combining multiple stats files into one JSON."""
     combined = {
         "sample_name": sample_name,
@@ -175,6 +199,7 @@ def main(seq_stats_path, aln_stats_path, rna_stats_path, insert_stats_path,
             "seq": process_seq_stats(seq_stats_path),
             "aln": process_aln_stats(aln_stats_path),
             "rna": process_rna_stats(rna_stats_path),
+            "cov": process_exon_cov_stats(exon_cov_stats_path),
             "insert": process_insert_stats(insert_stats_path),
             "var": process_var_stats(vep_stats_path),
         },

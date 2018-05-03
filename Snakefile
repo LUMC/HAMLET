@@ -92,11 +92,12 @@ rule combine_stats:
         rna_stats=RUN.output(OUTPUTS["rna_stats"]),
         insert_stats=RUN.output(OUTPUTS["insert_stats"]),
         vep_stats=RUN.output(OUTPUTS["vep_stats"]),
+        exon_cov_stats=RUN.output(OUTPUTS["exon_cov_stats"]),
         scr=srcdir("scripts/combine_stats.py"),
     output:
         js=RUN.output(OUTPUTS["stats"])
     conda: srcdir("envs/combine_stats.yml")
     shell:
         "python {input.scr} {input.seq_stats} {input.aln_stats}"
-        " {input.rna_stats} {input.insert_stats} {input.vep_stats}"
+        " {input.rna_stats} {input.insert_stats} {input.exon_cov_stats} {input.vep_stats}"
         " --sample-name {wildcards.sample} > {output.js}"
