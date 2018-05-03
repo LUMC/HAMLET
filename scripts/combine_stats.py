@@ -200,7 +200,7 @@ def main(seq_stats_path, aln_stats_path, rna_stats_path, insert_stats_path,
             "aln": process_aln_stats(aln_stats_path),
             "rna": process_rna_stats(rna_stats_path),
             "cov": process_exon_cov_stats(exon_cov_stats_path),
-            "insert": process_insert_stats(insert_stats_path),
+            "ins": process_insert_stats(insert_stats_path),
             "var": process_var_stats(vep_stats_path),
         },
     }
