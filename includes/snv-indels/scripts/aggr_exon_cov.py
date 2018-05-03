@@ -16,7 +16,7 @@ class Row(namedtuple("Row",
     @classmethod
     def from_raw_line(cls, line: str) -> "Row":
         cols = line.strip().split("\t")
-        return cls(cols[0], int(cols[1]), int(cols[2]), cols[3], cols[4],
+        return cls(cols[0], int(cols[1]), int(cols[2]), cols[3], int(cols[4]),
                    int(cols[5]) - 1, int(cols[6]))
 
     @property
