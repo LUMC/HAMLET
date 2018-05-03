@@ -109,7 +109,7 @@ rule exon_cov:
         idm=RUN.settings["ref_id_mapping"],
         scr=RUN.settings["exon_cov_script"]
     output:
-        json=RUN.output("{sample}/snv-indels/{sample}.exon_cov.json")
+        json=RUN.output("{sample}/snv-indels/{sample}.exon_cov_stats.json")
     conda: srcdir("envs/exon_covs.yml")
     shell:
         "bedtools coverage -d -sorted -g {input.genome} -a {input.bed} -b {input.bam}"
