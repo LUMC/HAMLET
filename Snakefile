@@ -11,10 +11,12 @@ try:
 except git.exc.InvalidGitRepositoryError:
     repo = None
     sha = "unknown"
+    is_dirty = "?"
 else:
     sha = repo.head.object.hexsha[:8]
+    is_dirty = repo.is_dirty()
 
-PIPELINE_VERSION = f"{BASE_PIPELINE_VERSION}-{sha}"
+PIPELINE_VERSION = f"{BASE_PIPELINE_VERSION}-{sha}{is_dirty}"
 
 
 RUN = Run(config)
