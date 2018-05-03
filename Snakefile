@@ -14,7 +14,7 @@ except git.exc.InvalidGitRepositoryError:
     is_dirty = "?"
 else:
     sha = repo.head.object.hexsha[:8]
-    is_dirty = repo.is_dirty()
+    is_dirty = "*" if repo.is_dirty() else ""
 
 PIPELINE_VERSION = f"{BASE_PIPELINE_VERSION}-{sha}{is_dirty}"
 
