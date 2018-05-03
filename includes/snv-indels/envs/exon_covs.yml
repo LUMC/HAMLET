@@ -1,0 +1,10 @@
+channels:
+- bioconda
+- r
+- defaults
+- conda-forge
+dependencies:
+- python=3.6.5=hc3d631a_2
+- bedtools=2.27.1=1
+- pip:
+  - click==6.7
