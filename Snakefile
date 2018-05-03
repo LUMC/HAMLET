@@ -1,25 +1,20 @@
 import os
 from functools import partial
 
-try:
-    import git
-    has_git = True
-except ImportError:
-    has_git = False
+import git
 from rattle import Run
 
 
-PIPELINE_VERSION = "0.1.0"
-if has_git:
-    try:
-        repo = git.Repo(path=os.getcwd(), search_parent_directories=True)
-    except git.exc.InvalidGitRepositoryError:
-        repo = None
-        sha = "unknown"
-    else:
-        sha = repo.head.object.hexsha[:8]
+BASE_PIPELINE_VERSION = "0.1.0"
+try:
+    repo = git.Repo(path=os.getcwd(), search_parent_directories=True)
+except git.exc.InvalidGitRepositoryError:
+    repo = None
+    sha = "unknown"
+else:
+    sha = repo.head.object.hexsha[:8]
 
-    PIPELINE_VERSION = f"{PIPELINE_VERSION}-{sha}"
+PIPELINE_VERSION = f"{BASE_PIPELINE_VERSION}-{sha}"
 
 
 RUN = Run(config)
