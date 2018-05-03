@@ -1,6 +1,25 @@
+import os
 from functools import partial
 
+try:
+    import git
+    has_git = True
+except ImportError:
+    has_git = False
 from rattle import Run
+
+
+PIPELINE_VERSION = "0.1.0"
+if has_git:
+    try:
+        repo = git.Repo(path=os.getcwd(), search_parent_directories=True)
+    except git.exc.InvalidGitRepositoryError:
+        repo = None
+        sha = "unknown"
+    else:
+        sha = repo.head.object.hexsha[:8]
+
+    PIPELINE_VERSION = f"{PIPELINE_VERSION}-{sha}"
 
 
 RUN = Run(config)
@@ -94,10 +113,13 @@ rule combine_stats:
         vep_stats=RUN.output(OUTPUTS["vep_stats"]),
         exon_cov_stats=RUN.output(OUTPUTS["exon_cov_stats"]),
         scr=srcdir("scripts/combine_stats.py"),
+    params:
+        ver=PIPELINE_VERSION
     output:
         js=RUN.output(OUTPUTS["stats"])
     conda: srcdir("envs/combine_stats.yml")
     shell:
         "python {input.scr} {input.seq_stats} {input.aln_stats}"
         " {input.rna_stats} {input.insert_stats} {input.exon_cov_stats} {input.vep_stats}"
-        " --sample-name {wildcards.sample} > {output.js}"
+        " --sample-name {wildcards.sample} --pipeline-version {params.ver}"
+        " > {output.js}"
