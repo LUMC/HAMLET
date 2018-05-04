@@ -113,6 +113,8 @@ rule create_summary:
         insert_stats=RUN.output(OUTPUTS["insert_stats"]),
         vep_stats=RUN.output(OUTPUTS["vep_stats"]),
         exon_cov_stats=RUN.output(OUTPUTS["exon_cov_stats"]),
+        idm=RUN.settings["ref_id_mapping"],
+        var_plot_dir=RUN.output(OUTPUTS["smallvars_plots"].strip("/.done")),
         scr=srcdir("scripts/create_summary.py"),
     params:
         pipeline_ver=PIPELINE_VERSION,
@@ -121,8 +123,10 @@ rule create_summary:
         js=RUN.output(OUTPUTS["summary"])
     conda: srcdir("envs/create_summary.yml")
     shell:
-        "python {input.scr} {input.seq_stats} {input.aln_stats}"
-        " {input.rna_stats} {input.insert_stats} {input.exon_cov_stats} {input.vep_stats}"
+        "python {input.scr}"
+        " {input.idm} {input.var_plot_dir}"
+        " {input.seq_stats} {input.aln_stats} {input.rna_stats} {input.insert_stats}"
+        " {input.exon_cov_stats} {input.vep_stats}"
         " --pipeline-version {params.pipeline_ver}"
         " --run-name {params.run_name}"
         " --sample-name {wildcards.sample}"

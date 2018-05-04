@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import json
+from pathlib import Path
 
 import click
 from crimson import picard, vep
@@ -175,7 +176,31 @@ def post_process(cs):
     return cs
 
 
+
+def add_variant_plots(idm_fh, var_plot_dir):
+    idms = set([])
+    for lineno, line in enumerate(idm_fh):
+        if lineno == 0:
+            continue
+        _, gsym, _ = line.strip().split("\t")
+        assert gsym not in idms, gsym
+        idms.add(gsym)
+
+    plots = []
+    vpd = Path(var_plot_dir)
+    for png in vpd.glob("*.png"):
+        stem = png.stem
+        _, gene = png.stem.rsplit("_gene_", 1)
+        if gene in idms:
+            plots.append({"path": str(png), "gene": gene})
+
+    return plots
+
+
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
+@click.argument("id_mappings_path", type=click.File("r"))
+@click.argument("var_plot_dir",
+                type=click.Path(exists=True, file_okay=False))
 @click.argument("seq_stats_path",
                 type=click.Path(exists=True, dir_okay=False))
 @click.argument("aln_stats_path",
@@ -194,8 +219,9 @@ def post_process(cs):
               help="Name of the sample from which the stats were generated.")
 @click.option("--pipeline-version", type=str,
               help="Version string of the pipeline.")
-def main(seq_stats_path, aln_stats_path, rna_stats_path, insert_stats_path,
-         exon_cov_stats_path, vep_stats_path,
+def main(id_mappings_path, var_plot_dir,
+         seq_stats_path, aln_stats_path, rna_stats_path,
+         insert_stats_path, exon_cov_stats_path, vep_stats_path,
          run_name, sample_name, pipeline_version):
     """Helper script for combining multiple stats files into one JSON."""
     combined = {
@@ -203,7 +229,7 @@ def main(seq_stats_path, aln_stats_path, rna_stats_path, insert_stats_path,
             "pipeline_version": pipeline_version,
             "run_name": run_name,
             "sample_name": sample_name,
-         },
+        },
         "stats": {
             "seq": process_seq_stats(seq_stats_path),
             "aln": process_aln_stats(aln_stats_path),
@@ -212,7 +238,10 @@ def main(seq_stats_path, aln_stats_path, rna_stats_path, insert_stats_path,
             "ins": process_insert_stats(insert_stats_path),
             "var": process_var_stats(vep_stats_path),
         },
+        "snv_indels": {"plots": []},
     }
+    combined["snv_indels"]["plots"].extend(
+        add_variant_plots(id_mappings_path, var_plot_dir))
     combined["stats"] = post_process(combined["stats"])
     print(json.dumps(combined, separators=(",", ":"), sort_keys=True))
 
