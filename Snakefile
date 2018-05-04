@@ -45,7 +45,7 @@ itd_output = partial(make_pattern, dirname="itd")
 OUTPUTS = dict(
     # Merged FASTQs, stats, and packaged results
     fqs="{sample}/{sample}-{pair}.fq.gz",
-    stats="{sample}/{sample}.stats.json",
+    summary="{sample}/{sample}.summary.json",
     package="{sample}/hamlet_results.{sample}.zip",
 
     # Small variants
@@ -102,8 +102,8 @@ rule all:
          for p in OUTPUTS.values()]
 
 
-rule combine_stats:
-    """Combines statistics across modules to a single JSON file per sample."""
+rule create_summary:
+    """Combines statistics and other info across modules to a single JSON file per sample."""
     input:
         seq_stats=RUN.output(OUTPUTS["seq_stats"]),
         aln_stats=RUN.output(OUTPUTS["aln_stats"]),
@@ -111,12 +111,12 @@ rule combine_stats:
         insert_stats=RUN.output(OUTPUTS["insert_stats"]),
         vep_stats=RUN.output(OUTPUTS["vep_stats"]),
         exon_cov_stats=RUN.output(OUTPUTS["exon_cov_stats"]),
-        scr=srcdir("scripts/combine_stats.py"),
+        scr=srcdir("scripts/create_summary.py"),
     params:
         ver=PIPELINE_VERSION
     output:
-        js=RUN.output(OUTPUTS["stats"])
-    conda: srcdir("envs/combine_stats.yml")
+        js=RUN.output(OUTPUTS["summary"])
+    conda: srcdir("envs/create_summary.yml")
     shell:
         "python {input.scr} {input.seq_stats} {input.aln_stats}"
         " {input.rna_stats} {input.insert_stats} {input.exon_cov_stats} {input.vep_stats}"
@@ -127,7 +127,7 @@ rule combine_stats:
 rule package_results:
     """Copies essential result files into one directory and zips it."""
     input:
-        stats=RUN.output(OUTPUTS["stats"]),
+        summary=RUN.output(OUTPUTS["summary"]),
         smallvars_csv_all=RUN.output(OUTPUTS["smallvars_csv_all"]),
         smallvars_csv_hi=RUN.output(OUTPUTS["smallvars_csv_hi"]),
         smallvars_plots=RUN.output(OUTPUTS["smallvars_plots"].strip("/.done")),
