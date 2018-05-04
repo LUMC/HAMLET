@@ -1,5 +1,6 @@
 import os
 from functools import partial
+from uuid import uuid4
 
 import git
 from rattle import Run
@@ -42,9 +43,10 @@ itd_output = partial(make_pattern, dirname="itd")
 
 
 OUTPUTS = dict(
-    # Merged FASTQs and stats
+    # Merged FASTQs, stats, and packaged results
     fqs="{sample}/{sample}-{pair}.fq.gz",
     stats="{sample}/{sample}.stats.json",
+    package="{sample}/{sample}.hamlet_results.zip",
 
     # Small variants
     smallvars_bam=var_output(".snv-indel.bam"),
@@ -120,3 +122,18 @@ rule combine_stats:
         " {input.rna_stats} {input.insert_stats} {input.exon_cov_stats} {input.vep_stats}"
         " --sample-name {wildcards.sample} --pipeline-version {params.ver}"
         " > {output.js}"
+
+
+rule package_results:
+    """Copies essential result files into one directory and zips it."""
+    input:
+        stats=RUN.output(OUTPUTS["stats"]),
+    output:
+        pkg=RUN.output(OUTPUTS["package"]),
+    params:
+        tmp="/tmp/hamlet-pkg-" + str(uuid4())
+    conda: srcdir("envs/package_results.yml")
+    shell:
+        "mkdir -p {params.tmp}"
+        " && cp {input} {params.tmp}"
+        " && (ls {params.tmp} | zip {output.pkg} -@)"

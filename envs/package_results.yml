@@ -1,0 +1,7 @@
+channels:
+- bioconda
+- r
+- defaults
+- conda-forge
+dependencies:
+- zip=3.0
