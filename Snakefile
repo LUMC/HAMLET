@@ -46,7 +46,7 @@ OUTPUTS = dict(
     # Merged FASTQs, stats, and packaged results
     fqs="{sample}/{sample}-{pair}.fq.gz",
     stats="{sample}/{sample}.stats.json",
-    package="{sample}/{sample}.hamlet_results.zip",
+    package="{sample}/hamlet_results.{sample}.zip",
 
     # Small variants
     smallvars_bam=var_output(".snv-indel.bam"),
@@ -128,12 +128,30 @@ rule package_results:
     """Copies essential result files into one directory and zips it."""
     input:
         stats=RUN.output(OUTPUTS["stats"]),
+        smallvars_csv_all=RUN.output(OUTPUTS["smallvars_csv_all"]),
+        smallvars_csv_hi=RUN.output(OUTPUTS["smallvars_csv_hi"]),
+        smallvars_plots=RUN.output(OUTPUTS["smallvars_plots"].strip("/.done")),
+        fusions_svg=RUN.output(OUTPUTS["fusions_svg"]),
+        count_fragments_per_gene=RUN.output(OUTPUTS["count_fragments_per_gene"]),
+        count_bases_per_gene=RUN.output(OUTPUTS["count_bases_per_gene"]),
+        count_bases_per_exon=RUN.output(OUTPUTS["count_bases_per_exon"]),
+        ratio_exons=RUN.output(OUTPUTS["ratio_exons"]),
+        flt_csv=RUN.output(OUTPUTS["flt3_csv"]),
+        flt_bg_csv=RUN.output(OUTPUTS["flt3_bg_csv"]),
+        flt_png=RUN.output(OUTPUTS["flt3_png"]),
+        kmt_csv=RUN.output(OUTPUTS["kmt2a_csv"]),
+        kmt_bg_csv=RUN.output(OUTPUTS["kmt2a_bg_csv"]),
+        kmt_png=RUN.output(OUTPUTS["kmt2a_png"]),
     output:
         pkg=RUN.output(OUTPUTS["package"]),
     params:
-        tmp="/tmp/hamlet-pkg-" + str(uuid4())
+        tmp="/tmp/hamlet-pkg.{sample}." + str(uuid4()) + "/hamlet_results.{sample}"
     conda: srcdir("envs/package_results.yml")
     shell:
-        "mkdir -p {params.tmp}"
-        " && cp {input} {params.tmp}"
-        " && (ls {params.tmp} | zip {output.pkg} -@)"
+        "(mkdir -p {params.tmp}"
+        " && cp -r {input} {params.tmp}"
+        " && cd $(dirname {params.tmp})"
+        " && zip -9 -x *.done -r {output.pkg} *"
+        " && cd -"
+        " && rm -rf {params.tmp})"
+        " || rm -rf {params.tmp}"
