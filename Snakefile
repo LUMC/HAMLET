@@ -22,6 +22,8 @@ PIPELINE_VERSION = f"{BASE_PIPELINE_VERSION}-{sha}{is_dirty}"
 
 RUN = Run(config)
 
+RUN_NAME = config.get("run_name") or f"hamlet_run-{uuid4().hex[:8]}"
+
 
 include: "includes/qc-seq/Snakefile"
 include: "includes/snv-indels/Snakefile"
@@ -113,14 +115,17 @@ rule create_summary:
         exon_cov_stats=RUN.output(OUTPUTS["exon_cov_stats"]),
         scr=srcdir("scripts/create_summary.py"),
     params:
-        ver=PIPELINE_VERSION
+        pipeline_ver=PIPELINE_VERSION,
+        run_name=RUN_NAME,
     output:
         js=RUN.output(OUTPUTS["summary"])
     conda: srcdir("envs/create_summary.yml")
     shell:
         "python {input.scr} {input.seq_stats} {input.aln_stats}"
         " {input.rna_stats} {input.insert_stats} {input.exon_cov_stats} {input.vep_stats}"
-        " --sample-name {wildcards.sample} --pipeline-version {params.ver}"
+        " --pipeline-version {params.pipeline_ver}"
+        " --run-name {params.run_name}"
+        " --sample-name {wildcards.sample}"
         " > {output.js}"
 
 

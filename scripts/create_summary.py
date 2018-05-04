@@ -188,16 +188,22 @@ def post_process(cs):
                 type=click.Path(exists=True, dir_okay=False))
 @click.argument("vep_stats_path",
                 type=click.Path(exists=True, dir_okay=False))
+@click.option("-r", "--run-name", type=str,
+              help="Name of the run in which the stats were generated.")
 @click.option("-n", "--sample-name", type=str,
               help="Name of the sample from which the stats were generated.")
 @click.option("--pipeline-version", type=str,
               help="Version string of the pipeline.")
 def main(seq_stats_path, aln_stats_path, rna_stats_path, insert_stats_path,
-         exon_cov_stats_path, vep_stats_path, sample_name, pipeline_version):
+         exon_cov_stats_path, vep_stats_path,
+         run_name, sample_name, pipeline_version):
     """Helper script for combining multiple stats files into one JSON."""
     combined = {
-        "sample_name": sample_name,
-        "pipeline_version": pipeline_version,
+        "metadata": {
+            "pipeline_version": pipeline_version,
+            "run_name": run_name,
+            "sample_name": sample_name,
+         },
         "stats": {
             "seq": process_seq_stats(seq_stats_path),
             "aln": process_aln_stats(aln_stats_path),
