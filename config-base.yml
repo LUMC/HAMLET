@@ -64,10 +64,10 @@ settings:
   # kmt2a_start: 456
   # kmt2a_end: 4719
 
-  # Path to the `fidus` executable used for detection of FLT3 ITD.
-  #fidus_exe:
+  # Path to the `rose-dt` executable used for detection of FLT3 ITD.
+  #rose_dt_exe:
 
-  # Path to the `fidus-plot.py` script used for plotting FLT3 ITD detection results.
+  # Path to the `rose-dt-plot.py` script used for plotting FLT3 ITD detection results.
   #plot_itd:
 
   # Path to the conda environment file specifying the `fidus-plot.py` script dependencies.

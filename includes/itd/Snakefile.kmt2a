@@ -37,7 +37,7 @@ rule detect_kmt2a:
         bam=RUN.output("{sample}/itd/{sample}.kmt2a.bam"),
         bai=RUN.output("{sample}/itd/{sample}.kmt2a.bai"),
         ref=RUN.settings["kmt2a_fasta"],
-        exe=RUN.settings["fidus_exe"],
+        exe=RUN.settings["rose_dt_exe"],
     output:
         csv=RUN.output("{sample}/itd/{sample}.kmt2a.csv"),
         bg_csv=RUN.output("{sample}/itd/{sample}.kmt2a.bg.csv"),
