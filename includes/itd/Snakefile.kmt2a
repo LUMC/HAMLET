@@ -59,5 +59,6 @@ rule plot_itd_kmt2a:
     threads: 1
     conda: RUN.settings["plot_itd_conda"]
     shell:
-        "python {input.scr} tracks {input.csv} {input.bg_csv}"
-        " --sample-id {wildcards.sample} {output.png}"
+        "python {input.scr}"
+        " --mode per-event --sample-id {wildcards.sample}"
+        " {input.csv} {input.bg_csv} {output.png}"

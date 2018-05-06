@@ -61,5 +61,6 @@ rule plot_itd_flt3:
     threads: 1
     conda: RUN.settings["plot_itd_conda"]
     shell:
-        "python {input.scr} tracks {input.csv} {input.bg_csv}"
-        " --sample-id {wildcards.sample} {output.png}"
+        "python {input.scr}"
+        " --sample-id {wildcards.sample} --mode per-event"
+        " {input.csv} {input.bg_csv} {output.png}"
