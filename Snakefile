@@ -119,6 +119,9 @@ rule create_summary:
         idm=RUN.settings["ref_id_mapping"],
         var_plot_dir=RUN.output(OUTPUTS["smallvars_plots_dir"]),
         fusion_results_dir=RUN.output(OUTPUTS["fusion_results_dir"]),
+        # This is actually a proxy so that the PNGs are there when create_summary runs;
+        # Because of problems in wkhtmltopdf, we can only show PNG images.
+        fusions_svg=RUN.output(OUTPUTS["fusions_svg"]),
         flt3_plot=RUN.output(OUTPUTS["flt3_png"]),
         kmt2a_plot=RUN.output(OUTPUTS["kmt2a_png"]),
         exon_ratios=RUN.output(OUTPUTS["ratio_exons"]),
