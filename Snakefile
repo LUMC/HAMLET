@@ -153,6 +153,7 @@ rule create_report:
         scr=srcdir("scripts/generate_report.py"),
     output:
         pdf=RUN.output(OUTPUTS["report"]),
+    conda: srcdir("envs/create_report.yml")
     shell:
         "python {input.scr}"
         " --templates-dir {input.templates} --imgs-dir {input.imgs}"

@@ -1,0 +1,19 @@
+channels:
+- bioconda
+- r
+- defaults
+- conda-forge
+dependencies:
+- wkhtmltopdf=0.12.3=0
+- pip=9.0.3=py36_0
+- python=3.6.5=hc3d631a_0
+- readline=7.0=ha6073c6_4
+- setuptools=39.0.1=py36_0
+- pip:
+  - click==6.7
+  - gitdb2==2.0.3
+  - gitpython==2.1.9
+  - jinja2==2.10
+  - markupsafe==1.0
+  - pdfkit==0.6.1
+  - smmap2==2.0.3
