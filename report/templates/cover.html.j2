@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{{ css_fname }}">
+    <title>Hamlet Report Cover</title>
+  </head>
+  <body>
+    <div class="cover">
+      <h1>HAMLET</h1>
+      <p class="pipeline-subtitle">Acute Myeloid Leukemia mRNA-seq Analysis Pipeline</p>
+      <h2>Analysis Report</h2>
+      <p class="report-subtitle">Sample '{{ sample_name }}' - Run '{{ run_name }}'</p>
+      <div class="logo">
+        <img src="{{ imgs_dir }}/hamlet-logo.jpg" height="250">
+      </div>
+      <p>Version {{ pipeline_version|default('unknown') }}<br />Generated on {{ timestamp.strftime('%A, %d %B %Y at %H:%M') }}</p>
+      <div class="logo lumc">
+        <img src="{{ imgs_dir }}/lumc-logo.jpg" height="40">
+      </div>
+      <p class="pipeline-trademark">Department of Hematology<br />Leiden University Medical Center</p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+<h1>Annotation Statistics</h1>
+
+<div class="table-title">
+  <p>Table 8 | Base-level annotation statistics</p>
+</div>
+<table class="table-wide" style="margin-bottom: 2em;">
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th class="text-right">Count</th>
+      <th class="text-right">% of aligned</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Total aligned</td>
+      <td class="text-right">{{ stats.aln.num_aligned_bases|show_int }}</td>
+      <td class="text-right">100%</td>
+    </tr>
+    <tr>
+      <td>Aligned to mRNA (CDS + UTR)</td>
+      <td class="text-right">{{ (stats.rna.num_coding_bases + stats.rna.num_utr_bases)|show_int }}</td>
+      <td class="text-right">{{ (stats.rna.num_coding_bases + stats.rna.num_utr_bases)|show_pct(stats.aln.num_aligned_bases) }}</td>
+    </tr>
+    <tr>
+      <td>Aligned to CDS</td>
+      <td class="text-right">{{ stats.rna.num_coding_bases|show_int }}</td>
+      <td class="text-right">{{ stats.rna.num_coding_bases|show_pct(stats.aln.num_aligned_bases) }}</td>
+    </tr>
+    <tr>
+      <td>Aligned to UTR</td>
+      <td class="text-right">{{ stats.rna.num_utr_bases|show_int }}</td>
+      <td class="text-right">{{ stats.rna.num_utr_bases|show_pct(stats.aln.num_aligned_bases) }}</td>
+    </tr>
+    <tr>
+      <td>Aligned to introns</td>
+      <td class="text-right">{{ stats.rna.num_intronic_bases|show_int }}</td>
+      <td class="text-right">{{ stats.rna.num_intronic_bases|show_pct(stats.aln.num_aligned_bases) }}</td>
+    </tr>
+    <tr>
+      <td>Aligned to intergenic regions</td>
+      <td class="text-right">{{ stats.rna.num_intergenic_bases|show_int }}</td>
+      <td class="text-right">{{ stats.rna.num_intergenic_bases|show_pct(stats.aln.num_aligned_bases) }}</td>
+    </tr>
+    <tr>
+      <td>Aligned to rRNA</td>
+      <td class="text-right">{{ stats.rna.num_ribosomal_bases|show_int }}</td>
+      <td class="text-right">{{ stats.rna.num_ribosomal_bases|show_pct(stats.aln.num_aligned_bases) }}</td>
+    </tr>
+  </tbody>
+</table>

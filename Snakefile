@@ -48,6 +48,7 @@ OUTPUTS = dict(
     # Merged FASTQs, stats, and packaged results
     fqs="{sample}/{sample}-{pair}.fq.gz",
     summary="{sample}/{sample}.summary.json",
+    report="{sample}/hamlet_report.{sample}.pdf",
     package="{sample}/hamlet_results.{sample}.zip",
 
     # Small variants
@@ -140,6 +141,24 @@ rule create_summary:
         " > {output.js}"
 
 
+
+rule create_report:
+    """Creates a PDF report of the essential results."""
+    input:
+        summary=RUN.output(OUTPUTS["summary"]),
+        css=srcdir("report/assets/style.css"),
+        templates=srcdir("report/templates"),
+        imgs=srcdir("report/assets/imgs"),
+        toc=srcdir("report/assets/toc.xsl"),
+        scr=srcdir("scripts/generate_report.py"),
+    output:
+        pdf=RUN.output(OUTPUTS["report"]),
+    shell:
+        "python {input.scr}"
+        " --templates-dir {input.templates} --imgs-dir {input.imgs}"
+        " --css-path {input.css} --toc-path {input.toc}"
+        " {input.summary} {output.pdf}"
+
 rule package_results:
     """Copies essential result files into one directory and zips it."""
     input:
@@ -158,6 +177,7 @@ rule package_results:
         kmt_csv=RUN.output(OUTPUTS["kmt2a_csv"]),
         kmt_bg_csv=RUN.output(OUTPUTS["kmt2a_bg_csv"]),
         kmt_png=RUN.output(OUTPUTS["kmt2a_png"]),
+        report=RUN.output(OUTPUTS["report"]),
     output:
         pkg=RUN.output(OUTPUTS["package"]),
     params:

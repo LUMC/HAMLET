@@ -1,0 +1,49 @@
+<h1>Basic Information</h1>
+
+<div class="table-title">
+  <p>Table 1 | Pipeline and sample details</p>
+</div>
+<table class="table-long" style="margin-bottom: 2em;">
+  <tbody>
+    <tr>
+      <td>Sample name</td>
+      <td>{{ metadata.sample_name }}</td>
+    </tr>
+    <tr>
+      <td>Read group count</td>
+      <td>{{ stats.seq.per_read_group|length }}</td>
+    </tr>
+    <tr>
+      <td>Run name</td>
+      <td>{{ metadata.run_name }}</td>
+    </tr>
+    <tr>
+      <td>Pipeline version</td>
+      <td>{{ metadata.pipeline_version }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="table-title">
+  <p>Table 2 | Genes of interest defined for analysis</p>
+</div>
+<table class="table-wide">
+  <thead>
+    <tr>
+      <th class="text-right">No.</th>
+      <th>Gene symbol</th>
+      <th>Gene ID</th>
+      <th>Transcript IDs of interest</th>
+    </tr>
+  </thead>
+    {% for item in metadata.genes_of_interest %}
+    <tr>
+      <td class="text-right">{{ loop.index }}.</td>
+      <td>{{ item.gene_symbol }}</td>
+      <td>{{ item.gene_id }}</td>
+      <td>{{ item.transcript_ids|join(', ') }}</td>
+    </tr>
+    {% endfor %}
+  <tbody>
+  </tbody>
+</table>

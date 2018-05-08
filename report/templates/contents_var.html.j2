@@ -1,0 +1,93 @@
+{% set total_vars = stats.var.num_snvs + stats.var.num_insertions + stats.var.num_deletions %}
+
+<h1>Variant Calling Results</h1>
+
+<div class="table-title">
+  <p>Table 9 | Variant calling results by type</p>
+</div>
+<table class="table-wide" style="margin-bottom: 2em;">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th class="text-right">Count</th>
+      <th class="text-right">% of total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Total</td>
+      <td class="text-right">{{ total_vars|show_int }}</td>
+      <td class="text-right">100%</td>
+    </tr>
+    <tr>
+      <td>SNV</td>
+      <td class="text-right">{{ stats.var.num_snvs|show_int }}</td>
+      <td class="text-right">{{ stats.var.num_snvs|show_pct(total_vars) }}</td>
+    </tr>
+    <tr>
+      <td>Insertion</td>
+      <td class="text-right">{{ stats.var.num_insertions|show_int }}</td>
+      <td class="text-right">{{ stats.var.num_insertions|show_pct(total_vars) }}</td>
+    </tr>
+    <tr>
+      <td>Deletion</td>
+      <td class="text-right">{{ stats.var.num_deletions|show_int }}</td>
+      <td class="text-right">{{ stats.var.num_deletions|show_pct(total_vars) }}</td>
+    </tr>
+  </tbody>
+</table>
+
+{% set vars = {'figure_idx': 1, 'table_idx': 10} %}
+
+{% for plot in results.var.plots %}
+<div class="keep-together">
+  <h2 style="margin-bottom: -.5em;">{{ plot.gene }} variants</h2>
+  <figure>
+    <img src="{{ plot.path }}"{% if not loop.last %} style="margin-bottom: 1em;"{% endif %}></img>
+    <figcaption>Figure {{ vars['figure_idx'] + loop.index0 }} | {{ plot.gene }} variant calling results</figcaption>
+  </figure>
+</div>
+{% for tid, exons in stats.cov[plot.gene].items() %}
+<div class="keep-together">
+  <div class="table-title">
+    <p>Table {{ vars['table_idx'] }} | Exon statistics of transcript {{ tid }} ({{ plot.gene }})</p>
+    {% if vars.update({'table_idx': vars['table_idx'] + 1}) %} {% endif %}
+  </div>
+  <table class="table-wide"{%if not loop.last %} style="margin-bottom: 2em;"{% endif %}>
+    <thead>
+      <tr>
+        <th class="text-right" rowspan="2">Index</th>
+        <th class="text-center" colspan="2">Location ({{ exons[0].chrom }})</th>
+        <th class="text-center" colspan="3">Coverage</th>
+        <th class="text-center" colspan="3">Fraction covered at least</th>
+      </tr>
+      <tr>
+        <th class="text-right">Start</th>
+        <th class="text-right">End</th>
+        <th class="text-right">Median</th>
+        <th class="text-right">Avg</th>
+        <th class="text-right">Stdev</th>
+        <th class="text-right">10x</th>
+        <th class="text-right">20x</th>
+        <th class="text-right">30x</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for exon in exons %}
+      <tr>
+        <td class="text-right">{{ exon.exon_num }}</td>
+        <td class="text-right">{{ exon.start|show_int }}</td>
+        <td class="text-right">{{ exon.end|show_int }}</td>
+        <td class="text-right">{{ exon.metrics.median|show_int }}</td>
+        <td class="text-right">{{ exon.metrics.avg|show_float('.1f') }}</td>
+        <td class="text-right">{{ exon.metrics.stdev|show_float('.1f') }}</td>
+        <td class="text-right">{{ exon.metrics.frac_cov_at_least['10x']|show_float('.1f') }}</td>
+        <td class="text-right">{{ exon.metrics.frac_cov_at_least['20x']|show_float('.1f') }}</td>
+        <td class="text-right">{{ exon.metrics.frac_cov_at_least['30x']|show_float('.1f') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endfor %}
+{% endfor %}

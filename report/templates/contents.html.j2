@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{{ css_fname }}">
+    <title>Hamlet Report</title>
+  </head>
+  <body>
+    <div class="contents">
+      <div class="chapter">
+        {% include "contents_basic.html.j2" %}
+      </div>
+      <div class="chapter">
+        {% include "contents_seq.html.j2" %}
+      </div>
+      <div class="chapter">
+        {% include "contents_aln.html.j2" %}
+      </div>
+      <div class="chapter">
+        {% include "contents_rna.html.j2" %}
+      </div>
+      <div class="chapter">
+        {% include "contents_var.html.j2" %}
+      </div>
+      <div class="chapter">
+        {% include "contents_fusion.html.j2" %}
+      </div>
+      <div class="chapter">
+        {% include "contents_itd.html.j2" %}
+      </div>
+      <div class="chapter">
+        {% include "contents_expr.html.j2" %}
+      </div>
+      <div class="chapter chapter-last">
+        {% include "contents_about.html.j2" %}
+      </div>
+    </div>
+  </body>
+</html>

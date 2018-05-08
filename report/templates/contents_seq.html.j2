@@ -1,0 +1,82 @@
+{% set num_raw_reads = stats.seq.all_read_groups.raw.num_reads_r1 + stats.seq.all_read_groups.raw.num_reads_r2 %}
+{% set num_proc_reads = stats.seq.all_read_groups.proc.num_reads_r1 + stats.seq.all_read_groups.proc.num_reads_r2 %}
+
+<h1>Sequencing Results</h1>
+
+<div class="table-title">
+  <p>Table 3 | Combined reads statistics</p>
+</div>
+<table class="table-wide" style="margin-bottom: 2em;">
+  <thead>
+    <tr>
+      <th class="text-left">Metric</th>
+      <th class="text-right">R1</th>
+      <th class="text-right">R2</th>
+      <th class="text-right">R1 + R2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="text-left"># Raw reads</td>
+      <td class="text-right">{{ stats.seq.all_read_groups.raw.num_reads_r1|show_int }}</td>
+      <td class="text-right">{{ stats.seq.all_read_groups.raw.num_reads_r2|show_int }}</td>
+      <td class="text-right">{{ num_raw_reads|show_int }}</td>
+    </tr>
+    <tr>
+      <td class="text-left"># Processed reads</td>
+      <td class="text-right">{{ stats.seq.all_read_groups.proc.num_reads_r1|show_int }}</td>
+      <td class="text-right">{{ stats.seq.all_read_groups.proc.num_reads_r2|show_int }}</td>
+      <td class="text-right">{{ num_proc_reads|show_int }}</td>
+    </tr>
+    <tr>
+      <td class="text-left">% Retained reads</td>
+      <td class="text-right">n/a</td>
+      <td class="text-right">n/a</td>
+      <td class="text-right">{{ num_proc_reads|show_pct(num_raw_reads) }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="table-title">
+  <p>Table 4 | Per read group statistics</p>
+</div>
+<table class="table-wide">
+  <thead>
+    <tr>
+      <th rowspan="3">Read Group</th>
+      <th colspan="4" class="text-center">Raw</th>
+      <th colspan="4" class="text-center">Processed</th>
+    </tr>
+    <tr>
+      <th colspan="2" class="text-center">R1</th>
+      <th colspan="2" class="text-center">R2</th>
+      <th colspan="2" class="text-center">R1</th>
+      <th colspan="2" class="text-center">R2</th>
+    </tr>
+    <tr>
+      <th class="text-right">#Reads</th>
+      <th class="text-right">%GC</th>
+      <th class="text-right">#Reads</th>
+      <th class="text-right">%GC</th>
+      <th class="text-right">#Reads</th>
+      <th class="text-right">%GC</th>
+      <th class="text-right">#Reads</th>
+      <th class="text-right">%GC</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for rgs in stats.seq.per_read_group %}
+    <tr>
+      <td>{{ rgs.name }}</td>
+      <td class="text-right">{{ rgs.raw.num_reads_r1|show_int }}</td>
+      <td class="text-right">{{ rgs.raw.pct_gc_r1 }}</td>
+      <td class="text-right">{{ rgs.raw.num_reads_r2|show_int }}</td>
+      <td class="text-right">{{ rgs.raw.pct_gc_r2 }}</td>
+      <td class="text-right">{{ rgs.proc.num_reads_r1|show_int }}</td>
+      <td class="text-right">{{ rgs.proc.pct_gc_r1 }}</td>
+      <td class="text-right">{{ rgs.proc.num_reads_r2|show_int }}</td>
+      <td class="text-right">{{ rgs.proc.pct_gc_r2 }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

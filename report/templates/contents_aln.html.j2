@@ -1,0 +1,91 @@
+<h1>Alignment Statistics</h1>
+
+<div class="table-title">
+  <p>Table 5 | Alignment count statistics</p>
+</div>
+<table class="table-wide" style="margin-bottom: 2em;">
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th class="text-right">Count</th>
+      <th class="text-right">% of total</th>
+      <th class="text-right">% of aligned</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Total reads</td>
+      <td class="text-right">{{ stats.aln.num_total_reads|show_int }}</td>
+      <td class="text-right">100%</td>
+      <td class="text-right">{{ stats.aln.num_total_reads|show_pct(stats.aln.num_aligned_reads) }}</td>
+    </tr>
+    <tr>
+      <td>Reads aligned</td>
+      <td class="text-right">{{ stats.aln.num_aligned_reads|show_int }}</td>
+      <td class="text-right">{{ stats.aln.num_aligned_reads|show_pct(stats.aln.num_total_reads) }}</td>
+      <td class="text-right">100%</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #809ebf;">
+      <td>Reads aligned properly</td>
+      <td class="text-right">{{ stats.aln.num_aligned_reads_proper_pairs|show_int }}</td>
+      <td class="text-right">{{ stats.aln.num_aligned_reads_proper_pairs|show_pct(stats.aln.num_total_reads) }}</td>
+      <td class="text-right">{{ stats.aln.num_aligned_reads_proper_pairs|show_pct(stats.aln.num_aligned_reads) }}</td>
+    </tr>
+    <tr>
+      <td>Total bases</td>
+      <td class="text-right">{{ stats.aln.num_total_bases|show_int }}</td>
+      <td class="text-right">100%</td>
+      <td class="text-right">{{ stats.aln.num_total_bases|show_pct(stats.aln.num_aligned_bases) }}</td>
+    </tr>
+    <tr>
+      <td>Bases aligned</td>
+      <td class="text-right">{{ stats.aln.num_aligned_bases|show_int }}</td>
+      <td class="text-right">{{ stats.aln.num_aligned_bases|show_pct(stats.aln.num_total_bases) }}</td>
+      <td class="text-right">100%</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="table-title">
+  <p>Table 6 | Insert size statistics</p>
+</div>
+<table class="table-long" style="margin-bottom: 2em;">
+  <tbody>
+    <tr>
+      <td>Median</td>
+      <td>{{ stats.ins.median_insert_size|show_int }}</td>
+    </tr>
+    <tr>
+      <td>Median absolute deviation</td>
+      <td>{{ stats.ins.median_absolute_deviation|show_int }}</td>
+    </tr>
+    <tr>
+      <td>Maximum</td>
+      <td>{{ stats.ins.max_insert_size|show_int }}</td>
+    </tr>
+    <tr>
+      <td>Minimum</td>
+      <td>{{ stats.ins.min_insert_size|show_int }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="table-title">
+  <p>Table 7 | Other alignment statistics</p>
+</div>
+<table class="table-long">
+  <tbody>
+    <tr>
+      <td>Strand balance</td>
+      <td>{{ stats.aln.strand_balance|show_float('.4g') }}</td>
+    </tr>
+    <tr>
+      <td>Mismatch rate</td>
+      <td>{{ stats.aln.rate_mismatch|show_float('.2e') }}</td>
+    </tr>
+    <tr>
+      <td>Indel rate</td>
+      <td>{{ stats.aln.rate_indel|show_float('.2e') }}</td>
+    </tr>
+  </tbody>
+</table>
