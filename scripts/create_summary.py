@@ -176,14 +176,23 @@ def post_process(cs):
     return cs
 
 
-
-def add_variant_plots(idm_fh, var_plot_dir):
-    idms = set([])
-    for lineno, line in enumerate(idm_fh):
+def parse_idm(fh):
+    idms = []
+    for lineno, line in enumerate(fh):
         if lineno == 0:
             continue
-        _, gsym, _ = line.strip().split("\t")
-        assert gsym not in idms, gsym
+        gid, gsym, raw_tids = line.strip().split("\t")
+        tids = raw_tids.split(",")
+        idms.append({"gene_id": gid, "gene_symbol": gsym,
+                     "transcript_ids": tids})
+    return idms
+
+
+def add_variant_plots(idm, var_plot_dir):
+    idms = set([])
+    for item in idm:
+        gsym = item["gene_symbol"]
+        assert gsym not in idms, item
         idms.add(gsym)
 
     plots = []
@@ -224,11 +233,13 @@ def main(id_mappings_path, var_plot_dir,
          insert_stats_path, exon_cov_stats_path, vep_stats_path,
          run_name, sample_name, pipeline_version):
     """Helper script for combining multiple stats files into one JSON."""
+    idm = parse_idm(id_mappings_path)
     combined = {
         "metadata": {
             "pipeline_version": pipeline_version,
             "run_name": run_name,
             "sample_name": sample_name,
+            "genes_of_interest": idm,
         },
         "stats": {
             "seq": process_seq_stats(seq_stats_path),
@@ -238,10 +249,12 @@ def main(id_mappings_path, var_plot_dir,
             "ins": process_insert_stats(insert_stats_path),
             "var": process_var_stats(vep_stats_path),
         },
-        "snv_indels": {"plots": []},
+        "results": {
+            "var": {"plots": []},
+        },
     }
-    combined["snv_indels"]["plots"].extend(
-        add_variant_plots(id_mappings_path, var_plot_dir))
+    combined["results"]["var"]["plots"].extend(
+        add_variant_plots(idm, var_plot_dir))
     combined["stats"] = post_process(combined["stats"])
     print(json.dumps(combined, separators=(",", ":"), sort_keys=True))
 
