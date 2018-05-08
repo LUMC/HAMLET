@@ -145,9 +145,12 @@ def process_var_stats(path):
     }
 
 
-def process_exon_cov_stats(path):
+def process_exon_cov_stats(path, idm):
     with open(path, "r") as src:
         raw = json.load(src)
+
+    tid_map = {item["gene_symbol"]: set(item["transcript_ids"])
+               for item in idm}
 
     tempd = {}
     for val in raw.values():
@@ -155,6 +158,8 @@ def process_exon_cov_stats(path):
         if gene not in tempd:
             tempd[gene] = {}
         trx = val.pop("trx")
+        if trx not in tid_map[gene]:
+            continue
         if trx not in tempd[gene]:
             tempd[gene][trx] = {}
         exon = int(val["exon_num"])
@@ -206,9 +211,60 @@ def add_variant_plots(idm, var_plot_dir):
     return plots
 
 
+def add_fusion_results(fusion_results_dir):
+    frd = Path(fusion_results_dir)
+    sf_plot = next(frd.rglob("*star-fusion-circos/*.png"))
+    sf_table = next(frd.glob("*.star-fusion"))
+    intersected = any(True for _ in frd.glob("*.fusions-combined.svg"))
+    rv = {
+        "intersected": intersected,
+        "plots": {
+            "star-fusion": str(sf_plot.resolve())
+        },
+        "tables": {
+            "star-fusion": {"path": str(sf_table.resolve())},
+        }
+    }
+
+    def parse_top10(tp):
+        with open(tp, "r") as src:
+            sft = []
+            for lineno, line in enumerate(src):
+                if lineno == 0:
+                    continue
+                name, jr_count, sf_count, fusion_type, *_ = line.split("\t")
+                sft.append({"name": name, "jr_count": jr_count,
+                            "sf_count": sf_count, "type": fusion_type,})
+                if lineno > 10:
+                    break
+        return sft
+
+    rv["tables"]["star-fusion"]["top10"] = \
+        parse_top10(rv["tables"]["star-fusion"]["path"])
+
+    if intersected:
+        fc_plot = next(frd.rglob("*fusioncatcher-circos/*.png"))
+        fc_table = next(frd.glob("*.star-fusion"))
+        rv["plots"]["fusioncatcher"] = str(fc_plot.resolve())
+        rv["tables"]["fusioncatcher"] = {"path": str(fc_table.resolve())}
+        rv["tables"]["fusioncatcher"]["top10"] = \
+            parse_top10(rv["tables"]["fusioncatcher"]["path"])
+
+        isect_plot = next(frd.rglob("*sf-isect-circos/*.png"))
+        isect_table = next(frd.glob("*.sf-isect"))
+        rv["plots"]["intersection"] = str(isect_plot.resolve())
+        rv["tables"]["intersection"] = {"path": str(isect_table.resolve())}
+        rv["tables"]["intersection"]["top10"] = \
+            parse_top10(rv["tables"]["intersection"]["path"])
+
+    return rv
+
+
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("id_mappings_path", type=click.File("r"))
 @click.argument("var_plot_dir",
+                type=click.Path(exists=True, file_okay=False))
+@click.argument("fusion_results_dir",
                 type=click.Path(exists=True, file_okay=False))
 @click.argument("seq_stats_path",
                 type=click.Path(exists=True, dir_okay=False))
@@ -228,7 +284,7 @@ def add_variant_plots(idm, var_plot_dir):
               help="Name of the sample from which the stats were generated.")
 @click.option("--pipeline-version", type=str,
               help="Version string of the pipeline.")
-def main(id_mappings_path, var_plot_dir,
+def main(id_mappings_path, var_plot_dir, fusion_results_dir,
          seq_stats_path, aln_stats_path, rna_stats_path,
          insert_stats_path, exon_cov_stats_path, vep_stats_path,
          run_name, sample_name, pipeline_version):
@@ -245,16 +301,18 @@ def main(id_mappings_path, var_plot_dir,
             "seq": process_seq_stats(seq_stats_path),
             "aln": process_aln_stats(aln_stats_path),
             "rna": process_rna_stats(rna_stats_path),
-            "cov": process_exon_cov_stats(exon_cov_stats_path),
+            "cov": process_exon_cov_stats(exon_cov_stats_path, idm),
             "ins": process_insert_stats(insert_stats_path),
             "var": process_var_stats(vep_stats_path),
         },
         "results": {
             "var": {"plots": []},
+            "fusion": {},
         },
     }
     combined["results"]["var"]["plots"].extend(
         add_variant_plots(idm, var_plot_dir))
+    combined["results"]["fusion"] = add_fusion_results(fusion_results_dir)
     combined["stats"] = post_process(combined["stats"])
     print(json.dumps(combined, separators=(",", ":"), sort_keys=True))
 
