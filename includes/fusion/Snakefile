@@ -40,9 +40,11 @@ rule plot_sf:
         txt=RUN.output("{sample}/fusion/{sample}.star-fusion"),
     output:
         svg=RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg"),
+        png=RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png"),
     conda: srcdir("envs/plot_fusion.yml")
     shell:
-        "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` -k human.hg38 star-fusion {input.txt}"
+        "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` --png"
+        " -k human.hg38 star-fusion {input.txt}"
 
 rule plot_cp:
     input:
@@ -80,9 +82,11 @@ if do_fusioncatcher:
             txt=RUN.output("{sample}/fusion/{sample}.fusioncatcher"),
         output:
             svg=RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg"),
+            png=RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png"),
         conda: srcdir("envs/plot_fusion.yml")
         shell:
-            "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` -k human.hg38 fusioncatcher {input.txt}"
+            "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` --png"
+            " -k human.hg38 fusioncatcher {input.txt}"
 
     rule intersect_fusions:
         input:
@@ -117,9 +121,11 @@ if do_fusioncatcher:
             txt=RUN.output("{sample}/fusion/{sample}.sf-isect"),
         output:
             svg=RUN.output("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.svg"),
+            png=RUN.output("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.png"),
         conda: srcdir("envs/plot_fusion.yml")
         shell:
-            "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` -k human.hg38 star-fusion {input.txt}"
+            "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` --png"
+            " -k human.hg38 star-fusion {input.txt}"
 
     rule combine_plots:
         input:
