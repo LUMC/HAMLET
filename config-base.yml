@@ -8,6 +8,9 @@ settings:
   # The directory in which all output files will be created.
   #output_dir:
 
+  # Name of the run; if not supplied will be set to 'hamlet-{8_random_chars}'
+  #run_name:
+
   # Path to a human genome FASTA file.
   #genome_fasta:
 
