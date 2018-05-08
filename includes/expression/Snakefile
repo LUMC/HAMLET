@@ -85,9 +85,12 @@ rule calc_exon_ratios:
         table=RUN.output("{sample}/expression/{sample}.exon_ratios"),
     params:
         exon_ratio_names=" ".join([RUN.settings["relative_gene_name"]] +
-                                  RUN.settings.get("exon_names"))
+                                  RUN.settings.get("exon_names")),
+        exon_min_ratio=0.1,
     threads: 1
     conda: srcdir("envs/calc_ratio.yml")
     shell:
-        "cat {input.table} | python {input.calc_script} -"
-        " {params.exon_ratio_names} > {output.table}"
+        "cat {input.table}"
+        " | python {input.calc_script} -r {params.exon_min_ratio}"
+        " - {params.exon_ratio_names}"
+        " > {output.table}"
