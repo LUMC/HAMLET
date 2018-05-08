@@ -55,12 +55,14 @@ OUTPUTS = dict(
     smallvars_vcf=var_output(".annotated.vcf.gz"),
     smallvars_csv_all=var_output(".variants_all.csv"),
     smallvars_csv_hi=var_output(".variants_hi.csv"),
+    smallvars_plots_dir="{sample}/snv-indels/variant_plots/",
     smallvars_plots="{sample}/snv-indels/variant_plots/.done",
 
     # Fusion
     star_fusion_txt=fusion_output(".star-fusion"),
     star_fusion_svg=fusion_output(".star-fusion.svg"),
     fusions_svg=fusion_output(".fusions-combined.svg"),
+    fusion_results_dir="{sample}/fusion/",
 
     # Expression
     count_fragments_per_gene=expr_output(".fragments_per_gene"),
@@ -114,7 +116,11 @@ rule create_summary:
         vep_stats=RUN.output(OUTPUTS["vep_stats"]),
         exon_cov_stats=RUN.output(OUTPUTS["exon_cov_stats"]),
         idm=RUN.settings["ref_id_mapping"],
-        var_plot_dir=RUN.output(OUTPUTS["smallvars_plots"].strip("/.done")),
+        var_plot_dir=RUN.output(OUTPUTS["smallvars_plots_dir"]),
+        fusion_results_dir=RUN.output(OUTPUTS["fusion_results_dir"]),
+        flt3_plot=RUN.output(OUTPUTS["flt3_png"]),
+        kmt2a_plot=RUN.output(OUTPUTS["kmt2a_png"]),
+        exon_ratios=RUN.output(OUTPUTS["ratio_exons"]),
         scr=srcdir("scripts/create_summary.py"),
     params:
         pipeline_ver=PIPELINE_VERSION,
@@ -124,7 +130,8 @@ rule create_summary:
     conda: srcdir("envs/create_summary.yml")
     shell:
         "python {input.scr}"
-        " {input.idm} {input.var_plot_dir}"
+        " {input.idm} {input.var_plot_dir} {input.fusion_results_dir}"
+        " {input.flt3_plot} {input.kmt2a_plot} {input.exon_ratios}"
         " {input.seq_stats} {input.aln_stats} {input.rna_stats} {input.insert_stats}"
         " {input.exon_cov_stats} {input.vep_stats}"
         " --pipeline-version {params.pipeline_ver}"

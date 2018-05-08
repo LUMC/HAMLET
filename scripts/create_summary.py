@@ -260,12 +260,27 @@ def add_fusion_results(fusion_results_dir):
     return rv
 
 
+def add_expr_results(exon_ratios_path):
+    rv = []
+    with open(exon_ratios_path, "r") as src:
+        header_cols = next(src).strip().split("\t")
+        for line in (l.strip() for l in src):
+            rv.append(dict(zip(header_cols, line.split("\t"))))
+    return rv
+
+
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("id_mappings_path", type=click.File("r"))
 @click.argument("var_plot_dir",
                 type=click.Path(exists=True, file_okay=False))
 @click.argument("fusion_results_dir",
                 type=click.Path(exists=True, file_okay=False))
+@click.argument("flt3_plot",
+                type=click.Path(exists=True, dir_okay=False))
+@click.argument("kmt2a_plot",
+                type=click.Path(exists=True, dir_okay=False))
+@click.argument("exon_ratios_path",
+                type=click.Path(exists=True, dir_okay=False))
 @click.argument("seq_stats_path",
                 type=click.Path(exists=True, dir_okay=False))
 @click.argument("aln_stats_path",
@@ -285,6 +300,7 @@ def add_fusion_results(fusion_results_dir):
 @click.option("--pipeline-version", type=str,
               help="Version string of the pipeline.")
 def main(id_mappings_path, var_plot_dir, fusion_results_dir,
+         flt3_plot, kmt2a_plot, exon_ratios_path,
          seq_stats_path, aln_stats_path, rna_stats_path,
          insert_stats_path, exon_cov_stats_path, vep_stats_path,
          run_name, sample_name, pipeline_version):
@@ -313,6 +329,11 @@ def main(id_mappings_path, var_plot_dir, fusion_results_dir,
     combined["results"]["var"]["plots"].extend(
         add_variant_plots(idm, var_plot_dir))
     combined["results"]["fusion"] = add_fusion_results(fusion_results_dir)
+    combined["results"]["itd"] = {
+        "flt3": {"path": str(Path(flt3_plot).resolve())},
+        "kmt2a": {"path": str(Path(kmt2a_plot).resolve())},
+    }
+    combined["results"]["expr"] = add_expr_results(exon_ratios_path)
     combined["stats"] = post_process(combined["stats"])
     print(json.dumps(combined, separators=(",", ":"), sort_keys=True))
 
