@@ -8,7 +8,7 @@ from rattle import Run
 
 BASE_PIPELINE_VERSION = "0.1.0"
 try:
-    repo = git.Repo(path=os.getcwd(), search_parent_directories=True)
+    repo = git.Repo(path=srcdir(""), search_parent_directories=True)
 except git.exc.InvalidGitRepositoryError:
     repo = None
     sha = "unknown"
