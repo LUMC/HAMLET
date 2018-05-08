@@ -144,9 +144,8 @@ rule create_summary:
         " > {output.js}"
 
 
-
-rule create_report:
-    """Creates a PDF report of the essential results."""
+rule generate_report:
+    """Generates a PDF report of the essential results."""
     input:
         summary=RUN.output(OUTPUTS["summary"]),
         css=srcdir("report/assets/style.css"),
@@ -162,6 +161,7 @@ rule create_report:
         " --templates-dir {input.templates} --imgs-dir {input.imgs}"
         " --css-path {input.css} --toc-path {input.toc}"
         " {input.summary} {output.pdf}"
+
 
 rule package_results:
     """Copies essential result files into one directory and zips it."""
