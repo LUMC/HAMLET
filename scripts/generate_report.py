@@ -126,7 +126,6 @@ class Report(object):
 
         with NTF(prefix=tmp_prefix, suffix=".html") as cov_fh:
             cov_txt = self.cover_tpl.render(**cover_ctx)
-            print(cov_txt, file=open("bzzt.html", "w"))
             cov_fh.write(cov_txt.encode("utf-8"))
             cov_fh.seek(0)
 
