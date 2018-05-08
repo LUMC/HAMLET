@@ -22,7 +22,7 @@ PIPELINE_VERSION = f"{BASE_PIPELINE_VERSION}-{sha}{is_dirty}"
 
 RUN = Run(config)
 
-RUN_NAME = config.get("run_name") or f"hamlet-{uuid4().hex[:8]}"
+RUN_NAME = RUN.settings.get("run_name") or f"hamlet-{uuid4().hex[:8]}"
 
 
 include: "includes/qc-seq/Snakefile"
