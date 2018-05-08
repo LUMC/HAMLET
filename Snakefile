@@ -148,7 +148,7 @@ rule create_report:
         summary=RUN.output(OUTPUTS["summary"]),
         css=srcdir("report/assets/style.css"),
         templates=srcdir("report/templates"),
-        imgs=srcdir("report/assets/imgs"),
+        imgs=srcdir("report/assets/img"),
         toc=srcdir("report/assets/toc.xsl"),
         scr=srcdir("scripts/generate_report.py"),
     output:
