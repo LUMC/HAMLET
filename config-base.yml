@@ -34,6 +34,9 @@ settings:
   # Name of the exons whose base counts will be gathered by the pipeline.
   #exon_names: []
 
+  # Minimum ratio for base count comparison against divisor gene.
+  #exon_min_ratio: 0.1
+
   # Path to the FASTA file containing the FLT3 transcript sequence.
   # This may contain more than one transcripts (up to the entire transcriptome).
   #flt3_fasta:
