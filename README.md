@@ -27,9 +27,6 @@ and a zipped file containing this report and the essential result files.
 
 The following diagram shows an overview of the Snakemake rules that are executed by Hamlet:
 
-
-# Steps
-
 ```plantuml
 digraph snakemake_dag {
     graph[bgcolor=white, margin=0];
@@ -189,6 +186,46 @@ digraph snakemake_dag {
     46[color="0.25 0.6 0.85", label=fastqc_raw];
 }
 ```
+
+# Installation
+
+The dependencies required for running the pipeline are listed in the provided `environment.yml` file. To use it, first
+set up a Conda virtual environment and then update it:
+
+```bash
+# Set up and activate your conda environment.
+# Install the dependencies
+$ conda env update -f environment.yml
+```
+
+Unfortunately, not all the required tools are available in Conda (or if they are present, they may not have been
+compiled using certain optimizations). There are three tools that fall under this category, and you may need to do
+additional steps to have them installed:
+
+1. GSNAP, which is used by the alignment step before variant calling. On some certain architectures, the version of
+   GSNAP that Hamlet uses can be compiled to utilize SIMD instructions. As of inclusion of this tool in the pipeline,
+   the optimization is not available in Conda unfortunately. Here you may supply your own compiled GSNAP using the
+   `gsnap_exe` settings. If you do, Hamlet will use that GSNAP executable. If you do not, Hamlet will use the
+   GSNAP available from Conda and may require more time to run.
+
+2. FusionCatcher, which is used by the fusion detection module. Unfortunately, [this tool is not and will probably never
+   be available in Conda](https://github.com/ndaniel/fusioncatcher/issues/20). If you would like to use FusionCatcher
+   in the fusion detection steps, we recommend installing version 0.99.5a and then supply the path to the main
+   executable using the `fusioncatcher_exe` settings. You may also keep this configuration value empty, though that will
+   result in the fusion detection module only using STAR-Fusion and skipping any possible intersection of the results.
+
+3. rose-dt, which is used to detect the FLT3 ITD and KMT2A PTD. This tool may be available in Conda soon, but for now
+   it must be compiled and installed directly [from source](https://git.lumc.nl/hem/rose-dt). You can then supply
+   the path to the executable, the plot script, and the plot script environment using the `rose_dt_exe`, `plot_itd`, and
+   `plot_itd_conda` settings respectively.
+
+4. VEP, which is used to annotate the variant calling results. Hamlet was tested using an older version of VEP (77),
+   which could not be made to work with Conda at the time of development. You will need to supply the path to the main
+   executable via the `vep_exe` settings.
+
+5. bgzip, which needs to be supplied via the `bgzip_exe` settings. This may be replaced with a proper Conda installation
+   in the future.
+
 
 # Running
 
