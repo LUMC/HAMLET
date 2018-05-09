@@ -36,6 +36,7 @@
       <th>Transcript IDs of interest</th>
     </tr>
   </thead>
+  <tbody>
     {% for item in metadata.genes_of_interest %}
     <tr>
       <td class="text-right">{{ loop.index }}.</td>
@@ -44,6 +45,5 @@
       <td>{{ item.transcript_ids|join(', ') }}</td>
     </tr>
     {% endfor %}
-  <tbody>
   </tbody>
 </table>
