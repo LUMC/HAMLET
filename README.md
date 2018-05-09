@@ -32,22 +32,11 @@ The following diagram shows an overview of the Snakemake rules that are executed
 
 ```plantuml
 digraph snakemake_dag {
-	graph [bb="0,0,2029,972",
-		bgcolor=white,
-		margin=0
-	];
+	graph [bgcolor=white, margin=0];
 	rankdir=LR;
-	node [fontname=sans,
-		fontsize=10,
-		label="\N",
-		penwidth=2,
-		shape=box,
-		style=rounded
-	];
-	edge [color=grey,
-		penwidth=2
-	];
-	0	 [color="0.13 0.6 0.85",
+	node [fontname=sans, fontsize=10, label="\N", penwidth=2, shape=box, style=rounded];
+	edge [color=grey, penwidth=2 ];
+	0	[color="0.13 0.6 0.85",
 		height=0.5,
 		label=all,
 		pos="1143,18",
