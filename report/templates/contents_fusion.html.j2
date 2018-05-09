@@ -1,7 +1,7 @@
 <h1>Fusion Detection Results</h1>
 
 {% set figure_idx = metadata.genes_of_interest|length + 1 %}
-{% set table_idx = metadata.genes_of_interest|num_tids + 10 %}
+{% set table_idx = metadata.genes_of_interest|num_tids + 14 %}
 
 <div class="keep-together">
   {% if results.fusion.intersected %}
@@ -18,7 +18,7 @@
   </figure>
   <div class="keep-together">
     <div class="table-title">
-      <p>Table {{ table_idx }} | Top 10 intersected fusion candidates</p>
+      <p>Table {{ table_idx }} | Top 20 intersected fusion candidates</p>
     </div>
     <table class="table-wide">
       <thead>
@@ -30,7 +30,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for item in results.fusion.tables.intersection.top10 %}
+        {% for item in results.fusion.tables.intersection.top20 %}
         <tr>
           <td>{{ item.name }}</td>
           <td>{{ item.type }}</td>
@@ -50,7 +50,7 @@
   </figure>
   <div class="keep-together">
     <div class="table-title">
-      <p>Table {{ table_idx }} | Top 10 STAR-Fusion fusion candidates</p>
+      <p>Table {{ table_idx }} | Top 20 STAR-Fusion fusion candidates</p>
     </div>
     <table class="table-wide">
       <thead>
@@ -62,7 +62,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for item in results.fusion.tables['star-fusion'].top10 %}
+        {% for item in results.fusion.tables['star-fusion'].top20 %}
         <tr>
           <td>{{ item.name }}</td>
           <td>{{ item.type }}</td>

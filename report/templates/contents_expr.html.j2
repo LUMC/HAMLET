@@ -1,31 +1,33 @@
 <h1>Overexpression Analysis Results</h1>
 
-{% set table_idx = metadata.genes_of_interest|num_tids + 11 %}
+{% set table_idx = metadata.genes_of_interest|num_tids + 15 %}
 
-<div class="table-title">
-  <p>Table {{ table_idx }} | Selected exon ratio values</p>
+<div class="keep-together">
+  <div class="table-title">
+    <p>Table {{ table_idx }} | Selected exon ratio values</p>
+  </div>
+  <table class="table-wide">
+    <thead>
+      <tr>
+        <th class="text-left">Exon</th>
+        <th class="text-right">Base count</th>
+        <th class="text-left">Divisor gene</th>
+        <th class="text-right">Divisor base count</th>
+        <th class="text-right">Ratio</th>
+        <th class="text-left">Above threshold</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in results.expr %}
+      <tr>
+        <td class="text-left">{{ item.exon }}</td>
+        <td class="text-right">{{ item.count|show_int }}</td>
+        <td class="text-left">{{ item.divisor_gene }}</td>
+        <td class="text-right">{{ item.divisor_exp|show_int }}</td>
+        <td class="text-right">{{ item.ratio|show_float }}</td>
+        <td class="text-left">{{ item.above_threshold }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
-<table class="table-wide">
-  <thead>
-    <tr>
-      <th class="text-left">Exon</th>
-      <th class="text-right">Base count</th>
-      <th class="text-left">Divisor gene</th>
-      <th class="text-right">Divisor base count</th>
-      <th class="text-right">Ratio</th>
-      <th class="text-left">Above threshold</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for item in results.expr %}
-    <tr>
-      <td class="text-left">{{ item.exon }}</td>
-      <td class="text-right">{{ item.count|show_int }}</td>
-      <td class="text-left">{{ item.divisor_gene }}</td>
-      <td class="text-right">{{ item.divisor_exp|show_int }}</td>
-      <td class="text-right">{{ item.ratio|show_float }}</td>
-      <td class="text-left">{{ item.above_threshold }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>

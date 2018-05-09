@@ -107,7 +107,7 @@ div.table-title {
   width: 100%;
 }
 
-.table-wide th {
+.table-wide th, #var-overview td.hl {
   color: #fff;
   background: #003d7e;
   font-weight: normal;

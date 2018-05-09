@@ -117,9 +117,12 @@ rule create_summary:
         exon_cov_stats=RUN.output(OUTPUTS["exon_cov_stats"]),
         idm=RUN.settings["ref_id_mapping"],
         var_plots=RUN.output(OUTPUTS["smallvars_plots"]),
+        var_csv=RUN.output(OUTPUTS["smallvars_csv_hi"]),
         fusions_svg=RUN.output(OUTPUTS["fusions_svg"]),
         flt3_plot=RUN.output(OUTPUTS["flt3_png"]),
         kmt2a_plot=RUN.output(OUTPUTS["kmt2a_png"]),
+        flt3_csv=RUN.output(OUTPUTS["flt3_csv"]),
+        kmt2a_csv=RUN.output(OUTPUTS["kmt2a_csv"]),
         exon_ratios=RUN.output(OUTPUTS["ratio_exons"]),
         scr=srcdir("scripts/create_summary.py"),
     params:
@@ -131,9 +134,11 @@ rule create_summary:
     shell:
         "python {input.scr}"
         " {input.idm}"
-        " `dirname {input.var_plots}`"
+        " `dirname {input.var_plots}` {input.var_csv}"
         " `dirname {input.fusions_svg}`"
-        " {input.flt3_plot} {input.kmt2a_plot} {input.exon_ratios}"
+        " {input.flt3_csv} {input.flt3_plot}"
+        " {input.kmt2a_csv} {input.kmt2a_plot}"
+        " {input.exon_ratios}"
         " {input.seq_stats} {input.aln_stats} {input.rna_stats} {input.insert_stats}"
         " {input.exon_cov_stats} {input.vep_stats}"
         " --pipeline-version {params.pipeline_ver}"

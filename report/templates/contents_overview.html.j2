@@ -1,0 +1,108 @@
+<h1>Results Overview</h1>
+
+<div class="keep-together">
+  <div class="table-title">
+    <p>Table 3 | High-impact variants in genes of interest</p>
+  </div>
+  <table class="table-wide" id="var-overview" style="margin-bottom: 2em;">
+    <thead>
+      <tr>
+        <th>Gene</th>
+        <th>HGVS description</th>
+        <th>Known database identifiers</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for gene in results.var.overview %}
+      {% set outer_loop = loop %}
+      {% for item in results.var.overview[gene] %}
+      <tr>
+        {% if loop.index == 1 %}
+        <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %} rowspan="{{ results.var.overview[gene]|length }}" class="hl">{{ gene }}</td>
+        {% endif %}
+        <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ item.HGVSc }}</td>
+        <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}><small>{{ item.Existing_variation.split(",")|join(", ") }}</small></td>
+      </tr>
+      {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="keep-together">
+  <div class="table-title">
+    <p>Table 4 | Top 5 detected fusion genes by supporting reads</p>
+  </div>
+  <table class="table-wide" style="margin-bottom: 2em;">
+    <thead>
+      <tr>
+        <th>Fusion name</th>
+        <th>Fusion type</th>
+        <th class="text-right">Junction reads count</th>
+        <th class="text-right">Spanning fragments count</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in results.fusion.tables.intersection.top20[:5] %}
+      <tr>
+        <td>{{ item.name }}</td>
+        <td>{{ item.type }}</td>
+        <td class="text-right">{{ item.jr_count }}</td>
+        <td class="text-right">{{ item.sf_count }}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="keep-together">
+  <div class="table-title">
+    <p>Table 5 | Detected reciprocal soft clip events</p>
+  </div>
+  <table class="table-wide" style="margin-bottom: 2em; width: 30%;">
+    <thead>
+      <tr>
+        <th>Gene</th>
+        <th class="text-right">Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>FLT3</td>
+        <td class="text-right">{{ results.itd.flt3.table|length }}</td>
+      </tr>
+      <tr>
+        <td>KMT2A</td>
+        <td class="text-right">{{ results.itd.kmt2a.table|length }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="keep-together">
+  <div class="table-title">
+    <p>Table 6 | Exon base count ratio over divisor gene</p>
+  </div>
+  <table class="table-wide">
+    <thead>
+      <tr>
+        <th class="text-left">Exon</th>
+        <th class="text-left">Divisor gene</th>
+        <th class="text-right">Ratio</th>
+        <th class="text-left">Above threshold</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in results.expr %}
+      <tr>
+        <td class="text-left">{{ item.exon }}</td>
+        <td class="text-left">{{ item.divisor_gene }}</td>
+        <td class="text-right">{{ item.ratio|show_float }}</td>
+        <td class="text-left">{{ item.above_threshold }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
