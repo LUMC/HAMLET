@@ -198,6 +198,8 @@ set up a Conda virtual environment and then update it:
 $ conda env update -f environment.yml
 ```
 
+When running the pipeline, Snakemake will then install all the required tools via Conda, whenever possible.
+
 Unfortunately, not all the required tools are available in Conda (or if they are present, they may not have been
 compiled using certain optimizations). There are three tools that fall under this category, and you may need to do
 additional steps to have them installed:
@@ -227,11 +229,61 @@ additional steps to have them installed:
    in the future.
 
 
-# Running
+# Usage
 
-    snakemake -p -T --use-conda -s Snakefile --configfile config.yml \
-        --rerun-incomplete --restart-times 3 \
-        --cluster-config config-cluster.yml --jobname 'hamlet.{jobid}' \
+## Input files
+
+Hamlet requires gzipped, paired-end mRNA-seq files. Any number of samples can be processed in a single execution, and
+each of them may have differing number of pair sets. These files may have arbitrary names, but they *must* be supplied
+correctly in the configuration files.
+
+## Execution
+
+After installation of all the required tools, you will need to fill in the required settings and configurations in
+several YAML files.
+
+For the runtime settings, use the provided `config-base.yml` file as template and fill in the required values as
+instructed. Fill also your sample names and paths to their input files as instructed in the same YAML file. Let's call
+this file `config.yml`.
+
+If running in a cluster, you may also want to define the resource configurations in another YAML file. Read more about
+this type of configuration on the official [Snakemake
+documentation](https://snakemake.readthedocs.io/en/stable/snakefiles/configuration.html#cluster-configuration). For this
+file, let's call it `config-cluster.yml`
+
+You can then run the pipeline by invoking Snakemake, for example:
+
+```bash
+    $ snakemake -s Snakefile \
+        --configfile config.yml --cluster-config config-cluster.yml \
+        --rerun-incomplete
+        # ... other flags
+```
+
+Here is another example that uses more flags (see the Snakemake help for explanation of these flags):
+
+```bash
+    $ snakemake -p -T -s Snakefile \
+        --configfile config.yml --cluster-config config-cluster.yml \
+        --rerun-incomplete
+        --jobname 'hamlet.{jobid}' \
         --jobs 100 -w 120 --max-jobs-per-second 3 \
         --drmaa ' -pe BWA {cluster.threads} -l h_vmem={cluster.vmem} -cwd -V' \
         --drmaa-log-dir .drmaa-logs
+```
+
+## Output files
+
+Assuming the output directory is set to `/path/to/output`, Hamlet will create `/path/to/output/{sample_name}` for each
+sample present in the config file. Inside the directory, all the essential results are packaged in a zip file called
+`hamlet_results.{sample_name}.zip`. This includes a PDF report called `hamlet_report.{sample_name}.pdf` which contains
+the overview of the essential results.
+
+
+## Notes
+
+1. You can run Hamlet from anywhere, but preferrably this is done outside of the repository. This way, the temporary
+   Snakemake files are written elsewhere and does not pollute the repository.
+
+2. You can direct Hamlet to create the output directory anywhere. This is a configuration value that is supplied in the
+   config file via `output_dir`.
