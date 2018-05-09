@@ -40,6 +40,9 @@ settings:
   # Minimum ratio for base count comparison against divisor gene.
   #exon_min_ratio: 0.1
 
+  # Divisor gene.
+  #relative_gene_name: HMBS
+
   # Path to the FASTA file containing the FLT3 transcript sequence.
   # This may contain more than one transcripts (up to the entire transcriptome).
   #flt3_fasta:
