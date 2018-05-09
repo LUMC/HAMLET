@@ -249,6 +249,7 @@ rule plot_vars:
         plotd=RUN.output("{sample}/snv-indels/variant_plots"),
     output:
         plots_mark=RUN.output("{sample}/snv-indels/variant_plots/.done"),
+        plotd=RUN.output("{sample}/snv-indels/variant_plots"),
     threads: 1
     conda: srcdir("envs/plot_variants.yml")
     shell:

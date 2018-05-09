@@ -1,5 +1,6 @@
 import os
 from functools import partial
+from os.path import dirname
 from uuid import uuid4
 
 import git
@@ -56,14 +57,12 @@ OUTPUTS = dict(
     smallvars_vcf=var_output(".annotated.vcf.gz"),
     smallvars_csv_all=var_output(".variants_all.csv"),
     smallvars_csv_hi=var_output(".variants_hi.csv"),
-    smallvars_plots_dir="{sample}/snv-indels/variant_plots/",
     smallvars_plots="{sample}/snv-indels/variant_plots/.done",
 
     # Fusion
     star_fusion_txt=fusion_output(".star-fusion"),
     star_fusion_svg=fusion_output(".star-fusion.svg"),
     fusions_svg=fusion_output(".fusions-combined.svg"),
-    fusion_results_dir="{sample}/fusion/",
 
     # Expression
     count_fragments_per_gene=expr_output(".fragments_per_gene"),
@@ -117,10 +116,7 @@ rule create_summary:
         vep_stats=RUN.output(OUTPUTS["vep_stats"]),
         exon_cov_stats=RUN.output(OUTPUTS["exon_cov_stats"]),
         idm=RUN.settings["ref_id_mapping"],
-        var_plot_dir=RUN.output(OUTPUTS["smallvars_plots_dir"]),
-        fusion_results_dir=RUN.output(OUTPUTS["fusion_results_dir"]),
-        # This is actually a proxy so that the PNGs are there when create_summary runs;
-        # Because of problems in wkhtmltopdf, we can only show PNG images.
+        var_plots=RUN.output(OUTPUTS["smallvars_plots"]),
         fusions_svg=RUN.output(OUTPUTS["fusions_svg"]),
         flt3_plot=RUN.output(OUTPUTS["flt3_png"]),
         kmt2a_plot=RUN.output(OUTPUTS["kmt2a_png"]),
@@ -134,7 +130,9 @@ rule create_summary:
     conda: srcdir("envs/create_summary.yml")
     shell:
         "python {input.scr}"
-        " {input.idm} {input.var_plot_dir} {input.fusion_results_dir}"
+        " {input.idm}"
+        " `dirname {input.var_plots}`"
+        " `dirname {input.fusions_svg}`"
         " {input.flt3_plot} {input.kmt2a_plot} {input.exon_ratios}"
         " {input.seq_stats} {input.aln_stats} {input.rna_stats} {input.insert_stats}"
         " {input.exon_cov_stats} {input.vep_stats}"
@@ -169,7 +167,7 @@ rule package_results:
         summary=RUN.output(OUTPUTS["summary"]),
         smallvars_csv_all=RUN.output(OUTPUTS["smallvars_csv_all"]),
         smallvars_csv_hi=RUN.output(OUTPUTS["smallvars_csv_hi"]),
-        smallvars_plots=RUN.output(OUTPUTS["smallvars_plots"].strip("/.done")),
+        smallvars_plots_dir=RUN.output(dirname(OUTPUTS["smallvars_plots"])),
         fusions_svg=RUN.output(OUTPUTS["fusions_svg"]),
         count_fragments_per_gene=RUN.output(OUTPUTS["count_fragments_per_gene"]),
         count_bases_per_gene=RUN.output(OUTPUTS["count_bases_per_gene"]),
