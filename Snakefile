@@ -49,7 +49,7 @@ OUTPUTS = dict(
     # Merged FASTQs, stats, and packaged results
     fqs="{sample}/{sample}-{pair}.fq.gz",
     summary="{sample}/{sample}.summary.json",
-    report="{sample}/hamlet_report.{sample}.pdf",
+    reportje="{sample}/hamlet_report.{sample}.pdf",
     package="{sample}/hamlet_results.{sample}.zip",
 
     # Small variants
@@ -157,7 +157,7 @@ rule generate_report:
         toc=srcdir("report/assets/toc.xsl"),
         scr=srcdir("scripts/generate_report.py"),
     output:
-        pdf=RUN.output(OUTPUTS["report"]),
+        pdf=RUN.output(OUTPUTS["reportje"]),
     conda: srcdir("envs/create_report.yml")
     shell:
         "python {input.scr}"
@@ -184,7 +184,7 @@ rule package_results:
         kmt_csv=RUN.output(OUTPUTS["kmt2a_csv"]),
         kmt_bg_csv=RUN.output(OUTPUTS["kmt2a_bg_csv"]),
         kmt_png=RUN.output(OUTPUTS["kmt2a_png"]),
-        report=RUN.output(OUTPUTS["report"]),
+        reportje=RUN.output(OUTPUTS["reportje"]),
     output:
         pkg=RUN.output(OUTPUTS["package"]),
     params:
