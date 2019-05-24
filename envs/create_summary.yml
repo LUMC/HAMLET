@@ -1,10 +1,23 @@
+name: create_summary
 channels:
 - bioconda
-- r
 - defaults
 - conda-forge
 dependencies:
-- crimson=0.3.0=py36_0
-- click=6.7=py36h5253387_0
-- python=3.6.2=0
-- pyyaml=3.12=py36hafb9ca4_1
+- ca-certificates=2018.03.07
+- certifi=2018.1.18
+- crimson=0.3.0
+- click=6.7
+- libgcc-ng=7.2.0
+- openssl=1.0.2o
+- pip=9.0.3
+- python=3.6.2
+- pyyaml=3.12
+- readline=6.2
+- setuptools=39.0.1
+- sqlite=3.13.0
+- tk=8.5.18
+- wheel=0.31.0
+- xz=5.2.3
+- yaml=0.1.7
+- zlib=1.2.11

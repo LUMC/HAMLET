@@ -1,8 +1,9 @@
+name: align_vars
 channels:
 - bioconda
 - r
 - defaults
 - conda-forge
 dependencies:
-- star=2.5.3a=0
-- picard=1.141=3
+- star=2.5.3a
+- picard=1.141

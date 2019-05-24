@@ -1,10 +1,23 @@
+name: calc_ratio
 channels:
 - bioconda
-- r
 - defaults
 - conda-forge
 dependencies:
-- click=6.7=py36_0
-- pandas=0.20.3=py36_0
-- pip=9.0.1=py36_1
-- python=3.6.2=0
+- click=6.7
+- pandas=0.20.3
+- pip=9.0.1
+- python=3.6.2
+- mkl=2017.0.3
+- numpy=1.13.1
+- openssl=1.0.2l
+- python-dateutil=2.6.1
+- pytz=2017.2
+- readline=6.2
+- setuptools=27.2.0
+- six=1.10.0
+- sqlite=3.13.0
+- tk=8.5.18
+- wheel=0.29.0
+- xz=5.2.3
+- zlib=1.2.11

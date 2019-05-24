@@ -1,9 +1,10 @@
+name: fastqc
 channels:
 - bioconda
-- r
 - defaults
 - conda-forge
 dependencies:
-- fastqc=0.11.5=1
-- java-jdk=8.0.92=1
-- libpng=1.6.27=0
+- fastqc=0.11.5
+- java-jdk=8.0.92
+- libpng=1.6.27
+- zlib=1.2.11
