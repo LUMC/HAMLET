@@ -1,0 +1,18 @@
+from snakemake.remote.NCBI import RemoteProvider as NCBIRemoteProvider
+NCBI = NCBIRemoteProvider(email='RedmarvandenBerg@lumc.nl')
+
+output_dir = 'deps'
+
+rule all:
+    input:
+        f'{output_dir}/FLT3_NM_004119.2.fasta'
+
+rule download_flt3
+    input:
+        NCBI.remote('NM_004119.2.fasta', db='nuccore')
+
+    output:
+        f'{output_dir}/FLT3_NM_004119.2.fasta'
+        
+    run:
+        shell('sleep 5s; cp {input} {output}')
