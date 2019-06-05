@@ -2,17 +2,49 @@ from snakemake.remote.NCBI import RemoteProvider as NCBIRemoteProvider
 NCBI = NCBIRemoteProvider(email='RedmarvandenBerg@lumc.nl')
 
 output_dir = 'deps'
+temp_dir = 'temp'
 
+#### SETTINGS ####
+ctat_resource = 'https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/__genome_libs_pre-StarFv1.3/GRCh38_gencode_v26_CTAT_lib_July192017.source_data.tar.gz'
+ctat_resource_tar_gz = ctat_resource.split('/')[-1]
+ctat_resource_folder = ctat_resource_tar_gz.split('.')[0]
+
+#### RULES ####
 rule all:
     input:
-        f'{output_dir}/FLT3_NM_004119.2.fasta'
+        #f'{output_dir}/FLT3.fasta',
+        #f'{output_dir}/KMT2A.fasta',
+        f'{temp_dir}/{ctat_resource_tar_gz}',
+        f'{output_dir}/{ctat_resource_folder}'
 
-rule download_flt3
+rule download_flt3:
     input:
         NCBI.remote('NM_004119.2.fasta', db='nuccore')
-
     output:
-        f'{output_dir}/FLT3_NM_004119.2.fasta'
-        
+        f'{output_dir}/FLT3.fasta'
     run:
         shell('sleep 5s; cp {input} {output}')
+
+rule download_kmt2a:
+    input:
+        NCBI.remote('NM_001197104.1.fasta', db='nuccore')
+    output:
+        f'{output_dir}/KMT2A.fasta'
+    run:
+        shell('sleep 5s; cp {input} {output}')
+
+rule download_genome_star_fusion_lib:
+    params:
+        ctat_resource
+    output:
+        f'{temp_dir}/GRCh38_gencode_v26_CTAT_lib_July192017.source_data.tar.gz'
+    run:
+        shell('mkdir -p {temp_dir} && wget {params} --output-document={output}')
+
+rule unpack_genome_star_fusion_lib:
+    params:
+        f'{temp_dir}/{ctat_resource_tar_gz}'
+    output:
+        f'{output_dir}/{ctat_resource_folder}'
+    run:
+        shell('tar -zxvf {params} -C {output_dir}')
