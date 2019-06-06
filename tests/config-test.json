@@ -1,8 +1,8 @@
 {
   "settings": {
     "flt3_bwa_index": "deps/FLT3.fasta",
-    "kmt2a_fasta": "deps/ktm2a.fa",
-    "genome_star_fusion_lib": "deps/GRCh38_gencode_v23_CTAT_lib",
+    "kmt2a_fasta": "deps/KMT2A.fasta",
+    "genome_star_fusion_lib": "deps/GRCh38_gencode_v26_CTAT_lib_July192017",
     "flt3_start": 1787,
     "relative_gene_name": "HMBS",
     "expression_gtf": "deps/placeholder",
@@ -30,7 +30,7 @@
     "fusioncatcher_exe": "deps/placeholder",
     "cache_vep": "deps/placeholder",
     "ref_id_mapping": "deps/placeholder",
-    "kmt2a_bwa_index": "deps/kmt2a.fasta",
+    "kmt2a_bwa_index": "deps/KMT2A.fasta",
     "flt3_fasta": "deps/FLT3.fasta",
     "rrna_refflat": "deps/placeholder",
     "ref_amplicons": "deps/placeholder",
