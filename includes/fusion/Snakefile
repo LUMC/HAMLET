@@ -51,6 +51,8 @@ rule plot_cp:
         svg=RUN.output("{sample}/fusion/{sample}.{ext}-circos/fsnviz.svg"),
     output:
         svg=RUN.output("{sample}/fusion/{sample}.{ext}.svg"),
+    wildcard_constraints:
+        ext="star-fusion|sf-isect|fusioncatcher",
     shell:
         "cp {input.svg} {output.svg}"
 
