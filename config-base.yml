@@ -79,9 +79,6 @@ settings:
   # Path to the `rose-dt-plot.py` script used for plotting FLT3 ITD detection results.
   #plot_itd:
 
-  # Path to the conda environment file specifying the `fidus-plot.py` script dependencies.
-  #plot_itd_conda:
-
   # STAR aligner index of the genome.
   #genome_star_index:
 

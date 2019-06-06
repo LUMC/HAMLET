@@ -218,8 +218,8 @@ additional steps to have them installed:
 
 3. rose-dt, which is used to detect the FLT3 ITD and KMT2A PTD. This tool may be available in Conda soon, but for now
    it must be compiled and installed directly [from source](https://git.lumc.nl/hem/rose-dt). You can then supply
-   the path to the executable, the plot script, and the plot script environment using the `rose_dt_exe`, `plot_itd`, and
-   `plot_itd_conda` settings respectively.
+   the path to the executable, the plot script, and the plot script environment using the `rose_dt_exe` and `plot_itd`
+   settings.
 
 4. VEP, which is used to annotate the variant calling results. Hamlet was tested using an older version of VEP (77),
    which could not be made to work with Conda at the time of development. You will need to supply the path to the main

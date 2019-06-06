@@ -57,7 +57,7 @@ rule plot_itd_kmt2a:
     output:
         png=RUN.output("{sample}/itd/{sample}.kmt2a.png"),
     threads: 1
-    conda: RUN.settings["plot_itd_conda"]
+    conda: srcdir("envs/fidus-plot.yml")
     shell:
         "python {input.scr}"
         " --mode per-event --sample-id {wildcards.sample}"

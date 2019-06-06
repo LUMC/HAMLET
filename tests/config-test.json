@@ -39,8 +39,7 @@
     "run_name": "hamlet-hiseq2500",
     "vcf_1kg": "deps/placeholder",
     "genome_star_index": "deps/placeholder",
-    "transcripts_bed": "deps/placeholder",
-    "plot_itd_conda": "deps/placeholder"
+    "transcripts_bed": "deps/placeholder"
   },
   "samples": {
     "TestSample": {

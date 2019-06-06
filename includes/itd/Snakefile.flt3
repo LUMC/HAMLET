@@ -57,7 +57,7 @@ rule plot_itd_flt3:
     output:
         png=RUN.output("{sample}/itd/{sample}.flt3.png"),
     threads: 1
-    conda: RUN.settings["plot_itd_conda"]
+    conda: srcdir("envs/fidus-plot.yml")
     shell:
         "python {input.scr}"
         " --sample-id {wildcards.sample} --mode per-event"
