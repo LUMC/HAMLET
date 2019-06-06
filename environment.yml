@@ -4,6 +4,8 @@ channels:
 - conda-forge
 - defaults
 dependencies:
+- biopython=1.73
+- conda=4.5.13
 - dropbox=7.2.1=py36_0
 - filechunkio=1.6=py36_0
 - ftputil=3.2=py36_0
