@@ -1,8 +1,8 @@
 {
   "settings": {
-    "flt3_bwa_index": "deps/data/bwa-flt3-index/flt3-001.fa",
-    "kmt2a_fasta": "deps/data/bwa-kmt2a-index/kmt2a-213.fa",
-    "genome_star_fusion_lib": "deps/data/GRCh38_gencode_v23_CTAT_lib",
+    "flt3_bwa_index": "deps/FLT3.fasta",
+    "kmt2a_fasta": "deps/ktm2a.fa",
+    "genome_star_fusion_lib": "deps/GRCh38_gencode_v23_CTAT_lib",
     "flt3_start": 1787,
     "relative_gene_name": "HMBS",
     "expression_gtf": "deps/placeholder",
@@ -16,7 +16,7 @@
     "plot_itd": "deps/placeholder",
     "gsnap_exe": "deps/placeholder",
     "bed_variant_hotspots": "deps/placeholder",
-    "vep_exe": "",
+    "vep_exe": "deps/placeholder",
     "exon_names": [
       "MECOM:169146722-169147734"
     ],
@@ -30,8 +30,8 @@
     "fusioncatcher_exe": "deps/placeholder",
     "cache_vep": "deps/placeholder",
     "ref_id_mapping": "deps/placeholder",
-    "kmt2a_bwa_index": "deps/data/bwa-kmt2a-index/kmt2a-213.fa",
-    "flt3_fasta": "deps/data/bwa-flt3-index/flt3-001.fa",
+    "kmt2a_bwa_index": "deps/kmt2a.fasta",
+    "flt3_fasta": "deps/FLT3.fasta",
     "rrna_refflat": "deps/placeholder",
     "ref_amplicons": "deps/placeholder",
     "genome_gmap_index": "deps/placeholder",
