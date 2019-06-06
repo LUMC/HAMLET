@@ -1,0 +1,55 @@
+{
+  "settings": {
+    "flt3_bwa_index": "deps/data/bwa-flt3-index/flt3-001.fa",
+    "kmt2a_fasta": "deps/data/bwa-kmt2a-index/kmt2a-213.fa",
+    "genome_star_fusion_lib": "deps/data/GRCh38_gencode_v23_CTAT_lib",
+    "flt3_start": 1787,
+    "relative_gene_name": "HMBS",
+    "expression_gtf": "deps/placeholder",
+    "rose_dt_exe": "deps/placeholder",
+    "expression_bed": "deps/placeholder",
+    "vcf_gonl": "deps/placeholder",
+    "kmt2a_start": 406,
+    "annotation_refflat": "deps/placeholder",
+    "kmt2a_end": 4769,
+    "kmt2a_name": "KMT2A-213",
+    "plot_itd": "deps/placeholder",
+    "gsnap_exe": "deps/placeholder",
+    "bed_variant_hotspots": "deps/placeholder",
+    "vep_exe": "",
+    "exon_names": [
+      "MECOM:169146722-169147734"
+    ],
+    "exon_min_ratio": 0.1,
+    "output_dir": "hamlet-output",
+    "ref_annot_goi": "deps/placeholder",
+    "flt3_end": 2024,
+    "genome_fasta": "deps/placeholder",
+    "fasta_vep": "deps/placeholder",
+    "flt3_name": "FLT3-001",
+    "fusioncatcher_exe": "deps/placeholder",
+    "cache_vep": "deps/placeholder",
+    "ref_id_mapping": "deps/placeholder",
+    "kmt2a_bwa_index": "deps/data/bwa-kmt2a-index/kmt2a-213.fa",
+    "flt3_fasta": "deps/data/bwa-flt3-index/flt3-001.fa",
+    "rrna_refflat": "deps/placeholder",
+    "ref_amplicons": "deps/placeholder",
+    "genome_gmap_index": "deps/placeholder",
+    "bgzip_exe": "deps/placeholder",
+    "run_name": "hamlet-hiseq2500",
+    "vcf_1kg": "deps/placeholder",
+    "genome_star_index": "deps/placeholder",
+    "transcripts_bed": "deps/placeholder",
+    "plot_itd_conda": "deps/placeholder"
+  },
+  "samples": {
+    "TestSample": {
+      "read_groups": {
+        "rg_1": {
+          "R2": "tests/R2.fq.gz",
+          "R1": "tests/R1.fq.gz"
+        }
+      }
+    }
+  }
+}
