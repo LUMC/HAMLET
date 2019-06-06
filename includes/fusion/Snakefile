@@ -66,6 +66,7 @@ if do_fusioncatcher:
             dir=RUN.output("{sample}/fusion/fusioncatcher"),
             txt=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt")
         threads: 8
+        conda: srcdir("envs/fusioncatcher.yml")
         shell:
             "(rm -rf {output.dir}"
             " && {input.exe} --threads {threads} -i {input.fq1},{input.fq2} -o {output.dir})"

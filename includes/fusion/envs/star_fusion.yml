@@ -1,7 +1,22 @@
+name: star_fusion
 channels:
 - bioconda
-- r
 - defaults
 - conda-forge
 dependencies:
-- star-fusion=0.5.4=2
+- star-fusion=0.5.4
+- star=2.5.3a
+- blast=2.2.31
+- boost=1.57.0
+- bowtie=1.0.0
+- bzip2=1.0.6
+- gmap=2017.05.08
+- icu=54.1
+- libdb=6.1.26
+- libgcc=5.2.0
+- perl=5.22.0.1
+- perl-db-file=1.835
+- perl-set-intervaltree=0.10
+- perl-threaded=5.22.0
+- perl-uri=1.71
+- zlib=1.2.11

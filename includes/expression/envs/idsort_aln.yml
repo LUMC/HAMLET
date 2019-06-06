@@ -1,7 +1,8 @@
+name: idsort_aln
 channels:
 - bioconda
-- r
 - defaults
 - conda-forge
 dependencies:
-- picard=1.141=3
+- picard=1.141
+- java-jdk=8.0.92
