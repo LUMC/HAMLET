@@ -64,6 +64,13 @@ OUTPUTS = dict(
     star_fusion_svg=fusion_output(".star-fusion.svg"),
     fusions_svg=fusion_output(".fusions-combined.svg"),
 
+    # Fusioncatcher
+    fusioncatcher_txt=fusion_output(".fusioncatcher"),
+    fusioncatcher_svg=fusion_output(".fusioncatcher.svg"),
+    fusions_txt=fusion_output(".fuma"),
+    isect_svg=fusion_output(".sf-isect.svg"),
+    isect_txt=fusion_output(".sf-isect"),
+
     # Expression
     count_fragments_per_gene=expr_output(".fragments_per_gene"),
     count_bases_per_gene=expr_output(".bases_per_gene"),
@@ -88,17 +95,6 @@ OUTPUTS = dict(
     kmt2a_bg_csv=itd_output(".kmt2a.bg.csv"),
     kmt2a_png=itd_output(".kmt2a.png"),
 )
-
-if "fusioncatcher_exe" in RUN.settings:
-    OUTPUTS.update(
-        dict(
-            fusioncatcher_txt=fusion_output(".fusioncatcher"),
-            fusioncatcher_svg=fusion_output(".fusioncatcher.svg"),
-            fusions_txt=fusion_output(".fuma"),
-            isect_svg=fusion_output(".sf-isect.svg"),
-            isect_txt=fusion_output(".sf-isect"),
-    ))
-
 
 rule all:
     input:

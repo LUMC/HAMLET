@@ -210,11 +210,8 @@ additional steps to have them installed:
    `gsnap_exe` settings. If you do, Hamlet will use that GSNAP executable. If you do not, Hamlet will use the
    GSNAP available from Conda and may require more time to run.
 
-2. FusionCatcher, which is used by the fusion detection module. Unfortunately, [this tool is not and will probably never
-   be available in Conda](https://github.com/ndaniel/fusioncatcher/issues/20). If you would like to use FusionCatcher
-   in the fusion detection steps, we recommend installing version 0.99.5a and then supply the path to the main
-   executable using the `fusioncatcher_exe` settings. You may also keep this configuration value empty, though that will
-   result in the fusion detection module only using STAR-Fusion and skipping any possible intersection of the results.
+2. FusionCatcher, which is used by the fusion detection module. The results from fusioncatcher will be intersected
+   with those of STAR-Fusion, and both the independend and the intersected results will be reported.
 
 3. rose-dt, which is used to detect the FLT3 ITD and KMT2A PTD. This tool may be available in Conda soon, but for now
    it must be compiled and installed directly [from source](https://git.lumc.nl/hem/rose-dt). You can then supply

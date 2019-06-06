@@ -82,10 +82,6 @@ settings:
   # STAR aligner index of the genome.
   #genome_star_index:
 
-  # Path to FusionCatcher executable.
-  # This is unfortunately required since FusionCatcher is not available in Conda so we have to install it beforehand.
-  #fusioncatcher_exe:
-
   # Path to GSNAP executable, required to reproduce paper results
   #gsnap_exe:
   #genome_gmap_index:

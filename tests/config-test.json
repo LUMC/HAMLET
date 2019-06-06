@@ -27,7 +27,6 @@
     "genome_fasta": "deps/placeholder",
     "fasta_vep": "deps/placeholder",
     "flt3_name": "FLT3-001",
-    "fusioncatcher_exe": "deps/placeholder",
     "cache_vep": "deps/placeholder",
     "ref_id_mapping": "deps/placeholder",
     "kmt2a_bwa_index": "deps/KMT2A.fasta",
