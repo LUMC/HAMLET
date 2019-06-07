@@ -37,6 +37,7 @@ dependencies:
 - xz=5.2.2=1
 - yaml=0.1.6=0
 - zlib=1.2.8=3
+- make=4.2.1
 - pip:
   - "git+https://github.com/bow/rattle.git@69f64e4e86559fcd48a40a2019f2997912147218#egg=Rattle"
   - gitdb2==2.0.3

@@ -9,13 +9,20 @@ ctat_resource = 'https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/__gen
 ctat_resource_tar_gz = ctat_resource.split('/')[-1]
 ctat_resource_folder = ctat_resource_tar_gz.split('.')[0]
 
+gsnap = 'http://research-pub.gene.com/gmap/src/gmap-gsnap-2014-12-31.v2.tar.gz'
+gsnap_tar_gz = gsnap.split('/')[-1]
+gsnap_folder = 'gmap-2014-12-31'
+
+
 #### RULES ####
 rule all:
     input:
         #f'{output_dir}/FLT3.fasta',
         #f'{output_dir}/KMT2A.fasta',
-        f'{temp_dir}/{ctat_resource_tar_gz}',
-        f'{output_dir}/{ctat_resource_folder}'
+        #f'{temp_dir}/{ctat_resource_tar_gz}',
+        f'{output_dir}/{ctat_resource_folder}',
+        #f'{output_dir}/{gsnap_folder}',
+        f'{output_dir}/{gsnap_folder}/src/gsnap'
 
 rule download_flt3:
     input:
@@ -42,9 +49,33 @@ rule download_genome_star_fusion_lib:
         shell('mkdir -p {temp_dir} && wget {params} --output-document={output}')
 
 rule unpack_genome_star_fusion_lib:
-    params:
+    input:
         f'{temp_dir}/{ctat_resource_tar_gz}'
     output:
         f'{output_dir}/{ctat_resource_folder}'
     run:
-        shell('tar -zxvf {params} -C {output_dir}')
+        shell('tar -zxvf {input} -C {output_dir}')
+
+rule download_SIMD_gsnap:
+    params:
+        gsnap
+    output:
+        f'{temp_dir}/{gsnap_tar_gz}'
+    run:
+        shell('mkdir -p {temp_dir} && wget {params} --output-document={output}')
+
+rule unpack_SIMD_gsnap:
+    input:
+        f'{temp_dir}/{gsnap_tar_gz}'
+    output:
+        f'{output_dir}/{gsnap_folder}'
+    run:
+        shell('tar -zxvf {input} -C {output_dir}')
+
+rule compile_SIMD_gsnap:
+    input:
+        f'{output_dir}/{gsnap_folder}'
+    output:
+        f'{output_dir}/{gsnap_folder}/src/gsnap'
+    run:
+        shell('cd {input} && ./configure && make')
