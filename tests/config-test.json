@@ -14,7 +14,7 @@
     "kmt2a_end": 4769,
     "kmt2a_name": "KMT2A-213",
     "plot_itd": "deps/placeholder",
-    "gsnap_exe": "deps/placeholder",
+    "gsnap_exe": "deps/gmap-2014-12-31/src/gsnap",
     "bed_variant_hotspots": "deps/placeholder",
     "vep_exe": "deps/placeholder",
     "exon_names": [
