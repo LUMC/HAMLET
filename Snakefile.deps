@@ -1,8 +1,8 @@
 from snakemake.remote.NCBI import RemoteProvider as NCBIRemoteProvider
 NCBI = NCBIRemoteProvider(email='RedmarvandenBerg@lumc.nl')
 
-output_dir = 'deps'
-temp_dir = 'temp'
+output_dir = '/tmp/deps'
+temp_dir = '/tmp/temp'
 
 #### SETTINGS ####
 ctat_resource = 'https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/__genome_libs_pre-StarFv1.3/GRCh38_gencode_v26_CTAT_lib_July192017.source_data.tar.gz'
@@ -13,16 +13,20 @@ gsnap = 'http://research-pub.gene.com/gmap/src/gmap-gsnap-2014-12-31.v2.tar.gz'
 gsnap_tar_gz = gsnap.split('/')[-1]
 gsnap_folder = 'gmap-2014-12-31'
 
+gmap_index = 'ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz'
+gmap_gz = gmap_index.split('/')[-1]
 
 #### RULES ####
 rule all:
     input:
-        #f'{output_dir}/FLT3.fasta',
-        #f'{output_dir}/KMT2A.fasta',
+        f'{output_dir}/FLT3.fasta',
+        f'{output_dir}/KMT2A.fasta',
         #f'{temp_dir}/{ctat_resource_tar_gz}',
         f'{output_dir}/{ctat_resource_folder}',
         #f'{output_dir}/{gsnap_folder}',
-        f'{output_dir}/{gsnap_folder}/src/gsnap'
+        f'{output_dir}/{gsnap_folder}/bin/gsnap',
+        #f'{output_dir}/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna'
+        f'{temp_dir}/{gmap_gz}'
 
 rule download_flt3:
     input:
@@ -76,6 +80,23 @@ rule compile_SIMD_gsnap:
     input:
         f'{output_dir}/{gsnap_folder}'
     output:
-        f'{output_dir}/{gsnap_folder}/src/gsnap'
+        f'{output_dir}/{gsnap_folder}/bin/gsnap'
     run:
-        shell('cd {input} && ./configure && make')
+        shell('cd {input} && ./configure --prefix {input} && make && make install')
+
+rule download_gmap_index:
+    params:
+        gmap_index
+    output:
+        f'{temp_dir}/{gmap_gz}'
+    run:
+        shell('mkdir -p {temp_dir} && wget {params} --output-document={output}')
+
+rule build_gmap_index:
+    input:
+        gzip = f'{temp_dir}/{gmap_gz}',
+        gmap_bin = f'{output_dir}/{gsnap_folder}/bin'
+    output:
+        f'{output_dir}/GCA_000001405.15_GRCh38_no_alt_analysis_set.sources'
+    run:
+        shell('{input.gmap_bin}/gmap_build -D {output_dir} -d GCA_000001405.15_GRCh38_no_alt_analysis_set -g {input.gzip} -B {input.gmap_bin}')
