@@ -1,4 +1,5 @@
 from snakemake.remote.NCBI import RemoteProvider as NCBIRemoteProvider
+import os
 NCBI = NCBIRemoteProvider(email='RedmarvandenBerg@lumc.nl')
 
 output_dir = '/tmp/deps'
@@ -16,17 +17,27 @@ gsnap_folder = 'gmap-2014-12-31'
 gmap_index = 'ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz'
 gmap_gz = gmap_index.split('/')[-1]
 
+# GRCH38_no_alt_analysis_set, see the readme for details
+# https://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/README_ANALYSIS_SETS
+GRCH38_no_alt_analysis_set = 'ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna'
+GRCH38_no_alt_analysis_set_fasta = f'{GRCH38_no_alt_analysis_set}.gz'
+GRCH38_no_alt_analysis_set_fai = f'{GRCH38_no_alt_analysis_set}.fai'
+GRCH38_no_alt_analysis_set_bwa = f'{GRCH38_no_alt_analysis_set}.bwa_index.tar.gz'
+
 #### RULES ####
 rule all:
     input:
-        f'{output_dir}/FLT3.fasta',
-        f'{output_dir}/KMT2A.fasta',
+        #f'{output_dir}/FLT3.fasta',
+        #f'{output_dir}/KMT2A.fasta',
         #f'{temp_dir}/{ctat_resource_tar_gz}',
         f'{output_dir}/{ctat_resource_folder}',
         #f'{output_dir}/{gsnap_folder}',
         f'{output_dir}/{gsnap_folder}/bin/gsnap',
         #f'{output_dir}/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna'
-        f'{temp_dir}/{gmap_gz}'
+        f'{temp_dir}/{gmap_gz}',
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta)}',
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_bwa)}',
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fai)}'
 
 rule download_flt3:
     input:
@@ -100,3 +111,30 @@ rule build_gmap_index:
         f'{output_dir}/GCA_000001405.15_GRCh38_no_alt_analysis_set.sources'
     run:
         shell('{input.gmap_bin}/gmap_build -D {output_dir} -d GCA_000001405.15_GRCh38_no_alt_analysis_set -g {input.gzip} -B {input.gmap_bin}')
+
+rule download_GRCH38_no_alt_fasta:
+    params:
+        GRCH38_no_alt_analysis_set_fasta
+    output:
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta)}'
+    run:
+        shell('wget {params} --output-document={output}')
+
+#rule unpack_GRCH38_no_alt:
+#    pass
+
+rule download_GRCH38_no_alt_fai:
+    params:
+        GRCH38_no_alt_analysis_set_fai
+    output:
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fai)}'
+    run:
+        shell('wget {params} --output-document={output}')
+
+rule download_GRCH38_no_alt_bwa:
+    params:
+        GRCH38_no_alt_analysis_set_bwa
+    output:
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_bwa)}'
+    run:
+        shell('wget {params} --output-document={output}')
