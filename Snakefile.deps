@@ -19,11 +19,12 @@ gmap_gz = gmap_index.split('/')[-1]
 
 # GRCH38_no_alt_analysis_set, see the readme for details
 # https://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/README_ANALYSIS_SETS
-GRCH38_no_alt_analysis_set = 'ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna'
-GRCH38_no_alt_analysis_set_fasta_gz = f'{GRCH38_no_alt_analysis_set}.gz'
-GRCH38_no_alt_analysis_set_fasta = f'{GRCH38_no_alt_analysis_set}'
-GRCH38_no_alt_analysis_set_fai = f'{GRCH38_no_alt_analysis_set}.fai'
-GRCH38_no_alt_analysis_set_dict = os.path.basename(GRCH38_no_alt_analysis_set_fasta).replace('.fna', '.dict')
+GRCH38_no_alt_analysis_set_url = 'ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines'
+GRCH38_no_alt_analysis_set_filename = os.path.join(GRCH38_no_alt_analysis_set_url, 'GCA_000001405.15_GRCh38_no_alt_analysis_set')
+GRCH38_no_alt_analysis_set_fasta_gz = f'{GRCH38_no_alt_analysis_set_filename}.fna.gz'
+GRCH38_no_alt_analysis_set_fasta = f'{GRCH38_no_alt_analysis_set_filename}.fna'
+GRCH38_no_alt_analysis_set_fai = f'{GRCH38_no_alt_analysis_set_filename}.fna.fai'
+GRCH38_no_alt_analysis_set_dict = f'{GRCH38_no_alt_analysis_set_filename}.dict'
 
 
 #### RULES ####
@@ -40,7 +41,7 @@ rule all:
         f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta_gz)}',
         f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fai)}',
         f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta)}',
-        GRCH38_no_alt_analysis_set_dict
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_dict)}'
 
 rule download_flt3:
     input:
@@ -143,7 +144,7 @@ rule picard_index_GRCH38_no_alt:
     input:
         f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta)}'
     output:
-        GRCH38_no_alt_analysis_set_dict
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_dict)}'
     conda:
         srcdir('includes/snv-indels/envs/align_vars.yml')
     shell:
