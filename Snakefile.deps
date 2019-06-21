@@ -20,9 +20,11 @@ gmap_gz = gmap_index.split('/')[-1]
 # GRCH38_no_alt_analysis_set, see the readme for details
 # https://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/README_ANALYSIS_SETS
 GRCH38_no_alt_analysis_set = 'ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna'
-GRCH38_no_alt_analysis_set_fasta = f'{GRCH38_no_alt_analysis_set}.gz'
+GRCH38_no_alt_analysis_set_fasta_gz = f'{GRCH38_no_alt_analysis_set}.gz'
+GRCH38_no_alt_analysis_set_fasta = f'{GRCH38_no_alt_analysis_set}'
 GRCH38_no_alt_analysis_set_fai = f'{GRCH38_no_alt_analysis_set}.fai'
-GRCH38_no_alt_analysis_set_bwa = f'{GRCH38_no_alt_analysis_set}.bwa_index.tar.gz'
+GRCH38_no_alt_analysis_set_dict = os.path.basename(GRCH38_no_alt_analysis_set_fasta).replace('.fna', '.dict')
+
 
 #### RULES ####
 rule all:
@@ -35,9 +37,10 @@ rule all:
         f'{output_dir}/{gsnap_folder}/bin/gsnap',
         #f'{output_dir}/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna'
         f'{temp_dir}/{gmap_gz}',
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta_gz)}',
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fai)}',
         f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta)}',
-        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_bwa)}',
-        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fai)}'
+        GRCH38_no_alt_analysis_set_dict
 
 rule download_flt3:
     input:
@@ -114,14 +117,19 @@ rule build_gmap_index:
 
 rule download_GRCH38_no_alt_fasta:
     params:
-        GRCH38_no_alt_analysis_set_fasta
+        GRCH38_no_alt_analysis_set_fasta_gz
     output:
-        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta)}'
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta_gz)}'
     run:
         shell('wget {params} --output-document={output}')
 
-#rule unpack_GRCH38_no_alt:
-#    pass
+rule unpack_GRCH38_no_alt:
+    input:
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta_gz)}'
+    output:
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta)}'
+    run:
+        shell('gunzip --decompress --keep {input} > {output}')
 
 rule download_GRCH38_no_alt_fai:
     params:
@@ -131,10 +139,12 @@ rule download_GRCH38_no_alt_fai:
     run:
         shell('wget {params} --output-document={output}')
 
-rule download_GRCH38_no_alt_bwa:
-    params:
-        GRCH38_no_alt_analysis_set_bwa
+rule picard_index_GRCH38_no_alt:
+    input:
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta)}'
     output:
-        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_bwa)}'
-    run:
-        shell('wget {params} --output-document={output}')
+        GRCH38_no_alt_analysis_set_dict
+    conda:
+        srcdir('includes/snv-indels/envs/align_vars.yml')
+    shell:
+        'picard CreateSequenceDictionary R={input} O={output}'
