@@ -130,7 +130,7 @@ rule unpack_GRCH38_no_alt:
     output:
         f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta)}'
     run:
-        shell('gunzip --decompress --keep {input} > {output}')
+        shell('gunzip --decompress --keep --to-stdout {input} > {output}')
 
 rule download_GRCH38_no_alt_fai:
     params:
