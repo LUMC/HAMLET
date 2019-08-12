@@ -4,12 +4,15 @@ from rattle import Run, ReadGroup, Sample
 
 RUN = Run(config)
 
-RUN.set_default_setting("contaminants_file", srcdir(path.join("defaults", "contaminant_list_fastqc_v0115.txt")))
-RUN.set_default_setting("cts_helper", srcdir(path.join("helpers", "clip_trim_sync.py")))
-RUN.set_default_setting("sync_script", srcdir(path.join("scripts", "sync_fq.py")))
 RUN.set_default_setting("rg_stats_script", srcdir(path.join("scripts", "gather_rg_stats.py")))
 RUN.set_default_setting("sample_stats_script", srcdir(path.join("scripts", "gather_sample_stats.py")))
 
+containers = {
+    "crimson": "docker://quay.io/biocontainers/crimson:0.3.0--py27_1",
+    "cutadapt": "docker://quay.io/biocontainers/cutadapt:1.14--py36_0",
+    "debian": "docker://debian:buster-slim",
+    "fastqc": "docker://quay.io/biocontainers/fastqc:0.11.8--1"
+}
 
 rule all_qc:
     input:
@@ -25,35 +28,29 @@ rule fastqc_raw:
     input:
         fq=RUN.config_input_func(ReadGroup, "{pair}"),
     output:
-        dir=RUN.output("{sample}/qc-seq/{read_group}/fastqc-{{pair}}-raw", fmt=True),
+        dir=directory(RUN.output("{sample}/qc-seq/{read_group}/fastqc-{{pair}}-raw", fmt=True)),
     threads: 4
     conda: srcdir("envs/fastqc.yml")
+    singularity: containers["fastqc"]
     shell:
         "mkdir -p {output.dir}"
         " && fastqc -o {output.dir} --extract --nogroup -f fastq --threads {threads} {input.fq}"
 
 
-rule clip_trim_sync:
-    """Clips FastQC-detected adapter sequences and then trims low quality bases from all read pairs."""
+rule cutadapt:
+    """Clip fastq files"""
     input:
         fq1=RUN.config_input_func(ReadGroup, "R1"),
         fq2=RUN.config_input_func(ReadGroup, "R2"),
-        fqc1=RUN.output("{sample}/qc-seq/{read_group}/fastqc-R1-raw", fmt=True),
-        fqc2=RUN.output("{sample}/qc-seq/{read_group}/fastqc-R2-raw", fmt=True),
-        contams_file=RUN.settings["contaminants_file"],
-        cts_helper=RUN.settings["cts_helper"],
-        sync_script=RUN.settings["sync_script"],
     output:
         fq1=temp(RUN.output("{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz")),
         fq2=temp(RUN.output("{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz")),
-        stats=RUN.output("{sample}/qc-seq/{read_group}/{sample}-{read_group}.cts-stats.json"),
-    threads: 2
-    conda: srcdir("envs/clip_trim_sync.yml")
-    shell:
-        "python {input.cts_helper} --i1 {input.fq1} --i2 {input.fq2}"
-        " --fqc1 {input.fqc1} --fqc2 {input.fqc2}"
-        " --o1 {output.fq1} --o2 {output.fq2} --contaminants {input.contams_file}"
-        " --sync-scr {input.sync_script} --stats {output.stats}"
+    singularity: containers["cutadapt"]
+    conda: "envs/cutadapt.yml"
+    shell: "cutadapt -a AGATCGGAAGAG -A AGATCGGAAGAG "
+           "--minimum-length=20 --quality-cutoff=20,20 "
+           "--output={output.fq1} --paired-output={output.fq2} "
+           "{input.fq1} {input.fq2}"
 
 
 rule fastqc_processed:
@@ -61,9 +58,10 @@ rule fastqc_processed:
     input:
         fq=RUN.output("{sample}/qc-seq/{read_group}/{sample}-{read_group}-{pair}.fq.gz"),
     output:
-        dir=RUN.output("{sample}/qc-seq/{read_group}/fastqc-{pair}-processed"),
+        dir=directory(RUN.output("{sample}/qc-seq/{read_group}/fastqc-{pair}-processed")),
     threads: 4
     conda: srcdir("envs/fastqc.yml")
+    singularity: containers["fastqc"]
     shell:
         "mkdir -p {output.dir}"
         " && fastqc -o {output.dir} --extract --nogroup -f fastq --threads {threads} {input.fq}"
@@ -80,6 +78,7 @@ rule rg_stats:
     output:
         stats=temp(RUN.output("{sample}/qc-seq/{read_group}/stats.json")),
     conda: srcdir("envs/rg_stats.yml")
+    singularity: containers["crimson"]
     shell:
         "python {input.rg_stats_script} --name {wildcards.read_group}"
         " {input.raw1} {input.raw2} {input.proc1} {input.proc2}"
@@ -96,6 +95,7 @@ rule sample_stats:
     output:
         stats=RUN.output("{sample}/qc-seq/{sample}.seq_stats.json")
     conda: srcdir("envs/sample_stats.yml")
+    singularity: containers["crimson"]
     shell:
         "python {input.sample_stats_script} --name {wildcards.sample}"
         " {input.rg_stats} > {output.stats}"
@@ -109,6 +109,7 @@ rule merge_fastqs:
                                for rgn in RUN.samples[wildcards.sample].read_groups]
     output:
         fq=RUN.output("{sample}/{sample}-{pair}.fq.gz"),
+    singularity: containers["debian"]
     shell:
         "zcat {input.fqs} | gzip -c > {output.fq}"
 
@@ -120,5 +121,6 @@ rule merge_fastqs_raw:
                                for rg in RUN.samples[wildcards.sample].read_groups.values()]
     output:
         fq=temp(RUN.output("{sample}/{sample}-{pair}.raw.fq.gz")),
+    singularity: containers["debian"]
     shell:
         "zcat {input.fqs} | gzip -c > {output.fq}"
