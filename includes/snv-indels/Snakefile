@@ -1,4 +1,5 @@
 from rattle import Run
+from os import path
 
 RUN = Run(config)
 
@@ -10,6 +11,29 @@ RUN.set_default_setting("plot_script", srcdir(path.join("scripts", "plotVariants
 RUN.set_default_setting("exon_cov_script", srcdir(path.join("scripts", "aggr_exon_cov.py")))
 RUN.set_default_setting("genome_fai", RUN.settings["genome_fasta"] + ".fai")
 
+containers = {
+    "bedtools": "docker://quay.io/biocontainers/bedtools:2.23.0--hdbcaa40_3",
+    "debian": "docker://debian:buster-slim",
+    "gsnap": "docker://quay.io/biocontainers/gmap:2019.06.10--pl526h2f06484_0",
+    # Wait for the mulled container
+    # https://github.com/BioContainers/multi-package-containers/pull/838
+    # click=7.0,pyvcf=0.6.8,python=3.5
+    "test": "docker://quay.io/biocontainers/mulled-v2-0a61039b60060e63b68e2f161289f029150f86c3:d29da2f35209ab08fa8cd60a29118dd759209458-0",
+    "picard": "docker://quay.io/biocontainers/picard:2.20.5--0",
+    "python3": "docker://python:3.7.4-slim-stretch",
+    "R": "docker://quay.io/biocontainers/r:3.2.2--0",
+    "samtools": "docker://quay.io/biocontainers/samtools:1.6--h244ad75_4",
+    # varscan=2.4.3,samtools=1.6,tabix=0.2.6
+    "varscan": "docker://quay.io/biocontainers/mulled-v2-fe04a5388a5c60964bedfc046450b83c0d810523:7ddebf6ed147098f06e2d2c7e0e6c89c9cee9978-0",
+    "vep": "docker://quay.io/biocontainers/ensembl-vep:97.3--pl526hecc5488_0"
+}
+
+rule all_snv_indels:
+    input:
+        #plots_mark=expand(RUN.output("{sample}/snv-indels/variant_plots/.done"), sample=RUN.samples),
+        plotd=expand(RUN.output("{sample}/snv-indels/variant_plots"), sample=RUN.samples),
+
+
 if RUN.settings.get("gsnap_exe") is not None:
     # To reproduce paper results, relies on a non-conda GSNAP 2014.12.23 with SIMD
     rule align_vars:
@@ -17,27 +41,39 @@ if RUN.settings.get("gsnap_exe") is not None:
             fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
             fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
             index=RUN.settings["genome_gmap_index"],
-            exe=RUN.settings["gsnap_exe"],
+            #exe=RUN.settings["gsnap_exe"],
         output:
-            bam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.bam")),
-            bai=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.bai")),
+            sam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.sam")),
+            #bai=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.bai")),
         params:
             rg_sample="{sample}"
         threads: 8
         conda: srcdir("envs/align_vars.yml")
+        singularity: containers["gsnap"]
         shell:
-            "{input.exe} --dir `dirname {input.index}` --db `basename {input.index}`"
+            #"{input.exe} --dir `dirname {input.index}` --db `basename {input.index}`"
+            "gsnap --dir `dirname {input.index}` --db `basename {input.index}`"
             " --batch 4 --nthreads {threads}"
             " --novelsplicing 1 --npaths 1 --quiet-if-excessive"
             " --read-group-name={params.rg_sample} --read-group-id={params.rg_sample}"
-            " --format sam --gunzip {input.fq1} {input.fq2}"
-            " | picard SortSam I=/dev/stdin O={output.bam} SORT_ORDER=coordinate"
-            " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true"
+            " --format sam --gunzip {input.fq1} {input.fq2} > {output.sam}"
+
+    rule sort_bamfile:
+        input:
+            sam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.sam"),
+        output:
+            bam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bam")),
+            bai=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bai")),
+        singularity: containers["picard"]
+        shell:
+            "picard SortSam I={input.sam} O={output.bam} SORT_ORDER=coordinate "
+            "VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true "
+
 
     rule reorder_aln_header:
         input:
-            bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.bam"),
-            bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.bai"),
+            bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bam"),
+            bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bai"),
             ref=RUN.settings["genome_fasta"],
             refd=RUN.settings["genome_dict"],
         output:
@@ -47,6 +83,7 @@ if RUN.settings.get("gsnap_exe") is not None:
             rg_sample="{sample}"
         threads: 1
         conda: srcdir("envs/align_vars.yml")
+        singularity: containers["picard"]
         shell:
             "picard -Xmx3G ReorderSam I={input.bam} O={output.bam} R={input.ref}"
             " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true"
@@ -79,6 +116,7 @@ rule genome_txt:
         ref_dict=RUN.settings["genome_dict"],
     output:
         genome=temp(RUN.output(".tmp.genome.txt"))
+    singularity: containers["debian"]
     shell:
         " cat {input.ref_dict}"
         " | grep -P \"@SQ\\tSN:\""
@@ -94,6 +132,7 @@ rule exon_cov_ref:
     output:
         bed=temp(RUN.output(".tmp.exon_cov_ref.bed"))
     conda: srcdir("envs/exon_covs.yml")
+    singularity: containers["bedtools"]
     shell:
         "cat {input.ref_refflat}"
         " | grep -vP \"chr.*alt\t\""
@@ -111,6 +150,7 @@ rule exon_cov:
     output:
         json=RUN.output("{sample}/snv-indels/{sample}.exon_cov_stats.json")
     conda: srcdir("envs/exon_covs.yml")
+    singularity: containers["bedtools"]
     shell:
         "bedtools coverage -d -sorted -g {input.genome} -a {input.bed} -b {input.bam}"
         " | cut -f1,2,3,4,5,8,7"
@@ -124,11 +164,12 @@ rule call_vars:
         vcf=RUN.output("{sample}/snv-indels/{sample}.raw.vcf.gz")
     threads: 3
     conda: srcdir("envs/call_vars.yml")
+    singularity: containers["varscan"]
     shell:
         "samtools mpileup -f {input.ref} -d 1000000 -s -B {input.bam}"
-        " | grep -vP '\\t\\t'"
+        " | grep -vE '\\t\\t'"
         " | varscan mpileup2cns --strand-filter 0 --output-vcf 1 --min-var-freq 0.1 --p-value 0.05"
-        " | grep -vP '\\t\./\.|\\t0/0'"
+        " | grep -vE '\\t\./\.|\\t0/0'"
         " | bgzip -c > {output.vcf}"
 
 rule aln_stats:
@@ -141,6 +182,7 @@ rule aln_stats:
         stats=RUN.output("{sample}/snv-indels/{sample}.aln_stats")
     threads: 1
     conda: srcdir("envs/bam_stats.yml")
+    singularity: containers["picard"]
     shell:
         "picard -Xmx2G CollectAlignmentSummaryMetrics"
         " R={input.ref} I={input.bam} O={output.stats}"
@@ -156,6 +198,7 @@ rule insert_stats:
         histo=RUN.output("{sample}/snv-indels/{sample}.insert_stats.pdf")
     threads: 1
     conda: srcdir("envs/bam_stats.yml")
+    singularity: containers["picard"]
     shell:
         "picard -Xmx2G CollectInsertSizeMetrics"
         " R={input.ref} I={input.bam} O={output.stats} H={output.histo}"
@@ -172,6 +215,7 @@ rule rna_stats:
         stats=RUN.output("{sample}/snv-indels/{sample}.rna_stats")
     threads: 1
     conda: srcdir("envs/bam_stats.yml")
+    singularity: containers["picard"]
     shell:
         "picard -Xmx4G CollectRnaSeqMetrics"
         " R={input.ref} REF_FLAT={input.annot}"
@@ -186,20 +230,19 @@ rule annotate_vars:
         ref_gonl=RUN.settings["vcf_gonl"],
         cache_vep=RUN.settings["cache_vep"],
         fasta_vep=RUN.settings["fasta_vep"],
-        vep_exe=RUN.settings["vep_exe"],
-        bgzip_exe=RUN.settings["bgzip_exe"],
     output:
         vcf=RUN.output("{sample}/snv-indels/{sample}.annotated.vcf.gz"),
         stats=RUN.output("{sample}/snv-indels/{sample}.vep_stats"),
     threads: 8
+    singularity: containers["vep"]
     shell:
-        "PATH=/usr/bin:${{PATH}} {input.vep_exe} -i {input.vcf}"
+        "vep -i {input.vcf}"
         " --fasta {input.fasta_vep} --dir {input.cache_vep}"
         " --custom {input.ref_1kg},P3,vcf,exact,0,AF,AFR_AF,AMR_AF,EAS_AF,EUR_AF,SAS_AF"
         " --custom {input.ref_gonl},GONL,vcf,exact,0,AF"
-        " --fork {threads} --offline --cache_version 77 --assembly GRCh38 --everything --merged"
+        " --fork {threads} --offline --cache_version 97 --assembly GRCh38 --everything --merged"
         " --allele_number --stats_text --vcf --cache --force_overwrite"
-        " --stats_file {output.stats} -o STDOUT | {input.bgzip_exe} -c > {output.vcf}"
+        " --stats_file {output.stats} -o STDOUT | bgzip -c > {output.vcf}"
 
 rule extract_vars:
     input:
@@ -211,6 +254,7 @@ rule extract_vars:
         json=RUN.output("{sample}/snv-indels/{sample}.variants.json"),
     threads: 1
     conda: srcdir("envs/extract_vars.yml")
+    singularity: containers["test"]
     shell:
         "python {input.scr} --hotspots {input.ref_hotspots} --sample-id {wildcards.sample}"
         " {input.ref_id_mapping} {input.vcf} > {output.json}"
@@ -223,6 +267,7 @@ rule table_vars_all:
         csv=RUN.output("{sample}/snv-indels/{sample}.variants_all.csv"),
     threads: 1
     conda: srcdir("envs/json_to_csv.yml")
+    singularity: containers["python3"]
     shell:
         "python {input.scr} {input.json} > {output.csv}"
 
@@ -234,6 +279,7 @@ rule table_vars_hi:
         csv=RUN.output("{sample}/snv-indels/{sample}.variants_hi.csv"),
     threads: 1
     conda: srcdir("envs/json_to_csv.yml")
+    singularity: containers["python3"]
     shell:
         "python {input.scr} --hi {input.json} > {output.csv}"
 
@@ -248,10 +294,11 @@ rule plot_vars:
     params:
         plotd=RUN.output("{sample}/snv-indels/variant_plots"),
     output:
-        plots_mark=RUN.output("{sample}/snv-indels/variant_plots/.done"),
-        plotd=RUN.output("{sample}/snv-indels/variant_plots"),
+        #plots_mark=RUN.output("{sample}/snv-indels/variant_plots/.done"),
+        plotd=directory(RUN.output("{sample}/snv-indels/variant_plots"))
     threads: 1
     conda: srcdir("envs/plot_variants.yml")
+    singularity: containers["R"]
     shell:
         "(Rscript {input.scr} -j {input.json}"
         " -i {input.ref_id_mapping} -m {input.ref_annot_goi}"
