@@ -70,6 +70,7 @@ dependencies:
 - perl-www-robotrules=6.02
 - perl-xml-parser=2.44
 - perl-xsloader=0.22
+- python=3.6
 - readline=7.0
 - setuptools=27.2.0
 - tk=8.6
