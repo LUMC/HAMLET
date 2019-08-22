@@ -15,10 +15,7 @@ containers = {
     "bedtools": "docker://quay.io/biocontainers/bedtools:2.23.0--hdbcaa40_3",
     "debian": "docker://debian:buster-slim",
     "gsnap": "docker://quay.io/biocontainers/gmap:2019.06.10--pl526h2f06484_0",
-    # Wait for the mulled container
-    # https://github.com/BioContainers/multi-package-containers/pull/838
-    # click=7.0,pyvcf=0.6.8,python=3.5
-    "test": "docker://quay.io/biocontainers/mulled-v2-0a61039b60060e63b68e2f161289f029150f86c3:d29da2f35209ab08fa8cd60a29118dd759209458-0",
+    "hamlet-scripts": "docker://lumc/hamlet-scripts:0.1",
     "picard": "docker://quay.io/biocontainers/picard:2.20.5--0",
     "python3": "docker://python:3.7.4-slim-stretch",
     "R": "docker://quay.io/biocontainers/r:3.2.2--0",
@@ -232,7 +229,7 @@ rule annotate_vars:
         fasta_vep=RUN.settings["fasta_vep"],
     output:
         vcf=RUN.output("{sample}/snv-indels/{sample}.annotated.vcf.gz"),
-        stats=RUN.output("{sample}/snv-indels/{sample}.vep_stats"),
+        stats=RUN.output("{sample}/snv-indels/{sample}.vep_stats.txt"),
     threads: 8
     singularity: containers["vep"]
     shell:
@@ -254,9 +251,9 @@ rule extract_vars:
         json=RUN.output("{sample}/snv-indels/{sample}.variants.json"),
     threads: 1
     conda: srcdir("envs/extract_vars.yml")
-    singularity: containers["test"]
+    singularity: containers["hamlet-scripts"]
     shell:
-        "python {input.scr} --hotspots {input.ref_hotspots} --sample-id {wildcards.sample}"
+        "python3 {input.scr} --hotspots {input.ref_hotspots} --sample-id {wildcards.sample}"
         " {input.ref_id_mapping} {input.vcf} > {output.json}"
 
 rule table_vars_all:
@@ -267,9 +264,9 @@ rule table_vars_all:
         csv=RUN.output("{sample}/snv-indels/{sample}.variants_all.csv"),
     threads: 1
     conda: srcdir("envs/json_to_csv.yml")
-    singularity: containers["python3"]
+    singularity: containers["hamlet-scripts"]
     shell:
-        "python {input.scr} {input.json} > {output.csv}"
+        "python3 {input.scr} {input.json} > {output.csv}"
 
 rule table_vars_hi:
     input:
@@ -279,9 +276,9 @@ rule table_vars_hi:
         csv=RUN.output("{sample}/snv-indels/{sample}.variants_hi.csv"),
     threads: 1
     conda: srcdir("envs/json_to_csv.yml")
-    singularity: containers["python3"]
+    singularity: containers["hamlet-scripts"]
     shell:
-        "python {input.scr} --hi {input.json} > {output.csv}"
+        "python3 {input.scr} --hi {input.json} > {output.csv}"
 
 rule plot_vars:
     input:
