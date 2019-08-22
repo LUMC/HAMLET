@@ -21,13 +21,13 @@ containers = {
     "hamlet-scripts": "docker://lumc/hamlet-scripts:0.2"
 }
 
-rule all:
+rule all_expression:
     input:
-        base_per_exon=[RUN.output(f) for f in expand("{sample}/expression/{sample}.bases_per_exon" ,sample=RUN.samples)]
-        #base_per_gene=expand("{sample}.bases_per_gene", sample=RUN.samples),
-        #exon_ratio=expand("{sample}.exon_ratios", sample=RUN.samples),
-        #fragment_per_gene=expand("{sample}.fragments_per_gene", sample=RUN.samples),
-        #raw_base=expand("{sample}.raw_base", sample=RUN.samples)
+        base_per_exon=[RUN.output(f) for f in expand("{sample}/expression/{sample}.bases_per_exon" ,sample=RUN.samples)],
+        base_per_gene=[RUN.output(f) for f in expand("{sample}/expression/{sample}.bases_per_gene", sample=RUN.samples)],
+        exon_ratio=[RUN.output(f) for f in expand("{sample}/expression/{sample}.exon_ratios", sample=RUN.samples)],
+        fragment_per_gene=[RUN.output(f) for f in expand("{sample}/expression/{sample}.fragments_per_gene", sample=RUN.samples)],
+        raw_base=[RUN.output(f) for f in expand("{sample}/expression/{sample}.raw_base", sample=RUN.samples)]
 
 rule idsort_aln:
     input:
@@ -113,6 +113,6 @@ rule calc_exon_ratios:
     singularity: containers["hamlet-scripts"]
     shell:
         "cat {input.table}"
-        " | python {input.calc_script} -r {params.exon_min_ratio}"
+        " | python3 {input.calc_script} -r {params.exon_min_ratio}"
         " - {params.exon_ratio_names}"
         " > {output.table}"
