@@ -14,7 +14,9 @@ RUN apt update && apt install -y \
     python3-pip \
     python3-pybedtools \
     python3-pysam \
-    python3-pyvcf && \
+    python3-pyvcf \
+    r-bioc-gviz \
+    r-cran-getopt && \
     apt clean && apt purge && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

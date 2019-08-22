@@ -15,10 +15,9 @@ containers = {
     "bedtools": "docker://quay.io/biocontainers/bedtools:2.23.0--hdbcaa40_3",
     "debian": "docker://debian:buster-slim",
     "gsnap": "docker://quay.io/biocontainers/gmap:2019.06.10--pl526h2f06484_0",
-    "hamlet-scripts": "docker://lumc/hamlet-scripts:0.1",
+    "hamlet-scripts": "docker://lumc/hamlet-scripts:0.2",
     "picard": "docker://quay.io/biocontainers/picard:2.20.5--0",
     "python3": "docker://python:3.7.4-slim-stretch",
-    "R": "docker://quay.io/biocontainers/r:3.2.2--0",
     "samtools": "docker://quay.io/biocontainers/samtools:1.6--h244ad75_4",
     # varscan=2.4.3,samtools=1.6,tabix=0.2.6
     "varscan": "docker://quay.io/biocontainers/mulled-v2-fe04a5388a5c60964bedfc046450b83c0d810523:7ddebf6ed147098f06e2d2c7e0e6c89c9cee9978-0",
@@ -295,7 +294,7 @@ rule plot_vars:
         plotd=directory(RUN.output("{sample}/snv-indels/variant_plots"))
     threads: 1
     conda: srcdir("envs/plot_variants.yml")
-    singularity: containers["R"]
+    singularity: containers["hamlet-scripts"]
     shell:
         "(Rscript {input.scr} -j {input.json}"
         " -i {input.ref_id_mapping} -m {input.ref_annot_goi}"
