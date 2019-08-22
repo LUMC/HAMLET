@@ -18,7 +18,7 @@ containers = {
     "bedtools": "docker://quay.io/biocontainers/mulled-v2-3251e6c49d800268f0bc575f28045ab4e69475a6:4ce073b219b6dabb79d154762a9b67728c357edb-0",
     "htseq": "docker://quay.io/biocontainers/htseq:0.11.2--py27h637b7d7_1",
     "picard": "docker://quay.io/biocontainers/picard:2.20.5--0",
-    "R": "docker://quay.io/biocontainers/r:3.2.2--0"
+    "hamlet-scripts": "docker://lumc/hamlet-scripts:0.2"
 }
 
 rule all:
@@ -78,7 +78,7 @@ rule count_bases_exon:
         sample="{sample}"
     threads: 1
     conda: srcdir("envs/count_bases.yml")
-    singularity: containers["R"]
+    singularity: containers["hamlet-scripts"]
     shell:
         "Rscript {input.aggr_script} -I {input.raw} -N {params.sample}"
         " -E {output.count}"
@@ -93,7 +93,7 @@ rule count_bases_gene:
         sample="{sample}"
     threads: 1
     conda: srcdir("envs/count_bases.yml")
-    singularity: containers["R"]
+    singularity: containers["hamlet-scripts"]
     shell:
         "Rscript {input.aggr_script} -I {input.raw} -N {params.sample}"
         " -G {output.count}"
@@ -110,7 +110,7 @@ rule calc_exon_ratios:
         exon_min_ratio=RUN.settings["exon_min_ratio"],
     threads: 1
     conda: srcdir("envs/calc_ratio.yml")
-    "python3": "docker://python:3.7.4-slim-stretch",
+    singularity: containers["hamlet-scripts"]
     shell:
         "cat {input.table}"
         " | python {input.calc_script} -r {params.exon_min_ratio}"
