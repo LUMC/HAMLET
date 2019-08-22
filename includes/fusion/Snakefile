@@ -1,4 +1,5 @@
 from rattle import Run
+from os import path
 
 RUN = Run(config)
 
@@ -10,25 +11,38 @@ containers = {
     "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py35_1",
     "fuma": "docker://quay.io/biocontainers/fuma:3.0.5--py27h24bf2e0_1",
     "fusioncatcher": "docker://quay.io/biocontainers/fusioncatcher:1.00--py27h8c6ebc1_1",
-    "star-fusion": "docker://quay.io/biocontainers/star-fusion:1.6.0"
+    "star-fusion": "docker://quay.io/biocontainers/star-fusion:1.7.0--0",
+    "hamlet-scripts": "docker://lumc/hamlet-scripts:0.2"
 }
 localrules: star_fusion_cp fusioncatcher_cp plot_cp
+
+rule all_fusion:
+    input:
+        star_final=[RUN.output(f) for f in expand("{sample}/fusion/star-fusion/star-fusion.fusion_candidates.final",sample=RUN.samples)]
+        #sf_svg=RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg"),
+        #sf_png=RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png"),
+        #ext=RUN.output("{sample}/fusion/{sample}.{ext}.svg"),
+        #final_list=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"),
+        #fc_svg=RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg"),
+        #fc_png=RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png"),
+        #combined_svg=RUN.output("{sample}/fusion/{sample}.fusions-combined.svg")
 
 rule star_fusion:
     input:
         fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
         fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
         lib=RUN.settings["genome_star_fusion_lib"]
+    params:
+        folder=RUN.output("{sample}/fusion/star-fusion")
     output:
-        dir=RUN.output("{sample}/fusion/star-fusion"),
         txt=RUN.output("{sample}/fusion/star-fusion/star-fusion.fusion_candidates.final")
     threads: 8
     conda: srcdir("envs/star_fusion.yml")
     singularity: containers["star-fusion"]
     shell:
-        "(rm -rf {output.dir}"
+        "(rm -rf {params.folder}"
         " && STAR-Fusion --genome_lib_dir {input.lib}"
-        "   --output_dir {output.dir}"
+        "   --output_dir {params.folder}"
         "   --left_fq {input.fq1} --right_fq {input.fq2})"
 
 rule star_fusion_cp:
@@ -125,9 +139,9 @@ rule subset_sf:
     output:
         sf=RUN.output("{sample}/fusion/{sample}.sf-isect")
     conda: srcdir("envs/subset_sf.yml")
-    singularity: containers["python3"]
+    singularity: containers["hamlet-scripts"]
     shell:
-        "python {input.subset_script} {input.isect} {input.sf} > {output.sf} || rm -f {output.sf}"
+        "python3 {input.subset_script} {input.isect} {input.sf} > {output.sf} || rm -f {output.sf}"
 
 rule plot_isect:
     input:
@@ -150,8 +164,8 @@ rule combine_plots:
     output:
         svg=RUN.output("{sample}/fusion/{sample}.fusions-combined.svg"),
     conda: srcdir("envs/combine_plots.yml")
-    singularity: containers["python3"]
+    singularity: containers["hamlet-scripts"]
     shell:
-        "python {input.combine_script}"
+        "python3 {input.combine_script}"
         " 'STAR-Fusion':{input.sf} 'FusionCatcher':{input.fc}"
         " 'Intersection':{input.isect} {output.svg}"
