@@ -34,12 +34,14 @@ rule idsort_aln:
         bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
     output:
         bam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.idsorted.bam")),
+    params:
+        tmp=temp(RUN.output("tmp")),
     threads: 1
     conda: srcdir("envs/idsort_aln.yml")
     singularity: containers["picard"]
     shell:
         "picard SortSam I={input.bam} O={output.bam} SORT_ORDER=queryname"
-        " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=false"
+        " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=false TMP_DIR={params.tmp}"
 
 rule count_fragments:
     input:

@@ -60,10 +60,12 @@ if RUN.settings.get("gsnap_exe") is not None:
         output:
             bam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bam")),
             bai=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bai")),
+        params:
+            tmp=temp(RUN.output("tmp")),
         singularity: containers["picard"]
         shell:
             "picard SortSam I={input.sam} O={output.bam} SORT_ORDER=coordinate "
-            "VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true "
+            "VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true TMP_DIR={params.tmp}"
 
 
     rule reorder_aln_header:
