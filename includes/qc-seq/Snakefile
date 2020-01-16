@@ -1,11 +1,8 @@
 from os import path
-from rattle import Run, ReadGroup, Sample
 
 
-RUN = Run(config)
-
-RUN.set_default_setting("rg_stats_script", srcdir(path.join("scripts", "gather_rg_stats.py")))
-RUN.set_default_setting("sample_stats_script", srcdir(path.join("scripts", "gather_sample_stats.py")))
+config["rg_stats_script"] = srcdir(path.join("scripts", "gather_rg_stats.py"))
+config["sample_stats_script"] = srcdir(path.join("scripts", "gather_sample_stats.py"))
 
 containers = {
     "crimson": "docker://quay.io/biocontainers/crimson:0.3.0--py27_1",
@@ -14,37 +11,111 @@ containers = {
     "fastqc": "docker://quay.io/biocontainers/fastqc:0.11.8--1"
 }
 
+def get_r(strand, wildcards):
+    """Get fastq files on a single strand for a sample"""
+    s = config["samples"].get(wildcards.sample)
+    rs = []
+    for rg in sorted(s["read_groups"].keys()):
+        rs.append(s["read_groups"][rg][strand])
+    return rs
+
+get_r1 = partial(get_r, "R1")
+get_r2 = partial(get_r, "R2")
+
+def get_readgroup_per_sample():
+    for sample in config["samples"]:
+        for rg in config["samples"][sample]["read_groups"]:
+            yield rg, sample
+
+def get_fastq(wildcards):
+    """ Get the fastq files from the config """
+    return (
+        config["samples"][wildcards.sample]["read_groups"]
+                [wildcards.read_group][wildcards.pair]
+    )
+
+def get_forward(wildcards):
+    """ Get the forward fastq file from the config """
+    return (
+        config["samples"][wildcards.sample]["read_groups"]
+                [wildcards.read_group]["R1"]
+    )
+
+def get_reverse(wildcards):
+    """ Get the reverse fastq file from the config """
+    return (
+        config["samples"][wildcards.sample]["read_groups"]
+            [wildcards.read_group]["R2"]
+    )
+
+def get_readgroup(wildcards):
+    return config["samples"][wildcards.sample]["read_groups"]
+
 rule all_qc:
     input:
-        fqs=[RUN.output("{sample}/{sample}-{pair}.fq.gz", fmt=True,
-                        sample=unit.sample, pair=pair)
-             for unit in RUN.unit_names for pair in ("R1", "R2")],
-        stats=expand(RUN.output("{sample}/qc-seq/{sample}.seq_stats.json"),
-                     sample=RUN.samples),
+        fastqc_raw = expand(
+            ("{sample}/qc-seq/{read_group}/fastqc-{{pair}}-raw".format(
+                sample=s, read_group=rg
+            )
+            for rg, s in get_readgroup_per_sample()), pair=("R1", "R2")
+        ),
+
+        cutadapt = expand(
+            ("{sample}/qc-seq/{read_group}/{sample}-{read_group}-{{pair}}.fq.gz".format(
+                sample=s, read_group=rg
+            )
+            for rg, s in get_readgroup_per_sample()),
+            pair=("R1", "R2")
+        ),
+
+        fastqc_processed = expand(
+            ("{sample}/qc-seq/{read_group}/fastqc-{{pair}}-processed".format(
+            sample=s, read_group=rg
+            )
+            for rg, s in get_readgroup_per_sample()), pair=("R1", "R2")
+        ),
+
+        rg_stats_json = [
+            "{sample}/qc-seq/{read_group}/stats.json".format(
+                sample=s, read_group=rg) for rg, s in get_readgroup_per_sample()
+        ],
+
+        sample_stats_json = expand("{sample}/qc-seq/{sample}.seq_stats.json",
+                                    sample=config["samples"]
+        ),
+
+        merge_fastqs = expand("{sample}/{sample}-{pair}.fq.gz", sample=config["samples"],
+                                pair=("R1", "R2")
+        ),
+
+        merged_raw = expand("{sample}/{sample}-{pair}.raw.fq.gz", sample=config["samples"],
+                                pair=("R1", "R2")
+        )
 
 
 rule fastqc_raw:
     """Runs FastQC for each pair of each read group of each sample given in the config file."""
     input:
-        fq=RUN.config_input_func(ReadGroup, "{pair}"),
+        fq=get_fastq
     output:
-        dir=directory(RUN.output("{sample}/qc-seq/{read_group}/fastqc-{{pair}}-raw", fmt=True)),
+        folder=directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-raw")
     threads: 4
     conda: srcdir("envs/fastqc.yml")
     singularity: containers["fastqc"]
     shell:
-        "mkdir -p {output.dir}"
-        " && fastqc -o {output.dir} --extract --nogroup -f fastq --threads {threads} {input.fq}"
+        "mkdir -p {output.folder}"
+        " && fastqc -o {output.folder} --extract --nogroup -f fastq "
+        "--threads {threads} {input.fq}"
 
 
 rule cutadapt:
     """Clip fastq files"""
     input:
-        fq1=RUN.config_input_func(ReadGroup, "R1"),
-        fq2=RUN.config_input_func(ReadGroup, "R2"),
+        fq1=get_forward,
+        fq2=get_reverse
     output:
-        fq1=temp(RUN.output("{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz")),
-        fq2=temp(RUN.output("{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz")),
+        fq1="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz",
+        fq2="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz"
     singularity: containers["cutadapt"]
     conda: "envs/cutadapt.yml"
     shell: "cutadapt -a AGATCGGAAGAG -A AGATCGGAAGAG "
@@ -56,27 +127,28 @@ rule cutadapt:
 rule fastqc_processed:
     """Runs FastQC for each pair of QC-ed inputs."""
     input:
-        fq=RUN.output("{sample}/qc-seq/{read_group}/{sample}-{read_group}-{pair}.fq.gz"),
+        fq=get_fastq
     output:
-        dir=directory(RUN.output("{sample}/qc-seq/{read_group}/fastqc-{pair}-processed")),
+        folder = directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-processed")
     threads: 4
     conda: srcdir("envs/fastqc.yml")
     singularity: containers["fastqc"]
     shell:
-        "mkdir -p {output.dir}"
-        " && fastqc -o {output.dir} --extract --nogroup -f fastq --threads {threads} {input.fq}"
+        "mkdir -p {output.folder}"
+        " && fastqc -o {output.folder} --extract --nogroup -f fastq "
+        "--threads {threads} {input.fq}"
 
 
 rule rg_stats:
     """Gathers read statistics on the read group level."""
     input:
-        raw1=RUN.output("{sample}/qc-seq/{read_group}/fastqc-R1-raw"),
-        raw2=RUN.output("{sample}/qc-seq/{read_group}/fastqc-R2-raw"),
-        proc1=RUN.output("{sample}/qc-seq/{read_group}/fastqc-R1-processed"),
-        proc2=RUN.output("{sample}/qc-seq/{read_group}/fastqc-R2-processed"),
-        rg_stats_script=RUN.settings["rg_stats_script"],
+        raw1="{sample}/qc-seq/{read_group}/fastqc-R1-raw",
+        raw2="{sample}/qc-seq/{read_group}/fastqc-R2-raw",
+        proc1="{sample}/qc-seq/{read_group}/fastqc-R1-processed",
+        proc2="{sample}/qc-seq/{read_group}/fastqc-R2-processed",
+        rg_stats_script=config["rg_stats_script"],
     output:
-        stats=temp(RUN.output("{sample}/qc-seq/{read_group}/stats.json")),
+        stats="{sample}/qc-seq/{read_group}/stats.json",
     conda: srcdir("envs/rg_stats.yml")
     singularity: containers["crimson"]
     shell:
@@ -88,12 +160,14 @@ rule rg_stats:
 rule sample_stats:
     """Gathers read statistics on the sample level."""
     input:
-        rg_stats=lambda wildcards: [RUN.output("{sample}/qc-seq/{read_group}/stats.json",
-                                               fmt=True, sample=wildcards.sample, read_group=rgn)
-                                    for rgn in RUN.samples[wildcards.sample].read_groups],
-        sample_stats_script=RUN.settings["sample_stats_script"],
+        rg_stats=lambda wildcards: expand(
+            "{sample}/qc-seq/{read_group}/stats.json",
+            sample=config["samples"],
+            read_group=get_readgroup(wildcards)
+        ),
+        sample_stats_script=config["sample_stats_script"]
     output:
-        stats=RUN.output("{sample}/qc-seq/{sample}.seq_stats.json")
+        stats="{sample}/qc-seq/{sample}.seq_stats.json"
     conda: srcdir("envs/sample_stats.yml")
     singularity: containers["crimson"]
     shell:
@@ -101,26 +175,51 @@ rule sample_stats:
         " {input.rg_stats} > {output.stats}"
 
 
-rule merge_fastqs:
+rule merge_fastqs_r1:
     """Merges all FASTQ files for a given sample from its read groups."""
     input:
-        fqs=lambda wildcards: [RUN.output("{sample}/qc-seq/{read_group}/{sample}-{read_group}-{pair}.fq.gz",
-                                          fmt=True, sample=wildcards.sample, read_group=rgn, pair=wildcards.pair)
-                               for rgn in RUN.samples[wildcards.sample].read_groups]
+        fqs = lambda wildcards: expand(
+            "{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz",
+            sample=wildcards.sample, read_group=get_readgroup(wildcards)
+        )
     output:
-        fq=RUN.output("{sample}/{sample}-{pair}.fq.gz"),
+        fq="{sample}/{sample}-R1.fq.gz",
     singularity: containers["debian"]
     shell:
         "zcat {input.fqs} | gzip -c > {output.fq}"
 
 
-rule merge_fastqs_raw:
+rule merge_fastqs_r2:
+    """Merges all FASTQ files for a given sample from its read groups."""
+    input:
+        fqs = lambda wildcards: expand(
+            "{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz",
+            sample=wildcards.sample, read_group=get_readgroup(wildcards)
+        )
+    output:
+        fq="{sample}/{sample}-R2.fq.gz",
+    singularity: containers["debian"]
+    shell:
+        "zcat {input.fqs} | gzip -c > {output.fq}"
+
+
+rule merge_fastqs_raw_r1:
     """Merges all raw FASTQ files for a given sample from its read groups."""
     input:
-        fqs=lambda wildcards: [rg._raw[wildcards.pair]
-                               for rg in RUN.samples[wildcards.sample].read_groups.values()]
+        fq = get_r1
     output:
-        fq=temp(RUN.output("{sample}/{sample}-{pair}.raw.fq.gz")),
+        merged = temp("{sample}/{sample}-R1.raw.fq.gz")
     singularity: containers["debian"]
     shell:
-        "zcat {input.fqs} | gzip -c > {output.fq}"
+        "zcat {input.fq} | gzip -c > {output.merged}"
+
+
+rule merge_fastqs_raw_r2:
+    """Merges all raw FASTQ files for a given sample from its read groups."""
+    input:
+        fq = get_r2
+    output:
+        merged = temp("{sample}/{sample}-R2.raw.fq.gz")
+    singularity: containers["debian"]
+    shell:
+        "zcat {input.fq} | gzip -c > {output.merged}"
