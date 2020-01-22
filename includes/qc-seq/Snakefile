@@ -27,6 +27,7 @@ def get_readgroup_per_sample():
         for rg in config["samples"][sample]["read_groups"]:
             yield rg, sample
 
+
 def get_fastq(wildcards):
     """ Get the fastq files from the config """
     return (
@@ -84,7 +85,7 @@ rule all_qc:
                                     sample=config["samples"]
         ),
 
-        merge_fastqs = expand("{sample}/{sample}-{pair}.fq.gz", sample=config["samples"],
+        merged_fastqs = expand("{sample}/{sample}-{pair}.fq.gz", sample=config["samples"],
                                 pair=("R1", "R2")
         ),
 
@@ -160,11 +161,9 @@ rule rg_stats:
 rule sample_stats:
     """Gathers read statistics on the sample level."""
     input:
-        rg_stats=lambda wildcards: expand(
-            "{sample}/qc-seq/{read_group}/stats.json",
-            sample=config["samples"],
-            read_group=get_readgroup(wildcards)
-        ),
+        rg_stats=lambda wildcards:
+        ("{sample}/qc-seq/{read_group}/stats.json".format(sample=wildcards.sample,
+        read_group=rg) for rg in get_readgroup(wildcards)),
         sample_stats_script=config["sample_stats_script"]
     output:
         stats="{sample}/qc-seq/{sample}.seq_stats.json"

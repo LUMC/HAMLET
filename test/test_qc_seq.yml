@@ -1,0 +1,96 @@
+- name: test-qc-dry-run-single
+  tags:
+    - dry-run
+  command: >
+    snakemake -n
+    --snakefile includes/qc-seq/Snakefile
+    --configfile test/data/test-qc-single.config
+  stdout:
+    contains:
+      - "Job counts:"
+
+- name: test-qc-dry-run-trio
+  tags:
+    - dry-run
+  command: >
+    snakemake -n
+    --snakefile includes/qc-seq/Snakefile
+    --configfile test/data/test-qc-trio.config
+  stdout:
+    contains:
+      - "Job counts:"
+
+- name: test-qc-sanity-snakemake
+  tags:
+    - sanity
+  command: >
+    snakemake --version
+  stdout:
+    contains:
+      - "5.9"
+
+- name: test-qc-sanity-singularity
+  tags:
+    - sanity
+  command: >
+    singularity --version
+  stdout:
+    contains:
+      - "singularity version 3.1"
+
+- name: test-qc-single
+  tags:
+    - sanity
+  tags:
+    - functional
+  command: >
+    snakemake -rp
+    --use-singularity
+    --singularity-args ' --bind /tmp/ --cleanenv'
+    --singularity-prefix /tmp/singularity
+    --snakefile includes/qc-seq/Snakefile
+    --configfile test/data/test-qc-single.config
+  files:
+    - path: "TestSample/TestSample-R1.fq.gz"
+    - path: "TestSample/TestSample-R2.fq.gz"
+    - path: "TestSample/qc-seq/rg_1/stats.json"
+    - path: "TestSample/qc-seq/rg_1"
+    - path: "TestSample/qc-seq/rg_1/fastqc-R1-processed"
+    - path: "TestSample/qc-seq/rg_1/fastqc-R2-processed"
+    - path: "TestSample/qc-seq/rg_1/fastqc-R1-raw"
+    - path: "TestSample/qc-seq/rg_1/fastqc-R2-raw"
+
+- name: test-qc-duo
+  tags:
+    - functional
+  command: >
+    snakemake -rp
+    --use-singularity
+    --singularity-args ' --bind /tmp/ --cleanenv'
+    --singularity-prefix /tmp/singularity
+    --snakefile includes/qc-seq/Snakefile
+    --configfile test/data/test-qc-duo.config
+  files:
+    - path: "TestSample1/TestSample1-R1.fq.gz"
+    - path: "TestSample1/TestSample1-R2.fq.gz"
+    - path: "TestSample2/TestSample2-R1.fq.gz"
+    - path: "TestSample2/TestSample2-R2.fq.gz"
+    - path: "TestSample2/qc-seq/rg_2/TestSample2-rg_2-R1.fq.gz"
+    - path: "TestSample2/qc-seq/rg_2/TestSample2-rg_2-R2.fq.gz"
+    - path: "TestSample2/qc-seq/rg_3/TestSample2-rg_3-R1.fq.gz"
+    - path: "TestSample2/qc-seq/rg_3/TestSample2-rg_3-R2.fq.gz"
+
+- name: test-qc-trio
+  tags:
+    - functional
+  command: >
+    snakemake -rp
+    --use-singularity
+    --singularity-args ' --bind /tmp/ --cleanenv'
+    --singularity-prefix /tmp/singularity
+    --snakefile includes/qc-seq/Snakefile
+    --configfile test/data/test-qc-trio.config
+  files:
+    - path: "TestSample3/qc-seq/rg_1"
+    - path: "TestSample3/qc-seq/rg_2"
+    - path: "TestSample3/qc-seq/rg_3"
