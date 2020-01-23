@@ -11,7 +11,7 @@ containers = {
     "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py35_1",
     "fuma": "docker://quay.io/biocontainers/fuma:3.0.5--py27h24bf2e0_1",
     "fusioncatcher": "docker://quay.io/biocontainers/fusioncatcher:1.00--py27h8c6ebc1_1",
-    "star-fusion": "docker://quay.io/biocontainers/star-fusion:1.7.0--0",
+    "star-fusion": "docker://quay.io/biocontainers/star-fusion:1.6.0--1",
     "hamlet-scripts": "docker://lumc/hamlet-scripts:0.2"
 }
 localrules: star_fusion_cp, fusioncatcher_cp, plot_cp
