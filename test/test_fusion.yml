@@ -4,7 +4,7 @@
   command: >
     snakemake -n
     --snakefile includes/fusion/Snakefile
-    --configfile test/data/test-qc-single.config
+    --configfile test/data/test-dry-run-single.config
   stdout:
     contains:
       - "Job counts:"
@@ -18,7 +18,7 @@
   command: >
     snakemake -n
     --snakefile includes/fusion/Snakefile
-    --configfile test/data/test-qc-trio.config
+    --configfile test/data/test-dry-run-trio.config
   stdout:
     contains:
       - "Job counts:"
