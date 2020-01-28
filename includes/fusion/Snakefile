@@ -6,6 +6,9 @@ RUN = Run(config)
 RUN.set_default_setting("sf_subset_script", srcdir(path.join("scripts", "subset_sf.py")))
 RUN.set_default_setting("plot_combined_script", srcdir(path.join("scripts", "combine_svgs.py")))
 
+# We need the QC-seq output
+include: "../qc-seq/Snakefile"
+
 containers = {
     "debian": "docker://debian:buster-slim",
     "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py35_1",
