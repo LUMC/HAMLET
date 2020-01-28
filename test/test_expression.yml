@@ -8,6 +8,11 @@
   stdout:
     contains:
       - "Job counts:"
+      - "TestSample/expression/TestSample.bases_per_exon"
+      - "TestSample/expression/TestSample.bases_per_gene"
+      - "TestSample/expression/TestSample.exon_ratios"
+      - "TestSample/expression/TestSample.fragments_per_gene"
+      - "TestSample/expression/TestSample.raw_base"
 
 - name: test-expression-dry-run-trio
   tags:
@@ -19,6 +24,21 @@
   stdout:
     contains:
       - "Job counts:"
+      - "TestSample1/expression/TestSample1.bases_per_exon"
+      - "TestSample1/expression/TestSample1.bases_per_gene"
+      - "TestSample1/expression/TestSample1.exon_ratios"
+      - "TestSample1/expression/TestSample1.fragments_per_gene"
+      - "TestSample1/expression/TestSample1.raw_base"
+      - "TestSample2/expression/TestSample2.bases_per_exon"
+      - "TestSample2/expression/TestSample2.bases_per_gene"
+      - "TestSample2/expression/TestSample2.exon_ratios"
+      - "TestSample2/expression/TestSample2.fragments_per_gene"
+      - "TestSample2/expression/TestSample2.raw_base"
+      - "TestSample3/expression/TestSample3.bases_per_exon"
+      - "TestSample3/expression/TestSample3.bases_per_gene"
+      - "TestSample3/expression/TestSample3.exon_ratios"
+      - "TestSample3/expression/TestSample3.fragments_per_gene"
+      - "TestSample3/expression/TestSample3.raw_base"
 
 - name: test-expression-sanity-snakemake
   tags:
