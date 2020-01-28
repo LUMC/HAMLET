@@ -8,17 +8,21 @@
   stdout:
     contains:
       - "Job counts:"
+      - "TestSample/snv-indels/variant_plots"
 
-#- name: test-snv-indels-dry-run-trio
-#  tags:
-#    - dry-run
-#  command: >
-#    snakemake -n
-#    --snakefile includes/snv-indels/Snakefile
-#    --configfile test/data/test-qc-trio.config
-#  stdout:
-#    contains:
-#      - "Job counts:"
+- name: test-snv-indels-dry-run-trio
+  tags:
+    - dry-run
+  command: >
+    snakemake -n
+    --snakefile includes/snv-indels/Snakefile
+    --configfile test/data/test-qc-trio.config
+  stdout:
+    contains:
+      - "Job counts:"
+      - "TestSample1/snv-indels/variant_plots"
+      - "TestSample2/snv-indels/variant_plots"
+      - "TestSample3/snv-indels/variant_plots"
 
 - name: test-snv-indels-sanity-snakemake
   tags:
