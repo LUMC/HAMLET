@@ -11,6 +11,9 @@ RUN.set_default_setting("plot_script", srcdir(path.join("scripts", "plotVariants
 RUN.set_default_setting("exon_cov_script", srcdir(path.join("scripts", "aggr_exon_cov.py")))
 RUN.set_default_setting("genome_fai", RUN.settings["genome_fasta"] + ".fai")
 
+# We need the QC-seq output
+include: "../qc-seq/Snakefile"
+
 containers = {
     "bedtools": "docker://quay.io/biocontainers/bedtools:2.23.0--hdbcaa40_3",
     "debian": "docker://debian:buster-slim",
@@ -24,90 +27,68 @@ containers = {
     "vep": "docker://quay.io/biocontainers/ensembl-vep:97.3--pl526hecc5488_0"
 }
 
+
+
 rule all_snv_indels:
     input:
         #plots_mark=expand(RUN.output("{sample}/snv-indels/variant_plots/.done"), sample=RUN.samples),
         plotd=expand(RUN.output("{sample}/snv-indels/variant_plots"), sample=RUN.samples),
 
 
-if RUN.settings.get("gsnap_exe") is not None:
-    # To reproduce paper results, relies on a non-conda GSNAP 2014.12.23 with SIMD
-    rule align_vars:
-        input:
-            fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
-            fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
-            index=RUN.settings["genome_gmap_index"],
-            #exe=RUN.settings["gsnap_exe"],
-        output:
-            sam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.sam")),
-            #bai=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.bai")),
-        params:
-            rg_sample="{sample}"
-        threads: 8
-        conda: srcdir("envs/align_vars.yml")
-        singularity: containers["gsnap"]
-        shell:
-            #"{input.exe} --dir `dirname {input.index}` --db `basename {input.index}`"
-            "gsnap --dir `dirname {input.index}` --db `basename {input.index}`"
-            " --batch 4 --nthreads {threads}"
-            " --novelsplicing 1 --npaths 1 --quiet-if-excessive"
-            " --read-group-name={params.rg_sample} --read-group-id={params.rg_sample}"
-            " --format sam --gunzip {input.fq1} {input.fq2} > {output.sam}"
+# To reproduce paper results, relies on a non-conda GSNAP 2014.12.23 with SIMD
+rule align_vars:
+    input:
+        fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
+        fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
+        index=RUN.settings["genome_gmap_index"],
+        #exe=RUN.settings["gsnap_exe"],
+    output:
+        sam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.sam")),
+        #bai=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.bai")),
+    params:
+        rg_sample="{sample}"
+    threads: 8
+    conda: srcdir("envs/align_vars.yml")
+    singularity: containers["gsnap"]
+    shell:
+        #"{input.exe} --dir `dirname {input.index}` --db `basename {input.index}`"
+        "gsnap --dir `dirname {input.index}` --db `basename {input.index}`"
+        " --batch 4 --nthreads {threads}"
+        " --novelsplicing 1 --npaths 1 --quiet-if-excessive"
+        " --read-group-name={params.rg_sample} --read-group-id={params.rg_sample}"
+        " --format sam --gunzip {input.fq1} {input.fq2} > {output.sam}"
 
-    rule sort_bamfile:
-        input:
-            sam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.sam"),
-        output:
-            bam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bam")),
-            bai=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bai")),
-        params:
-            tmp=temp(RUN.output("tmp")),
-        singularity: containers["picard"]
-        shell:
-            "picard SortSam I={input.sam} O={output.bam} SORT_ORDER=coordinate "
-            "VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true TMP_DIR={params.tmp}"
+rule sort_bamfile:
+    input:
+        sam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.sam"),
+    output:
+        bam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bam")),
+        bai=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bai")),
+    params:
+        tmp=temp(RUN.output("tmp")),
+    singularity: containers["picard"]
+    shell:
+        "picard SortSam I={input.sam} O={output.bam} SORT_ORDER=coordinate "
+        "VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true TMP_DIR={params.tmp}"
 
 
-    rule reorder_aln_header:
-        input:
-            bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bam"),
-            bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bai"),
-            ref=RUN.settings["genome_fasta"],
-            refd=RUN.settings["genome_dict"],
-        output:
-            bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
-            bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
-        params:
-            rg_sample="{sample}"
-        threads: 1
-        conda: srcdir("envs/align_vars.yml")
-        singularity: containers["picard"]
-        shell:
-            "picard -Xmx3G ReorderSam I={input.bam} O={output.bam} R={input.ref}"
-            " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true"
-else:
-    rule align_vars:
-        input:
-            fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
-            fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
-            index=RUN.settings["genome_star_index"],
-        output:
-            bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
-            bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
-        params:
-            rg_sample="{sample}"
-        threads: 8
-        conda: srcdir("envs/align_vars.yml")
-        shell:
-            "rm -rf `dirname {output.bam}`/alignment && "
-            "mkdir -p `dirname {output.bam}`/alignment && "
-            "STAR --outFileNamePrefix `dirname {output.bam}`/alignment/"
-            " --genomeDir {input.index} --readFilesIn {input.fq1} {input.fq2}"
-            " --readFilesCommand zcat --runThreadN {threads}"
-            " --outStd SAM --outSAMunmapped Within --outFilterMultimapNmax 1"
-            " --outSAMattrRGline ID:{params.rg_sample} SM:{params.rg_sample}"
-            " | picard SortSam I=/dev/stdin O={output.bam} SORT_ORDER=coordinate"
-            " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true"
+rule reorder_aln_header:
+    input:
+        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bam"),
+        bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bai"),
+        ref=RUN.settings["genome_fasta"],
+        refd=RUN.settings["genome_dict"],
+    output:
+        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
+        bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
+    params:
+        rg_sample="{sample}"
+    threads: 1
+    conda: srcdir("envs/align_vars.yml")
+    singularity: containers["picard"]
+    shell:
+        "picard -Xmx3G ReorderSam I={input.bam} O={output.bam} R={input.ref}"
+        " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true"
 
 rule genome_txt:
     input:
