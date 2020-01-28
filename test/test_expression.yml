@@ -1,0 +1,39 @@
+- name: test-expression-dry-run-single
+  tags:
+    - dry-run
+  command: >
+    snakemake -n
+    --snakefile includes/expression/Snakefile
+    --configfile test/data/test-qc-single.config
+  stdout:
+    contains:
+      - "Job counts:"
+
+- name: test-expression-dry-run-trio
+  tags:
+    - dry-run
+  command: >
+    snakemake -n
+    --snakefile includes/expression/Snakefile
+    --configfile test/data/test-qc-trio.config
+  stdout:
+    contains:
+      - "Job counts:"
+
+- name: test-expression-sanity-snakemake
+  tags:
+    - sanity
+  command: >
+    snakemake --version
+  stdout:
+    contains:
+      - "5.9"
+
+- name: test-expression-sanity-singularity
+  tags:
+    - sanity
+  command: >
+    singularity --version
+  stdout:
+    contains:
+      - "singularity version 3.1"
