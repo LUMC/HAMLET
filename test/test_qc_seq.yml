@@ -4,7 +4,7 @@
   command: >
     snakemake -n
     --snakefile includes/qc-seq/Snakefile
-    --configfile test/data/test-qc-single.config
+    --configfile test/data/config/test-qc-single.config
   stdout:
     contains:
       - "Job counts:"
@@ -15,7 +15,7 @@
   command: >
     snakemake -n
     --snakefile includes/qc-seq/Snakefile
-    --configfile test/data/test-qc-trio.config
+    --configfile test/data/config/test-qc-trio.config
   stdout:
     contains:
       - "Job counts:"
@@ -47,7 +47,7 @@
     --singularity-args ' --bind /tmp/ --cleanenv'
     --singularity-prefix /tmp/singularity
     --snakefile includes/qc-seq/Snakefile
-    --configfile test/data/test-qc-single.config
+    --configfile test/data/config/test-qc-single.config
   files:
     - path: "TestSample/TestSample-R1.fq.gz"
     - path: "TestSample/TestSample-R2.fq.gz"
@@ -67,7 +67,7 @@
     --singularity-args ' --bind /tmp/ --cleanenv'
     --singularity-prefix /tmp/singularity
     --snakefile includes/qc-seq/Snakefile
-    --configfile test/data/test-qc-duo.config
+    --configfile test/data/config/test-qc-duo.config
   files:
     - path: "TestSample1/TestSample1-R1.fq.gz"
     - path: "TestSample1/TestSample1-R2.fq.gz"
@@ -87,7 +87,7 @@
     --singularity-args ' --bind /tmp/ --cleanenv'
     --singularity-prefix /tmp/singularity
     --snakefile includes/qc-seq/Snakefile
-    --configfile test/data/test-qc-trio.config
+    --configfile test/data/config/test-qc-trio.config
   files:
     - path: "TestSample3/qc-seq/rg_1"
     - path: "TestSample3/qc-seq/rg_2"
@@ -102,7 +102,7 @@
     --singularity-args ' --bind /tmp/ --cleanenv'
     --singularity-prefix /tmp/singularity
     --snakefile includes/qc-seq/Snakefile
-    --configfile test/data/test-qc-single-low-qual-adapters.config
+    --configfile test/data/config/test-qc-single-low-qual-adapters.config
   files:
     - path: "low_qual/low_qual-R1.fq.gz"
     - path: "low_qual/low_qual-R2.fq.gz"
