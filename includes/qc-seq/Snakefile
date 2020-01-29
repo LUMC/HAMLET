@@ -128,7 +128,8 @@ rule cutadapt:
 rule fastqc_processed:
     """Runs FastQC for each pair of QC-ed inputs."""
     input:
-        fq=get_fastq
+        fq1="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz",
+        fq2="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz"
     output:
         folder = directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-processed")
     threads: 4
@@ -137,7 +138,7 @@ rule fastqc_processed:
     shell:
         "mkdir -p {output.folder}"
         " && fastqc -o {output.folder} --extract --nogroup -f fastq "
-        "--threads {threads} {input.fq}"
+        "--threads {threads} {input.fq1} {input.fq2}"
 
 
 rule rg_stats:
