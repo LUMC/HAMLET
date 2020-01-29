@@ -112,3 +112,17 @@
     - path: "low_qual/qc-seq/readgroup1/fastqc-R2-processed"
     - path: "low_qual/qc-seq/readgroup1/fastqc-R1-raw"
     - path: "low_qual/qc-seq/readgroup1/fastqc-R2-raw"
+    - path: "low_qual/qc-seq/readgroup1/fastqc-R1-raw/ct_r1_fastqc/summary.txt"
+      contains:
+        - "FAIL\tPer base sequence quality\tct_r1.fq.gz"
+        - "WARN\tPer base N content\tct_r1.fq.gz"
+        - "FAIL\tOverrepresented sequences\tct_r1.fq.gz"
+        - "FAIL\tAdapter Content\tct_r1.fq.gz"
+    - path: "low_qual/qc-seq/readgroup1/fastqc-R1-processed/low_qual-readgroup1-R1_fastqc/summary.txt"
+      contains:
+        - "PASS\tPer base sequence quality\tlow_qual-readgroup1-R1.fq.gz"
+        - "PASS\tPer base N content\tlow_qual-readgroup1-R1.fq.gz"
+        - "WARN\tOverrepresented sequences\tlow_qual-readgroup1-R1.fq.gz"
+        - "PASS\tAdapter Content\tlow_qual-readgroup1-R1.fq.gz"
+
+
