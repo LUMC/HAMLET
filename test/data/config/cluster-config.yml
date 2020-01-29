@@ -1,0 +1,90 @@
+__default__:
+  job_name: hamlet
+  queue: all.q
+  vmem: 4G
+  threads: 1
+
+fastqc_raw:
+  vmem: 9G
+  threads: 6
+
+fastqc_processed:
+  vmem: 9G
+  threads: 6
+
+align_flt3:
+  vmem: 10G
+  threads: 5
+
+extract_sc_flt3:
+  vmem: 10G
+  threads: 3
+
+align_kmt2a:
+  vmem: 10G
+  threads: 5
+
+extract_sc_kmt2a:
+  vmem: 10G
+  threads: 3
+
+align_vars:
+  vmem: 20G
+  threads: 8
+
+reorder_aln_header:
+  vmem: 10G
+  threads: 1
+
+aln_stats:
+  vmem: 10G
+  threads: 1
+
+rna_stats:
+  vmem: 10G
+  threads: 1
+
+insert_stats:
+  vmem: 20G
+  threads: 1
+
+exon_cov:
+  vmem: 20G
+  threads: 1
+
+call_vars:
+  vmem: 20G
+  threads: 4
+
+annotate_vars:
+  vmem: 6G
+  threads: 8
+
+star_fusion:
+  vmem: 15G
+  threads: 8
+
+fusioncatcher:
+  vmem: 15G
+  threads: 8
+
+jaffa:
+  vmem: 15G
+  threads: 8
+
+count_raw_bases:
+  vmem: 20G
+  threads: 1
+
+count_bases_exon:
+  vmem: 12G
+  threads: 1
+
+count_bases_gene:
+  vmem: 9G
+  threads: 1
+
+idsort_aln:
+  vmem: 10G
+  threads: 1
+

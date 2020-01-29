@@ -49,3 +49,46 @@
   stdout:
     contains:
       - "singularity version 3.1"
+
+- name: test-fusion-integration-NB-4-dry-run
+  tags:
+    - dry-run
+  command: >
+      snakemake -rpn
+      --use-singularity
+      --singularity-args ' --containall --bind /tmp/:/tmp,/exports/:/exports/'
+      --singularity-prefix /exports/hem-leukemia/testing/singularity
+      --snakefile includes/fusion/Snakefile
+      --configfile test/data/config/test-fusion-NB4.config
+      --cluster-config test/data/config/cluster-config.yml
+      --drmaa ' -q {cluster.queue} -pe BWA {cluster.threads} -l h_vmem={cluster.vmem} -cwd -V -p -100 -N hamlet-integration'
+      --jobname 'hamlet-integration.{jobid}'
+      --jobs 100
+      --latency-wait 120
+      --drmaa-log-dir cluster-logs
+
+- name: test-fusion-integration-NB-4
+  tags:
+    - integration
+  command: >
+      snakemake -rp
+      --use-singularity
+      --singularity-args ' --containall --bind /tmp/:/tmp,/exports/:/exports/'
+      --singularity-prefix /exports/hem-leukemia/testing/singularity
+      --snakefile includes/fusion/Snakefile
+      --configfile test/data/config/test-fusion-NB4.config
+      --cluster-config test/data/config/cluster-config.yml
+      --drmaa ' -q {cluster.queue} -pe BWA {cluster.threads} -l h_vmem={cluster.vmem} -cwd -V -p -100 -N hamlet-integration'
+      --jobname 'hamlet-integration.{jobid}'
+      --jobs 100
+      --latency-wait 120
+      --drmaa-log-dir cluster-logs
+      NB4/fusion/NB4.star-fusion
+  files:
+    - path: "NB4/fusion/star-fusion/star-fusion.fusion_predictions.abridged.tsv"
+    - path: "NB4/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
+    - path: "NB4/fusion/NB4.star-fusion"
+      contains:
+        - "PLAA--MIR31HG\t200\t101\tONLY_REF_SPLICE"
+        - "RARA--PML\t111\t43\tONLY_REF_SPLICE"
+        - "PML--RARA\t40\t25\tONLY_REF_SPLICE"
