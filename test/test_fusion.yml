@@ -77,12 +77,7 @@
       --singularity-prefix /exports/hem-leukemia/testing/singularity
       --snakefile includes/fusion/Snakefile
       --configfile test/data/config/test-fusion-NB4.config
-      --cluster-config test/data/config/cluster-config.yml
-      --drmaa ' -q {cluster.queue} -pe BWA {cluster.threads} -l h_vmem={cluster.vmem} -cwd -V -p -100 -N hamlet-integration'
-      --jobname 'hamlet-integration.{jobid}'
-      --jobs 100
-      --latency-wait 120
-      --drmaa-log-dir cluster-logs
+      --verbose
       NB4/fusion/NB4.star-fusion
   files:
     - path: "NB4/fusion/star-fusion/star-fusion.fusion_predictions.abridged.tsv"
