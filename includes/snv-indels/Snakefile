@@ -22,8 +22,8 @@ containers = {
     "picard": "docker://quay.io/biocontainers/picard:2.20.5--0",
     "python3": "docker://python:3.7.4-slim-stretch",
     "samtools": "docker://quay.io/biocontainers/samtools:1.6--h244ad75_4",
-    # varscan=2.4.3,samtools=1.6,tabix=0.2.6
-    "varscan": "docker://quay.io/biocontainers/mulled-v2-fe04a5388a5c60964bedfc046450b83c0d810523:7ddebf6ed147098f06e2d2c7e0e6c89c9cee9978-0",
+    "varscan-2.4.2-samtools-1.3.1-tabix-0.2.6-grep-2.14":
+    "docker://quay.io/biocontainers/mulled-v2-58936b48a08c4e06505165c6f560ec9460b431ea:ef260d10ee671f4c7bd8e783939839bb2e0b684e-0",
     "vep": "docker://quay.io/biocontainers/ensembl-vep:97.3--pl526hecc5488_0"
 }
 
@@ -143,7 +143,7 @@ rule call_vars:
         vcf=RUN.output("{sample}/snv-indels/{sample}.raw.vcf.gz")
     threads: 3
     conda: srcdir("envs/call_vars.yml")
-    singularity: containers["varscan"]
+    singularity: containers["varscan-2.4.2-samtools-1.3.1-tabix-0.2.6-grep-2.14"]
     shell:
         "samtools mpileup -f {input.ref} -d 1000000 -s -B {input.bam}"
         " | grep -vE '\\t\\t'"
