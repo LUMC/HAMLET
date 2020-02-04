@@ -12,8 +12,9 @@ RUN.set_default_setting("flt3_end", 2024)
 
 rule all_flt3:
     input:
-        flt3_sc_jsons=expand(RUN.output("{sample}/itd/{sample}.flt3-sc.json"), sample=RUN.samples),
-        flt3_sc_plots=expand(RUN.output("{sample}/itd/{sample}.flt3-sc.png"), sample=RUN.samples),
+        flt3_csv=expand(RUN.output("{sample}/itd/{sample}.flt3.csv"), sample=RUN.samples),
+        flt3_bg_csv=expand(RUN.output("{sample}/itd/{sample}.flt3.bg.csv"), sample=RUN.samples),
+        flt3_plots=expand(RUN.output("{sample}/itd/{sample}.flt3.png"), sample=RUN.samples),
 
 rule align_flt3:
     input:

@@ -1,0 +1,63 @@
+- name: test-itd-dry-run-single
+  tags:
+    - dry-run
+  command: >
+    snakemake -n
+    --snakefile includes/itd/Snakefile
+    --configfile test/data/config/test-dry-run-single.config
+  stdout:
+    contains:
+      - "Job counts:"
+      - "TestSample/itd/TestSample.kmt2a.csv"
+      - "TestSample/itd/TestSample.kmt2a.bg.csv"
+      - "TestSample/itd/TestSample.kmt2a.png"
+      - "TestSample/itd/TestSample.flt3.csv"
+      - "TestSample/itd/TestSample.flt3.bg.csv"
+      - "TestSample/itd/TestSample.flt3.png"
+
+- name: test-itd-dry-run-trio
+  tags:
+    - dry-run
+  command: >
+    snakemake -n
+    --snakefile includes/itd/Snakefile
+    --configfile test/data/config/test-dry-run-trio.config
+  stdout:
+    contains:
+      - "Job counts:"
+      - "TestSample1/itd/TestSample1.kmt2a.csv"
+      - "TestSample1/itd/TestSample1.kmt2a.bg.csv"
+      - "TestSample1/itd/TestSample1.kmt2a.png"
+      - "TestSample1/itd/TestSample1.flt3.csv"
+      - "TestSample1/itd/TestSample1.flt3.bg.csv"
+      - "TestSample1/itd/TestSample1.flt3.png"
+      - "TestSample2/itd/TestSample2.kmt2a.csv"
+      - "TestSample2/itd/TestSample2.kmt2a.bg.csv"
+      - "TestSample2/itd/TestSample2.kmt2a.png"
+      - "TestSample2/itd/TestSample2.flt3.csv"
+      - "TestSample2/itd/TestSample2.flt3.bg.csv"
+      - "TestSample2/itd/TestSample2.flt3.png"
+      - "TestSample3/itd/TestSample3.kmt2a.csv"
+      - "TestSample3/itd/TestSample3.kmt2a.bg.csv"
+      - "TestSample3/itd/TestSample3.kmt2a.png"
+      - "TestSample3/itd/TestSample3.flt3.csv"
+      - "TestSample3/itd/TestSample3.flt3.bg.csv"
+      - "TestSample3/itd/TestSample3.flt3.png"
+
+- name: test-itd-sanity-snakemake
+  tags:
+    - sanity
+  command: >
+    snakemake --version
+  stdout:
+    contains:
+      - "5.9"
+
+- name: test-itd-sanity-singularity
+  tags:
+    - sanity
+  command: >
+    singularity --version
+  stdout:
+    contains:
+      - "singularity version 3.1"

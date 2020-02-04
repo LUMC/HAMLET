@@ -12,8 +12,9 @@ RUN.set_default_setting("kmt2a_end", 4719)
 
 rule all_kmt2a:
     input:
-        kmt2a_sc_jsons=expand(RUN.output("{sample}/itd/{sample}.kmt2a-sc.json"), sample=RUN.samples),
-        kmt2a_sc_plots=expand(RUN.output("{sample}/itd/{sample}.kmt2a-sc.png"), sample=RUN.samples),
+        kmt2a_csv=expand(RUN.output("{sample}/itd/{sample}.kmt2a.csv"), sample=RUN.samples),
+        kmt2a_bg_csv=expand(RUN.output("{sample}/itd/{sample}.kmt2a.bg.csv"), sample=RUN.samples),
+        kmt2a_sc_plots=expand(RUN.output("{sample}/itd/{sample}.kmt2a.png"), sample=RUN.samples),
 
 rule align_kmt2a:
     input:
