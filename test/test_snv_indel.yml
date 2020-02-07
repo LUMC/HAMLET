@@ -41,3 +41,20 @@
   stdout:
     contains:
       - "singularity version 3.1"
+
+- name: test-p53-integration-NB-4
+  tags:
+    - integration
+  command: >
+      snakemake -rp
+      --use-singularity
+      --singularity-args ' --containall --bind /tmp/:/tmp,/exports/:/exports/'
+      --singularity-prefix /exports/hem-leukemia/testing/singularity
+      --snakefile includes/snv-indels/Snakefile
+      --configfile test/data/config/test-p53-NB4.config
+      --verbose
+      NB4/snv-indels/NB4.raw.vcf.gz
+  files:
+    - path: "NB4/snv-indels/NB4.raw.vcf.gz"
+      contains:
+        - "chr17\t7674220\t.\tC\tT\t.\tPASS"
