@@ -15,7 +15,7 @@ RUN.set_default_setting("genome_fai", RUN.settings["genome_fasta"] + ".fai")
 include: "../qc-seq/Snakefile"
 
 containers = {
-    "bedtools": "docker://quay.io/biocontainers/bedtools:2.23.0--hdbcaa40_3",
+    "bedtools": "docker://quay.io/biocontainers/mulled-v2-22105f082fdf56207f1dcc5b6da71a14394e28d7:387d955c0a2cdb831ec519d636e4ffd7062d6ae1-0",
     "debian": "docker://debian:buster-slim",
     "gsnap": "docker://quay.io/biocontainers/gmap:2019.06.10--pl526h2f06484_0",
     "hamlet-scripts": "docker://lumc/hamlet-scripts:0.2",
@@ -33,6 +33,8 @@ rule all_snv_indels:
     input:
         #plots_mark=expand(RUN.output("{sample}/snv-indels/variant_plots/.done"), sample=RUN.samples),
         plotd=expand(RUN.output("{sample}/snv-indels/variant_plots"), sample=RUN.samples),
+        #json=expand(RUN.output("{sample}/snv-indels/{sample}.exon_cov_stats.json"), sample=RUN.samples),
+        stats=expand(RUN.output("{sample}/snv-indels/{sample}.aln_stats"), sample=RUN.samples)
 
 
 # To reproduce paper results, relies on a non-conda GSNAP 2014.12.23 with SIMD
