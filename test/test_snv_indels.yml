@@ -64,3 +64,4 @@
     - path: "NB4/snv-indels/NB4.aln_stats"
     - path: "NB4/snv-indels/NB4.vep_stats.txt"
     - path: "NB4/snv-indels/NB4.variants.json"
+    - path: "NB4/snv-indels/NB4.exon_cov_stats.json"
