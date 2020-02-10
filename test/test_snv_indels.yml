@@ -62,5 +62,5 @@
       contains:
         - "chr17\t7674220\t.\tC\tT\t.\tPASS\tADP=416;WT=0;HET=0;HOM=1;NC=0;CSQ=T|missense_variant|MODERATE|TP53|ENSG00000141510|Transcript|ENST00000269305|protein_coding|7/11||ENST00000269305.8:c.743G>A"
     - path: "NB4/snv-indels/NB4.aln_stats"
-    - path: "NB4/snv-indels/NB4.variants.json"
     - path: "NB4/snv-indels/NB4.vep_stats.txt"
+    - path: "NB4/snv-indels/NB4.variants.json"
