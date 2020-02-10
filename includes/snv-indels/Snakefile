@@ -36,6 +36,8 @@ rule all_snv_indels:
         stats=expand(RUN.output("{sample}/snv-indels/{sample}.aln_stats"), sample=RUN.samples),
         var_json=expand(RUN.output("{sample}/snv-indels/{sample}.variants.json"), sample=RUN.samples),
         cov_json=expand(RUN.output("{sample}/snv-indels/{sample}.exon_cov_stats.json"), sample=RUN.samples),
+        insert_stats=expand(RUN.output("{sample}/snv-indels/{sample}.insert_stats"), sample=RUN.samples),
+        insert_histo=expand(RUN.output("{sample}/snv-indels/{sample}.insert_stats.pdf"), sample=RUN.samples),
 
 
 # To reproduce paper results, relies on a non-conda GSNAP 2014.12.23 with SIMD

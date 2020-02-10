@@ -65,3 +65,10 @@
     - path: "NB4/snv-indels/NB4.vep_stats.txt"
     - path: "NB4/snv-indels/NB4.variants.json"
     - path: "NB4/snv-indels/NB4.exon_cov_stats.json"
+    - path: "NB4/snv-indels/NB4.snv-indel.bam"
+    - path: "NB4/snv-indels/NB4.snv-indel.bai"
+    - path: "NB4/snv-indels/NB4.insert_stats.pdf"
+    - path: "NB4/snv-indels/NB4.insert_stats"
+      contains:
+        - "MEDIAN_INSERT_SIZE\tMODE_INSERT_SIZE\tMEDIAN_ABSOLUTE_DEVIATION\tMIN_INSERT_SIZE\tMAX_INSERT_SIZE\tMEAN_INSERT_SIZE\tSTANDARD_DEVIATION\tREAD_PAIRS\tPAIR_ORIENTATION"
+        - "177\t128\t54\t31\t20794276\t199.914744\t106.425583\t7016\tFR"
