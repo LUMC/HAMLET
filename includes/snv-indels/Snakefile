@@ -38,6 +38,8 @@ rule all_snv_indels:
         cov_json=expand(RUN.output("{sample}/snv-indels/{sample}.exon_cov_stats.json"), sample=RUN.samples),
         insert_stats=expand(RUN.output("{sample}/snv-indels/{sample}.insert_stats"), sample=RUN.samples),
         insert_histo=expand(RUN.output("{sample}/snv-indels/{sample}.insert_stats.pdf"), sample=RUN.samples),
+        rna_stats=expand(RUN.output("{sample}/snv-indels/{sample}.rna_stats"), sample=RUN.samples),
+        rna_histo=expand(RUN.output("{sample}/snv-indels/{sample}.rna_stats.pdf"), sample=RUN.samples),
 
 
 # To reproduce paper results, relies on a non-conda GSNAP 2014.12.23 with SIMD
@@ -196,7 +198,8 @@ rule rna_stats:
         ref_rrna=RUN.settings["rrna_refflat"],
         annot=RUN.settings["annotation_refflat"],
     output:
-        stats=RUN.output("{sample}/snv-indels/{sample}.rna_stats")
+        stats=RUN.output("{sample}/snv-indels/{sample}.rna_stats"),
+        histo=RUN.output("{sample}/snv-indels/{sample}.rna_stats.pdf"),
     threads: 1
     conda: srcdir("envs/bam_stats.yml")
     singularity: containers["picard"]
@@ -205,7 +208,7 @@ rule rna_stats:
         " R={input.ref} REF_FLAT={input.annot}"
         " RIBOSOMAL_INTERVALS={input.ref_rrna}"
         " STRAND_SPECIFICITY=NONE ASSUME_SORTED=true"
-        " CHART_OUTPUT={output.stats}.pdf I={input.bam} O={output.stats}"
+        " CHART_OUTPUT={output.histo} I={input.bam} O={output.stats}"
 
 rule annotate_vars:
     input:
