@@ -13,6 +13,8 @@
       - "TestSample/fusion/TestSample.star-fusion-circos/fsnviz.png"
       - "TestSample/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
       - "TestSample/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
+      - "TestSample/fusion/TestSample.fusioncatcher"
+      - "TestSample/fusion/TestSample.fusioncatcher-circos/fsnviz.png"
 
 - name: test-fusion-dry-run-trio
   tags:
@@ -29,16 +31,22 @@
       - "TestSample1/fusion/TestSample1.star-fusion-circos/fsnviz.png"
       - "TestSample1/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
       - "TestSample1/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
+      - "TestSample1/fusion/TestSample1.fusioncatcher"
+      - "TestSample1/fusion/TestSample1.fusioncatcher-circos/fsnviz.png"
       - "TestSample2/fusion/TestSample2.star-fusion"
       - "TestSample2/fusion/TestSample2.star-fusion-circos/fsnviz.svg"
       - "TestSample2/fusion/TestSample2.star-fusion-circos/fsnviz.png"
       - "TestSample2/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
       - "TestSample2/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
+      - "TestSample2/fusion/TestSample2.fusioncatcher"
+      - "TestSample2/fusion/TestSample2.fusioncatcher-circos/fsnviz.png"
       - "TestSample3/fusion/TestSample3.star-fusion"
       - "TestSample3/fusion/TestSample3.star-fusion-circos/fsnviz.svg"
       - "TestSample3/fusion/TestSample3.star-fusion-circos/fsnviz.png"
       - "TestSample3/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
       - "TestSample3/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
+      - "TestSample3/fusion/TestSample3.fusioncatcher"
+      - "TestSample3/fusion/TestSample3.fusioncatcher-circos/fsnviz.png"
 
 - name: test-fusion-sanity-snakemake
   tags:
