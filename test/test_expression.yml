@@ -57,3 +57,20 @@
   stdout:
     contains:
       - "singularity version 3.1"
+
+- name: test-expression-integration-HEL
+  tags:
+    - integration
+  command: >
+      snakemake -rp
+      --use-singularity
+      --singularity-args ' --containall --bind /tmp/:/tmp,/exports/:/exports/'
+      --singularity-prefix /exports/hem-leukemia/testing/singularity
+      --snakefile includes/expression/Snakefile
+      --configfile test/data/config/test-expression-HEL.config
+      --verbose
+  files:
+    - path: "HEL/expression/HEL.fragments_per_gene"
+      contains:
+        - "MECOM\t3677"
+        - "HMBS\t9154"
