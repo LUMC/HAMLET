@@ -21,10 +21,10 @@ localrules: star_fusion_cp, fusioncatcher_cp, plot_cp
 
 rule all_fusion:
     input:
-        #star_final=[RUN.output(f) for f in expand("{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv",sample=RUN.samples)]
-        star_final=[RUN.output(f) for f in expand("{sample}/fusion/{sample}.star-fusion",sample=RUN.samples)],
-        sf_svg=[RUN.output(f) for f in expand("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg",sample=RUN.samples)],
-        sf_png=[RUN.output(f) for f in expand("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png",sample=RUN.samples)]
+        star_predictions=expand(RUN.output("{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv"), sample=RUN.samples),
+        star_final=expand(RUN.output("{sample}/fusion/{sample}.star-fusion"), sample=RUN.samples),
+        sf_svg=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg"), sample=RUN.samples),
+        sf_png=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png"), sample=RUN.samples),
         #ext=RUN.output("{sample}/fusion/{sample}.{ext}.svg"),
         #final_list=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"),
         #fc_svg=RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg"),

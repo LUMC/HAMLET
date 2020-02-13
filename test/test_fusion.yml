@@ -11,6 +11,7 @@
       - "TestSample/fusion/TestSample.star-fusion"
       - "TestSample/fusion/TestSample.star-fusion-circos/fsnviz.svg"
       - "TestSample/fusion/TestSample.star-fusion-circos/fsnviz.png"
+      - "TestSample/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
 
 - name: test-fusion-dry-run-trio
   tags:
@@ -25,12 +26,15 @@
       - "TestSample1/fusion/TestSample1.star-fusion"
       - "TestSample1/fusion/TestSample1.star-fusion-circos/fsnviz.svg"
       - "TestSample1/fusion/TestSample1.star-fusion-circos/fsnviz.png"
+      - "TestSample1/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
       - "TestSample2/fusion/TestSample2.star-fusion"
       - "TestSample2/fusion/TestSample2.star-fusion-circos/fsnviz.svg"
       - "TestSample2/fusion/TestSample2.star-fusion-circos/fsnviz.png"
+      - "TestSample2/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
       - "TestSample3/fusion/TestSample3.star-fusion"
       - "TestSample3/fusion/TestSample3.star-fusion-circos/fsnviz.svg"
       - "TestSample3/fusion/TestSample3.star-fusion-circos/fsnviz.png"
+      - "TestSample3/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
 
 - name: test-fusion-sanity-snakemake
   tags:
