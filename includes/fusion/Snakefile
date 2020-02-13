@@ -25,6 +25,7 @@ rule all_fusion:
         star_final=expand(RUN.output("{sample}/fusion/{sample}.star-fusion"), sample=RUN.samples),
         sf_svg=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg"), sample=RUN.samples),
         sf_png=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png"), sample=RUN.samples),
+        catcher_final_list=expand(RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"), sample=RUN.samples),
         #ext=RUN.output("{sample}/fusion/{sample}.{ext}.svg"),
         #final_list=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"),
         #fc_svg=RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg"),
@@ -86,14 +87,13 @@ rule fusioncatcher:
         fq1=RUN.output("{sample}/{sample}-R1.raw.fq.gz"),
         fq2=RUN.output("{sample}/{sample}-R2.raw.fq.gz"),
     output:
-        dir=RUN.output("{sample}/fusion/fusioncatcher"),
         txt=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt")
     threads: 8
     conda: srcdir("envs/fusioncatcher.yml")
     singularity: containers["fusioncatcher"]
     shell:
-        "(rm -rf {output.dir}"
-        " && fusioncatcher --threads {threads} -i {input.fq1},{input.fq2} -o {output.dir})"
+        " dir=`dirname {output.txt}` "
+        " && fusioncatcher --threads {threads} -i {input.fq1},{input.fq2} -o ${{dir}})"
         " || test -f {output.txt}"
 
 rule fusioncatcher_cp:
