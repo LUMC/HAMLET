@@ -15,6 +15,7 @@
       - "TestSample/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
       - "TestSample/fusion/TestSample.fusioncatcher"
         #- "TestSample/fusion/TestSample.fusioncatcher-circos/fsnviz.png"
+      - "TestSample/fusion/TestSample.fuma"
 
 - name: test-fusion-dry-run-trio
   tags:
@@ -33,6 +34,7 @@
       - "TestSample1/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
       - "TestSample1/fusion/TestSample1.fusioncatcher"
         #- "TestSample1/fusion/TestSample1.fusioncatcher-circos/fsnviz.png"
+      - "TestSample1/fusion/TestSample1.fuma"
       - "TestSample2/fusion/TestSample2.star-fusion"
         #- "TestSample2/fusion/TestSample2.star-fusion-circos/fsnviz.svg"
         #- "TestSample2/fusion/TestSample2.star-fusion-circos/fsnviz.png"
@@ -40,6 +42,7 @@
       - "TestSample2/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
       - "TestSample2/fusion/TestSample2.fusioncatcher"
         #- "TestSample2/fusion/TestSample2.fusioncatcher-circos/fsnviz.png"
+      - "TestSample2/fusion/TestSample2.fuma"
       - "TestSample3/fusion/TestSample3.star-fusion"
         #- "TestSample3/fusion/TestSample3.star-fusion-circos/fsnviz.svg"
         #- "TestSample3/fusion/TestSample3.star-fusion-circos/fsnviz.png"
@@ -47,6 +50,7 @@
       - "TestSample3/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
       - "TestSample3/fusion/TestSample3.fusioncatcher"
         #- "TestSample3/fusion/TestSample3.fusioncatcher-circos/fsnviz.png"
+      - "TestSample3/fusion/TestSample3.fuma"
 
 - name: test-fusion-sanity-snakemake
   tags:
@@ -116,3 +120,10 @@
 
         - "HAGH\tPCNT\tt1,exon-exon"
         - "16:1809238:-\t21:46445284:+\tENSG00000063854\tENSG00000160299\tENSE00002603496\tENSE00003625234"
+    - path: "NB4/fusion/NB4.fuma"
+      contains:
+        - "Left-genes\tRight-genes\tSpans large gene (>200000bp)\tfc-NB4\tsf-NB4"
+
+        - "PML\tRARA\tFALSE\t1=chr15:74033414-chr17:40348316,2=chr15:74034478-chr17:40331396\t2=chr15:74034478-chr17:40331396,4=chr15:74033414-chr17:40348316"
+        - "HAGH\tPCNT\tFALSE\t3=chr16:1809238-chr21:46445284,4=chr16:1809238-chr21:46444694\t10=chr16:1809238-chr21:46444694,6=chr16:1809238-chr21:46445284"
+

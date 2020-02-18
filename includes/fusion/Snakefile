@@ -26,6 +26,7 @@ rule all_fusion:
         #sf_svg=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg"), sample=RUN.samples),
         #sf_png=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png"), sample=RUN.samples),
         fusion_catcher=expand(RUN.output("{sample}/fusion/{sample}.fusioncatcher"), sample=RUN.samples),
+        fuma=expand(RUN.output("{sample}/fusion/{sample}.fuma"), sample=RUN.samples),
         #fusion_circos=expand(RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png"), sample=RUN.samples),
         #ext=RUN.output("{sample}/fusion/{sample}.{ext}.svg"),
         #final_list=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"),
