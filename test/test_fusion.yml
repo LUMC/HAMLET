@@ -9,12 +9,12 @@
     contains:
       - "Job counts:"
       - "TestSample/fusion/TestSample.star-fusion"
-      - "TestSample/fusion/TestSample.star-fusion-circos/fsnviz.svg"
-      - "TestSample/fusion/TestSample.star-fusion-circos/fsnviz.png"
+        #- "TestSample/fusion/TestSample.star-fusion-circos/fsnviz.svg"
+        #- "TestSample/fusion/TestSample.star-fusion-circos/fsnviz.png"
       - "TestSample/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
       - "TestSample/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
       - "TestSample/fusion/TestSample.fusioncatcher"
-      - "TestSample/fusion/TestSample.fusioncatcher-circos/fsnviz.png"
+        #- "TestSample/fusion/TestSample.fusioncatcher-circos/fsnviz.png"
 
 - name: test-fusion-dry-run-trio
   tags:
@@ -27,26 +27,26 @@
     contains:
       - "Job counts:"
       - "TestSample1/fusion/TestSample1.star-fusion"
-      - "TestSample1/fusion/TestSample1.star-fusion-circos/fsnviz.svg"
-      - "TestSample1/fusion/TestSample1.star-fusion-circos/fsnviz.png"
+        #- "TestSample1/fusion/TestSample1.star-fusion-circos/fsnviz.svg"
+        #- "TestSample1/fusion/TestSample1.star-fusion-circos/fsnviz.png"
       - "TestSample1/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
       - "TestSample1/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
       - "TestSample1/fusion/TestSample1.fusioncatcher"
-      - "TestSample1/fusion/TestSample1.fusioncatcher-circos/fsnviz.png"
+        #- "TestSample1/fusion/TestSample1.fusioncatcher-circos/fsnviz.png"
       - "TestSample2/fusion/TestSample2.star-fusion"
-      - "TestSample2/fusion/TestSample2.star-fusion-circos/fsnviz.svg"
-      - "TestSample2/fusion/TestSample2.star-fusion-circos/fsnviz.png"
+        #- "TestSample2/fusion/TestSample2.star-fusion-circos/fsnviz.svg"
+        #- "TestSample2/fusion/TestSample2.star-fusion-circos/fsnviz.png"
       - "TestSample2/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
       - "TestSample2/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
       - "TestSample2/fusion/TestSample2.fusioncatcher"
-      - "TestSample2/fusion/TestSample2.fusioncatcher-circos/fsnviz.png"
+        #- "TestSample2/fusion/TestSample2.fusioncatcher-circos/fsnviz.png"
       - "TestSample3/fusion/TestSample3.star-fusion"
-      - "TestSample3/fusion/TestSample3.star-fusion-circos/fsnviz.svg"
-      - "TestSample3/fusion/TestSample3.star-fusion-circos/fsnviz.png"
+        #- "TestSample3/fusion/TestSample3.star-fusion-circos/fsnviz.svg"
+        #- "TestSample3/fusion/TestSample3.star-fusion-circos/fsnviz.png"
       - "TestSample3/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
       - "TestSample3/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
       - "TestSample3/fusion/TestSample3.fusioncatcher"
-      - "TestSample3/fusion/TestSample3.fusioncatcher-circos/fsnviz.png"
+        #- "TestSample3/fusion/TestSample3.fusioncatcher-circos/fsnviz.png"
 
 - name: test-fusion-sanity-snakemake
   tags:
@@ -99,7 +99,20 @@
     - path: "NB4/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
     - path: "NB4/fusion/NB4.star-fusion"
       contains:
-        - "PLAA--MIR31HG\t200\t101\tONLY_REF_SPLICE"
-        - "RARA--PML\t111\t43\tONLY_REF_SPLICE"
-        - "PML--RARA\t40\t25\tONLY_REF_SPLICE"
+        - "#FusionName\tJunctionReadCount\tSpanningFragCount\tSpliceType\tLeftGene\tLeftBreakpoint\tRightGene\tRightBreakpoint\tJunctionReads\tSpanningFrags\tLargeAnchorSupport\tFFPM\tLeftBreakDinuc\tLeftBreakEntropy\tRightBreakDinuc\tRightBreakEntropy\tannots"
+        - "RARA--PML\t111\t43\tONLY_REF_SPLICE\tRARA^ENSG00000131759.18\tchr17:40331396:+\tPML^ENSG00000140464.19\tchr15:74034478:+"
+        - "PML--RARA\t40\t25\tONLY_REF_SPLICE\tPML^ENSG00000140464.19\tchr15:74033414:+\tRARA^ENSG00000131759.18\tchr17:40348316:+"
+        - "HAGH--PCNT\t8\t13\tONLY_REF_SPLICE\tHAGH^ENSG00000063854.13\tchr16:1809238:-\tPCNT^ENSG00000160299.17\tchr21:46444694:+"
+
     - path: "NB4/fusion/NB4.fusioncatcher"
+      contains:
+        - "Gene_1_symbol(5end_fusion_partner)\tGene_2_symbol(3end_fusion_partner)\tFusion_description\tCounts_of_common_mapping_reads\tSpanning_pairs\tSpanning_unique_reads\tLongest_anchor_found\tFusion_finding_method\tFusion_point_for_gene_1(5end_fusion_partner)\tFusion_point_for_gene_2(3end_fusion_partner)\tGene_1_id(5end_fusion_partner)\tGene_2_id(3end_fusion_partner)\tExon_1_id(5end_fusion_partner)\tExon_2_id(3end_fusion_partner)\tFusion_sequence\tPredicted_effect"
+
+        - "RARA\tPML\tknown,oncogene,chimerdb2,cgp,ticdb,tcga,cell_lines,chimerdb3kb,chimerdb3pub,chimerdb3seq,cancer,tumor,tcga-cancer,tcga2,oncokb,mitelman,t5,exon-exon,reciprocal"
+        - "17:40331396:+\t15:74034478:+\tENSG00000131759\tENSG00000140464\tENSE00001422265\tENSE00003629382"
+
+        - "PML\tRARA\tknown,oncogene,chimerdb2,cgp,ticdb,tcga,cell_lines,chimerdb3kb,chimerdb3pub,chimerdb3seq,cancer,tumor,tcga-cancer,tcga2,oncokb,mitelman,t5,exon-exon,reciprocal"
+        - "15:74033414:+\t17:40348316:+\tENSG00000140464\tENSG00000131759\tENSE00001390455\tENSE00003521943"
+
+        - "HAGH\tPCNT\tt1,exon-exon"
+        - "16:1809238:-\t21:46445284:+\tENSG00000063854\tENSG00000160299\tENSE00002603496\tENSE00003625234"
