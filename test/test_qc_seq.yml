@@ -40,7 +40,7 @@
 
 - name: test-qc-single
   tags:
-    - functional
+    - integration
   command: >
     snakemake -rp
     --use-singularity
