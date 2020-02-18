@@ -13,7 +13,7 @@ containers = {
     "debian": "docker://debian:buster-slim",
     "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py35_1",
     "fuma": "docker://quay.io/biocontainers/fuma:3.0.5--py27h24bf2e0_1",
-    "fusioncatcher": "docker://quay.io/biocontainers/fusioncatcher:1.00--py27h8c6ebc1_1",
+    "fusioncatcher": "docker://quay.io/biocontainers/fusioncatcher:1.20--2",
     "star-fusion": "docker://quay.io/biocontainers/star-fusion:1.6.0--1",
     "hamlet-scripts": "docker://lumc/hamlet-scripts:0.2"
 }
@@ -23,10 +23,10 @@ rule all_fusion:
     input:
         star_predictions=expand(RUN.output("{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv"), sample=RUN.samples),
         star_final=expand(RUN.output("{sample}/fusion/{sample}.star-fusion"), sample=RUN.samples),
-        sf_svg=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg"), sample=RUN.samples),
-        sf_png=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png"), sample=RUN.samples),
+        #sf_svg=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg"), sample=RUN.samples),
+        #sf_png=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png"), sample=RUN.samples),
         fusion_catcher=expand(RUN.output("{sample}/fusion/{sample}.fusioncatcher"), sample=RUN.samples),
-        fusion_circos=expand(RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png"), sample=RUN.samples),
+        #fusion_circos=expand(RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png"), sample=RUN.samples),
         #ext=RUN.output("{sample}/fusion/{sample}.{ext}.svg"),
         #final_list=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"),
         #fc_svg=RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg"),
@@ -87,6 +87,8 @@ rule fusioncatcher:
     input:
         fq1=RUN.output("{sample}/{sample}-R1.raw.fq.gz"),
         fq2=RUN.output("{sample}/{sample}-R2.raw.fq.gz"),
+    params:
+        data=RUN.settings["fusioncatcher_data"]
     output:
         txt=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt")
     threads: 8
@@ -94,8 +96,8 @@ rule fusioncatcher:
     singularity: containers["fusioncatcher"]
     shell:
         " dir=`dirname {output.txt}` "
-        " && fusioncatcher --threads {threads} -i {input.fq1},{input.fq2} -o ${{dir}}"
-        " || test -f {output.txt}"
+        " && fusioncatcher.py --threads {threads} -i {input.fq1},{input.fq2} -o ${{dir}}"
+        " --data {params.data} || test -f {output.txt}"
 
 rule fusioncatcher_cp:
     input:

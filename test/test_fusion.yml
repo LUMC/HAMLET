@@ -94,7 +94,6 @@
       --snakefile includes/fusion/Snakefile
       --configfile test/data/config/test-fusion-NB4.config
       --verbose
-      NB4/fusion/NB4.star-fusion
   files:
     - path: "NB4/fusion/star-fusion/star-fusion.fusion_predictions.abridged.tsv"
     - path: "NB4/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
@@ -103,3 +102,4 @@
         - "PLAA--MIR31HG\t200\t101\tONLY_REF_SPLICE"
         - "RARA--PML\t111\t43\tONLY_REF_SPLICE"
         - "PML--RARA\t40\t25\tONLY_REF_SPLICE"
+    - path: "NB4/fusion/NB4.fusioncatcher"
