@@ -11,7 +11,7 @@ include: "../qc-seq/Snakefile"
 
 containers = {
     "debian": "docker://debian:buster-slim",
-    "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py35_1",
+    "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py_3",
     "fuma": "docker://quay.io/biocontainers/fuma:3.0.5--py27h24bf2e0_1",
     "fusioncatcher": "docker://quay.io/biocontainers/fusioncatcher:1.20--2",
     "star-fusion": "docker://quay.io/biocontainers/star-fusion:1.6.0--1",
@@ -23,11 +23,13 @@ rule all_fusion:
     input:
         star_predictions=expand(RUN.output("{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv"), sample=RUN.samples),
         star_final=expand(RUN.output("{sample}/fusion/{sample}.star-fusion"), sample=RUN.samples),
-        #sf_svg=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg"), sample=RUN.samples),
-        #sf_png=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png"), sample=RUN.samples),
         fusion_catcher=expand(RUN.output("{sample}/fusion/{sample}.fusioncatcher"), sample=RUN.samples),
         fuma=expand(RUN.output("{sample}/fusion/{sample}.fuma"), sample=RUN.samples),
         subset=expand(RUN.output("{sample}/fusion/{sample}.sf-isect"), sample=RUN.samples),
+        is_svg=expand(RUN.output("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.svg"), sample=RUN.samples),
+        is_png=expand(RUN.output("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.png"), sample=RUN.samples),
+        #sf_svg=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg"), sample=RUN.samples),
+        #sf_png=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png"), sample=RUN.samples),
         #fusion_circos=expand(RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png"), sample=RUN.samples),
         #ext=RUN.output("{sample}/fusion/{sample}.{ext}.svg"),
         #final_list=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"),
