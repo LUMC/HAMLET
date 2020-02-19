@@ -31,8 +31,7 @@ containers = {
 
 rule all_snv_indels:
     input:
-        #plots_mark=expand(RUN.output("{sample}/snv-indels/variant_plots/.done"), sample=RUN.samples),
-        plotd=expand(RUN.output("{sample}/snv-indels/variant_plots"), sample=RUN.samples),
+        plots_mark=expand(RUN.output("{sample}/snv-indels/variant_plots/.done"), sample=RUN.samples),
         stats=expand(RUN.output("{sample}/snv-indels/{sample}.aln_stats"), sample=RUN.samples),
         var_json=expand(RUN.output("{sample}/snv-indels/{sample}.variants.json"), sample=RUN.samples),
         cov_json=expand(RUN.output("{sample}/snv-indels/{sample}.exon_cov_stats.json"), sample=RUN.samples),
@@ -281,8 +280,8 @@ rule plot_vars:
     params:
         plotd=RUN.output("{sample}/snv-indels/variant_plots"),
     output:
-        #plots_mark=RUN.output("{sample}/snv-indels/variant_plots/.done"),
-        plotd=directory(RUN.output("{sample}/snv-indels/variant_plots"))
+        plots_mark=RUN.output("{sample}/snv-indels/variant_plots/.done"),
+        #plotd=directory(RUN.output("{sample}/snv-indels/variant_plots"))
     threads: 1
     conda: srcdir("envs/plot_variants.yml")
     singularity: containers["hamlet-scripts"]

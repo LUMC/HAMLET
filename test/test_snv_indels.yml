@@ -8,7 +8,7 @@
   stdout:
     contains:
       - "Job counts:"
-      - "TestSample/snv-indels/variant_plots"
+      - "TestSample/snv-indels/variant_plots/.done"
 
 - name: test-snv-indels-dry-run-trio
   tags:
@@ -20,9 +20,9 @@
   stdout:
     contains:
       - "Job counts:"
-      - "TestSample1/snv-indels/variant_plots"
-      - "TestSample2/snv-indels/variant_plots"
-      - "TestSample3/snv-indels/variant_plots"
+      - "TestSample1/snv-indels/variant_plots/.done"
+      - "TestSample2/snv-indels/variant_plots/.done"
+      - "TestSample3/snv-indels/variant_plots/.done"
 
 - name: test-snv-indels-sanity-snakemake
   tags:
@@ -77,3 +77,5 @@
       contains:
         - "PF_BASES\tPF_ALIGNED_BASES\tRIBOSOMAL_BASES\tCODING_BASES\tUTR_BASES\tINTRONIC_BASES\tINTERGENIC_BASES\tIGNORED_READS\tCORRECT_STRAND_READS\tINCORRECT_STRAND_READS\tNUM_R1_TRANSCRIPT_STRAND_READS\tNUM_R2_TRANSCRIPT_STRAND_READS\tNUM_UNEXPLAINED_READS"
         - "1320386\t1289751\t0\t562538\t680479\t46273\t461\t0\t0\t0\t2802\t3145\t79"
+    - path: "NB4/snv-indels/variant_plots/sample_NB4_gene_TP53.png"
+    - path: "NB4/snv-indels/variant_plots/.done"
