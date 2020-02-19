@@ -32,7 +32,7 @@ rule all_fusion:
         sf_png=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png"), sample=RUN.samples),
         fc_svg=expand(RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg"), sample=RUN.samples),
         fc_png=expand(RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png"), sample=RUN.samples),
-        #combined_svg=RUN.output("{sample}/fusion/{sample}.fusions-combined.svg")
+        combined_svg=expand(RUN.output("{sample}/fusion/{sample}.fusions-combined.svg"), sample=RUN.samples)
 
 rule star_fusion:
     input:

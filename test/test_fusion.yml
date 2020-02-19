@@ -18,6 +18,7 @@
       - "TestSample/fusion/TestSample.fuma"
       - "TestSample/fusion/TestSample.sf-isect"
       - "TestSample/fusion/TestSample.sf-isect-circos/fsnviz.svg"
+      - "TestSample/fusion/TestSample.fusions-combined.svg"
 
 - name: test-fusion-dry-run-trio
   tags:
@@ -39,6 +40,7 @@
       - "TestSample1/fusion/TestSample1.fuma"
       - "TestSample1/fusion/TestSample1.sf-isect"
       - "TestSample1/fusion/TestSample1.sf-isect-circos/fsnviz.svg"
+      - "TestSample1/fusion/TestSample1.fusions-combined.svg"
 
       - "TestSample2/fusion/TestSample2.star-fusion"
       - "TestSample2/fusion/TestSample2.star-fusion-circos/fsnviz.svg"
@@ -50,6 +52,7 @@
       - "TestSample2/fusion/TestSample2.fuma"
       - "TestSample2/fusion/TestSample2.sf-isect"
       - "TestSample2/fusion/TestSample2.sf-isect-circos/fsnviz.svg"
+      - "TestSample2/fusion/TestSample2.fusions-combined.svg"
 
       - "TestSample3/fusion/TestSample3.star-fusion"
       - "TestSample3/fusion/TestSample3.star-fusion-circos/fsnviz.svg"
@@ -61,6 +64,7 @@
       - "TestSample3/fusion/TestSample3.fuma"
       - "TestSample3/fusion/TestSample3.sf-isect"
       - "TestSample3/fusion/TestSample3.sf-isect-circos/fsnviz.svg"
+      - "TestSample3/fusion/TestSample3.fusions-combined.svg"
 
 - name: test-fusion-sanity-snakemake
   tags:
@@ -161,6 +165,13 @@
         - "PCNT"
 
     - path: "NB4/fusion/NB4.star-fusion-circos/fsnviz.svg"
+      contains:
+        - "RARA"
+        - "PML"
+        - "HAGH"
+        - "PCNT"
+
+    - path: "NB4/fusion/NB4.fusions-combined.svg"
       contains:
         - "RARA"
         - "PML"
