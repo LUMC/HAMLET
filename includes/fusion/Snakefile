@@ -28,13 +28,10 @@ rule all_fusion:
         subset=expand(RUN.output("{sample}/fusion/{sample}.sf-isect"), sample=RUN.samples),
         is_svg=expand(RUN.output("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.svg"), sample=RUN.samples),
         is_png=expand(RUN.output("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.png"), sample=RUN.samples),
-        #sf_svg=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg"), sample=RUN.samples),
-        #sf_png=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png"), sample=RUN.samples),
-        #fusion_circos=expand(RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png"), sample=RUN.samples),
-        #ext=RUN.output("{sample}/fusion/{sample}.{ext}.svg"),
-        #final_list=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"),
-        #fc_svg=RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg"),
-        #fc_png=RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png"),
+        sf_svg=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg"), sample=RUN.samples),
+        sf_png=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png"), sample=RUN.samples),
+        fc_svg=expand(RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg"), sample=RUN.samples),
+        fc_png=expand(RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png"), sample=RUN.samples),
         #combined_svg=RUN.output("{sample}/fusion/{sample}.fusions-combined.svg")
 
 rule star_fusion:
