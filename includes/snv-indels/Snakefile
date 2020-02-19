@@ -47,17 +47,14 @@ rule align_vars:
         fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
         fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
         index=RUN.settings["genome_gmap_index"],
-        #exe=RUN.settings["gsnap_exe"],
     output:
         sam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.sam")),
-        #bai=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.bai")),
     params:
         rg_sample="{sample}"
     threads: 8
     conda: srcdir("envs/align_vars.yml")
     singularity: containers["gsnap"]
     shell:
-        #"{input.exe} --dir `dirname {input.index}` --db `basename {input.index}`"
         "gsnap --dir `dirname {input.index}` --db `basename {input.index}`"
         " --batch 4 --nthreads {threads}"
         " --novelsplicing 1 --npaths 1 --quiet-if-excessive"
@@ -281,7 +278,6 @@ rule plot_vars:
         plotd=RUN.output("{sample}/snv-indels/variant_plots"),
     output:
         plots_mark=RUN.output("{sample}/snv-indels/variant_plots/.done"),
-        #plotd=directory(RUN.output("{sample}/snv-indels/variant_plots"))
     threads: 1
     conda: srcdir("envs/plot_variants.yml")
     singularity: containers["hamlet-scripts"]
