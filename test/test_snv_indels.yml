@@ -9,6 +9,8 @@
     contains:
       - "Job counts:"
       - "TestSample/snv-indels/variant_plots/.done"
+      - "TestSample/snv-indels/TestSample.variants_all.csv"
+      - "TestSample/snv-indels/TestSample.variants_hi.csv"
 
 - name: test-snv-indels-dry-run-trio
   tags:
@@ -21,8 +23,16 @@
     contains:
       - "Job counts:"
       - "TestSample1/snv-indels/variant_plots/.done"
+      - "TestSample1/snv-indels/TestSample1.variants_all.csv"
+      - "TestSample1/snv-indels/TestSample1.variants_hi.csv"
+
       - "TestSample2/snv-indels/variant_plots/.done"
+      - "TestSample2/snv-indels/TestSample2.variants_all.csv"
+      - "TestSample2/snv-indels/TestSample2.variants_hi.csv"
+
       - "TestSample3/snv-indels/variant_plots/.done"
+      - "TestSample3/snv-indels/TestSample3.variants_all.csv"
+      - "TestSample3/snv-indels/TestSample3.variants_hi.csv"
 
 - name: test-snv-indels-sanity-snakemake
   tags:
@@ -79,3 +89,30 @@
         - "1320386\t1289751\t0\t562538\t680479\t46273\t461\t0\t0\t0\t2802\t3145\t79"
     - path: "NB4/snv-indels/variant_plots/sample_NB4_gene_TP53.png"
     - path: "NB4/snv-indels/variant_plots/.done"
+    - path: "NB4/snv-indels/NB4.variants_all.csv"
+    - path: "NB4/snv-indels/NB4.variants_hi.csv"
+      contains:
+        - "sample_id,gene_symbol,gene_id,CHROM,POS,REF,alleles,genotype,is_in_hotspot"
+        - "NB4,TP53,ENSG00000141510,chr17,7674220,C,\"T,T\",T/T,no"
+
+- name: test-flt3-integration-MV4-11
+  tags:
+    - flt3
+    - integration
+  command: >
+      snakemake -rp
+      --use-singularity
+      --singularity-args ' --containall --bind /tmp/:/tmp,/exports/:/exports/'
+      --singularity-prefix /exports/hem-leukemia/testing/singularity
+      --snakefile includes/snv-indels/Snakefile
+      --configfile test/data/config/test-itd-MV4-11.config
+      --latency-wait 120
+      --verbose
+  files:
+    - path: "MV4-11/snv-indels/variant_plots/sample_MV4-11_gene_FLT3.png"
+    - path: "MV4-11/snv-indels/MV4-11.variants.json"
+    - path: "MV4-11/snv-indels/MV4-11.variants_all.csv"
+    - path: "MV4-11/snv-indels/MV4-11.variants_hi.csv"
+      contains:
+        - "sample_id,gene_symbol,gene_id,CHROM,POS,REF,alleles,genotype,is_in_hotspot"
+        - "MV4-11,FLT3,ENSG00000122025,chr13,28034148,A,\"A,G\",A/G,yes"

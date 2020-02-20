@@ -39,6 +39,8 @@ rule all_snv_indels:
         insert_histo=expand(RUN.output("{sample}/snv-indels/{sample}.insert_stats.pdf"), sample=RUN.samples),
         rna_stats=expand(RUN.output("{sample}/snv-indels/{sample}.rna_stats"), sample=RUN.samples),
         rna_histo=expand(RUN.output("{sample}/snv-indels/{sample}.rna_stats.pdf"), sample=RUN.samples),
+        all_csv=expand(RUN.output("{sample}/snv-indels/{sample}.variants_all.csv"), sample=RUN.samples),
+        high_csv=expand(RUN.output("{sample}/snv-indels/{sample}.variants_hi.csv"), sample=RUN.samples),
 
 
 # To reproduce paper results, relies on a non-conda GSNAP 2014.12.23 with SIMD
