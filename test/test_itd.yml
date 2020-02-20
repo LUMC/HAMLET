@@ -62,6 +62,12 @@
     contains:
       - "singularity version 3.1"
 
+- name: test-itd-sanity-rattle
+  tags:
+    - sanity
+  command: >
+    python -m rattle
+
 - name: test-itd-MV4-11-flt3
   tags:
     - integration

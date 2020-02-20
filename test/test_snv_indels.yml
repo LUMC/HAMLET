@@ -52,6 +52,12 @@
     contains:
       - "singularity version 3.1"
 
+- name: test-snv-indels-sanity-rattle
+  tags:
+    - sanity
+  command: >
+    python -m rattle
+
 - name: test-p53-integration-NB-4
   tags:
     - integration
