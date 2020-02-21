@@ -49,11 +49,18 @@
     - integration
   command: >
     snakemake -rp
-    --use-singularity
-    --singularity-args ' --bind /tmp/ --cleanenv'
-    --singularity-prefix /tmp/singularity
     --snakefile includes/qc-seq/Snakefile
     --configfile test/data/config/test-qc-single.config
+    --cluster-config test/data/config/cluster-config.yml
+    --verbose
+    --use-singularity
+    --singularity-args ' --containall --bind /exports'
+    --singularity-prefix /exports/hem-leukemia/testing/singularity
+    --drmaa ' -pe BWA {cluster.threads} -q all.q -l h_vmem={cluster.vmem} -cwd -V -N hamlet-test '
+    --drmaa-log-dir cluster-logs
+    --jobname 'hamlet.{jobid}'
+    --jobs 70
+    --latency-wait 120
   files:
     - path: "TestSample/TestSample-R1.fq.gz"
     - path: "TestSample/TestSample-R2.fq.gz"
@@ -69,11 +76,18 @@
     - functional
   command: >
     snakemake -rp
-    --use-singularity
-    --singularity-args ' --bind /tmp/ --cleanenv'
-    --singularity-prefix /tmp/singularity
     --snakefile includes/qc-seq/Snakefile
     --configfile test/data/config/test-qc-duo.config
+    --cluster-config test/data/config/cluster-config.yml
+    --verbose
+    --use-singularity
+    --singularity-args ' --containall --bind /exports'
+    --singularity-prefix /exports/hem-leukemia/testing/singularity
+    --drmaa ' -pe BWA {cluster.threads} -q all.q -l h_vmem={cluster.vmem} -cwd -V -N hamlet-test '
+    --drmaa-log-dir cluster-logs
+    --jobname 'hamlet.{jobid}'
+    --jobs 70
+    --latency-wait 120
   files:
     - path: "TestSample1/TestSample1-R1.fq.gz"
     - path: "TestSample1/TestSample1-R2.fq.gz"
@@ -89,11 +103,18 @@
     - functional
   command: >
     snakemake -rp
-    --use-singularity
-    --singularity-args ' --bind /tmp/ --cleanenv'
-    --singularity-prefix /tmp/singularity
     --snakefile includes/qc-seq/Snakefile
     --configfile test/data/config/test-qc-trio.config
+    --cluster-config test/data/config/cluster-config.yml
+    --verbose
+    --use-singularity
+    --singularity-args ' --containall --bind /exports'
+    --singularity-prefix /exports/hem-leukemia/testing/singularity
+    --drmaa ' -pe BWA {cluster.threads} -q all.q -l h_vmem={cluster.vmem} -cwd -V -N hamlet-test '
+    --drmaa-log-dir cluster-logs
+    --jobname 'hamlet.{jobid}'
+    --jobs 70
+    --latency-wait 120
   files:
     - path: "TestSample3/qc-seq/rg_1"
     - path: "TestSample3/qc-seq/rg_2"
@@ -104,11 +125,18 @@
     - functional
   command: >
     snakemake -rp
-    --use-singularity
-    --singularity-args ' --bind /tmp/ --cleanenv'
-    --singularity-prefix /tmp/singularity
     --snakefile includes/qc-seq/Snakefile
     --configfile test/data/config/test-qc-single-low-qual-adapters.config
+    --cluster-config test/data/config/cluster-config.yml
+    --verbose
+    --use-singularity
+    --singularity-args ' --containall --bind /exports'
+    --singularity-prefix /exports/hem-leukemia/testing/singularity
+    --drmaa ' -pe BWA {cluster.threads} -q all.q -l h_vmem={cluster.vmem} -cwd -V -N hamlet-test '
+    --drmaa-log-dir cluster-logs
+    --jobname 'hamlet.{jobid}'
+    --jobs 70
+    --latency-wait 120
   files:
     - path: "low_qual/low_qual-R1.fq.gz"
     - path: "low_qual/low_qual-R2.fq.gz"
@@ -130,5 +158,3 @@
         - "PASS\tPer base N content\tlow_qual-readgroup1-R1.fq.gz"
         - "WARN\tOverrepresented sequences\tlow_qual-readgroup1-R1.fq.gz"
         - "PASS\tAdapter Content\tlow_qual-readgroup1-R1.fq.gz"
-
-

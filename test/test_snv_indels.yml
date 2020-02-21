@@ -61,15 +61,21 @@
 - name: test-p53-integration-NB-4
   tags:
     - integration
+    - p53
   command: >
-      snakemake -rp
-      --use-singularity
-      --singularity-args ' --containall --bind /tmp/:/tmp,/exports/:/exports/'
-      --singularity-prefix /exports/hem-leukemia/testing/singularity
-      --snakefile includes/snv-indels/Snakefile
-      --configfile test/data/config/test-p53-NB4.config
-      --latency-wait 120
-      --verbose
+    snakemake -rp
+    --snakefile includes/snv-indels/Snakefile
+    --configfile test/data/config/test-p53-NB4.config
+    --cluster-config test/data/config/cluster-config.yml
+    --verbose
+    --use-singularity
+    --singularity-args ' --containall --bind /exports'
+    --singularity-prefix /exports/hem-leukemia/testing/singularity
+    --drmaa ' -pe BWA {cluster.threads} -q all.q -l h_vmem={cluster.vmem} -cwd -V -N hamlet-test '
+    --drmaa-log-dir cluster-logs
+    --jobname 'hamlet.{jobid}'
+    --jobs 70
+    --latency-wait 120
   files:
     - path: "NB4/snv-indels/variant_plots/sample_NB4_gene_TP53.png"
     - path: "NB4/snv-indels/variant_plots/.done"
@@ -115,14 +121,19 @@
     - flt3
     - integration
   command: >
-      snakemake -rp
-      --use-singularity
-      --singularity-args ' --containall --bind /tmp/:/tmp,/exports/:/exports/'
-      --singularity-prefix /exports/hem-leukemia/testing/singularity
-      --snakefile includes/snv-indels/Snakefile
-      --configfile test/data/config/test-itd-MV4-11.config
-      --latency-wait 120
-      --verbose
+    snakemake -rp
+    --snakefile includes/snv-indels/Snakefile
+    --configfile test/data/config/test-itd-MV4-11.config
+    --cluster-config test/data/config/cluster-config.yml
+    --verbose
+    --use-singularity
+    --singularity-args ' --containall --bind /exports'
+    --singularity-prefix /exports/hem-leukemia/testing/singularity
+    --drmaa ' -pe BWA {cluster.threads} -q all.q -l h_vmem={cluster.vmem} -cwd -V -N hamlet-test '
+    --drmaa-log-dir cluster-logs
+    --jobname 'hamlet.{jobid}'
+    --jobs 70
+    --latency-wait 120
   files:
     - path: "MV4-11/snv-indels/variant_plots/sample_MV4-11_gene_FLT3.png"
     - path: "MV4-11/snv-indels/MV4-11.variants.json"
