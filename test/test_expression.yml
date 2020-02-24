@@ -82,7 +82,29 @@
     --jobs 70
     --latency-wait 120
   files:
+    - path: "HEL/expression/HEL.bases_per_exon"
+      contains:
+        - "exon\tHEL"
+        - "HMBS:119084882-119085066\t121064"
+        - "MECOM:169083498-169085043\t211124"
+
+    - path: "HEL/expression/HEL.bases_per_gene"
+      contains:
+        - "gene\tHEL"
+        - "HMBS\t1661651"
+        - "MECOM\t707074"
+
+    - path: "HEL/expression/HEL.exon_ratios"
+      contains:
+        - "sample_name\texon\tcount\tratio\tabove_threshold\tdivisor_gene\tdivisor_exp"
+        - "HEL\tMECOM:169146722-169147734\t28454\t0.017123932763257747\tno\tHMBS\t1661651"
+
     - path: "HEL/expression/HEL.fragments_per_gene"
       contains:
         - "MECOM\t3677"
         - "HMBS\t9154"
+
+    - path: "HEL/expression/HEL.raw_base"
+      contains:
+        - "chr11\t119084882\t119085066\t121064\t657.956522\tHMBS"
+        - "chr3\t169115382\t169116739\t174584\t128.654385\tMECOM"
