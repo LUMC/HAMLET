@@ -88,13 +88,16 @@
       MV4-11/itd/MV4-11.flt3.csv
       MV4-11/itd/MV4-11.flt3.png
   files:
+    - path: "MV4-11/itd/MV4-11.flt3.png"
+
     - path: "MV4-11/itd/MV4-11.flt3.bg.csv"
       contains:
         - "position\tcoverage\tsoft_clip_count"
-          #- "1852\t1749\t570"
-          #- "1883\t1775\t1094"
+        - "1852\t1670\t500"
+        - "1883\t1588\t1048"
+
     - path: "MV4-11/itd/MV4-11.flt3.csv"
       contains:
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
-          #- "1853\t1882\t563\t1091\t1852\t1882\t1883\t1853\texact\t0"
-    - path: "MV4-11/itd/MV4-11.flt3.png"
+        - "1853\t1881,1882\t494\t4\t1852\t1882\t1882\t1853\tfuzzy-end\t1"
+        - "1853\t1882\t494\t1046\t1852\t1882\t1883\t1853\texact\t0"
