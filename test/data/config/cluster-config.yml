@@ -53,7 +53,7 @@ rna_stats:
   threads: 1
 
 sort_bamfile:
-  vmem: 8G
+  vmem: 16G
   threads: 1
 
 star_fusion:

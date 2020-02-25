@@ -169,6 +169,7 @@ rule aln_stats:
     singularity: containers["picard"]
     shell:
         "picard -Xmx2G CollectAlignmentSummaryMetrics"
+        " VALIDATION_STRINGENCY=LENIENT"
         " R={input.ref} I={input.bam} O={output.stats}"
 
 rule insert_stats:
@@ -185,6 +186,7 @@ rule insert_stats:
     singularity: containers["picard"]
     shell:
         "picard -Xmx2G CollectInsertSizeMetrics"
+        " VALIDATION_STRINGENCY=LENIENT"
         " R={input.ref} I={input.bam} O={output.stats} H={output.histo}"
 
 rule rna_stats:
@@ -203,6 +205,7 @@ rule rna_stats:
     singularity: containers["picard"]
     shell:
         "picard -Xmx4G CollectRnaSeqMetrics"
+        " VALIDATION_STRINGENCY=LENIENT"
         " R={input.ref} REF_FLAT={input.annot}"
         " RIBOSOMAL_INTERVALS={input.ref_rrna}"
         " STRAND_SPECIFICITY=NONE ASSUME_SORTED=true"

@@ -33,6 +33,13 @@ include: "includes/expression/Snakefile"
 include: "includes/itd/Snakefile"
 
 
+containers = {
+    "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py_3",
+    "hamlet-scripts": "docker://lumc/hamlet-scripts:0.2",
+    "debian": "docker://debian:buster-slim",
+    "zip": "docker://lumc/zip:3.0"
+}
+
 def make_pattern(extension, dirname):
     """Helper function to create a wildcard-containing path for output files."""
     return f"{{sample}}/{dirname}/{{sample}}{extension}"
@@ -49,7 +56,7 @@ OUTPUTS = dict(
     # Merged FASTQs, stats, and packaged results
     fqs="{sample}/{sample}-{pair}.fq.gz",
     summary="{sample}/{sample}.summary.json",
-    reportje="{sample}/hamlet_report.{sample}.pdf",
+    reportje="{sample}/hamlet_report.{sample}.html",
     package="{sample}/hamlet_results.{sample}.zip",
 
     # Small variants
@@ -82,7 +89,7 @@ OUTPUTS = dict(
     aln_stats=var_output(".aln_stats"),
     rna_stats=var_output(".rna_stats"),
     insert_stats=var_output(".insert_stats"),
-    vep_stats=var_output(".vep_stats"),
+    vep_stats=var_output(".vep_stats.txt"),
     exon_cov_stats=var_output(".exon_cov_stats.json"),
 
     # ITD module
@@ -127,6 +134,7 @@ rule create_summary:
     output:
         js=RUN.output(OUTPUTS["summary"])
     conda: srcdir("envs/create_summary.yml")
+    singularity: containers["fsnviz"]
     shell:
         "python {input.scr}"
         " {input.idm}"
@@ -153,13 +161,14 @@ rule generate_report:
         toc=srcdir("report/assets/toc.xsl"),
         scr=srcdir("scripts/generate_report.py"),
     output:
-        pdf=RUN.output(OUTPUTS["reportje"]),
+        html=RUN.output(OUTPUTS["reportje"]),
     conda: srcdir("envs/create_report.yml")
+    singularity: containers["hamlet-scripts"]
     shell:
-        "python {input.scr}"
+        "python3 {input.scr}"
         " --templates-dir {input.templates} --imgs-dir {input.imgs}"
         " --css-path {input.css} --toc-path {input.toc}"
-        " {input.summary} {output.pdf}"
+        " --input-summary {input.summary} --html-output {output.html}"
 
 
 rule package_results:
@@ -168,7 +177,7 @@ rule package_results:
         summary=RUN.output(OUTPUTS["summary"]),
         smallvars_csv_all=RUN.output(OUTPUTS["smallvars_csv_all"]),
         smallvars_csv_hi=RUN.output(OUTPUTS["smallvars_csv_hi"]),
-        smallvars_plots_dir=RUN.output(dirname(OUTPUTS["smallvars_plots"])),
+        smallvars_plots=RUN.output((OUTPUTS["smallvars_plots"])),
         fusions_svg=RUN.output(OUTPUTS["fusions_svg"]),
         count_fragments_per_gene=RUN.output(OUTPUTS["count_fragments_per_gene"]),
         count_bases_per_gene=RUN.output(OUTPUTS["count_bases_per_gene"]),
@@ -184,13 +193,13 @@ rule package_results:
     output:
         pkg=RUN.output(OUTPUTS["package"]),
     params:
-        tmp="/tmp/hamlet-pkg.{sample}." + str(uuid4()) + "/hamlet_results.{sample}"
+        tmp=RUN.output("tmp/hamlet-pkg.{sample}." + str(uuid4()) + "/hamlet_results.{sample}")
     conda: srcdir("envs/package_results.yml")
+    singularity: containers["zip"]
     shell:
         "(mkdir -p {params.tmp}"
         " && cp -r {input} {params.tmp}"
-        " && cd $(dirname {params.tmp})"
-        " && zip -9 -x *.done -r {output.pkg} *"
-        " && cd -"
+        " && cp -r $(dirname {input.smallvars_plots}) {params.tmp}"
+        " && zip -9 -x *.done -r {output.pkg} {params.tmp}"
         " && rm -rf {params.tmp})"
         " || rm -rf {params.tmp}"
