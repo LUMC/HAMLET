@@ -134,8 +134,10 @@ class Report(object):
                 print(con_txt, file=fout)
 
 
-def localise_assets(sd, html_output):
+def localise_assets(sd, html_output, css_path):
     """ Localise the html assets to a folder next to the html output """
+
+    # Create the report assets folder
     assets_folder = '.'.join(html_output.split('.')[:-1])
     os.makedirs(assets_folder, exist_ok=True)
 
@@ -164,6 +166,12 @@ def localise_assets(sd, html_output):
         local_html_path = '/'.join(new_path.split('/')[1:])
         sd['results']['var']['plots'][index]['path'] = local_html_path
 
+    # Copy the css file
+    local_css = os.path.join(assets_folder, os.path.basename(css_path))
+    shutil.copy(css_path, local_css)
+    local_css_path = '/'.join(local_css.split('/')[1:])
+    return local_css_path
+
 
 def main(input_summary_path, css_path, templates_dir, imgs_dir, toc_path,
          html_output):
@@ -172,7 +180,7 @@ def main(input_summary_path, css_path, templates_dir, imgs_dir, toc_path,
     with open(input_summary_path) as src:
         sd = json.load(src)
 
-    localise_assets(sd, html_output)
+    css_path = localise_assets(sd, html_output, css_path)
 
     sdm = sd["metadata"]
     sample_name = sdm["sample_name"]

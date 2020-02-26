@@ -45,7 +45,7 @@ insert_stats:
   threads: 1
 
 reorder_aln_header:
-  vmem: 10G
+  vmem: 16G
   threads: 1
 
 rna_stats:

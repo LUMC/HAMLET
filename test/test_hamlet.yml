@@ -82,4 +82,15 @@
   files:
     - path: "Frankenstein/hamlet_results.Frankenstein.zip"
     - path: "Frankenstein/Frankenstein.summary.json"
+    - path: "Frankenstein/hamlet_report.Frankenstein/style.css"
+    - path: "Frankenstein/hamlet_report.Frankenstein/Frankenstein.flt3.png"
+    - path: "Frankenstein/hamlet_report.Frankenstein/Frankenstein.kmt2a.png"
+    - path: "Frankenstein/hamlet_report.Frankenstein/sample_Frankenstein_gene_TP53.png"
+    - path: "Frankenstein/hamlet_report.Frankenstein/Frankenstein.sf-isect-circos_fsnviz.png"
     - path: "Frankenstein/hamlet_report.Frankenstein.html"
+      contains:
+        - "hamlet_report.Frankenstein/style.css"
+        - "hamlet_report.Frankenstein/sample_Frankenstein_gene_TP53.png"
+        - "hamlet_report.Frankenstein/Frankenstein.sf-isect-circos_fsnviz.png"
+        - "hamlet_report.Frankenstein/Frankenstein.flt3.png"
+        - "hamlet_report.Frankenstein/Frankenstein.kmt2a.png"
