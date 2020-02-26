@@ -1,5 +1,7 @@
 import argparse
 import json
+import os
+import shutil
 from datetime import datetime as dt
 from pathlib import Path
 from tempfile import NamedTemporaryFile as NTF
@@ -132,12 +134,45 @@ class Report(object):
                 print(con_txt, file=fout)
 
 
+def localise_assets(sd, html_output):
+    """ Localise the html assets to a folder next to the html output """
+    assets_folder = '.'.join(html_output.split('.')[:-1])
+    os.makedirs(assets_folder, exist_ok=True)
+
+    # Localise the fusion results, they all have the same name so we have to
+    # include the containing folder in the file name
+    for plot in sd['results']['fusion']['plots']:
+        path = sd['results']['fusion']['plots'][plot]
+        newpath = os.path.join(assets_folder, '_'.join(path.split('/')[-2:]))
+        shutil.copy(path, newpath)
+        local_html_path = '/'.join(newpath.split('/')[1:])
+        sd['results']['fusion']['plots'][plot] = local_html_path
+
+    # Localise itd
+    for gene in sd['results']['itd']:
+        path = sd['results']['itd'][gene]['path']
+        new_path = os.path.join(assets_folder, os.path.basename(path))
+        shutil.copy(path, new_path)
+        local_html_path = '/'.join(new_path.split('/')[1:])
+        sd['results']['itd'][gene]['path'] = local_html_path
+
+    # Localise variant results
+    for index, gene in enumerate(sd['results']['var']['plots']):
+        path = gene['path']
+        new_path = os.path.join(assets_folder, os.path.basename(path))
+        shutil.copy(path, new_path)
+        local_html_path = '/'.join(new_path.split('/')[1:])
+        sd['results']['var']['plots'][index]['path'] = local_html_path
+
+
 def main(input_summary_path, css_path, templates_dir, imgs_dir, toc_path,
          html_output):
     """Script for generating PDF report of a sample analyzed with the Hamlet
     pipeline."""
     with open(input_summary_path) as src:
         sd = json.load(src)
+
+    localise_assets(sd, html_output)
 
     sdm = sd["metadata"]
     sample_name = sdm["sample_name"]
