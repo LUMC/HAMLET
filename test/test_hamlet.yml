@@ -10,7 +10,7 @@
       - "Job counts:"
       - "TestSample/TestSample.summary.json"
       - "TestSample/hamlet_results.TestSample.zip"
-      - "TestSample/hamlet_report.TestSample.html"
+      - "TestSample/hamlet_report.TestSample.pdf"
       - "TestSample/TestSample.summary.json"
 
 - name: test-hamlet-dry-run-trio
@@ -25,17 +25,17 @@
       - "Job counts:"
       - "TestSample1/TestSample1.summary.json"
       - "TestSample1/hamlet_results.TestSample1.zip"
-      - "TestSample1/hamlet_report.TestSample1.html"
+      - "TestSample1/hamlet_report.TestSample1.pdf"
       - "TestSample1/TestSample1.summary.json"
 
       - "TestSample2/TestSample2.summary.json"
       - "TestSample2/hamlet_results.TestSample2.zip"
-      - "TestSample2/hamlet_report.TestSample2.html"
+      - "TestSample2/hamlet_report.TestSample2.pdf"
       - "TestSample2/TestSample2.summary.json"
         
       - "TestSample3/TestSample3.summary.json"
       - "TestSample3/hamlet_results.TestSample3.zip"
-      - "TestSample3/hamlet_report.TestSample3.html"
+      - "TestSample3/hamlet_report.TestSample3.pdf"
       - "TestSample3/TestSample3.summary.json"
 
 - name: test-hamlet-sanity-snakemake
@@ -54,7 +54,7 @@
     singularity --version
   stdout:
     contains:
-      - "singularity version 3.1"
+      - "singularity version 3"
 
 - name: test-hamlet-sanity-rattle
   tags:
@@ -69,17 +69,13 @@
     snakemake -rp
     --snakefile Snakefile
     --configfile test/data/config/test-hamlet-frankenstein.config
-    --cluster-config test/data/config/cluster-config.yml
     --verbose
     --use-singularity
     --singularity-args ' --containall --bind /exports'
     --singularity-prefix /exports/hem-leukemia/testing/singularity
-    --drmaa ' -pe BWA {cluster.threads} -q all.q -l h_vmem={cluster.vmem} -cwd -V -N hamlet-test '
-    --drmaa-log-dir cluster-logs
-    --jobname 'hamlet.{jobid}'
     --jobs 70
     --latency-wait 120
   files:
     - path: "Frankenstein/hamlet_results.Frankenstein.zip"
     - path: "Frankenstein/Frankenstein.summary.json"
-    - path: "Frankenstein/hamlet_report.Frankenstein.html"
+    - path: "Frankenstein/hamlet_report.Frankenstein.pdf"

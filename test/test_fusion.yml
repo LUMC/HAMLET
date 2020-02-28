@@ -82,7 +82,7 @@
     singularity --version
   stdout:
     contains:
-      - "singularity version 3.1"
+      - "singularity version 3"
 
 - name: test-fusion-sanity-rattle
   tags:

@@ -35,7 +35,7 @@ include: "includes/itd/Snakefile"
 
 containers = {
     "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py_3",
-    "hamlet-scripts": "docker://lumc/hamlet-scripts:0.2",
+    "hamlet-scripts": "docker://lumc/hamlet-scripts:0.3",
     "debian": "docker://debian:buster-slim",
     "zip": "docker://lumc/zip:3.0"
 }
@@ -56,7 +56,7 @@ OUTPUTS = dict(
     # Merged FASTQs, stats, and packaged results
     fqs="{sample}/{sample}-{pair}.fq.gz",
     summary="{sample}/{sample}.summary.json",
-    reportje="{sample}/hamlet_report.{sample}.html",
+    reportje="{sample}/hamlet_report.{sample}.pdf",
     package="{sample}/hamlet_results.{sample}.zip",
 
     # Small variants
@@ -161,14 +161,14 @@ rule generate_report:
         toc=srcdir("report/assets/toc.xsl"),
         scr=srcdir("scripts/generate_report.py"),
     output:
-        html=RUN.output(OUTPUTS["reportje"]),
+        pdf=RUN.output(OUTPUTS["reportje"]),
     conda: srcdir("envs/create_report.yml")
     singularity: containers["hamlet-scripts"]
     shell:
         "python3 {input.scr}"
         " --templates-dir {input.templates} --imgs-dir {input.imgs}"
         " --css-path {input.css} --toc-path {input.toc}"
-        " --input-summary {input.summary} --html-output {output.html}"
+        " {input.summary} {output.pdf}"
 
 
 rule package_results:
