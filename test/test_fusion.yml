@@ -82,7 +82,7 @@
     singularity --version
   stdout:
     contains:
-      - "singularity version 3.1"
+      - "singularity version 3"
 
 - name: test-fusion-sanity-rattle
   tags:
@@ -97,16 +97,10 @@
     snakemake -rpn
     --snakefile includes/fusion/Snakefile
     --configfile test/data/config/test-fusion-NB4.config
-    --cluster-config test/data/config/cluster-config.yml
     --verbose
     --use-singularity
     --singularity-args ' --containall --bind /exports'
     --singularity-prefix /exports/hem-leukemia/testing/singularity
-    --drmaa ' -pe BWA {cluster.threads} -q all.q -l h_vmem={cluster.vmem} -cwd -V -N hamlet-test '
-    --drmaa-log-dir cluster-logs
-    --jobname 'hamlet.{jobid}'
-    --jobs 70
-    --latency-wait 120
 
 - name: test-fusion-integration-NB-4
   tags:
@@ -115,16 +109,10 @@
     snakemake -rp
     --snakefile includes/fusion/Snakefile
     --configfile test/data/config/test-fusion-NB4.config
-    --cluster-config test/data/config/cluster-config.yml
     --verbose
     --use-singularity
     --singularity-args ' --containall --bind /exports'
     --singularity-prefix /exports/hem-leukemia/testing/singularity
-    --drmaa ' -pe BWA {cluster.threads} -q all.q -l h_vmem={cluster.vmem} -cwd -V -N hamlet-test '
-    --drmaa-log-dir cluster-logs
-    --jobname 'hamlet.{jobid}'
-    --jobs 70
-    --latency-wait 120
   files:
     - path: "NB4/fusion/star-fusion/star-fusion.fusion_predictions.abridged.tsv"
     - path: "NB4/fusion/star-fusion/star-fusion.fusion_predictions.tsv"

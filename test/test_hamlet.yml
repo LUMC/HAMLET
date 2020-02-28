@@ -54,7 +54,7 @@
     singularity --version
   stdout:
     contains:
-      - "singularity version 3.1"
+      - "singularity version 3"
 
 - name: test-hamlet-sanity-rattle
   tags:
@@ -69,16 +69,10 @@
     snakemake -rp
     --snakefile Snakefile
     --configfile test/data/config/test-hamlet-frankenstein.config
-    --cluster-config test/data/config/cluster-config.yml
     --verbose
     --use-singularity
     --singularity-args ' --containall --bind /exports'
     --singularity-prefix /exports/hem-leukemia/testing/singularity
-    --drmaa ' -pe BWA {cluster.threads} -q all.q -l h_vmem={cluster.vmem} -cwd -V -N hamlet-test '
-    --drmaa-log-dir cluster-logs
-    --jobname 'hamlet.{jobid}'
-    --jobs 70
-    --latency-wait 120
   files:
     - path: "Frankenstein/hamlet_results.Frankenstein.zip"
     - path: "Frankenstein/Frankenstein.summary.json"
