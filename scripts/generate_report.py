@@ -1,12 +1,11 @@
-import argparse
 import json
-import os
-import shutil
 from datetime import datetime as dt
 from pathlib import Path
 from tempfile import NamedTemporaryFile as NTF
 from typing import Optional
 
+import click
+import pdfkit
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -52,7 +51,7 @@ class Report(object):
             "quiet": None,
 
             "page-size": "A4",
-            "page-offset": -1,
+            "page-offset":-1,
             "margin-top": "20",
             "margin-right": "16",
             "margin-bottom": "20",
@@ -111,6 +110,7 @@ class Report(object):
 
     def write(self, output_path: Path) -> None:
         """Writes the report to the given path."""
+        toc = {"xsl-style-sheet": self.toc_fname}
         tmp_prefix = str(Path.cwd()) + "/"
         cover_ctx = {
             "sample_name": self.sample_name,
@@ -130,61 +130,34 @@ class Report(object):
             cov_fh.seek(0)
 
             con_txt = self.contents_tpl.render(**contents_ctx)
-            with open(output_path, 'wt') as fout:
-                print(con_txt, file=fout)
+            pdfkit.from_string(con_txt, str(output_path),
+                               options=self.pdfkit_opts, css=self.css_fname,
+                               toc=toc, cover=cov_fh.name, cover_first=True)
 
 
-def localise_assets(sd, html_output, css_path):
-    """ Localise the html assets to a folder next to the html output """
-
-    # Create the report assets folder
-    assets_folder = '.'.join(html_output.split('.')[:-1])
-    os.makedirs(assets_folder, exist_ok=True)
-
-    # Localise the fusion results, they all have the same name so we have to
-    # include the containing folder in the file name
-    for plot in sd['results']['fusion']['plots']:
-        path = sd['results']['fusion']['plots'][plot]
-        newpath = os.path.join(assets_folder, '_'.join(path.split('/')[-2:]))
-        shutil.copy(path, newpath)
-        local_html_path = '/'.join(newpath.split('/')[1:])
-        sd['results']['fusion']['plots'][plot] = local_html_path
-
-    # Localise itd
-    for gene in sd['results']['itd']:
-        path = sd['results']['itd'][gene]['path']
-        new_path = os.path.join(assets_folder, os.path.basename(path))
-        shutil.copy(path, new_path)
-        local_html_path = '/'.join(new_path.split('/')[1:])
-        sd['results']['itd'][gene]['path'] = local_html_path
-
-    # Localise variant results
-    for index, gene in enumerate(sd['results']['var']['plots']):
-        path = gene['path']
-        new_path = os.path.join(assets_folder, os.path.basename(path))
-        shutil.copy(path, new_path)
-        local_html_path = '/'.join(new_path.split('/')[1:])
-        sd['results']['var']['plots'][index]['path'] = local_html_path
-
-    # Copy the css file
-    local_css = os.path.join(assets_folder, os.path.basename(css_path))
-    shutil.copy(css_path, local_css)
-    local_css_path = '/'.join(local_css.split('/')[1:])
-    return local_css_path
-
-
-def main(input_summary_path, css_path, templates_dir, imgs_dir, toc_path,
-         html_output):
+@click.command(context_settings={"help_option_names": ["-h", "--help"]})
+@click.argument("input_summary_path",
+                type=click.Path(exists=True, dir_okay=False))
+@click.argument("output_report_path", type=str)
+@click.option("--css-path", default="assets/style.css",
+              type=click.Path(exists=True, dir_okay=False))
+@click.option("--templates-dir", default="templates",
+              type=click.Path(exists=True, file_okay=False))
+@click.option("--imgs-dir", default="assets/img",
+              type=click.Path(exists=True, file_okay=False))
+@click.option("--toc-path", default="assets/toc.xsl",
+              type=click.Path(exists=True, dir_okay=False))
+def main(input_summary_path, output_report_path, css_path, templates_dir,
+         imgs_dir, toc_path):
     """Script for generating PDF report of a sample analyzed with the Hamlet
     pipeline."""
     with open(input_summary_path) as src:
         sd = json.load(src)
 
-    css_path = localise_assets(sd, html_output, css_path)
-
     sdm = sd["metadata"]
     sample_name = sdm["sample_name"]
     run_name = sdm["run_name"]
+    pipeline_version = sdm["pipeline_version"]
     header_caption = ("Hamlet Report -"
                       f" Sample {sample_name!r} of Run {run_name!r}")
     footer_lcaption = "Generated on {timestamp:%A, %d %B %Y at %H:%M}"
@@ -198,25 +171,8 @@ def main(input_summary_path, css_path, templates_dir, imgs_dir, toc_path,
                     header_caption=header_caption,
                     footer_lcaption=footer_lcaption,
                     footer_rcaption=footer_rcaption)
-    report.write(Path(html_output))
+    report.write(Path(output_report_path))
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument("--input-summary", required=True,
-                        help="Input summary path")
-    parser.add_argument("--css-path", default="assets/style.css",
-                        help="Path to css file")
-    parser.add_argument("--templates-dir", default="templates",
-                        help="Path to templates directory")
-    parser.add_argument("--imgs-dir", default="assets/img",
-                        help="Path to images directory")
-    parser.add_argument("--toc-path", default="assets/toc.xsl",
-                        help="Path to table of content")
-    parser.add_argument("--html-output", required=True,
-                        help="Path to output HTML file")
-
-    args = parser.parse_args()
-    main(args.input_summary, args.css_path, args.templates_dir, args.imgs_dir,
-         args.toc_path, args.html_output)
+    main()

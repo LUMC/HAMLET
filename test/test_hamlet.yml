@@ -10,7 +10,7 @@
       - "Job counts:"
       - "TestSample/TestSample.summary.json"
       - "TestSample/hamlet_results.TestSample.zip"
-      - "TestSample/hamlet_report.TestSample.html"
+      - "TestSample/hamlet_report.TestSample.pdf"
       - "TestSample/TestSample.summary.json"
 
 - name: test-hamlet-dry-run-trio
@@ -25,17 +25,17 @@
       - "Job counts:"
       - "TestSample1/TestSample1.summary.json"
       - "TestSample1/hamlet_results.TestSample1.zip"
-      - "TestSample1/hamlet_report.TestSample1.html"
+      - "TestSample1/hamlet_report.TestSample1.pdf"
       - "TestSample1/TestSample1.summary.json"
 
       - "TestSample2/TestSample2.summary.json"
       - "TestSample2/hamlet_results.TestSample2.zip"
-      - "TestSample2/hamlet_report.TestSample2.html"
+      - "TestSample2/hamlet_report.TestSample2.pdf"
       - "TestSample2/TestSample2.summary.json"
         
       - "TestSample3/TestSample3.summary.json"
       - "TestSample3/hamlet_results.TestSample3.zip"
-      - "TestSample3/hamlet_report.TestSample3.html"
+      - "TestSample3/hamlet_report.TestSample3.pdf"
       - "TestSample3/TestSample3.summary.json"
 
 - name: test-hamlet-sanity-snakemake
@@ -76,15 +76,4 @@
   files:
     - path: "Frankenstein/hamlet_results.Frankenstein.zip"
     - path: "Frankenstein/Frankenstein.summary.json"
-    - path: "Frankenstein/hamlet_report.Frankenstein/style.css"
-    - path: "Frankenstein/hamlet_report.Frankenstein/Frankenstein.flt3.png"
-    - path: "Frankenstein/hamlet_report.Frankenstein/Frankenstein.kmt2a.png"
-    - path: "Frankenstein/hamlet_report.Frankenstein/sample_Frankenstein_gene_TP53.png"
-    - path: "Frankenstein/hamlet_report.Frankenstein/Frankenstein.sf-isect-circos_fsnviz.png"
-    - path: "Frankenstein/hamlet_report.Frankenstein.html"
-      contains:
-        - "hamlet_report.Frankenstein/style.css"
-        - "hamlet_report.Frankenstein/sample_Frankenstein_gene_TP53.png"
-        - "hamlet_report.Frankenstein/Frankenstein.sf-isect-circos_fsnviz.png"
-        - "hamlet_report.Frankenstein/Frankenstein.flt3.png"
-        - "hamlet_report.Frankenstein/Frankenstein.kmt2a.png"
+    - path: "Frankenstein/hamlet_report.Frankenstein.pdf"
