@@ -32,6 +32,7 @@ include: "includes/fusion/Snakefile"
 include: "includes/expression/Snakefile"
 include: "includes/itd/Snakefile"
 
+localrules: create_summary, generate_report, package_results
 
 containers = {
     "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py_3",

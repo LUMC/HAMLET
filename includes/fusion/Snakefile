@@ -9,6 +9,9 @@ RUN.set_default_setting("plot_combined_script", srcdir(path.join("scripts", "com
 # We need the QC-seq output
 include: "../qc-seq/Snakefile"
 
+localrules: combine_plots, fusioncatcher_cp, intersect_fusions, plot_cp, plot_isect, plot_sf star_fusion_cp, subset_sf
+
+
 containers = {
     "debian": "docker://debian:buster-slim",
     "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py_3",
@@ -17,7 +20,7 @@ containers = {
     "star-fusion": "docker://quay.io/biocontainers/star-fusion:1.6.0--1",
     "hamlet-scripts": "docker://lumc/hamlet-scripts:0.2"
 }
-localrules: star_fusion_cp, fusioncatcher_cp, plot_cp
+
 
 rule all_fusion:
     input:

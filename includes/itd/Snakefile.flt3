@@ -14,6 +14,8 @@ containers = {
     "rose": "docker://lumc/rose-dt:0.1"
 }
 
+localrules: detect_flt3, plot_itd_flt3
+
 rule all_flt3:
     input:
         flt3_csv=expand(RUN.output("{sample}/itd/{sample}.flt3.csv"), sample=RUN.samples),
