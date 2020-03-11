@@ -255,9 +255,9 @@ def make_record_extractor(reader, csq_info_name=CSQ_NAME):
             for custom_info_key in ("GONL", "GONL_AF", "P3", "P3_AF",
                                     "P3_AFR_AF", "P3_AMR_AF", "P3_EAS_AF",
                                     "P3_EUR_AF", "P3_SAS_AF"):
-                key_val = record.INFO.get(custom_info_key)
+                key_val = vep_data[0].get(custom_info_key)
                 if key_val is not None:
-                    key_val = list(map(str, key_val))
+                    key_val = list(map(str, [key_val]))
                     custom_info_key = custom_info_key.replace("P3", "1KG_P3")
                     key_val = map(lambda x: ":".join(x),
                                   zip([str(x) for x in record.ALT], key_val))
@@ -403,7 +403,7 @@ def main(id_file, input_vcf, keep_amp, hotspots, sample_id):
 
     def gene_check(rec):
         for csq in rec.INFO["CSQ"]:
-            gene = csq.split("|")[1]
+            gene = csq.split("|")[4]
             if gene in gene_ids:
                 return True
         return False

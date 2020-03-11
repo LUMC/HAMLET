@@ -1,0 +1,79 @@
+- name: test-hamlet-dry-run-single
+  tags:
+    - dry-run
+  command: >
+    snakemake -n
+    --snakefile Snakefile
+    --configfile test/data/config/test-qc-single.config
+  stdout:
+    contains:
+      - "Job counts:"
+      - "TestSample/TestSample.summary.json"
+      - "TestSample/hamlet_results.TestSample.zip"
+      - "TestSample/hamlet_report.TestSample.pdf"
+      - "TestSample/TestSample.summary.json"
+
+- name: test-hamlet-dry-run-trio
+  tags:
+    - dry-run
+  command: >
+    snakemake -n
+    --snakefile Snakefile
+    --configfile test/data/config/test-qc-trio.config
+  stdout:
+    contains:
+      - "Job counts:"
+      - "TestSample1/TestSample1.summary.json"
+      - "TestSample1/hamlet_results.TestSample1.zip"
+      - "TestSample1/hamlet_report.TestSample1.pdf"
+      - "TestSample1/TestSample1.summary.json"
+
+      - "TestSample2/TestSample2.summary.json"
+      - "TestSample2/hamlet_results.TestSample2.zip"
+      - "TestSample2/hamlet_report.TestSample2.pdf"
+      - "TestSample2/TestSample2.summary.json"
+        
+      - "TestSample3/TestSample3.summary.json"
+      - "TestSample3/hamlet_results.TestSample3.zip"
+      - "TestSample3/hamlet_report.TestSample3.pdf"
+      - "TestSample3/TestSample3.summary.json"
+
+- name: test-hamlet-sanity-snakemake
+  tags:
+    - sanity
+  command: >
+    snakemake --version
+  stdout:
+    contains:
+      - "5.9"
+
+- name: test-hamlet-sanity-singularity
+  tags:
+    - sanity
+  command: >
+    singularity --version
+  stdout:
+    contains:
+      - "singularity version 3"
+
+- name: test-hamlet-sanity-rattle
+  tags:
+    - sanity
+  command: >
+    python -m rattle
+
+- name: test-hamlet-frankenstein-integration
+  tags:
+    - integration
+  command: >
+    snakemake -rp
+    --snakefile Snakefile
+    --configfile test/data/config/test-hamlet-frankenstein.config
+    --verbose
+    --use-singularity
+    --singularity-args ' --containall --bind /exports'
+    --singularity-prefix /exports/hem-leukemia/testing/singularity
+  files:
+    - path: "Frankenstein/hamlet_results.Frankenstein.zip"
+    - path: "Frankenstein/Frankenstein.summary.json"
+    - path: "Frankenstein/hamlet_report.Frankenstein.pdf"

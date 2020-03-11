@@ -1,0 +1,133 @@
+- name: test-snv-indels-dry-run-single
+  tags:
+    - dry-run
+  command: >
+    snakemake -n
+    --snakefile includes/snv-indels/Snakefile
+    --configfile test/data/config/test-dry-run-single.config
+  stdout:
+    contains:
+      - "Job counts:"
+      - "TestSample/snv-indels/variant_plots/.done"
+      - "TestSample/snv-indels/TestSample.variants_all.csv"
+      - "TestSample/snv-indels/TestSample.variants_hi.csv"
+
+- name: test-snv-indels-dry-run-trio
+  tags:
+    - dry-run
+  command: >
+    snakemake -n
+    --snakefile includes/snv-indels/Snakefile
+    --configfile test/data/config/test-dry-run-trio.config
+  stdout:
+    contains:
+      - "Job counts:"
+      - "TestSample1/snv-indels/variant_plots/.done"
+      - "TestSample1/snv-indels/TestSample1.variants_all.csv"
+      - "TestSample1/snv-indels/TestSample1.variants_hi.csv"
+
+      - "TestSample2/snv-indels/variant_plots/.done"
+      - "TestSample2/snv-indels/TestSample2.variants_all.csv"
+      - "TestSample2/snv-indels/TestSample2.variants_hi.csv"
+
+      - "TestSample3/snv-indels/variant_plots/.done"
+      - "TestSample3/snv-indels/TestSample3.variants_all.csv"
+      - "TestSample3/snv-indels/TestSample3.variants_hi.csv"
+
+- name: test-snv-indels-sanity-snakemake
+  tags:
+    - sanity
+  command: >
+    snakemake --version
+  stdout:
+    contains:
+      - "5.9"
+
+- name: test-snv-indels-sanity-singularity
+  tags:
+    - sanity
+  command: >
+    singularity --version
+  stdout:
+    contains:
+      - "singularity version 3"
+
+- name: test-snv-indels-sanity-rattle
+  tags:
+    - sanity
+  command: >
+    python -m rattle
+
+- name: test-p53-integration-NB-4
+  tags:
+    - integration
+    - p53
+  command: >
+    snakemake -rp
+    --snakefile includes/snv-indels/Snakefile
+    --configfile test/data/config/test-p53-NB4.config
+    --verbose
+    --use-singularity
+    --singularity-args ' --containall --bind /exports'
+    --singularity-prefix /exports/hem-leukemia/testing/singularity
+  files:
+    - path: "NB4/snv-indels/variant_plots/sample_NB4_gene_TP53.png"
+    - path: "NB4/snv-indels/variant_plots/.done"
+    - path: "NB4/snv-indels/NB4.variants_all.csv"
+    - path: "NB4/snv-indels/NB4.vep_stats.txt"
+    - path: "NB4/snv-indels/NB4.variants.json"
+    - path: "NB4/snv-indels/NB4.exon_cov_stats.json"
+    - path: "NB4/snv-indels/NB4.snv-indel.bam"
+    - path: "NB4/snv-indels/NB4.snv-indel.bai"
+    - path: "NB4/snv-indels/NB4.insert_stats.pdf"
+    - path: "NB4/snv-indels/NB4.rna_stats.pdf"
+
+    - path: "NB4/snv-indels/NB4.raw.vcf.gz"
+      contains:
+        - "chr17\t7674220\t.\tC\tT\t.\tPASS"
+
+    - path: "NB4/snv-indels/NB4.annotated.vcf.gz"
+      contains:
+        - "chr17\t7674220\t.\tC\tT\t.\tPASS\tADP=416;WT=0;HET=0;HOM=1;NC=0;CSQ=T|missense_variant|MODERATE|TP53|ENSG00000141510|Transcript|ENST00000269305|protein_coding|7/11||ENST00000269305.8:c.743G>A"
+
+    - path: "NB4/snv-indels/NB4.aln_stats"
+      contains:
+        - "CATEGORY\tTOTAL_READS\tPF_READS\tPCT_PF_READS\tPF_NOISE_READS\tPF_READS_ALIGNED\tPCT_PF_READS_ALIGNED\tPF_ALIGNED_BASES\tPF_HQ_ALIGNED_READS\tPF_HQ_ALIGNED_BASES\tPF_HQ_ALIGNED_Q20_BASES\tPF_HQ_MEDIAN_MISMATCHES\tPF_MISMATCH_RATE\tPF_HQ_ERROR_RATE\tPF_INDEL_RATE\tMEAN_READ_LENGTH\tREADS_ALIGNED_IN_PAIRS\tPCT_READS_ALIGNED_IN_PAIRS\tPF_READS_IMPROPER_PAIRS\tPCT_PF_READS_IMPROPER_PAIRS\tBAD_CYCLES\tSTRAND_BALANCE\tPCT_CHIMERAS\tPCT_ADAPTER"
+        - "PAIR\t14266\t14266\t1\t0\t14242\t0.998318\t1287643\t14242\t1287643\t1244050\t0\t0.002528\t0.002528\t0.000081\t92.401023\t14218\t0.998315\t148\t0.010392\t0\t0.501123\t0.013341\t0.000491"
+
+    - path: "NB4/snv-indels/NB4.insert_stats"
+      contains:
+        - "MEDIAN_INSERT_SIZE\tMODE_INSERT_SIZE\tMEDIAN_ABSOLUTE_DEVIATION\tMIN_INSERT_SIZE\tMAX_INSERT_SIZE\tMEAN_INSERT_SIZE\tSTANDARD_DEVIATION\tREAD_PAIRS\tPAIR_ORIENTATION"
+        - "177\t128\t54\t31\t20794276\t199.914744\t106.425583\t7016\tFR"
+
+    - path: "NB4/snv-indels/NB4.rna_stats"
+      contains:
+        - "PF_BASES\tPF_ALIGNED_BASES\tRIBOSOMAL_BASES\tCODING_BASES\tUTR_BASES\tINTRONIC_BASES\tINTERGENIC_BASES\tIGNORED_READS\tCORRECT_STRAND_READS\tINCORRECT_STRAND_READS\tNUM_R1_TRANSCRIPT_STRAND_READS\tNUM_R2_TRANSCRIPT_STRAND_READS\tNUM_UNEXPLAINED_READS"
+        - "1320386\t1289751\t0\t562538\t680479\t46273\t461\t0\t0\t0\t2802\t3145\t79"
+
+    - path: "NB4/snv-indels/NB4.variants_hi.csv"
+      contains:
+        - "sample_id,gene_symbol,gene_id,CHROM,POS,REF,alleles,genotype,is_in_hotspot"
+        - "NB4,TP53,ENSG00000141510,chr17,7674220,C,\"T,T\",T/T,no"
+
+- name: test-flt3-integration-MV4-11
+  tags:
+    - flt3
+    - integration
+  command: >
+    snakemake -rp
+    --snakefile includes/snv-indels/Snakefile
+    --configfile test/data/config/test-itd-MV4-11.config
+    --verbose
+    --use-singularity
+    --singularity-args ' --containall --bind /exports'
+    --singularity-prefix /exports/hem-leukemia/testing/singularity
+  files:
+    - path: "MV4-11/snv-indels/variant_plots/sample_MV4-11_gene_FLT3.png"
+    - path: "MV4-11/snv-indels/MV4-11.variants.json"
+    - path: "MV4-11/snv-indels/MV4-11.variants_all.csv"
+
+    - path: "MV4-11/snv-indels/MV4-11.variants_hi.csv"
+      contains:
+        - "sample_id,gene_symbol,gene_id,CHROM,POS,REF,alleles,genotype,is_in_hotspot"
+        - "MV4-11,FLT3,ENSG00000122025,chr13,28034148,A,\"A,G\",A/G,yes"

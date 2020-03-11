@@ -1,4 +1,5 @@
 from rattle import Run
+from os import path
 
 RUN = Run(config)
 
@@ -10,75 +11,98 @@ RUN.set_default_setting("plot_script", srcdir(path.join("scripts", "plotVariants
 RUN.set_default_setting("exon_cov_script", srcdir(path.join("scripts", "aggr_exon_cov.py")))
 RUN.set_default_setting("genome_fai", RUN.settings["genome_fasta"] + ".fai")
 
-if RUN.settings.get("gsnap_exe") is not None:
-    # To reproduce paper results, relies on a non-conda GSNAP 2014.12.23 with SIMD
-    rule align_vars:
-        input:
-            fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
-            fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
-            index=RUN.settings["genome_gmap_index"],
-            exe=RUN.settings["gsnap_exe"],
-        output:
-            bam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.bam")),
-            bai=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.bai")),
-        params:
-            rg_sample="{sample}"
-        threads: 8
-        conda: srcdir("envs/align_vars.yml")
-        shell:
-            "{input.exe} --dir `dirname {input.index}` --db `basename {input.index}`"
-            " --batch 4 --nthreads {threads}"
-            " --novelsplicing 1 --npaths 1 --quiet-if-excessive"
-            " --read-group-name={params.rg_sample} --read-group-id={params.rg_sample}"
-            " --format sam --gunzip {input.fq1} {input.fq2}"
-            " | picard SortSam I=/dev/stdin O={output.bam} SORT_ORDER=coordinate"
-            " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true"
+# We need the QC-seq output
+include: "../qc-seq/Snakefile"
 
-    rule reorder_aln_header:
-        input:
-            bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.bam"),
-            bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.bai"),
-            ref=RUN.settings["genome_fasta"],
-            refd=RUN.settings["genome_dict"],
-        output:
-            bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
-            bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
-        params:
-            rg_sample="{sample}"
-        threads: 1
-        conda: srcdir("envs/align_vars.yml")
-        shell:
-            "picard -Xmx3G ReorderSam I={input.bam} O={output.bam} R={input.ref}"
-            " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true"
-else:
-    rule align_vars:
-        input:
-            fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
-            fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
-            index=RUN.settings["genome_star_index"],
-        output:
-            bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
-            bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
-        params:
-            rg_sample="{sample}"
-        threads: 8
-        conda: srcdir("envs/align_vars.yml")
-        shell:
-            "rm -rf `dirname {output.bam}`/alignment && "
-            "mkdir -p `dirname {output.bam}`/alignment && "
-            "STAR --outFileNamePrefix `dirname {output.bam}`/alignment/"
-            " --genomeDir {input.index} --readFilesIn {input.fq1} {input.fq2}"
-            " --readFilesCommand zcat --runThreadN {threads}"
-            " --outStd SAM --outSAMunmapped Within --outFilterMultimapNmax 1"
-            " --outSAMattrRGline ID:{params.rg_sample} SM:{params.rg_sample}"
-            " | picard SortSam I=/dev/stdin O={output.bam} SORT_ORDER=coordinate"
-            " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true"
+localrules: plot_vars, table_vars_all, table_vars_hi
+
+containers = {
+    "bedtools-2.27-grep-2.14-gawk-5.0-click-7-python-3.7": "docker://quay.io/biocontainers/mulled-v2-a4b89e0b16b1d7db92e5a069e5c40405b3b53aab:98c4ac2f0e27869be58f6a4d8bb7ae3bc02a3a70-0",
+    "debian": "docker://debian:buster-slim",
+    "gsnap": "docker://quay.io/biocontainers/gmap:2019.06.10--pl526h2f06484_0",
+    "hamlet-scripts": "docker://lumc/hamlet-scripts:0.2",
+    "picard": "docker://quay.io/biocontainers/picard:2.20.5--0",
+    "python3": "docker://python:3.7.4-slim-stretch",
+    "samtools": "docker://quay.io/biocontainers/samtools:1.6--h244ad75_4",
+    "varscan-2.4.2-samtools-1.3.1-tabix-0.2.6-grep-2.14":
+    "docker://quay.io/biocontainers/mulled-v2-58936b48a08c4e06505165c6f560ec9460b431ea:ef260d10ee671f4c7bd8e783939839bb2e0b684e-0",
+    "vep": "docker://quay.io/biocontainers/ensembl-vep:97.3--pl526hecc5488_0"
+}
+
+
+
+rule all_snv_indels:
+    input:
+        plots_mark=expand(RUN.output("{sample}/snv-indels/variant_plots/.done"), sample=RUN.samples),
+        stats=expand(RUN.output("{sample}/snv-indels/{sample}.aln_stats"), sample=RUN.samples),
+        var_json=expand(RUN.output("{sample}/snv-indels/{sample}.variants.json"), sample=RUN.samples),
+        cov_json=expand(RUN.output("{sample}/snv-indels/{sample}.exon_cov_stats.json"), sample=RUN.samples),
+        insert_stats=expand(RUN.output("{sample}/snv-indels/{sample}.insert_stats"), sample=RUN.samples),
+        insert_histo=expand(RUN.output("{sample}/snv-indels/{sample}.insert_stats.pdf"), sample=RUN.samples),
+        rna_stats=expand(RUN.output("{sample}/snv-indels/{sample}.rna_stats"), sample=RUN.samples),
+        rna_histo=expand(RUN.output("{sample}/snv-indels/{sample}.rna_stats.pdf"), sample=RUN.samples),
+        all_csv=expand(RUN.output("{sample}/snv-indels/{sample}.variants_all.csv"), sample=RUN.samples),
+        high_csv=expand(RUN.output("{sample}/snv-indels/{sample}.variants_hi.csv"), sample=RUN.samples),
+
+
+# To reproduce paper results, relies on a non-conda GSNAP 2014.12.23 with SIMD
+rule align_vars:
+    input:
+        fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
+        fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
+        index=RUN.settings["genome_gmap_index"],
+    output:
+        sam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.sam")),
+    params:
+        rg_sample="{sample}"
+    threads: 8
+    conda: srcdir("envs/align_vars.yml")
+    singularity: containers["gsnap"]
+    shell:
+        "gsnap --dir `dirname {input.index}` --db `basename {input.index}`"
+        " --batch 4 --nthreads {threads}"
+        " --novelsplicing 1 --npaths 1 --quiet-if-excessive"
+        " --read-group-name={params.rg_sample} --read-group-id={params.rg_sample}"
+        " --format sam --gunzip {input.fq1} {input.fq2} > {output.sam}"
+
+rule sort_bamfile:
+    input:
+        sam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.sam"),
+    output:
+        bam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bam")),
+        bai=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bai")),
+    params:
+        tmp=temp(RUN.output("tmp")),
+    singularity: containers["picard"]
+    shell:
+        "picard SortSam I={input.sam} O={output.bam} SORT_ORDER=coordinate "
+        "VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true TMP_DIR={params.tmp}"
+
+
+rule reorder_aln_header:
+    input:
+        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bam"),
+        bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bai"),
+        ref=RUN.settings["genome_fasta"],
+        refd=RUN.settings["genome_dict"],
+    output:
+        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
+        bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
+    params:
+        rg_sample="{sample}"
+    threads: 1
+    conda: srcdir("envs/align_vars.yml")
+    singularity: containers["picard"]
+    shell:
+        "picard -Xmx3G ReorderSam I={input.bam} O={output.bam} R={input.ref}"
+        " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true"
 
 rule genome_txt:
     input:
         ref_dict=RUN.settings["genome_dict"],
     output:
         genome=temp(RUN.output(".tmp.genome.txt"))
+    singularity: containers["debian"]
     shell:
         " cat {input.ref_dict}"
         " | grep -P \"@SQ\\tSN:\""
@@ -94,6 +118,7 @@ rule exon_cov_ref:
     output:
         bed=temp(RUN.output(".tmp.exon_cov_ref.bed"))
     conda: srcdir("envs/exon_covs.yml")
+    singularity: containers["bedtools-2.27-grep-2.14-gawk-5.0-click-7-python-3.7"]
     shell:
         "cat {input.ref_refflat}"
         " | grep -vP \"chr.*alt\t\""
@@ -111,6 +136,7 @@ rule exon_cov:
     output:
         json=RUN.output("{sample}/snv-indels/{sample}.exon_cov_stats.json")
     conda: srcdir("envs/exon_covs.yml")
+    singularity: containers["bedtools-2.27-grep-2.14-gawk-5.0-click-7-python-3.7"]
     shell:
         "bedtools coverage -d -sorted -g {input.genome} -a {input.bed} -b {input.bam}"
         " | cut -f1,2,3,4,5,8,7"
@@ -124,6 +150,7 @@ rule call_vars:
         vcf=RUN.output("{sample}/snv-indels/{sample}.raw.vcf.gz")
     threads: 3
     conda: srcdir("envs/call_vars.yml")
+    singularity: containers["varscan-2.4.2-samtools-1.3.1-tabix-0.2.6-grep-2.14"]
     shell:
         "samtools mpileup -f {input.ref} -d 1000000 -s -B {input.bam}"
         " | grep -vP '\\t\\t'"
@@ -141,8 +168,10 @@ rule aln_stats:
         stats=RUN.output("{sample}/snv-indels/{sample}.aln_stats")
     threads: 1
     conda: srcdir("envs/bam_stats.yml")
+    singularity: containers["picard"]
     shell:
         "picard -Xmx2G CollectAlignmentSummaryMetrics"
+        " VALIDATION_STRINGENCY=LENIENT"
         " R={input.ref} I={input.bam} O={output.stats}"
 
 rule insert_stats:
@@ -156,8 +185,10 @@ rule insert_stats:
         histo=RUN.output("{sample}/snv-indels/{sample}.insert_stats.pdf")
     threads: 1
     conda: srcdir("envs/bam_stats.yml")
+    singularity: containers["picard"]
     shell:
         "picard -Xmx2G CollectInsertSizeMetrics"
+        " VALIDATION_STRINGENCY=LENIENT"
         " R={input.ref} I={input.bam} O={output.stats} H={output.histo}"
 
 rule rna_stats:
@@ -169,15 +200,18 @@ rule rna_stats:
         ref_rrna=RUN.settings["rrna_refflat"],
         annot=RUN.settings["annotation_refflat"],
     output:
-        stats=RUN.output("{sample}/snv-indels/{sample}.rna_stats")
+        stats=RUN.output("{sample}/snv-indels/{sample}.rna_stats"),
+        histo=RUN.output("{sample}/snv-indels/{sample}.rna_stats.pdf"),
     threads: 1
     conda: srcdir("envs/bam_stats.yml")
+    singularity: containers["picard"]
     shell:
         "picard -Xmx4G CollectRnaSeqMetrics"
+        " VALIDATION_STRINGENCY=LENIENT"
         " R={input.ref} REF_FLAT={input.annot}"
         " RIBOSOMAL_INTERVALS={input.ref_rrna}"
         " STRAND_SPECIFICITY=NONE ASSUME_SORTED=true"
-        " CHART_OUTPUT={output.stats}.pdf I={input.bam} O={output.stats}"
+        " CHART_OUTPUT={output.histo} I={input.bam} O={output.stats}"
 
 rule annotate_vars:
     input:
@@ -186,20 +220,19 @@ rule annotate_vars:
         ref_gonl=RUN.settings["vcf_gonl"],
         cache_vep=RUN.settings["cache_vep"],
         fasta_vep=RUN.settings["fasta_vep"],
-        vep_exe=RUN.settings["vep_exe"],
-        bgzip_exe=RUN.settings["bgzip_exe"],
     output:
         vcf=RUN.output("{sample}/snv-indels/{sample}.annotated.vcf.gz"),
-        stats=RUN.output("{sample}/snv-indels/{sample}.vep_stats"),
+        stats=RUN.output("{sample}/snv-indels/{sample}.vep_stats.txt"),
     threads: 8
+    singularity: containers["vep"]
     shell:
-        "PATH=/usr/bin:${{PATH}} {input.vep_exe} -i {input.vcf}"
+        "vep -i {input.vcf}"
         " --fasta {input.fasta_vep} --dir {input.cache_vep}"
         " --custom {input.ref_1kg},P3,vcf,exact,0,AF,AFR_AF,AMR_AF,EAS_AF,EUR_AF,SAS_AF"
         " --custom {input.ref_gonl},GONL,vcf,exact,0,AF"
-        " --fork {threads} --offline --cache_version 77 --assembly GRCh38 --everything --merged"
+        " --fork {threads} --offline --cache_version 97 --assembly GRCh38 --everything --merged"
         " --allele_number --stats_text --vcf --cache --force_overwrite"
-        " --stats_file {output.stats} -o STDOUT | {input.bgzip_exe} -c > {output.vcf}"
+        " --stats_file {output.stats} -o STDOUT | bgzip -c > {output.vcf}"
 
 rule extract_vars:
     input:
@@ -211,8 +244,9 @@ rule extract_vars:
         json=RUN.output("{sample}/snv-indels/{sample}.variants.json"),
     threads: 1
     conda: srcdir("envs/extract_vars.yml")
+    singularity: containers["hamlet-scripts"]
     shell:
-        "python {input.scr} --hotspots {input.ref_hotspots} --sample-id {wildcards.sample}"
+        "python3 {input.scr} --hotspots {input.ref_hotspots} --sample-id {wildcards.sample}"
         " {input.ref_id_mapping} {input.vcf} > {output.json}"
 
 rule table_vars_all:
@@ -223,8 +257,9 @@ rule table_vars_all:
         csv=RUN.output("{sample}/snv-indels/{sample}.variants_all.csv"),
     threads: 1
     conda: srcdir("envs/json_to_csv.yml")
+    singularity: containers["hamlet-scripts"]
     shell:
-        "python {input.scr} {input.json} > {output.csv}"
+        "python3 {input.scr} {input.json} > {output.csv}"
 
 rule table_vars_hi:
     input:
@@ -234,8 +269,9 @@ rule table_vars_hi:
         csv=RUN.output("{sample}/snv-indels/{sample}.variants_hi.csv"),
     threads: 1
     conda: srcdir("envs/json_to_csv.yml")
+    singularity: containers["hamlet-scripts"]
     shell:
-        "python {input.scr} --hi {input.json} > {output.csv}"
+        "python3 {input.scr} --hi {input.json} > {output.csv}"
 
 rule plot_vars:
     input:
@@ -249,9 +285,9 @@ rule plot_vars:
         plotd=RUN.output("{sample}/snv-indels/variant_plots"),
     output:
         plots_mark=RUN.output("{sample}/snv-indels/variant_plots/.done"),
-        plotd=RUN.output("{sample}/snv-indels/variant_plots"),
     threads: 1
     conda: srcdir("envs/plot_variants.yml")
+    singularity: containers["hamlet-scripts"]
     shell:
         "(Rscript {input.scr} -j {input.json}"
         " -i {input.ref_id_mapping} -m {input.ref_annot_goi}"

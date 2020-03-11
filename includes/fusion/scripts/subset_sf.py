@@ -12,7 +12,8 @@ if __name__ == "__main__":
     with open(fuma_fname, "r") as src:
         src.readline()
         for line in (raw_line.strip() for raw_line in src):
-            cols = filter(lambda x: len(x) > 0, line.split("\t"))
+            cols = [x for x in line.split("\t") if len(x) > 0]
+
             if len(cols) < 5:
                 continue
             lefts = cols[0].split(":")

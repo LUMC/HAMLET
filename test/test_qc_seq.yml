@@ -1,0 +1,136 @@
+- name: test-qc-dry-run-single
+  tags:
+    - dry-run
+  command: >
+    snakemake -n
+    --snakefile includes/qc-seq/Snakefile
+    --configfile test/data/config/test-qc-single.config
+  stdout:
+    contains:
+      - "Job counts:"
+
+- name: test-qc-dry-run-trio
+  tags:
+    - dry-run
+  command: >
+    snakemake -n
+    --snakefile includes/qc-seq/Snakefile
+    --configfile test/data/config/test-qc-trio.config
+  stdout:
+    contains:
+      - "Job counts:"
+
+- name: test-qc-sanity-snakemake
+  tags:
+    - sanity
+  command: >
+    snakemake --version
+  stdout:
+    contains:
+      - "5.9"
+
+- name: test-qc-sanity-singularity
+  tags:
+    - sanity
+  command: >
+    singularity --version
+  stdout:
+    contains:
+      - "singularity version 3"
+
+- name: test-qc-sanity-rattle
+  tags:
+    - sanity
+  command: >
+    python -m rattle
+
+- name: test-qc-single
+  tags:
+    - integration
+  command: >
+    snakemake -rp
+    --snakefile includes/qc-seq/Snakefile
+    --configfile test/data/config/test-qc-single.config
+    --verbose
+    --use-singularity
+    --singularity-args ' --containall --bind /exports'
+    --singularity-prefix /exports/hem-leukemia/testing/singularity
+  files:
+    - path: "TestSample/TestSample-R1.fq.gz"
+    - path: "TestSample/TestSample-R2.fq.gz"
+    - path: "TestSample/qc-seq/rg_1/stats.json"
+    - path: "TestSample/qc-seq/rg_1"
+    - path: "TestSample/qc-seq/rg_1/fastqc-R1-processed"
+    - path: "TestSample/qc-seq/rg_1/fastqc-R2-processed"
+    - path: "TestSample/qc-seq/rg_1/fastqc-R1-raw"
+    - path: "TestSample/qc-seq/rg_1/fastqc-R2-raw"
+
+- name: test-qc-duo
+  tags:
+    - functional
+  command: >
+    snakemake -rp
+    --snakefile includes/qc-seq/Snakefile
+    --configfile test/data/config/test-qc-duo.config
+    --verbose
+    --use-singularity
+    --singularity-args ' --containall --bind /exports'
+    --singularity-prefix /exports/hem-leukemia/testing/singularity
+  files:
+    - path: "TestSample1/TestSample1-R1.fq.gz"
+    - path: "TestSample1/TestSample1-R2.fq.gz"
+    - path: "TestSample2/TestSample2-R1.fq.gz"
+    - path: "TestSample2/TestSample2-R2.fq.gz"
+    - path: "TestSample2/qc-seq/rg_2/TestSample2-rg_2-R1.fq.gz"
+    - path: "TestSample2/qc-seq/rg_2/TestSample2-rg_2-R2.fq.gz"
+    - path: "TestSample2/qc-seq/rg_3/TestSample2-rg_3-R1.fq.gz"
+    - path: "TestSample2/qc-seq/rg_3/TestSample2-rg_3-R2.fq.gz"
+
+- name: test-qc-trio
+  tags:
+    - functional
+  command: >
+    snakemake -rp
+    --snakefile includes/qc-seq/Snakefile
+    --configfile test/data/config/test-qc-trio.config
+    --verbose
+    --use-singularity
+    --singularity-args ' --containall --bind /exports'
+    --singularity-prefix /exports/hem-leukemia/testing/singularity
+  files:
+    - path: "TestSample3/qc-seq/rg_1"
+    - path: "TestSample3/qc-seq/rg_2"
+    - path: "TestSample3/qc-seq/rg_3"
+
+- name: test-qc-single-low-qual-adapters
+  tags:
+    - functional
+  command: >
+    snakemake -rp
+    --snakefile includes/qc-seq/Snakefile
+    --configfile test/data/config/test-qc-single-low-qual-adapters.config
+    --verbose
+    --use-singularity
+    --singularity-args ' --containall --bind /exports'
+    --singularity-prefix /exports/hem-leukemia/testing/singularity
+  files:
+    - path: "low_qual/low_qual-R1.fq.gz"
+    - path: "low_qual/low_qual-R2.fq.gz"
+    - path: "low_qual/qc-seq/readgroup1/stats.json"
+    - path: "low_qual/qc-seq/readgroup1"
+    - path: "low_qual/qc-seq/readgroup1/fastqc-R1-processed"
+    - path: "low_qual/qc-seq/readgroup1/fastqc-R2-processed"
+    - path: "low_qual/qc-seq/readgroup1/fastqc-R1-raw"
+    - path: "low_qual/qc-seq/readgroup1/fastqc-R2-raw"
+    - path: "low_qual/qc-seq/readgroup1/fastqc-R1-raw/ct_r1_fastqc/summary.txt"
+      contains:
+        - "FAIL\tPer base sequence quality\tct_r1.fq.gz"
+        - "WARN\tPer base N content\tct_r1.fq.gz"
+        - "FAIL\tOverrepresented sequences\tct_r1.fq.gz"
+        - "FAIL\tAdapter Content\tct_r1.fq.gz"
+    - path: "low_qual/qc-seq/readgroup1/fastqc-R1-processed/low_qual-readgroup1-R1_fastqc/summary.txt"
+      contains:
+        - "PASS\tPer base sequence quality\tlow_qual-readgroup1-R1.fq.gz"
+        - "PASS\tPer base N content\tlow_qual-readgroup1-R1.fq.gz"
+        - "WARN\tOverrepresented sequences\tlow_qual-readgroup1-R1.fq.gz"
+        - "PASS\tAdapter Content\tlow_qual-readgroup1-R1.fq.gz"

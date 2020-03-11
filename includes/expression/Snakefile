@@ -1,4 +1,5 @@
 from rattle import Run
+from os import path
 
 RUN = Run(config)
 
@@ -12,17 +13,40 @@ RUN.set_default_setting("relative_gene_name", "HMBS")
 if not RUN.settings.get("exon_names", []):
     raise ValueError("No exon names for exon ratio calculation defined")
 
+# We need the QC-seq output
+include: "../qc-seq/Snakefile"
+include: "../snv-indels/Snakefile"
+
+localrules: calc_exon_ratios, count_bases_exon, count_bases_gene
+
+containers = {
+    "bedtools-2.17-python-2.7": "docker://quay.io/biocontainers/mulled-v2-a9ddcbd438a66450297b5e0b61ac390ee9bfdb61:e60f3cfda0dfcf4a72f2091c6fa1ebe5a5400220-0",
+    "htseq": "docker://quay.io/biocontainers/htseq:0.11.2--py27h637b7d7_1",
+    "picard": "docker://quay.io/biocontainers/picard:2.20.5--0",
+    "hamlet-scripts": "docker://lumc/hamlet-scripts:0.2"
+}
+
+rule all_expression:
+    input:
+        base_per_exon=[RUN.output(f) for f in expand("{sample}/expression/{sample}.bases_per_exon" ,sample=RUN.samples)],
+        base_per_gene=[RUN.output(f) for f in expand("{sample}/expression/{sample}.bases_per_gene", sample=RUN.samples)],
+        exon_ratio=[RUN.output(f) for f in expand("{sample}/expression/{sample}.exon_ratios", sample=RUN.samples)],
+        fragment_per_gene=[RUN.output(f) for f in expand("{sample}/expression/{sample}.fragments_per_gene", sample=RUN.samples)],
+        raw_base=[RUN.output(f) for f in expand("{sample}/expression/{sample}.raw_base", sample=RUN.samples)]
 
 rule idsort_aln:
     input:
         bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
     output:
         bam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.idsorted.bam")),
+    params:
+        tmp=temp(RUN.output("tmp")),
     threads: 1
     conda: srcdir("envs/idsort_aln.yml")
+    singularity: containers["picard"]
     shell:
         "picard SortSam I={input.bam} O={output.bam} SORT_ORDER=queryname"
-        " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=false"
+        " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=false TMP_DIR={params.tmp}"
 
 rule count_fragments:
     input:
@@ -32,6 +56,7 @@ rule count_fragments:
         count=RUN.output("{sample}/expression/{sample}.fragments_per_gene"),
     threads: 1
     conda: srcdir("envs/count_fragments.yml")
+    singularity: containers["htseq"]
     shell:
         "htseq-count --format bam --order name --stranded no"
         " {input.bam} {input.gtf} > {output.count}"
@@ -45,6 +70,7 @@ rule count_raw_bases:
         raw_base_count=RUN.output("{sample}/expression/{sample}.raw_base"),
     threads: 1
     conda: srcdir("envs/count_bases.yml")
+    singularity: containers["bedtools-2.17-python-2.7"]
     shell:
         "bedtools coverage -split -hist -abam {input.bam} -b {input.bed}"
         " | python {input.count_script} -c 3 > {output.raw_base_count}"
@@ -59,6 +85,7 @@ rule count_bases_exon:
         sample="{sample}"
     threads: 1
     conda: srcdir("envs/count_bases.yml")
+    singularity: containers["hamlet-scripts"]
     shell:
         "Rscript {input.aggr_script} -I {input.raw} -N {params.sample}"
         " -E {output.count}"
@@ -73,6 +100,7 @@ rule count_bases_gene:
         sample="{sample}"
     threads: 1
     conda: srcdir("envs/count_bases.yml")
+    singularity: containers["hamlet-scripts"]
     shell:
         "Rscript {input.aggr_script} -I {input.raw} -N {params.sample}"
         " -G {output.count}"
@@ -89,8 +117,9 @@ rule calc_exon_ratios:
         exon_min_ratio=RUN.settings["exon_min_ratio"],
     threads: 1
     conda: srcdir("envs/calc_ratio.yml")
+    singularity: containers["hamlet-scripts"]
     shell:
         "cat {input.table}"
-        " | python {input.calc_script} -r {params.exon_min_ratio}"
+        " | python3 {input.calc_script} -r {params.exon_min_ratio}"
         " - {params.exon_ratio_names}"
         " > {output.table}"

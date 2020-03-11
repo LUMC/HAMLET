@@ -213,16 +213,11 @@ additional steps to have them installed:
 2. FusionCatcher, which is used by the fusion detection module. The results from fusioncatcher will be intersected
    with those of STAR-Fusion, and both the independend and the intersected results will be reported.
 
-3. rose-dt, which is used to detect the FLT3 ITD and KMT2A PTD. This tool may be available in Conda soon, but for now
-   it must be compiled and installed directly [from source](https://git.lumc.nl/hem/rose-dt). You can then supply
-   the path to the executable, the plot script, and the plot script environment using the `rose_dt_exe` and `plot_itd`
-   settings.
-
-4. VEP, which is used to annotate the variant calling results. Hamlet was tested using an older version of VEP (77),
+3. VEP, which is used to annotate the variant calling results. Hamlet was tested using an older version of VEP (77),
    which could not be made to work with Conda at the time of development. You will need to supply the path to the main
    executable via the `vep_exe` settings.
 
-5. bgzip, which needs to be supplied via the `bgzip_exe` settings. This may be replaced with a proper Conda installation
+4. bgzip, which needs to be supplied via the `bgzip_exe` settings. This may be replaced with a proper Conda installation
    in the future.
 
 

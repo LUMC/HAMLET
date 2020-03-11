@@ -207,7 +207,7 @@ def add_variant_plots(idm, var_plot_dir):
         stem = png.stem
         _, gene = png.stem.rsplit("_gene_", 1)
         if gene in idms:
-            plots.append({"path": str(png), "gene": gene})
+            plots.append({"path": str(png.absolute()), "gene": gene})
 
     return plots
 

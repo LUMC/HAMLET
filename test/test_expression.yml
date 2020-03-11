@@ -1,0 +1,104 @@
+- name: test-expression-dry-run-single
+  tags:
+    - dry-run
+  command: >
+    snakemake -n
+    --snakefile includes/expression/Snakefile
+    --configfile test/data/config/test-dry-run-single.config
+  stdout:
+    contains:
+      - "Job counts:"
+      - "TestSample/expression/TestSample.bases_per_exon"
+      - "TestSample/expression/TestSample.bases_per_gene"
+      - "TestSample/expression/TestSample.exon_ratios"
+      - "TestSample/expression/TestSample.fragments_per_gene"
+      - "TestSample/expression/TestSample.raw_base"
+
+- name: test-expression-dry-run-trio
+  tags:
+    - dry-run
+  command: >
+    snakemake -n
+    --snakefile includes/expression/Snakefile
+    --configfile test/data/config/test-dry-run-trio.config
+  stdout:
+    contains:
+      - "Job counts:"
+      - "TestSample1/expression/TestSample1.bases_per_exon"
+      - "TestSample1/expression/TestSample1.bases_per_gene"
+      - "TestSample1/expression/TestSample1.exon_ratios"
+      - "TestSample1/expression/TestSample1.fragments_per_gene"
+      - "TestSample1/expression/TestSample1.raw_base"
+      - "TestSample2/expression/TestSample2.bases_per_exon"
+      - "TestSample2/expression/TestSample2.bases_per_gene"
+      - "TestSample2/expression/TestSample2.exon_ratios"
+      - "TestSample2/expression/TestSample2.fragments_per_gene"
+      - "TestSample2/expression/TestSample2.raw_base"
+      - "TestSample3/expression/TestSample3.bases_per_exon"
+      - "TestSample3/expression/TestSample3.bases_per_gene"
+      - "TestSample3/expression/TestSample3.exon_ratios"
+      - "TestSample3/expression/TestSample3.fragments_per_gene"
+      - "TestSample3/expression/TestSample3.raw_base"
+
+- name: test-expression-sanity-snakemake
+  tags:
+    - sanity
+  command: >
+    snakemake --version
+  stdout:
+    contains:
+      - "5.9"
+
+- name: test-expression-sanity-singularity
+  tags:
+    - sanity
+  command: >
+    singularity --version
+  stdout:
+    contains:
+      - "singularity version 3"
+
+- name: test-expression-sanity-rattle
+  tags:
+    - sanity
+  command: >
+    python -m rattle
+
+- name: test-expression-integration-HEL
+  tags:
+    - integration
+  command: >
+    snakemake -rp
+    --snakefile includes/expression/Snakefile
+    --configfile test/data/config/test-expression-HEL.config
+    --verbose
+    --use-singularity
+    --singularity-args ' --containall --bind /exports'
+    --singularity-prefix /exports/hem-leukemia/testing/singularity
+  files:
+    - path: "HEL/expression/HEL.bases_per_exon"
+      contains:
+        - "exon\tHEL"
+        - "HMBS:119084882-119085066\t121064"
+        - "MECOM:169083498-169085043\t211124"
+
+    - path: "HEL/expression/HEL.bases_per_gene"
+      contains:
+        - "gene\tHEL"
+        - "HMBS\t1661651"
+        - "MECOM\t707074"
+
+    - path: "HEL/expression/HEL.exon_ratios"
+      contains:
+        - "sample_name\texon\tcount\tratio\tabove_threshold\tdivisor_gene\tdivisor_exp"
+        - "HEL\tMECOM:169146722-169147734\t28454\t0.017123932763257747\tno\tHMBS\t1661651"
+
+    - path: "HEL/expression/HEL.fragments_per_gene"
+      contains:
+        - "MECOM\t3677"
+        - "HMBS\t9154"
+
+    - path: "HEL/expression/HEL.raw_base"
+      contains:
+        - "chr11\t119084882\t119085066\t121064\t657.956522\tHMBS"
+        - "chr3\t169115382\t169116739\t174584\t128.654385\tMECOM"
