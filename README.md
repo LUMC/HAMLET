@@ -258,8 +258,9 @@ correctly in the config files which are present in the `test/data/config/` folde
 pytest --tag integration
 ```
 
-** Important: pytest copies the current directory to /tmp to run the tests.  Therefore, do not place large reference
-or sample files inside the HAMLET root folder when running tests, or these will be copied over dozens of times. **
+**Important: pytest copies the current directory to /tmp to run the tests.  Therefore, do not place large reference
+or sample files inside the HAMLET root folder when running tests, or these will be copied over dozens of times.**
+
 
 # Usage
 
