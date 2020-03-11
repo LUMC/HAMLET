@@ -134,7 +134,6 @@ rule create_summary:
         run_name=RUN_NAME,
     output:
         js=RUN.output(OUTPUTS["summary"])
-    conda: srcdir("envs/create_summary.yml")
     singularity: containers["fsnviz"]
     shell:
         "python {input.scr}"
@@ -163,7 +162,6 @@ rule generate_report:
         scr=srcdir("scripts/generate_report.py"),
     output:
         pdf=RUN.output(OUTPUTS["reportje"]),
-    conda: srcdir("envs/create_report.yml")
     singularity: containers["hamlet-scripts"]
     shell:
         "python3 {input.scr}"
@@ -195,7 +193,6 @@ rule package_results:
         pkg=RUN.output(OUTPUTS["package"]),
     params:
         tmp=RUN.output("tmp/hamlet-pkg.{sample}." + str(uuid4()) + "/hamlet_results.{sample}")
-    conda: srcdir("envs/package_results.yml")
     singularity: containers["zip"]
     shell:
         "(mkdir -p {params.tmp}"

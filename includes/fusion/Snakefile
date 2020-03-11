@@ -47,7 +47,6 @@ rule star_fusion:
     output:
         txt=RUN.output("{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv")
     threads: 8
-    conda: srcdir("envs/star_fusion.yml")
     singularity: containers["star-fusion"]
     shell:
         "(rm -rf {params.folder}"
@@ -70,7 +69,6 @@ rule plot_sf:
     output:
         svg=RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg"),
         png=RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png"),
-    conda: srcdir("envs/plot_fusion.yml")
     singularity: containers["fsnviz"]
     shell:
         "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` --png"
@@ -96,7 +94,6 @@ rule fusioncatcher:
     output:
         txt=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt")
     threads: 8
-    conda: srcdir("envs/fusioncatcher.yml")
     singularity: containers["fusioncatcher"]
     shell:
         " dir=`dirname {output.txt}` "
@@ -118,7 +115,6 @@ rule plot_fc:
     output:
         svg=RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg"),
         png=RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png"),
-    conda: srcdir("envs/plot_fusion.yml")
     singularity: containers["fsnviz"]
     shell:
         "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` --png"
@@ -131,7 +127,6 @@ rule intersect_fusions:
         bed=RUN.settings["transcripts_bed"],
     output:
         txt=RUN.output("{sample}/fusion/{sample}.fuma"),
-    conda: srcdir("envs/intersect_fusions.yml")
     singularity: containers["fuma"]
     shell:
         "fuma -a hg38:{input.bed} -s"
@@ -149,7 +144,6 @@ rule subset_sf:
         subset_script=RUN.settings["sf_subset_script"],
     output:
         sf=RUN.output("{sample}/fusion/{sample}.sf-isect")
-    conda: srcdir("envs/subset_sf.yml")
     singularity: containers["hamlet-scripts"]
     shell:
         "python3 {input.subset_script} {input.isect} {input.sf} > {output.sf} || rm -f {output.sf}"
@@ -160,7 +154,6 @@ rule plot_isect:
     output:
         svg=RUN.output("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.svg"),
         png=RUN.output("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.png"),
-    conda: srcdir("envs/plot_fusion.yml")
     singularity: containers["fsnviz"]
     shell:
         "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` --png"
@@ -174,7 +167,6 @@ rule combine_plots:
         combine_script=RUN.settings["plot_combined_script"]
     output:
         svg=RUN.output("{sample}/fusion/{sample}.fusions-combined.svg"),
-    conda: srcdir("envs/combine_plots.yml")
     singularity: containers["hamlet-scripts"]
     shell:
         "python3 {input.combine_script}"

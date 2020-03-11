@@ -103,7 +103,6 @@ rule fastqc_raw:
     output:
         folder=directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-raw")
     threads: 4
-    conda: srcdir("envs/fastqc.yml")
     singularity: containers["fastqc"]
     shell:
         "mkdir -p {output.folder}"
@@ -120,7 +119,6 @@ rule cutadapt:
         fq1="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz",
         fq2="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz"
     singularity: containers["cutadapt"]
-    conda: "envs/cutadapt.yml"
     shell: "cutadapt -a AGATCGGAAGAG -A AGATCGGAAGAG "
            "--minimum-length=20 --quality-cutoff=20,20 "
            "--output={output.fq1} --paired-output={output.fq2} "
@@ -135,7 +133,6 @@ rule fastqc_processed:
     output:
         folder = directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-processed")
     threads: 4
-    conda: srcdir("envs/fastqc.yml")
     singularity: containers["fastqc"]
     shell:
         "mkdir -p {output.folder}"
@@ -153,7 +150,6 @@ rule rg_stats:
         rg_stats_script=config["rg_stats_script"],
     output:
         stats="{sample}/qc-seq/{read_group}/stats.json",
-    conda: srcdir("envs/rg_stats.yml")
     singularity: containers["crimson"]
     shell:
         "python {input.rg_stats_script} --name {wildcards.read_group}"
@@ -170,7 +166,6 @@ rule sample_stats:
         sample_stats_script=config["sample_stats_script"]
     output:
         stats="{sample}/qc-seq/{sample}.seq_stats.json"
-    conda: srcdir("envs/sample_stats.yml")
     singularity: containers["crimson"]
     shell:
         "python {input.sample_stats_script} --name {wildcards.sample}"

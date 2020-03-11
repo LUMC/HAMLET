@@ -42,7 +42,6 @@ rule idsort_aln:
     params:
         tmp=temp(RUN.output("tmp")),
     threads: 1
-    conda: srcdir("envs/idsort_aln.yml")
     singularity: containers["picard"]
     shell:
         "picard SortSam I={input.bam} O={output.bam} SORT_ORDER=queryname"
@@ -55,7 +54,6 @@ rule count_fragments:
     output:
         count=RUN.output("{sample}/expression/{sample}.fragments_per_gene"),
     threads: 1
-    conda: srcdir("envs/count_fragments.yml")
     singularity: containers["htseq"]
     shell:
         "htseq-count --format bam --order name --stranded no"
@@ -69,7 +67,6 @@ rule count_raw_bases:
     output:
         raw_base_count=RUN.output("{sample}/expression/{sample}.raw_base"),
     threads: 1
-    conda: srcdir("envs/count_bases.yml")
     singularity: containers["bedtools-2.17-python-2.7"]
     shell:
         "bedtools coverage -split -hist -abam {input.bam} -b {input.bed}"
@@ -84,7 +81,6 @@ rule count_bases_exon:
     params:
         sample="{sample}"
     threads: 1
-    conda: srcdir("envs/count_bases.yml")
     singularity: containers["hamlet-scripts"]
     shell:
         "Rscript {input.aggr_script} -I {input.raw} -N {params.sample}"
@@ -99,7 +95,6 @@ rule count_bases_gene:
     params:
         sample="{sample}"
     threads: 1
-    conda: srcdir("envs/count_bases.yml")
     singularity: containers["hamlet-scripts"]
     shell:
         "Rscript {input.aggr_script} -I {input.raw} -N {params.sample}"
@@ -116,7 +111,6 @@ rule calc_exon_ratios:
                                   RUN.settings.get("exon_names")),
         exon_min_ratio=RUN.settings["exon_min_ratio"],
     threads: 1
-    conda: srcdir("envs/calc_ratio.yml")
     singularity: containers["hamlet-scripts"]
     shell:
         "cat {input.table}"
