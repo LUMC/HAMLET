@@ -124,3 +124,32 @@
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
         - "453,457\t4106,4110\t39\t25\t452\t4106\t4111\t457\tfuzzy\t4"
 
+- name: test-flt3-kmt2a-no-reads
+  tags:
+    - integration
+  command: >
+    snakemake -rp
+    --snakefile includes/itd/Snakefile
+    --configfile test/data/config/test-p53-NB4.config
+    --verbose
+    --use-singularity
+    --singularity-args ' --containall --bind /exports'
+    --singularity-prefix /exports/hem-leukemia/testing/singularity
+  files:
+    - path: "NB4/itd/NB4.kmt2a.png"
+    - path: "NB4/itd/NB4.kmt2a.bg.csv"
+      contains:
+        - "position\tcoverage\tsoft_clip_count"
+
+    - path: "NB4/itd/NB4.kmt2a.csv"
+      contains:
+        - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
+
+    - path: "NB4/itd/NB4.flt3.png"
+    - path: "NB4/itd/NB4.flt3.bg.csv"
+      contains:
+        - "position\tcoverage\tsoft_clip_count"
+
+    - path: "NB4/itd/NB4.flt3.csv"
+      contains:
+        - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
