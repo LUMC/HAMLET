@@ -53,7 +53,7 @@
     --configfile test/data/config/test-qc-single.config
     --verbose
     --use-singularity
-    --singularity-args ' --containall --bind /exports'
+    --singularity-args ' --containall --bind /tmp'
     --singularity-prefix /exports/hem-leukemia/testing/singularity
   files:
     - path: "TestSample/TestSample-R1.fq.gz"
@@ -74,7 +74,7 @@
     --configfile test/data/config/test-qc-duo.config
     --verbose
     --use-singularity
-    --singularity-args ' --containall --bind /exports'
+    --singularity-args ' --containall --bind /tmp'
     --singularity-prefix /exports/hem-leukemia/testing/singularity
   files:
     - path: "TestSample1/TestSample1-R1.fq.gz"
@@ -95,7 +95,7 @@
     --configfile test/data/config/test-qc-trio.config
     --verbose
     --use-singularity
-    --singularity-args ' --containall --bind /exports'
+    --singularity-args ' --containall --bind /tmp'
     --singularity-prefix /exports/hem-leukemia/testing/singularity
   files:
     - path: "TestSample3/qc-seq/rg_1"
@@ -111,7 +111,7 @@
     --configfile test/data/config/test-qc-single-low-qual-adapters.config
     --verbose
     --use-singularity
-    --singularity-args ' --containall --bind /exports'
+    --singularity-args ' --containall --bind /tmp'
     --singularity-prefix /exports/hem-leukemia/testing/singularity
   files:
     - path: "low_qual/low_qual-R1.fq.gz"
