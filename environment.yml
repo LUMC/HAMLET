@@ -1,11 +1,13 @@
-channels:
-- bioconda
-- r
-- conda-forge
-- defaults
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: linux-64
+name: HAMLET
 dependencies:
-- pytest-workflow
-- snakemake
-- drmaa
-- pip:
-  - "git+https://github.com/bow/rattle.git@69f64e4e86559fcd48a40a2019f2997912147218#egg=Rattle"
+ - _libgcc_mutex=0.1=conda_forge
+ - _openmp_mutex=4.5=0_gnu
+ - pytest-workflow
+ - python=3.6
+ - snakemake=5.9
+ - pip
+ - pip:
+   - "git+https://github.com/bow/rattle.git@69f64e4e86559fcd48a40a2019f2997912147218#egg=Rattle"
