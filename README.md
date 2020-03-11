@@ -1,7 +1,7 @@
 # Hamlet
 
 Hamlet is a pipeline for analysis of human acute myeloid leukemia RNA-seq samples. It is based on the
-[Snakemake workflow management system](https://snakemake.readthedocs.io/en/stable/). Four distinct analysi modules
+[Snakemake workflow management system](https://snakemake.readthedocs.io/en/stable/). Four distinct analysis modules
 comprise Hamlet:
 
   1. `snv-indels`, for small variant detection
@@ -15,7 +15,7 @@ the [`include`](https://snakemake.readthedocs.io/en/stable/snakefiles/modulariza
 
 Configurations and input file definitions are supplied in a single YAML configuration file. Here you can specify
 arbitrary number of samples, each containing an arbitrary number of paired-end files. The merging of these files and
-separation of output per-sample are taken care of automatically by Hamlet. Additionally, if you mayalso supply your own
+separation of output per-sample are taken care of automatically by Hamlet. Additionally, if you may also supply your own
 cluster-specific YAML configuration to determine how much resource such as memory or CPU cores should be allocated to
 the jobs.
 
@@ -218,31 +218,48 @@ set up a Conda virtual environment and then update it:
 ```bash
 # Set up and activate your conda environment.
 # Install the dependencies
-$ conda env update -f environment.yml
+conda env create -f environment.yml
 ```
 
-When running the pipeline, Snakemake will then install all the required tools via Conda, whenever possible.
+Additionally, `singularity` version 3 or greater should be installed on the system.
 
-Unfortunately, not all the required tools are available in Conda (or if they are present, they may not have been
-compiled using certain optimizations). There are three tools that fall under this category, and you may need to do
-additional steps to have them installed:
+# Data files
+HAMLET requires around 100GB of reference files to run. Please contact the author or open an issue if you are
+interested in receiving a copy of the reference files used by the LUMC.
 
-1. GSNAP, which is used by the alignment step before variant calling. On some certain architectures, the version of
-   GSNAP that Hamlet uses can be compiled to utilize SIMD instructions. As of inclusion of this tool in the pipeline,
-   the optimization is not available in Conda unfortunately. Here you may supply your own compiled GSNAP using the
-   `gsnap_exe` settings. If you do, Hamlet will use that GSNAP executable. If you do not, Hamlet will use the
-   GSNAP available from Conda and may require more time to run.
+# Testing
+The following commands can be used to test different aspects of HAMLET. First, activate the HAMLET conda environment
+which was created in the previous step.
+```bash
+conda activate HAMLET
+```
 
-2. FusionCatcher, which is used by the fusion detection module. The results from fusioncatcher will be intersected
-   with those of STAR-Fusion, and both the independend and the intersected results will be reported.
+To test if all dependencies of HAMLET have been installed, use
+```bash
+pytest --tag sanity
+```
 
-3. VEP, which is used to annotate the variant calling results. Hamlet was tested using an older version of VEP (77),
-   which could not be made to work with Conda at the time of development. You will need to supply the path to the main
-   executable via the `vep_exe` settings.
+If any of the tests fail, append `--keep-workflow-wd-on-fail` to the pytest command and inspect the `log.err` and
+`log.out` files in the run folder.
 
-4. bgzip, which needs to be supplied via the `bgzip_exe` settings. This may be replaced with a proper Conda installation
-   in the future.
+To test if HAMLET can parse the Snakemake files and find the appropriate output files, use
+```bash
+pytest --tag dry-run
+```
 
+To test if HAMLET can run the quality control part of the pipeline, using example data, use
+```bash
+pytest --tag functional
+```
+
+To test the full behaviour of HAMLET, please make sure that all required reference files are present and have been set
+correctly in the config files which are present in the `test/data/config/` folder. Then, use
+```bash
+pytest --tag integration
+```
+
+** Important: pytest copies the current directory to /tmp to run the tests.  Therefore, do not place large reference
+or sample files inside the HAMLET root folder when running tests, or these will be copied over dozens of times. **
 
 # Usage
 
@@ -257,9 +274,8 @@ correctly in the configuration files.
 After installation of all the required tools, you will need to fill in the required settings and configurations in
 several YAML files.
 
-For the runtime settings, use the provided `config-base.yml` file as template and fill in the required values as
-instructed. Fill also your sample names and paths to their input files as instructed in the same YAML file. Let's call
-this file `config.yml`.
+For the runtime settings, use the provided `test/data/config/test-hamlet-frankenstein.config` file as template and
+update the values as required. Let's call this file `config.yml`.
 
 If running in a cluster, you may also want to define the resource configurations in another YAML file. Read more about
 this type of configuration on the official [Snakemake
@@ -275,17 +291,7 @@ You can then run the pipeline by invoking Snakemake, for example:
         # ... other flags
 ```
 
-Here is another example that uses more flags (see the Snakemake help for explanation of these flags):
-
-```bash
-    $ snakemake -p -T -s Snakefile \
-        --configfile config.yml --cluster-config config-cluster.yml \
-        --rerun-incomplete
-        --jobname 'hamlet.{jobid}' \
-        --jobs 100 -w 120 --max-jobs-per-second 3 \
-        --drmaa ' -pe BWA {cluster.threads} -l h_vmem={cluster.vmem} -cwd -V' \
-        --drmaa-log-dir .drmaa-logs
-```
+See `test/test_hamlet.yml` for a working example of the flags required to run HAMLET with Singularity.
 
 ## Output files
 
@@ -297,8 +303,11 @@ the overview of the essential results.
 
 ## Notes
 
-1. You can run Hamlet from anywhere, but preferrably this is done outside of the repository. This way, the temporary
+1. You can run Hamlet from anywhere, but preferably this is done outside of the repository. This way, the temporary
    Snakemake files are written elsewhere and does not pollute the repository.
 
 2. You can direct Hamlet to create the output directory anywhere. This is a configuration value that is supplied in the
    config file via `output_dir`.
+
+# Citation
+If you use HAMLET in your research, please cite the [HAMLET publication](https://www.nature.com/articles/s41375-020-0762-8).
