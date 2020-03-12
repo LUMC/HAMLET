@@ -224,8 +224,8 @@ conda env create -f environment.yml
 Additionally, `singularity` version 3 or greater should be installed on the system.
 
 # Data files
-HAMLET requires around 100GB of reference files to run. Please contact the author or open an issue if you are
-interested in receiving a copy of the reference files used by the LUMC.
+HAMLET requires around 100GB of reference files to run. You can download the data files [here](https://barmsijs.lumc.nl/HAMLET/deps.tar.gz).
+Please contact the author or open an issue if the link is not working.
 
 # Testing
 The following commands can be used to test different aspects of HAMLET. First, activate the HAMLET conda environment
