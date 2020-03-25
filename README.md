@@ -10,7 +10,7 @@ comprise Hamlet:
   4. `expression`, for expression analysis
 
 There is also a `qc-seq` module which does quality control for input sequence files. Everything is tied together by
-a main [`Snakefile`](https://snakemake.readthedocs.io/en/stable/executable.html#useful-command-line-arguments) using
+a main `Snakefile` using
 the [`include`](https://snakemake.readthedocs.io/en/stable/snakefiles/modularization.html#includes) statement.
 
 Configurations and input file definitions are supplied in a single YAML configuration file. Here you can specify
@@ -213,7 +213,8 @@ digraph snakemake_dag {
 # Installation
 
 The dependencies required for running the pipeline are listed in the provided `environment.yml` file. To use it, first
-set up a Conda virtual environment and then update it:
+make sure that you have [Conda](https://docs.conda.io/en/latest/miniconda.html) installed on your system.
+Then, set up a Conda virtual environment and then update it:
 
 ```bash
 # Set up and activate your conda environment.
