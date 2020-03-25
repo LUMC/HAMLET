@@ -220,6 +220,9 @@ Then, set up a Conda virtual environment and then update it:
 # Set up and activate your conda environment.
 # Install the dependencies
 conda env create -f environment.yml
+
+# Activate the conda environment
+conda activate HAMLET
 ```
 
 Additionally, `singularity` version 3 or greater should be installed on the system.
