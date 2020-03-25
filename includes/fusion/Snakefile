@@ -1,10 +1,4 @@
-from rattle import Run
 from os import path
-
-RUN = Run(config)
-
-RUN.set_default_setting("sf_subset_script", srcdir(path.join("scripts", "subset_sf.py")))
-RUN.set_default_setting("plot_combined_script", srcdir(path.join("scripts", "combine_svgs.py")))
 
 # We need the QC-seq output
 include: "../qc-seq/Snakefile"
@@ -21,31 +15,41 @@ containers = {
     "hamlet-scripts": "docker://lumc/hamlet-scripts:0.2"
 }
 
+settings=config["settings"]
+
+# Set the default settings
+def set_default(key, value):
+    """ Set default value for settings """
+    if key not in settings:
+        settings[key] = value
+
+set_default("sf_subset_script", srcdir(path.join("scripts", "subset_sf.py")))
+set_default("plot_combined_script", srcdir(path.join("scripts", "combine_svgs.py")))
 
 rule all_fusion:
     input:
-        star_predictions=expand(RUN.output("{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv"), sample=RUN.samples),
-        star_final=expand(RUN.output("{sample}/fusion/{sample}.star-fusion"), sample=RUN.samples),
-        fusion_catcher=expand(RUN.output("{sample}/fusion/{sample}.fusioncatcher"), sample=RUN.samples),
-        fuma=expand(RUN.output("{sample}/fusion/{sample}.fuma"), sample=RUN.samples),
-        subset=expand(RUN.output("{sample}/fusion/{sample}.sf-isect"), sample=RUN.samples),
-        is_svg=expand(RUN.output("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.svg"), sample=RUN.samples),
-        is_png=expand(RUN.output("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.png"), sample=RUN.samples),
-        sf_svg=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg"), sample=RUN.samples),
-        sf_png=expand(RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png"), sample=RUN.samples),
-        fc_svg=expand(RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg"), sample=RUN.samples),
-        fc_png=expand(RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png"), sample=RUN.samples),
-        combined_svg=expand(RUN.output("{sample}/fusion/{sample}.fusions-combined.svg"), sample=RUN.samples)
+        star_predictions=expand("{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv", sample=config["samples"]),
+        star_final=expand("{sample}/fusion/{sample}.star-fusion", sample=config["samples"]),
+        fusion_catcher=expand("{sample}/fusion/{sample}.fusioncatcher", sample=config["samples"]),
+        fuma=expand("{sample}/fusion/{sample}.fuma", sample=config["samples"]),
+        subset=expand("{sample}/fusion/{sample}.sf-isect", sample=config["samples"]),
+        is_svg=expand("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.svg", sample=config["samples"]),
+        is_png=expand("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.png", sample=config["samples"]),
+        sf_svg=expand("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg", sample=config["samples"]),
+        sf_png=expand("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png", sample=config["samples"]),
+        fc_svg=expand("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg", sample=config["samples"]),
+        fc_png=expand("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png", sample=config["samples"]),
+        combined_svg=expand("{sample}/fusion/{sample}.fusions-combined.svg", sample=config["samples"]),
 
 rule star_fusion:
     input:
-        fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
-        fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
-        lib=RUN.settings["genome_star_fusion_lib"]
+        fq1="{sample}/{sample}-R1.fq.gz",
+        fq2="{sample}/{sample}-R2.fq.gz",
+        lib=settings["genome_star_fusion_lib"]
     params:
-        folder=RUN.output("{sample}/fusion/star-fusion")
+        folder="{sample}/fusion/star-fusion"
     output:
-        txt=RUN.output("{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv")
+        txt="{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
     threads: 8
     singularity: containers["star-fusion"]
     shell:
@@ -56,19 +60,19 @@ rule star_fusion:
 
 rule star_fusion_cp:
     input:
-        txt=RUN.output("{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv"),
+        txt="{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv",
     output:
-        txt=RUN.output("{sample}/fusion/{sample}.star-fusion"),
+        txt="{sample}/fusion/{sample}.star-fusion",
     singularity: containers["debian"]
     shell:
         "cp {input.txt} {output.txt}"
 
 rule plot_sf:
     input:
-        txt=RUN.output("{sample}/fusion/{sample}.star-fusion"),
+        txt="{sample}/fusion/{sample}.star-fusion",
     output:
-        svg=RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg"),
-        png=RUN.output("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png"),
+        svg="{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg",
+        png="{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png",
     singularity: containers["fsnviz"]
     shell:
         "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` --png"
@@ -76,9 +80,9 @@ rule plot_sf:
 
 rule plot_cp:
     input:
-        svg=RUN.output("{sample}/fusion/{sample}.{ext}-circos/fsnviz.svg"),
+        svg="{sample}/fusion/{sample}.{ext}-circos/fsnviz.svg",
     output:
-        svg=RUN.output("{sample}/fusion/{sample}.{ext}.svg"),
+        svg="{sample}/fusion/{sample}.{ext}.svg",
     wildcard_constraints:
         ext="star-fusion|sf-isect|fusioncatcher",
     singularity: containers["debian"]
@@ -87,12 +91,12 @@ rule plot_cp:
 
 rule fusioncatcher:
     input:
-        fq1=RUN.output("{sample}/{sample}-R1.raw.fq.gz"),
-        fq2=RUN.output("{sample}/{sample}-R2.raw.fq.gz"),
+        fq1="{sample}/{sample}-R1.raw.fq.gz",
+        fq2="{sample}/{sample}-R2.raw.fq.gz",
     params:
-        data=RUN.settings["fusioncatcher_data"]
+        data=settings["fusioncatcher_data"]
     output:
-        txt=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt")
+        txt="{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
     threads: 8
     singularity: containers["fusioncatcher"]
     shell:
@@ -102,19 +106,19 @@ rule fusioncatcher:
 
 rule fusioncatcher_cp:
     input:
-        txt=RUN.output("{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"),
+        txt="{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt",
     output:
-        txt=RUN.output("{sample}/fusion/{sample}.fusioncatcher"),
+        txt="{sample}/fusion/{sample}.fusioncatcher",
     singularity: containers["debian"]
     shell:
         "cp {input.txt} {output.txt}"
 
 rule plot_fc:
     input:
-        txt=RUN.output("{sample}/fusion/{sample}.fusioncatcher"),
+        txt="{sample}/fusion/{sample}.fusioncatcher",
     output:
-        svg=RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg"),
-        png=RUN.output("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png"),
+        svg="{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg",
+        png="{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png",
     singularity: containers["fsnviz"]
     shell:
         "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` --png"
@@ -122,11 +126,11 @@ rule plot_fc:
 
 rule intersect_fusions:
     input:
-        sf=RUN.output("{sample}/fusion/{sample}.star-fusion"),
-        fc=RUN.output("{sample}/fusion/{sample}.fusioncatcher"),
-        bed=RUN.settings["transcripts_bed"],
+        sf="{sample}/fusion/{sample}.star-fusion",
+        fc="{sample}/fusion/{sample}.fusioncatcher",
+        bed=settings["transcripts_bed"],
     output:
-        txt=RUN.output("{sample}/fusion/{sample}.fuma"),
+        txt="{sample}/fusion/{sample}.fuma",
     singularity: containers["fuma"]
     shell:
         "fuma -a hg38:{input.bed} -s"
@@ -139,21 +143,21 @@ rule intersect_fusions:
 
 rule subset_sf:
     input:
-        sf=RUN.output("{sample}/fusion/{sample}.star-fusion"),
-        isect=RUN.output("{sample}/fusion/{sample}.fuma"),
-        subset_script=RUN.settings["sf_subset_script"],
+        sf="{sample}/fusion/{sample}.star-fusion",
+        isect="{sample}/fusion/{sample}.fuma",
+        subset_script=settings["sf_subset_script"],
     output:
-        sf=RUN.output("{sample}/fusion/{sample}.sf-isect")
+        sf="{sample}/fusion/{sample}.sf-isect",
     singularity: containers["hamlet-scripts"]
     shell:
         "python3 {input.subset_script} {input.isect} {input.sf} > {output.sf} || rm -f {output.sf}"
 
 rule plot_isect:
     input:
-        txt=RUN.output("{sample}/fusion/{sample}.sf-isect"),
+        txt="{sample}/fusion/{sample}.sf-isect",
     output:
-        svg=RUN.output("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.svg"),
-        png=RUN.output("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.png"),
+        svg="{sample}/fusion/{sample}.sf-isect-circos/fsnviz.svg",
+        png="{sample}/fusion/{sample}.sf-isect-circos/fsnviz.png",
     singularity: containers["fsnviz"]
     shell:
         "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` --png"
@@ -161,12 +165,12 @@ rule plot_isect:
 
 rule combine_plots:
     input:
-        sf=RUN.output("{sample}/fusion/{sample}.star-fusion.svg"),
-        fc=RUN.output("{sample}/fusion/{sample}.fusioncatcher.svg"),
-        isect=RUN.output("{sample}/fusion/{sample}.sf-isect.svg"),
-        combine_script=RUN.settings["plot_combined_script"]
+        sf="{sample}/fusion/{sample}.star-fusion.svg",
+        fc="{sample}/fusion/{sample}.fusioncatcher.svg",
+        isect="{sample}/fusion/{sample}.sf-isect.svg",
+        combine_script=settings["plot_combined_script"]
     output:
-        svg=RUN.output("{sample}/fusion/{sample}.fusions-combined.svg"),
+        svg="{sample}/fusion/{sample}.fusions-combined.svg",
     singularity: containers["hamlet-scripts"]
     shell:
         "python3 {input.combine_script}"

@@ -8,6 +8,3 @@ dependencies:
  - pytest-workflow
  - python=3.6
  - snakemake=5.9
- - pip
- - pip:
-   - "git+https://github.com/bow/rattle.git@69f64e4e86559fcd48a40a2019f2997912147218#egg=Rattle"

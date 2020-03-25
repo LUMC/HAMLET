@@ -84,12 +84,6 @@
     contains:
       - "singularity version 3"
 
-- name: test-fusion-sanity-rattle
-  tags:
-    - sanity
-  command: >
-    python -m rattle
-
 - name: test-fusion-integration-NB-4-dry-run
   tags:
     - dry-run

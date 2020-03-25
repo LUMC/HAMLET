@@ -1,17 +1,5 @@
-from rattle import Run
 from os import path
 
-RUN = Run(config)
-
-# TODO: ensure gtf exists
-RUN.set_default_setting("base_count_script", srcdir(path.join("scripts", "hist2count.py")))
-RUN.set_default_setting("aggr_base_count_script", srcdir(path.join("scripts", "aggr_base_count.R")))
-RUN.set_default_setting("calc_ratio_script", srcdir(path.join("scripts", "calc_ratio.py")))
-
-RUN.set_default_setting("relative_gene_name", "HMBS")
-
-if not RUN.settings.get("exon_names", []):
-    raise ValueError("No exon names for exon ratio calculation defined")
 
 # We need the QC-seq output
 include: "../qc-seq/Snakefile"
@@ -26,21 +14,37 @@ containers = {
     "hamlet-scripts": "docker://lumc/hamlet-scripts:0.2"
 }
 
+settings=config["settings"]
+
+# Set the default settings
+def set_default(key, value):
+    """ Set default value for settings """
+    if key not in settings:
+        settings[key] = value
+
+set_default("base_count_script", srcdir(path.join("scripts", "hist2count.py")))
+set_default("aggr_base_count_script", srcdir(path.join("scripts", "aggr_base_count.R")))
+set_default("calc_ratio_script", srcdir(path.join("scripts", "calc_ratio.py")))
+set_default("relative_gene_name", "HMBS")
+
+if "exon_names" not in settings:
+    raise ValueError("No exon names for exon ratio calculation defined")
+
 rule all_expression:
     input:
-        base_per_exon=[RUN.output(f) for f in expand("{sample}/expression/{sample}.bases_per_exon" ,sample=RUN.samples)],
-        base_per_gene=[RUN.output(f) for f in expand("{sample}/expression/{sample}.bases_per_gene", sample=RUN.samples)],
-        exon_ratio=[RUN.output(f) for f in expand("{sample}/expression/{sample}.exon_ratios", sample=RUN.samples)],
-        fragment_per_gene=[RUN.output(f) for f in expand("{sample}/expression/{sample}.fragments_per_gene", sample=RUN.samples)],
-        raw_base=[RUN.output(f) for f in expand("{sample}/expression/{sample}.raw_base", sample=RUN.samples)]
+        base_per_exon=expand("{sample}/expression/{sample}.bases_per_exon", sample=config["samples"]),
+        base_per_gene=expand("{sample}/expression/{sample}.bases_per_gene", sample=config["samples"]),
+        exon_ratio=expand("{sample}/expression/{sample}.exon_ratios", sample=config["samples"]),
+        fragment_per_gene=expand("{sample}/expression/{sample}.fragments_per_gene", sample=config["samples"]),
+        raw_base=expand("{sample}/expression/{sample}.raw_base", sample=config["samples"]),
 
 rule idsort_aln:
     input:
-        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
+        bam="{sample}/snv-indels/{sample}.snv-indel.bam",
     output:
-        bam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.idsorted.bam")),
+        bam=temp("{sample}/snv-indels/{sample}.snv-indel.idsorted.bam"),
     params:
-        tmp=temp(RUN.output("tmp")),
+        tmp=temp("tmp"),
     threads: 1
     singularity: containers["picard"]
     shell:
@@ -49,10 +53,10 @@ rule idsort_aln:
 
 rule count_fragments:
     input:
-        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.idsorted.bam"),
-        gtf=RUN.settings["expression_gtf"],
+        bam="{sample}/snv-indels/{sample}.snv-indel.idsorted.bam",
+        gtf=settings["expression_gtf"],
     output:
-        count=RUN.output("{sample}/expression/{sample}.fragments_per_gene"),
+        count="{sample}/expression/{sample}.fragments_per_gene",
     threads: 1
     singularity: containers["htseq"]
     shell:
@@ -61,11 +65,11 @@ rule count_fragments:
 
 rule count_raw_bases:
     input:
-        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
-        bed=RUN.settings["expression_bed"],
-        count_script=RUN.settings["base_count_script"],
+        bam="{sample}/snv-indels/{sample}.snv-indel.bam",
+        bed=settings["expression_bed"],
+        count_script=settings["base_count_script"],
     output:
-        raw_base_count=RUN.output("{sample}/expression/{sample}.raw_base"),
+        raw_base_count="{sample}/expression/{sample}.raw_base",
     threads: 1
     singularity: containers["bedtools-2.17-python-2.7"]
     shell:
@@ -74,10 +78,10 @@ rule count_raw_bases:
 
 rule count_bases_exon:
     input:
-        raw=RUN.output("{sample}/expression/{sample}.raw_base"),
-        aggr_script=RUN.settings["aggr_base_count_script"],
+        raw="{sample}/expression/{sample}.raw_base",
+        aggr_script=settings["aggr_base_count_script"],
     output:
-        count=RUN.output("{sample}/expression/{sample}.bases_per_exon"),
+        count="{sample}/expression/{sample}.bases_per_exon",
     params:
         sample="{sample}"
     threads: 1
@@ -88,10 +92,10 @@ rule count_bases_exon:
 
 rule count_bases_gene:
     input:
-        raw=RUN.output("{sample}/expression/{sample}.raw_base"),
-        aggr_script=RUN.settings["aggr_base_count_script"],
+        raw="{sample}/expression/{sample}.raw_base",
+        aggr_script=settings["aggr_base_count_script"],
     output:
-        count=RUN.output("{sample}/expression/{sample}.bases_per_gene"),
+        count="{sample}/expression/{sample}.bases_per_gene",
     params:
         sample="{sample}"
     threads: 1
@@ -102,14 +106,15 @@ rule count_bases_gene:
 
 rule calc_exon_ratios:
     input:
-        table=RUN.output("{sample}/expression/{sample}.bases_per_exon"),
-        calc_script=RUN.settings["calc_ratio_script"],
+        table="{sample}/expression/{sample}.bases_per_exon",
+        calc_script=settings["calc_ratio_script"],
     output:
-        table=RUN.output("{sample}/expression/{sample}.exon_ratios"),
+        table="{sample}/expression/{sample}.exon_ratios",
     params:
-        exon_ratio_names=" ".join([RUN.settings["relative_gene_name"]] +
-                                  RUN.settings.get("exon_names")),
-        exon_min_ratio=RUN.settings["exon_min_ratio"],
+        exon_ratio_names=" ".join(
+            [settings["relative_gene_name"]] + settings.get("exon_names")
+        ),
+        exon_min_ratio=settings["exon_min_ratio"],
     threads: 1
     singularity: containers["hamlet-scripts"]
     shell:
