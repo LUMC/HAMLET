@@ -75,7 +75,7 @@ rule sort_bamfile:
         tmp=temp("tmp"),
     singularity: containers["picard"]
     shell:
-        "picard SortSam I={input.sam} O={output.bam} SORT_ORDER=coordinate "
+        "picard -Xmx4G SortSam I={input.sam} O={output.bam} SORT_ORDER=coordinate "
         "VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true TMP_DIR={params.tmp}"
 
 
@@ -93,7 +93,7 @@ rule reorder_aln_header:
     threads: 1
     singularity: containers["picard"]
     shell:
-        "picard -Xmx3G ReorderSam I={input.bam} O={output.bam} R={input.ref}"
+        "picard -Xmx4G ReorderSam I={input.bam} O={output.bam} R={input.ref}"
         " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true"
 
 rule genome_txt:
@@ -165,7 +165,7 @@ rule aln_stats:
     threads: 1
     singularity: containers["picard"]
     shell:
-        "picard -Xmx2G CollectAlignmentSummaryMetrics"
+        "picard -Xmx4G CollectAlignmentSummaryMetrics"
         " VALIDATION_STRINGENCY=LENIENT"
         " R={input.ref} I={input.bam} O={output.stats}"
 
@@ -181,7 +181,7 @@ rule insert_stats:
     threads: 1
     singularity: containers["picard"]
     shell:
-        "picard -Xmx2G CollectInsertSizeMetrics"
+        "picard -Xmx4G CollectInsertSizeMetrics"
         " VALIDATION_STRINGENCY=LENIENT"
         " R={input.ref} I={input.bam} O={output.stats} H={output.histo}"
 

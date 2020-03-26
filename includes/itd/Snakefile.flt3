@@ -43,7 +43,7 @@ rule align_flt3:
     shell:
         "bwa mem -R \'{params.rg}\' -t {threads} -L 2,2 {input.fasta} {input.fq1} {input.fq2}"
         " | samtools view -Sbh -F 0x4 -"
-        " | picard SortSam I=/dev/stdin O={output.bam} SO=coordinate CREATE_INDEX=true"
+        " | picard -Xmx4G SortSam I=/dev/stdin O={output.bam} SO=coordinate CREATE_INDEX=true"
 
 rule detect_flt3:
     input:

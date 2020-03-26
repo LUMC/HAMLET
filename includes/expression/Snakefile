@@ -48,7 +48,7 @@ rule idsort_aln:
     threads: 1
     singularity: containers["picard"]
     shell:
-        "picard SortSam I={input.bam} O={output.bam} SORT_ORDER=queryname"
+        "picard -Xmx4G SortSam I={input.bam} O={output.bam} SORT_ORDER=queryname"
         " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=false TMP_DIR={params.tmp}"
 
 rule count_fragments:
