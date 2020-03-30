@@ -38,12 +38,6 @@
     contains:
       - "singularity version 3"
 
-- name: test-qc-sanity-rattle
-  tags:
-    - sanity
-  command: >
-    python -m rattle
-
 - name: test-qc-single
   tags:
     - integration

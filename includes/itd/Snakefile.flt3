@@ -1,35 +1,41 @@
 from os import path
-from rattle import Run
 
 
-RUN = Run(config)
-
-# Region of interest ~ exon 14-15 in transcript coordinates.
-RUN.set_default_setting("flt3_name", "FLT3-001")
-RUN.set_default_setting("flt3_start", 1787)
-RUN.set_default_setting("flt3_end", 2024)
 
 containers = {
     "bwa-0.7.17-samtools-1.3.1-picard-2.9.2": "docker://quay.io/biocontainers/mulled-v2-1c6be8ad49e4dfe8ab70558e8fb200d7b2fd7509:5900b4e68c4051137fffd99165b00e98f810acae-0",
     "rose": "docker://lumc/rose-dt:0.4"
 }
 
+settings=config["settings"]
+
+# Set the default settings
+def set_default(key, value):
+    """ Set default value for settings """
+    if key not in settings:
+        settings[key] = value
+
+# Region of interest ~ exon 14-15 in transcript coordinates.
+set_default("flt3_name", "FLT3-001")
+set_default("flt3_start", 1787)
+set_default("flt3_end", 2024)
+
 localrules: detect_flt3, plot_itd_flt3
 
 rule all_flt3:
     input:
-        flt3_csv=expand(RUN.output("{sample}/itd/{sample}.flt3.csv"), sample=RUN.samples),
-        flt3_bg_csv=expand(RUN.output("{sample}/itd/{sample}.flt3.bg.csv"), sample=RUN.samples),
-        flt3_plots=expand(RUN.output("{sample}/itd/{sample}.flt3.png"), sample=RUN.samples),
+        flt3_csv=expand("{sample}/itd/{sample}.flt3.csv", sample=config["samples"]),
+        flt3_bg_csv=expand("{sample}/itd/{sample}.flt3.bg.csv", sample=config["samples"]),
+        flt3_plots=expand("{sample}/itd/{sample}.flt3.png", sample=config["samples"]),
 
 rule align_flt3:
     input:
-        fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
-        fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
-        fasta=RUN.settings["flt3_fasta"]
+        fq1="{sample}/{sample}-R1.fq.gz",
+        fq2="{sample}/{sample}-R2.fq.gz",
+        fasta=settings["flt3_fasta"]
     output:
-        bam=RUN.output("{sample}/itd/{sample}.flt3.bam"),
-        bai=RUN.output("{sample}/itd/{sample}.flt3.bai"),
+        bam="{sample}/itd/{sample}.flt3.bam",
+        bai="{sample}/itd/{sample}.flt3.bai",
     params:
         rg="@RG\\tID:{sample}\\tSM:{sample}"
     threads: 3
@@ -37,31 +43,31 @@ rule align_flt3:
     shell:
         "bwa mem -R \'{params.rg}\' -t {threads} -L 2,2 {input.fasta} {input.fq1} {input.fq2}"
         " | samtools view -Sbh -F 0x4 -"
-        " | picard SortSam I=/dev/stdin O={output.bam} SO=coordinate CREATE_INDEX=true"
+        " | picard -Xmx4G SortSam I=/dev/stdin O={output.bam} SO=coordinate CREATE_INDEX=true"
 
 rule detect_flt3:
     input:
-        bam=RUN.output("{sample}/itd/{sample}.flt3.bam"),
-        bai=RUN.output("{sample}/itd/{sample}.flt3.bai"),
-        ref=RUN.settings["flt3_fasta"],
+        bam="{sample}/itd/{sample}.flt3.bam",
+        bai="{sample}/itd/{sample}.flt3.bai",
+        ref=settings["flt3_fasta"],
     output:
-        csv=RUN.output("{sample}/itd/{sample}.flt3.csv"),
-        bg_csv=RUN.output("{sample}/itd/{sample}.flt3.bg.csv"),
+        csv="{sample}/itd/{sample}.flt3.csv",
+        bg_csv="{sample}/itd/{sample}.flt3.bg.csv",
     threads: 1
     params:
-        trx_name=RUN.settings["flt3_name"],
-        start=RUN.settings["flt3_start"],
-        end=RUN.settings["flt3_end"],
+        trx_name=settings["flt3_name"],
+        start=settings["flt3_start"],
+        end=settings["flt3_end"],
     singularity: containers["rose"]
     shell:
         "rose-dt -r {params.trx_name}:{params.start}-{params.end} --bg-counts {output.bg_csv} {input.ref} {input.bam} > {output.csv}"
 
 rule plot_itd_flt3:
     input:
-        csv=RUN.output("{sample}/itd/{sample}.flt3.csv"),
-        bg_csv=RUN.output("{sample}/itd/{sample}.flt3.bg.csv"),
+        csv="{sample}/itd/{sample}.flt3.csv",
+        bg_csv="{sample}/itd/{sample}.flt3.bg.csv",
     output:
-        png=RUN.output("{sample}/itd/{sample}.flt3.png"),
+        png="{sample}/itd/{sample}.flt3.png",
     threads: 1
     singularity: containers["rose"]
     shell:

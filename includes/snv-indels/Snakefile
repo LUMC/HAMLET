@@ -1,15 +1,4 @@
-from rattle import Run
 from os import path
-
-RUN = Run(config)
-
-# TODO: ensure db indices exist
-RUN.set_default_setting("genome_dict", RUN.settings["genome_fasta"].rsplit(".", 1)[0] + ".dict")
-RUN.set_default_setting("extract_script", srcdir(path.join("scripts", "vcf2json.py")))
-RUN.set_default_setting("csv_script", srcdir(path.join("scripts", "json2csv.py")))
-RUN.set_default_setting("plot_script", srcdir(path.join("scripts", "plotVariants.R")))
-RUN.set_default_setting("exon_cov_script", srcdir(path.join("scripts", "aggr_exon_cov.py")))
-RUN.set_default_setting("genome_fai", RUN.settings["genome_fasta"] + ".fai")
 
 # We need the QC-seq output
 include: "../qc-seq/Snakefile"
@@ -29,29 +18,42 @@ containers = {
     "vep": "docker://quay.io/biocontainers/ensembl-vep:97.3--pl526hecc5488_0"
 }
 
+settings=config["settings"]
 
+# Set the default settings
+def set_default(key, value):
+    """ Set default value for settings """
+    if key not in settings:
+        settings[key] = value
+
+set_default("genome_dict", settings["genome_fasta"].rsplit(".", 1)[0] + ".dict")
+set_default("genome_fai", settings["genome_fasta"] + ".fai")
+set_default("exon_cov_script", srcdir(path.join("scripts", "aggr_exon_cov.py")))
+set_default("extract_script", srcdir(path.join("scripts", "vcf2json.py")))
+set_default("csv_script", srcdir(path.join("scripts", "json2csv.py")))
+set_default("plot_script", srcdir(path.join("scripts", "plotVariants.R")))
 
 rule all_snv_indels:
     input:
-        plots_mark=expand(RUN.output("{sample}/snv-indels/variant_plots/.done"), sample=RUN.samples),
-        stats=expand(RUN.output("{sample}/snv-indels/{sample}.aln_stats"), sample=RUN.samples),
-        var_json=expand(RUN.output("{sample}/snv-indels/{sample}.variants.json"), sample=RUN.samples),
-        cov_json=expand(RUN.output("{sample}/snv-indels/{sample}.exon_cov_stats.json"), sample=RUN.samples),
-        insert_stats=expand(RUN.output("{sample}/snv-indels/{sample}.insert_stats"), sample=RUN.samples),
-        insert_histo=expand(RUN.output("{sample}/snv-indels/{sample}.insert_stats.pdf"), sample=RUN.samples),
-        rna_stats=expand(RUN.output("{sample}/snv-indels/{sample}.rna_stats"), sample=RUN.samples),
-        rna_histo=expand(RUN.output("{sample}/snv-indels/{sample}.rna_stats.pdf"), sample=RUN.samples),
-        all_csv=expand(RUN.output("{sample}/snv-indels/{sample}.variants_all.csv"), sample=RUN.samples),
-        high_csv=expand(RUN.output("{sample}/snv-indels/{sample}.variants_hi.csv"), sample=RUN.samples),
+        plots_mark=expand("{sample}/snv-indels/variant_plots/.done", sample=config["samples"]),
+        stats=expand("{sample}/snv-indels/{sample}.aln_stats", sample=config["samples"]),
+        var_json=expand("{sample}/snv-indels/{sample}.variants.json", sample=config["samples"]),
+        cov_json=expand("{sample}/snv-indels/{sample}.exon_cov_stats.json", sample=config["samples"]),
+        insert_stats=expand("{sample}/snv-indels/{sample}.insert_stats", sample=config["samples"]),
+        insert_histo=expand("{sample}/snv-indels/{sample}.insert_stats.pdf", sample=config["samples"]),
+        rna_stats=expand("{sample}/snv-indels/{sample}.rna_stats", sample=config["samples"]),
+        rna_histo=expand("{sample}/snv-indels/{sample}.rna_stats.pdf", sample=config["samples"]),
+        all_csv=expand("{sample}/snv-indels/{sample}.variants_all.csv", sample=config["samples"]),
+        high_csv=expand("{sample}/snv-indels/{sample}.variants_hi.csv", sample=config["samples"])
 
 
 rule align_vars:
     input:
-        fq1=RUN.output("{sample}/{sample}-R1.fq.gz"),
-        fq2=RUN.output("{sample}/{sample}-R2.fq.gz"),
-        index=RUN.settings["genome_gmap_index"],
+        fq1="{sample}/{sample}-R1.fq.gz",
+        fq2="{sample}/{sample}-R2.fq.gz",
+        index=settings["genome_gmap_index"],
     output:
-        sam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.sam")),
+        sam=temp("{sample}/snv-indels/{sample}.snv-indel.raw.sam"),
     params:
         rg_sample="{sample}"
     threads: 8
@@ -65,40 +67,40 @@ rule align_vars:
 
 rule sort_bamfile:
     input:
-        sam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.raw.sam"),
+        sam="{sample}/snv-indels/{sample}.snv-indel.raw.sam",
     output:
-        bam=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bam")),
-        bai=temp(RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bai")),
+        bam=temp("{sample}/snv-indels/{sample}.snv-indel.sort.bam"),
+        bai=temp("{sample}/snv-indels/{sample}.snv-indel.sort.bai"),
     params:
-        tmp=temp(RUN.output("tmp")),
+        tmp=temp("tmp"),
     singularity: containers["picard"]
     shell:
-        "picard SortSam I={input.sam} O={output.bam} SORT_ORDER=coordinate "
+        "picard -Xmx4G SortSam I={input.sam} O={output.bam} SORT_ORDER=coordinate "
         "VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true TMP_DIR={params.tmp}"
 
 
 rule reorder_aln_header:
     input:
-        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bam"),
-        bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.sort.bai"),
-        ref=RUN.settings["genome_fasta"],
-        refd=RUN.settings["genome_dict"],
+        bam="{sample}/snv-indels/{sample}.snv-indel.sort.bam",
+        bai="{sample}/snv-indels/{sample}.snv-indel.sort.bai",
+        ref=settings["genome_fasta"],
+        refd=settings["genome_dict"],
     output:
-        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
-        bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
+        bam="{sample}/snv-indels/{sample}.snv-indel.bam",
+        bai="{sample}/snv-indels/{sample}.snv-indel.bai",
     params:
         rg_sample="{sample}"
     threads: 1
     singularity: containers["picard"]
     shell:
-        "picard -Xmx3G ReorderSam I={input.bam} O={output.bam} R={input.ref}"
+        "picard -Xmx4G ReorderSam I={input.bam} O={output.bam} R={input.ref}"
         " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true"
 
 rule genome_txt:
     input:
-        ref_dict=RUN.settings["genome_dict"],
+        ref_dict=settings["genome_dict"],
     output:
-        genome=temp(RUN.output(".tmp.genome.txt"))
+        genome=temp(".tmp.genome.txt")
     singularity: containers["debian"]
     shell:
         " cat {input.ref_dict}"
@@ -110,10 +112,10 @@ rule genome_txt:
 
 rule exon_cov_ref:
     input:
-        ref_fai=RUN.settings["genome_fai"],
-        ref_refflat=RUN.settings["annotation_refflat"],
+        ref_fai=settings["genome_fai"],
+        ref_refflat=settings["annotation_refflat"],
     output:
-        bed=temp(RUN.output(".tmp.exon_cov_ref.bed"))
+        bed=temp(".tmp.exon_cov_ref.bed")
     singularity: containers["bedtools-2.27-grep-2.14-gawk-5.0-click-7-python-3.7"]
     shell:
         "cat {input.ref_refflat}"
@@ -124,13 +126,13 @@ rule exon_cov_ref:
 
 rule exon_cov:
     input:
-        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
-        bed=RUN.output(".tmp.exon_cov_ref.bed"),
-        genome=RUN.output(".tmp.genome.txt"),
-        idm=RUN.settings["ref_id_mapping"],
-        scr=RUN.settings["exon_cov_script"]
+        bam="{sample}/snv-indels/{sample}.snv-indel.bam",
+        bed=".tmp.exon_cov_ref.bed",
+        genome=".tmp.genome.txt",
+        idm=settings["ref_id_mapping"],
+        scr=settings["exon_cov_script"]
     output:
-        json=RUN.output("{sample}/snv-indels/{sample}.exon_cov_stats.json")
+        json="{sample}/snv-indels/{sample}.exon_cov_stats.json"
     singularity: containers["bedtools-2.27-grep-2.14-gawk-5.0-click-7-python-3.7"]
     shell:
         "bedtools coverage -d -sorted -g {input.genome} -a {input.bed} -b {input.bam}"
@@ -139,10 +141,10 @@ rule exon_cov:
 
 rule call_vars:
     input:
-        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
-        ref=RUN.settings["genome_fasta"],
+        bam="{sample}/snv-indels/{sample}.snv-indel.bam",
+        ref=settings["genome_fasta"],
     output:
-        vcf=RUN.output("{sample}/snv-indels/{sample}.raw.vcf.gz")
+        vcf="{sample}/snv-indels/{sample}.raw.vcf.gz"
     threads: 3
     singularity: containers["varscan-2.4.2-samtools-1.3.1-tabix-0.2.6-grep-2.14"]
     shell:
@@ -154,46 +156,46 @@ rule call_vars:
 
 rule aln_stats:
     input:
-        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
-        bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
-        ref=RUN.settings["genome_fasta"],
-        ref_dict=RUN.settings["genome_dict"],
+        bam="{sample}/snv-indels/{sample}.snv-indel.bam",
+        bai="{sample}/snv-indels/{sample}.snv-indel.bai",
+        ref=settings["genome_fasta"],
+        ref_dict=settings["genome_dict"],
     output:
-        stats=RUN.output("{sample}/snv-indels/{sample}.aln_stats")
+        stats="{sample}/snv-indels/{sample}.aln_stats"
     threads: 1
     singularity: containers["picard"]
     shell:
-        "picard -Xmx2G CollectAlignmentSummaryMetrics"
+        "picard -Xmx4G CollectAlignmentSummaryMetrics"
         " VALIDATION_STRINGENCY=LENIENT"
         " R={input.ref} I={input.bam} O={output.stats}"
 
 rule insert_stats:
     input:
-        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
-        bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
-        ref=RUN.settings["genome_fasta"],
-        ref_dict=RUN.settings["genome_dict"],
+        bam="{sample}/snv-indels/{sample}.snv-indel.bam",
+        bai="{sample}/snv-indels/{sample}.snv-indel.bai",
+        ref=settings["genome_fasta"],
+        ref_dict=settings["genome_dict"],
     output:
-        stats=RUN.output("{sample}/snv-indels/{sample}.insert_stats"),
-        histo=RUN.output("{sample}/snv-indels/{sample}.insert_stats.pdf")
+        stats="{sample}/snv-indels/{sample}.insert_stats",
+        histo="{sample}/snv-indels/{sample}.insert_stats.pdf",
     threads: 1
     singularity: containers["picard"]
     shell:
-        "picard -Xmx2G CollectInsertSizeMetrics"
+        "picard -Xmx4G CollectInsertSizeMetrics"
         " VALIDATION_STRINGENCY=LENIENT"
         " R={input.ref} I={input.bam} O={output.stats} H={output.histo}"
 
 rule rna_stats:
     input:
-        bam=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bam"),
-        bai=RUN.output("{sample}/snv-indels/{sample}.snv-indel.bai"),
-        ref=RUN.settings["genome_fasta"],
-        ref_dict=RUN.settings["genome_dict"],
-        ref_rrna=RUN.settings["rrna_refflat"],
-        annot=RUN.settings["annotation_refflat"],
+        bam="{sample}/snv-indels/{sample}.snv-indel.bam",
+        bai="{sample}/snv-indels/{sample}.snv-indel.bai",
+        ref=settings["genome_fasta"],
+        ref_dict=settings["genome_dict"],
+        ref_rrna=settings["rrna_refflat"],
+        annot=settings["annotation_refflat"],
     output:
-        stats=RUN.output("{sample}/snv-indels/{sample}.rna_stats"),
-        histo=RUN.output("{sample}/snv-indels/{sample}.rna_stats.pdf"),
+        stats="{sample}/snv-indels/{sample}.rna_stats",
+        histo="{sample}/snv-indels/{sample}.rna_stats.pdf",
     threads: 1
     singularity: containers["picard"]
     shell:
@@ -206,14 +208,14 @@ rule rna_stats:
 
 rule annotate_vars:
     input:
-        vcf=RUN.output("{sample}/snv-indels/{sample}.raw.vcf.gz"),
-        ref_1kg=RUN.settings["vcf_1kg"],
-        ref_gonl=RUN.settings["vcf_gonl"],
-        cache_vep=RUN.settings["cache_vep"],
-        fasta_vep=RUN.settings["fasta_vep"],
+        vcf="{sample}/snv-indels/{sample}.raw.vcf.gz",
+        ref_1kg=settings["vcf_1kg"],
+        ref_gonl=settings["vcf_gonl"],
+        cache_vep=settings["cache_vep"],
+        fasta_vep=settings["fasta_vep"],
     output:
-        vcf=RUN.output("{sample}/snv-indels/{sample}.annotated.vcf.gz"),
-        stats=RUN.output("{sample}/snv-indels/{sample}.vep_stats.txt"),
+        vcf="{sample}/snv-indels/{sample}.annotated.vcf.gz",
+        stats="{sample}/snv-indels/{sample}.vep_stats.txt",
     threads: 8
     singularity: containers["vep"]
     shell:
@@ -227,12 +229,12 @@ rule annotate_vars:
 
 rule extract_vars:
     input:
-        vcf=RUN.output("{sample}/snv-indels/{sample}.annotated.vcf.gz"),
-        ref_hotspots=RUN.settings["bed_variant_hotspots"],
-        ref_id_mapping=RUN.settings["ref_id_mapping"],
-        scr=RUN.settings["extract_script"],
+        vcf="{sample}/snv-indels/{sample}.annotated.vcf.gz",
+        ref_hotspots=settings["bed_variant_hotspots"],
+        ref_id_mapping=settings["ref_id_mapping"],
+        scr=settings["extract_script"],
     output:
-        json=RUN.output("{sample}/snv-indels/{sample}.variants.json"),
+        json="{sample}/snv-indels/{sample}.variants.json",
     threads: 1
     singularity: containers["hamlet-scripts"]
     shell:
@@ -241,10 +243,10 @@ rule extract_vars:
 
 rule table_vars_all:
     input:
-        json=RUN.output("{sample}/snv-indels/{sample}.variants.json"),
-        scr=RUN.settings["csv_script"],
+        json="{sample}/snv-indels/{sample}.variants.json",
+        scr=settings["csv_script"],
     output:
-        csv=RUN.output("{sample}/snv-indels/{sample}.variants_all.csv"),
+        csv="{sample}/snv-indels/{sample}.variants_all.csv",
     threads: 1
     singularity: containers["hamlet-scripts"]
     shell:
@@ -252,10 +254,10 @@ rule table_vars_all:
 
 rule table_vars_hi:
     input:
-        json=RUN.output("{sample}/snv-indels/{sample}.variants.json"),
-        scr=RUN.settings["csv_script"],
+        json="{sample}/snv-indels/{sample}.variants.json",
+        scr=settings["csv_script"],
     output:
-        csv=RUN.output("{sample}/snv-indels/{sample}.variants_hi.csv"),
+        csv="{sample}/snv-indels/{sample}.variants_hi.csv",
     threads: 1
     singularity: containers["hamlet-scripts"]
     shell:
@@ -263,16 +265,16 @@ rule table_vars_hi:
 
 rule plot_vars:
     input:
-        json=RUN.output("{sample}/snv-indels/{sample}.variants.json"),
-        scr=RUN.settings["plot_script"],
-        ref_id_mapping=RUN.settings["ref_id_mapping"],
-        ref_hotspots=RUN.settings["bed_variant_hotspots"],
-        ref_amplicons=RUN.settings["ref_amplicons"],
-        ref_annot_goi=RUN.settings["ref_annot_goi"],
+        json="{sample}/snv-indels/{sample}.variants.json",
+        scr=settings["plot_script"],
+        ref_id_mapping=settings["ref_id_mapping"],
+        ref_hotspots=settings["bed_variant_hotspots"],
+        ref_amplicons=settings["ref_amplicons"],
+        ref_annot_goi=settings["ref_annot_goi"],
     params:
-        plotd=RUN.output("{sample}/snv-indels/variant_plots"),
+        plotd="{sample}/snv-indels/variant_plots",
     output:
-        plots_mark=RUN.output("{sample}/snv-indels/variant_plots/.done"),
+        plots_mark="{sample}/snv-indels/variant_plots/.done",
     threads: 1
     singularity: containers["hamlet-scripts"]
     shell:

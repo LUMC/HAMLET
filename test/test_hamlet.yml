@@ -56,12 +56,6 @@
     contains:
       - "singularity version 3"
 
-- name: test-hamlet-sanity-rattle
-  tags:
-    - sanity
-  command: >
-    python -m rattle
-
 - name: test-hamlet-frankenstein-integration
   tags:
     - integration

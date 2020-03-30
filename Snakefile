@@ -4,27 +4,6 @@ from os.path import dirname
 from uuid import uuid4
 
 import git
-from rattle import Run
-
-
-BASE_PIPELINE_VERSION = "0.1.0"
-try:
-    repo = git.Repo(path=srcdir(""), search_parent_directories=True)
-except git.exc.InvalidGitRepositoryError:
-    repo = None
-    sha = "unknown"
-    is_dirty = "?"
-else:
-    sha = repo.head.object.hexsha[:8]
-    is_dirty = "*" if repo.is_dirty() else ""
-
-PIPELINE_VERSION = f"{BASE_PIPELINE_VERSION}-{sha}{is_dirty}"
-
-
-RUN = Run(config)
-
-RUN_NAME = RUN.settings.get("run_name") or f"hamlet-{uuid4().hex[:8]}"
-
 
 include: "includes/qc-seq/Snakefile"
 include: "includes/snv-indels/Snakefile"
@@ -41,10 +20,28 @@ containers = {
     "zip": "docker://lumc/zip:3.0"
 }
 
+settings=config["settings"]
+
+# Get run name and pipeline version
+BASE_PIPELINE_VERSION = "0.1.0"
+
+try:
+    repo = git.Repo(path=srcdir(""), search_parent_directories=True)
+except git.exc.InvalidGitRepositoryError:
+    repo = None
+    sha = "unknown"
+    is_dirty = "?"
+else:
+    sha = repo.head.object.hexsha[:8]
+    is_dirty = "*" if repo.is_dirty() else ""
+
+PIPELINE_VERSION = f"{BASE_PIPELINE_VERSION}-{sha}{is_dirty}"
+RUN_NAME = settings.get("run_name") or f"hamlet-{uuid4().hex[:8]}"
+
+
 def make_pattern(extension, dirname):
     """Helper function to create a wildcard-containing path for output files."""
     return f"{{sample}}/{dirname}/{{sample}}{extension}"
-
 
 seqqc_output = partial(make_pattern, dirname="qc-seq")
 var_output = partial(make_pattern, dirname="snv-indels")
@@ -106,34 +103,34 @@ OUTPUTS = dict(
 
 rule all:
     input:
-        [expand(RUN.output(p), sample=RUN.samples, pair={"R1", "R2"})
+        [expand(p, sample=config["samples"], pair={"R1", "R2"})
          for p in OUTPUTS.values()]
 
 
 rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""
     input:
-        seq_stats=RUN.output(OUTPUTS["seq_stats"]),
-        aln_stats=RUN.output(OUTPUTS["aln_stats"]),
-        rna_stats=RUN.output(OUTPUTS["rna_stats"]),
-        insert_stats=RUN.output(OUTPUTS["insert_stats"]),
-        vep_stats=RUN.output(OUTPUTS["vep_stats"]),
-        exon_cov_stats=RUN.output(OUTPUTS["exon_cov_stats"]),
-        idm=RUN.settings["ref_id_mapping"],
-        var_plots=RUN.output(OUTPUTS["smallvars_plots"]),
-        var_csv=RUN.output(OUTPUTS["smallvars_csv_hi"]),
-        fusions_svg=RUN.output(OUTPUTS["fusions_svg"]),
-        flt3_plot=RUN.output(OUTPUTS["flt3_png"]),
-        kmt2a_plot=RUN.output(OUTPUTS["kmt2a_png"]),
-        flt3_csv=RUN.output(OUTPUTS["flt3_csv"]),
-        kmt2a_csv=RUN.output(OUTPUTS["kmt2a_csv"]),
-        exon_ratios=RUN.output(OUTPUTS["ratio_exons"]),
+        seq_stats=OUTPUTS["seq_stats"],
+        aln_stats=OUTPUTS["aln_stats"],
+        rna_stats=OUTPUTS["rna_stats"],
+        insert_stats=OUTPUTS["insert_stats"],
+        vep_stats=OUTPUTS["vep_stats"],
+        exon_cov_stats=OUTPUTS["exon_cov_stats"],
+        idm=settings["ref_id_mapping"],
+        var_plots=OUTPUTS["smallvars_plots"],
+        var_csv=OUTPUTS["smallvars_csv_hi"],
+        fusions_svg=OUTPUTS["fusions_svg"],
+        flt3_plot=OUTPUTS["flt3_png"],
+        kmt2a_plot=OUTPUTS["kmt2a_png"],
+        flt3_csv=OUTPUTS["flt3_csv"],
+        kmt2a_csv=OUTPUTS["kmt2a_csv"],
+        exon_ratios=OUTPUTS["ratio_exons"],
         scr=srcdir("scripts/create_summary.py"),
     params:
         pipeline_ver=PIPELINE_VERSION,
         run_name=RUN_NAME,
     output:
-        js=RUN.output(OUTPUTS["summary"])
+        js=OUTPUTS["summary"]
     singularity: containers["fsnviz"]
     shell:
         "python {input.scr}"
@@ -154,14 +151,14 @@ rule create_summary:
 rule generate_report:
     """Generates a PDF report of the essential results."""
     input:
-        summary=RUN.output(OUTPUTS["summary"]),
+        summary=OUTPUTS["summary"],
         css=srcdir("report/assets/style.css"),
         templates=srcdir("report/templates"),
         imgs=srcdir("report/assets/img"),
         toc=srcdir("report/assets/toc.xsl"),
         scr=srcdir("scripts/generate_report.py"),
     output:
-        pdf=RUN.output(OUTPUTS["reportje"]),
+        pdf=OUTPUTS["reportje"],
     singularity: containers["hamlet-scripts"]
     shell:
         "python3 {input.scr}"
@@ -173,26 +170,26 @@ rule generate_report:
 rule package_results:
     """Copies essential result files into one directory and zips it."""
     input:
-        summary=RUN.output(OUTPUTS["summary"]),
-        smallvars_csv_all=RUN.output(OUTPUTS["smallvars_csv_all"]),
-        smallvars_csv_hi=RUN.output(OUTPUTS["smallvars_csv_hi"]),
-        smallvars_plots=RUN.output((OUTPUTS["smallvars_plots"])),
-        fusions_svg=RUN.output(OUTPUTS["fusions_svg"]),
-        count_fragments_per_gene=RUN.output(OUTPUTS["count_fragments_per_gene"]),
-        count_bases_per_gene=RUN.output(OUTPUTS["count_bases_per_gene"]),
-        count_bases_per_exon=RUN.output(OUTPUTS["count_bases_per_exon"]),
-        ratio_exons=RUN.output(OUTPUTS["ratio_exons"]),
-        flt_csv=RUN.output(OUTPUTS["flt3_csv"]),
-        flt_bg_csv=RUN.output(OUTPUTS["flt3_bg_csv"]),
-        flt_png=RUN.output(OUTPUTS["flt3_png"]),
-        kmt_csv=RUN.output(OUTPUTS["kmt2a_csv"]),
-        kmt_bg_csv=RUN.output(OUTPUTS["kmt2a_bg_csv"]),
-        kmt_png=RUN.output(OUTPUTS["kmt2a_png"]),
-        reportje=RUN.output(OUTPUTS["reportje"]),
+        summary=OUTPUTS["summary"],
+        smallvars_csv_all=OUTPUTS["smallvars_csv_all"],
+        smallvars_csv_hi=OUTPUTS["smallvars_csv_hi"],
+        smallvars_plots=OUTPUTS["smallvars_plots"],
+        fusions_svg=OUTPUTS["fusions_svg"],
+        count_fragments_per_gene=OUTPUTS["count_fragments_per_gene"],
+        count_bases_per_gene=OUTPUTS["count_bases_per_gene"],
+        count_bases_per_exon=OUTPUTS["count_bases_per_exon"],
+        ratio_exons=OUTPUTS["ratio_exons"],
+        flt_csv=OUTPUTS["flt3_csv"],
+        flt_bg_csv=OUTPUTS["flt3_bg_csv"],
+        flt_png=OUTPUTS["flt3_png"],
+        kmt_csv=OUTPUTS["kmt2a_csv"],
+        kmt_bg_csv=OUTPUTS["kmt2a_bg_csv"],
+        kmt_png=OUTPUTS["kmt2a_png"],
+        reportje=OUTPUTS["reportje"],
     output:
-        pkg=RUN.output(OUTPUTS["package"]),
+        pkg=OUTPUTS["package"],
     params:
-        tmp=RUN.output("tmp/hamlet-pkg.{sample}." + str(uuid4()) + "/hamlet_results.{sample}")
+        tmp="tmp/hamlet-pkg.{sample}." + str(uuid4()) + "/hamlet_results.{sample}"
     singularity: containers["zip"]
     shell:
         "(mkdir -p {params.tmp}"

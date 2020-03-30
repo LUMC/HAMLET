@@ -58,12 +58,6 @@
     contains:
       - "singularity version 3"
 
-- name: test-expression-sanity-rattle
-  tags:
-    - sanity
-  command: >
-    python -m rattle
-
 - name: test-expression-integration-HEL
   tags:
     - integration
