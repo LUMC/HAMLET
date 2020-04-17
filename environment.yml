@@ -8,5 +8,5 @@ channels:
   - defaults
 dependencies:
  - pytest-workflow
- - python=3.6
+ - python>3.6
  - snakemake=5.9
