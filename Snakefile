@@ -23,7 +23,13 @@ containers = {
 settings=config["settings"]
 
 # Get run name and pipeline version
-BASE_PIPELINE_VERSION = "0.1.0"
+def find_repo_tag(repo):
+    """ Return the tag of head, or None """
+    for tag in repo.tags:
+        if tag.commit == repo.head.commit:
+            return tag
+    else:
+        return None
 
 try:
     repo = git.Repo(path=srcdir(""), search_parent_directories=True)
@@ -31,11 +37,13 @@ except git.exc.InvalidGitRepositoryError:
     repo = None
     sha = "unknown"
     is_dirty = "?"
+    tag = None
 else:
     sha = repo.head.object.hexsha[:8]
     is_dirty = "*" if repo.is_dirty() else ""
+    tag = find_repo_tag(repo) or repo.head.reference.name
 
-PIPELINE_VERSION = f"{BASE_PIPELINE_VERSION}-{sha}{is_dirty}"
+PIPELINE_VERSION = f"HAMLET-{tag}-{sha}{is_dirty}"
 RUN_NAME = settings.get("run_name") or f"hamlet-{uuid4().hex[:8]}"
 
 
