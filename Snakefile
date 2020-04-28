@@ -24,12 +24,36 @@ settings=config["settings"]
 
 # Get run name and pipeline version
 def find_repo_tag(repo):
-    """ Return the tag of head, or None """
+    """ Return the tag of head, or the branch we are on"""
+    # First we try to find a tag
     for tag in repo.tags:
         if tag.commit == repo.head.commit:
             return tag
+
+    # If that fails, we return the branch we are on, unless we are in a
+    # detached head state
+    if not repo.head.is_detached:
+        return repo.head.reference.name
+
+    # If we are in a detached head state, we have to search which branch
+    # has the commit we are on
     else:
-        return None
+        branches = repo.git.branch('--contains', repo.head.commit).split('\n')
+        # Cut of first two characters of the output of the command
+        # git branch --contains COMMIT_HASH
+        branches = [branch[2:] for branch in branches]
+        # Remove the current detached branch we are on
+        branches = [branch for branch in branches
+                    if not branch.startswith('(detached from ')]
+        # If the current commit is in master, return master
+        if 'master' in branches:
+            return 'master'
+        # If the current commit is in devel, return devel
+        if 'devel' in branches:
+            return 'devel'
+        # Otherwise, just return any of the branches
+        else:
+            return branches[0]
 
 try:
     repo = git.Repo(path=srcdir(""), search_parent_directories=True)
@@ -41,7 +65,7 @@ except git.exc.InvalidGitRepositoryError:
 else:
     sha = repo.head.object.hexsha[:8]
     is_dirty = "*" if repo.is_dirty() else ""
-    tag = find_repo_tag(repo) or repo.head.reference.name
+    tag = find_repo_tag(repo)
 
 PIPELINE_VERSION = f"HAMLET-{tag}-{sha}{is_dirty}"
 RUN_NAME = settings.get("run_name") or f"hamlet-{uuid4().hex[:8]}"
