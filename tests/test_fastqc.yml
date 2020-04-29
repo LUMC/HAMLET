@@ -1,0 +1,6 @@
+- name: FastQC
+  tags:
+    - qc-seq
+  command: 'snakemake --use-conda --conda-prefix ~/tmp/conda -s Snakefile --configfile tests/config-test.json hamlet-output/TestSample/qc-seq/rg_1/TestSample-rg_1.cts-stats.json'
+  files:
+    - path: "hamlet-output/TestSample/qc-seq/rg_1/TestSample-rg_1.cts-stats.json"
