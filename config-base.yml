@@ -5,9 +5,6 @@
 
 settings:
 
-  # The directory in which all output files will be created.
-  #output_dir:
-
   # Name of the run; if not supplied will be set to 'hamlet-{8_random_chars}'
   #run_name:
 
@@ -73,21 +70,8 @@ settings:
   # kmt2a_start: 456
   # kmt2a_end: 4719
 
-  # Path to the `rose-dt` executable used for detection of FLT3 ITD.
-  #rose_dt_exe:
-
-  # Path to the `rose-dt-plot.py` script used for plotting FLT3 ITD detection results.
-  #plot_itd:
-
-  # Path to the conda environment file specifying the `fidus-plot.py` script dependencies.
-  #plot_itd_conda:
-
   # STAR aligner index of the genome.
   #genome_star_index:
-
-  # Path to FusionCatcher executable.
-  # This is unfortunately required since FusionCatcher is not available in Conda so we have to install it beforehand.
-  #fusioncatcher_exe:
 
   # Path to GSNAP executable, required to reproduce paper results
   #gsnap_exe:

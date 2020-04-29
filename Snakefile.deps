@@ -1,0 +1,149 @@
+from snakemake.remote.NCBI import RemoteProvider as NCBIRemoteProvider
+import os
+NCBI = NCBIRemoteProvider(email='RedmarvandenBerg@lumc.nl')
+
+output_dir = '/tmp/deps'
+temp_dir = '/tmp/temp'
+
+#### SETTINGS ####
+ctat_resource = 'https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/__genome_libs_pre-StarFv1.3/GRCh38_gencode_v26_CTAT_lib_July192017.source_data.tar.gz'
+ctat_resource_tar_gz = ctat_resource.split('/')[-1]
+ctat_resource_folder = ctat_resource_tar_gz.split('.')[0]
+
+gsnap = 'http://research-pub.gene.com/gmap/src/gmap-gsnap-2014-12-31.v2.tar.gz'
+gsnap_tar_gz = gsnap.split('/')[-1]
+gsnap_folder = 'gmap-2014-12-31'
+
+gmap_index = 'ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz'
+gmap_gz = gmap_index.split('/')[-1]
+
+# GRCH38_no_alt_analysis_set, see the readme for details
+# https://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/README_ANALYSIS_SETS
+GRCH38_no_alt_analysis_set_url = 'ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines'
+GRCH38_no_alt_analysis_set_filename = os.path.join(GRCH38_no_alt_analysis_set_url, 'GCA_000001405.15_GRCh38_no_alt_analysis_set')
+GRCH38_no_alt_analysis_set_fasta_gz = f'{GRCH38_no_alt_analysis_set_filename}.fna.gz'
+GRCH38_no_alt_analysis_set_fasta = f'{GRCH38_no_alt_analysis_set_filename}.fna'
+GRCH38_no_alt_analysis_set_fai = f'{GRCH38_no_alt_analysis_set_filename}.fna.fai'
+GRCH38_no_alt_analysis_set_dict = f'{GRCH38_no_alt_analysis_set_filename}.dict'
+
+
+#### RULES ####
+rule all:
+    input:
+        #f'{output_dir}/FLT3.fasta',
+        #f'{output_dir}/KMT2A.fasta',
+        f'{output_dir}/{ctat_resource_folder}',
+        #f'{output_dir}/{gsnap_folder}',
+        f'{output_dir}/{gsnap_folder}/bin/gsnap',
+        #f'{output_dir}/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna'
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta_gz)}',
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fai)}',
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta)}',
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_dict)}'
+
+rule download_flt3:
+    input:
+        NCBI.remote('NM_004119.2.fasta', db='nuccore')
+    output:
+        f'{output_dir}/FLT3.fasta'
+    run:
+        shell('sleep 5s; cp {input} {output}')
+
+rule download_kmt2a:
+    input:
+        NCBI.remote('NM_001197104.1.fasta', db='nuccore')
+    output:
+        f'{output_dir}/KMT2A.fasta'
+    run:
+        shell('sleep 5s; cp {input} {output}')
+
+rule download_genome_star_fusion_lib:
+    params:
+        ctat_resource
+    output:
+        f'{temp_dir}/GRCh38_gencode_v26_CTAT_lib_July192017.source_data.tar.gz'
+    run:
+        shell('mkdir -p {temp_dir} && wget {params} --output-document={output}')
+
+rule unpack_genome_star_fusion_lib:
+    input:
+        f'{temp_dir}/{ctat_resource_tar_gz}'
+    output:
+        f'{output_dir}/{ctat_resource_folder}'
+    run:
+        shell('tar -zxvf {input} -C {output_dir}')
+
+rule download_SIMD_gsnap:
+    params:
+        gsnap
+    output:
+        f'{temp_dir}/{gsnap_tar_gz}'
+    run:
+        shell('mkdir -p {temp_dir} && wget {params} --output-document={output}')
+
+rule unpack_SIMD_gsnap:
+    input:
+        f'{temp_dir}/{gsnap_tar_gz}'
+    output:
+        f'{output_dir}/{gsnap_folder}'
+    run:
+        shell('tar -zxvf {input} -C {output_dir}')
+
+rule compile_SIMD_gsnap:
+    input:
+        f'{output_dir}/{gsnap_folder}'
+    output:
+        f'{output_dir}/{gsnap_folder}/bin/gsnap'
+    run:
+        shell('cd {input} && ./configure --prefix {input} && make && make install')
+
+rule download_gmap_index:
+    params:
+        gmap_index
+    output:
+        f'{temp_dir}/{gmap_gz}'
+    run:
+        shell('mkdir -p {temp_dir} && wget {params} --output-document={output}')
+
+rule build_gmap_index:
+    input:
+        gzip = f'{temp_dir}/{gmap_gz}',
+        gmap_bin = f'{output_dir}/{gsnap_folder}/bin'
+    output:
+        f'{output_dir}/GCA_000001405.15_GRCh38_no_alt_analysis_set.sources'
+    run:
+        shell('{input.gmap_bin}/gmap_build -D {output_dir} -d GCA_000001405.15_GRCh38_no_alt_analysis_set -g {input.gzip} -B {input.gmap_bin}')
+
+rule download_GRCH38_no_alt_fasta:
+    params:
+        GRCH38_no_alt_analysis_set_fasta_gz
+    output:
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta_gz)}'
+    run:
+        shell('wget {params} --output-document={output}')
+
+rule unpack_GRCH38_no_alt:
+    input:
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta_gz)}'
+    output:
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta)}'
+    run:
+        shell('gunzip --decompress --keep --to-stdout {input} > {output}')
+
+rule download_GRCH38_no_alt_fai:
+    params:
+        GRCH38_no_alt_analysis_set_fai
+    output:
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fai)}'
+    run:
+        shell('wget {params} --output-document={output}')
+
+rule picard_index_GRCH38_no_alt:
+    input:
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_fasta)}'
+    output:
+        f'{output_dir}/{os.path.basename(GRCH38_no_alt_analysis_set_dict)}'
+    conda:
+        srcdir('includes/snv-indels/envs/align_vars.yml')
+    shell:
+        'picard CreateSequenceDictionary R={input} O={output}'

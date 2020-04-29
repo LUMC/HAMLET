@@ -4,27 +4,6 @@ from os.path import dirname
 from uuid import uuid4
 
 import git
-from rattle import Run
-
-
-BASE_PIPELINE_VERSION = "0.1.0"
-try:
-    repo = git.Repo(path=srcdir(""), search_parent_directories=True)
-except git.exc.InvalidGitRepositoryError:
-    repo = None
-    sha = "unknown"
-    is_dirty = "?"
-else:
-    sha = repo.head.object.hexsha[:8]
-    is_dirty = "*" if repo.is_dirty() else ""
-
-PIPELINE_VERSION = f"{BASE_PIPELINE_VERSION}-{sha}{is_dirty}"
-
-
-RUN = Run(config)
-
-RUN_NAME = RUN.settings.get("run_name") or f"hamlet-{uuid4().hex[:8]}"
-
 
 include: "includes/qc-seq/Snakefile"
 include: "includes/snv-indels/Snakefile"
@@ -32,11 +11,81 @@ include: "includes/fusion/Snakefile"
 include: "includes/expression/Snakefile"
 include: "includes/itd/Snakefile"
 
+localrules: create_summary, generate_report, package_results
+
+containers = {
+    "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py_3",
+    "hamlet-scripts": "docker://lumc/hamlet-scripts:0.3",
+    "debian": "docker://debian:buster-slim",
+    "zip": "docker://lumc/zip:3.0"
+}
+
+settings=config["settings"]
+
+# Get run name and pipeline version
+def find_repo_tag(repo):
+    """ Return the tag of head, or the branch we are on"""
+    # First we try to find a tag
+    for tag in repo.tags:
+        if tag.commit == repo.head.commit:
+            return tag
+
+    # If that fails, we return the branch we are on, unless we are in a
+    # detached head state
+    if not repo.head.is_detached:
+        return repo.head.reference.name
+
+    # If we are in a detached head state, we have to search which branch
+    # has the commit we are on
+    else:
+        branches = repo.git.branch('--contains', repo.head.commit).split('\n')
+        # Cut of first two characters of the output of the command
+        # git branch --contains COMMIT_HASH
+        branches = [branch[2:] for branch in branches]
+        # Remove the current detached branch we are on
+        branches = [branch for branch in branches
+                    if not branch.startswith('(detached from ')]
+        # If the current commit is in master, return master
+        if 'master' in branches:
+            return 'master'
+        # If the current commit is in devel, return devel
+        if 'devel' in branches:
+            return 'devel'
+        # Otherwise, just return any of the branches after cleaning up all
+        # special characters
+        else:
+            # Replace space by underscore
+            branch = branches[0].replace(' ', '_')
+            # Remove all other special characters
+            branch = ''.join([c for c in branch if c.isalnum() or c == '_'])
+            return branch
+
+def find_head_name(repo):
+    """ Return the name of head, or None """
+    try:
+        return repo.head.reference.name
+    except TypeError:
+        return None
+
+try:
+    repo = git.Repo(path=srcdir(""), search_parent_directories=True)
+except git.exc.InvalidGitRepositoryError:
+    repo = None
+    sha = "unknown"
+    is_dirty = "?"
+    tag = None
+else:
+    sha = repo.head.object.hexsha[:8]
+    is_dirty = "*" if repo.is_dirty() else ""
+    tag = find_repo_tag(repo)
+
+PIPELINE_VERSION = f"HAMLET-{tag}-{sha}{is_dirty}"
+RUN_NAME = settings.get("run_name") or f"hamlet-{uuid4().hex[:8]}"
+
 
 def make_pattern(extension, dirname):
     """Helper function to create a wildcard-containing path for output files."""
     return f"{{sample}}/{dirname}/{{sample}}{extension}"
-
 
 seqqc_output = partial(make_pattern, dirname="qc-seq")
 var_output = partial(make_pattern, dirname="snv-indels")
@@ -64,6 +113,13 @@ OUTPUTS = dict(
     star_fusion_svg=fusion_output(".star-fusion.svg"),
     fusions_svg=fusion_output(".fusions-combined.svg"),
 
+    # Fusioncatcher
+    fusioncatcher_txt=fusion_output(".fusioncatcher"),
+    fusioncatcher_svg=fusion_output(".fusioncatcher.svg"),
+    fusions_txt=fusion_output(".fuma"),
+    isect_svg=fusion_output(".sf-isect.svg"),
+    isect_txt=fusion_output(".sf-isect"),
+
     # Expression
     count_fragments_per_gene=expr_output(".fragments_per_gene"),
     count_bases_per_gene=expr_output(".bases_per_gene"),
@@ -75,7 +131,7 @@ OUTPUTS = dict(
     aln_stats=var_output(".aln_stats"),
     rna_stats=var_output(".rna_stats"),
     insert_stats=var_output(".insert_stats"),
-    vep_stats=var_output(".vep_stats"),
+    vep_stats=var_output(".vep_stats.txt"),
     exon_cov_stats=var_output(".exon_cov_stats.json"),
 
     # ITD module
@@ -89,48 +145,37 @@ OUTPUTS = dict(
     kmt2a_png=itd_output(".kmt2a.png"),
 )
 
-if "fusioncatcher_exe" in RUN.settings:
-    OUTPUTS.update(
-        dict(
-            fusioncatcher_txt=fusion_output(".fusioncatcher"),
-            fusioncatcher_svg=fusion_output(".fusioncatcher.svg"),
-            fusions_txt=fusion_output(".fuma"),
-            isect_svg=fusion_output(".sf-isect.svg"),
-            isect_txt=fusion_output(".sf-isect"),
-    ))
-
-
 rule all:
     input:
-        [expand(RUN.output(p), sample=RUN.samples, pair={"R1", "R2"})
+        [expand(p, sample=config["samples"], pair={"R1", "R2"})
          for p in OUTPUTS.values()]
 
 
 rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""
     input:
-        seq_stats=RUN.output(OUTPUTS["seq_stats"]),
-        aln_stats=RUN.output(OUTPUTS["aln_stats"]),
-        rna_stats=RUN.output(OUTPUTS["rna_stats"]),
-        insert_stats=RUN.output(OUTPUTS["insert_stats"]),
-        vep_stats=RUN.output(OUTPUTS["vep_stats"]),
-        exon_cov_stats=RUN.output(OUTPUTS["exon_cov_stats"]),
-        idm=RUN.settings["ref_id_mapping"],
-        var_plots=RUN.output(OUTPUTS["smallvars_plots"]),
-        var_csv=RUN.output(OUTPUTS["smallvars_csv_hi"]),
-        fusions_svg=RUN.output(OUTPUTS["fusions_svg"]),
-        flt3_plot=RUN.output(OUTPUTS["flt3_png"]),
-        kmt2a_plot=RUN.output(OUTPUTS["kmt2a_png"]),
-        flt3_csv=RUN.output(OUTPUTS["flt3_csv"]),
-        kmt2a_csv=RUN.output(OUTPUTS["kmt2a_csv"]),
-        exon_ratios=RUN.output(OUTPUTS["ratio_exons"]),
+        seq_stats=OUTPUTS["seq_stats"],
+        aln_stats=OUTPUTS["aln_stats"],
+        rna_stats=OUTPUTS["rna_stats"],
+        insert_stats=OUTPUTS["insert_stats"],
+        vep_stats=OUTPUTS["vep_stats"],
+        exon_cov_stats=OUTPUTS["exon_cov_stats"],
+        idm=settings["ref_id_mapping"],
+        var_plots=OUTPUTS["smallvars_plots"],
+        var_csv=OUTPUTS["smallvars_csv_hi"],
+        fusions_svg=OUTPUTS["fusions_svg"],
+        flt3_plot=OUTPUTS["flt3_png"],
+        kmt2a_plot=OUTPUTS["kmt2a_png"],
+        flt3_csv=OUTPUTS["flt3_csv"],
+        kmt2a_csv=OUTPUTS["kmt2a_csv"],
+        exon_ratios=OUTPUTS["ratio_exons"],
         scr=srcdir("scripts/create_summary.py"),
     params:
         pipeline_ver=PIPELINE_VERSION,
         run_name=RUN_NAME,
     output:
-        js=RUN.output(OUTPUTS["summary"])
-    conda: srcdir("envs/create_summary.yml")
+        js=OUTPUTS["summary"]
+    singularity: containers["fsnviz"]
     shell:
         "python {input.scr}"
         " {input.idm}"
@@ -150,17 +195,17 @@ rule create_summary:
 rule generate_report:
     """Generates a PDF report of the essential results."""
     input:
-        summary=RUN.output(OUTPUTS["summary"]),
+        summary=OUTPUTS["summary"],
         css=srcdir("report/assets/style.css"),
         templates=srcdir("report/templates"),
         imgs=srcdir("report/assets/img"),
         toc=srcdir("report/assets/toc.xsl"),
         scr=srcdir("scripts/generate_report.py"),
     output:
-        pdf=RUN.output(OUTPUTS["reportje"]),
-    conda: srcdir("envs/create_report.yml")
+        pdf=OUTPUTS["reportje"],
+    singularity: containers["hamlet-scripts"]
     shell:
-        "python {input.scr}"
+        "python3 {input.scr}"
         " --templates-dir {input.templates} --imgs-dir {input.imgs}"
         " --css-path {input.css} --toc-path {input.toc}"
         " {input.summary} {output.pdf}"
@@ -169,32 +214,31 @@ rule generate_report:
 rule package_results:
     """Copies essential result files into one directory and zips it."""
     input:
-        summary=RUN.output(OUTPUTS["summary"]),
-        smallvars_csv_all=RUN.output(OUTPUTS["smallvars_csv_all"]),
-        smallvars_csv_hi=RUN.output(OUTPUTS["smallvars_csv_hi"]),
-        smallvars_plots_dir=RUN.output(dirname(OUTPUTS["smallvars_plots"])),
-        fusions_svg=RUN.output(OUTPUTS["fusions_svg"]),
-        count_fragments_per_gene=RUN.output(OUTPUTS["count_fragments_per_gene"]),
-        count_bases_per_gene=RUN.output(OUTPUTS["count_bases_per_gene"]),
-        count_bases_per_exon=RUN.output(OUTPUTS["count_bases_per_exon"]),
-        ratio_exons=RUN.output(OUTPUTS["ratio_exons"]),
-        flt_csv=RUN.output(OUTPUTS["flt3_csv"]),
-        flt_bg_csv=RUN.output(OUTPUTS["flt3_bg_csv"]),
-        flt_png=RUN.output(OUTPUTS["flt3_png"]),
-        kmt_csv=RUN.output(OUTPUTS["kmt2a_csv"]),
-        kmt_bg_csv=RUN.output(OUTPUTS["kmt2a_bg_csv"]),
-        kmt_png=RUN.output(OUTPUTS["kmt2a_png"]),
-        reportje=RUN.output(OUTPUTS["reportje"]),
+        summary=OUTPUTS["summary"],
+        smallvars_csv_all=OUTPUTS["smallvars_csv_all"],
+        smallvars_csv_hi=OUTPUTS["smallvars_csv_hi"],
+        smallvars_plots=OUTPUTS["smallvars_plots"],
+        fusions_svg=OUTPUTS["fusions_svg"],
+        count_fragments_per_gene=OUTPUTS["count_fragments_per_gene"],
+        count_bases_per_gene=OUTPUTS["count_bases_per_gene"],
+        count_bases_per_exon=OUTPUTS["count_bases_per_exon"],
+        ratio_exons=OUTPUTS["ratio_exons"],
+        flt_csv=OUTPUTS["flt3_csv"],
+        flt_bg_csv=OUTPUTS["flt3_bg_csv"],
+        flt_png=OUTPUTS["flt3_png"],
+        kmt_csv=OUTPUTS["kmt2a_csv"],
+        kmt_bg_csv=OUTPUTS["kmt2a_bg_csv"],
+        kmt_png=OUTPUTS["kmt2a_png"],
+        reportje=OUTPUTS["reportje"],
     output:
-        pkg=RUN.output(OUTPUTS["package"]),
+        pkg=OUTPUTS["package"],
     params:
-        tmp="/tmp/hamlet-pkg.{sample}." + str(uuid4()) + "/hamlet_results.{sample}"
-    conda: srcdir("envs/package_results.yml")
+        tmp="tmp/hamlet-pkg.{sample}." + str(uuid4()) + "/hamlet_results.{sample}"
+    singularity: containers["zip"]
     shell:
         "(mkdir -p {params.tmp}"
         " && cp -r {input} {params.tmp}"
-        " && cd $(dirname {params.tmp})"
-        " && zip -9 -x *.done -r {output.pkg} *"
-        " && cd -"
+        " && cp -r $(dirname {input.smallvars_plots}) {params.tmp}"
+        " && zip -9 -x *.done -r {output.pkg} {params.tmp}"
         " && rm -rf {params.tmp})"
         " || rm -rf {params.tmp}"

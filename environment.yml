@@ -1,44 +1,12 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: linux-64
+name: HAMLET
 channels:
-- bioconda
-- r
-- conda-forge
-- defaults
+  - bioconda
+  - conda-forge
+  - defaults
 dependencies:
-- biopython=1.73
-- conda=4.5.13
-- dropbox=7.2.1=py36_0
-- filechunkio=1.6=py36_0
-- ftputil=3.2=py36_0
-- pysftp=0.2.9=py36_0
-- snakemake=4.0.0=py36_1
-- urllib3=1.12=py36_0
-- cffi=1.9.1=py36_0
-- cryptography=1.7.1=py36_0
-- docutils=0.13.1=py36_0
-- drmaa=0.7.6=py36_0
-- idna=2.2=py36_0
-- libffi=3.2.1=1
-- openssl=1.0.2k=1
-- paramiko=2.1.2=py36_0
-- pip=9.0.1=py36_1
-- pyasn1=0.2.3=py36_0
-- pycparser=2.17=py36_0
-- pytest-workflow
-- python=3.6.2=0
-- pyyaml=3.12=py36_0
-- readline=6.2=2
-- requests=2.13.0=py36_0
-- setuptools
-- six=1.10.0=py36_0
-- sqlite=3.13.0=0
-- tk=8.5.18=0
-- wheel=0.29.0=py36_0
-- wrapt=1.10.10=py36_0
-- xz=5.2.2=1
-- yaml=0.1.6=0
-- zlib=1.2.8=3
-- pip:
-  - "git+https://github.com/bow/rattle.git@69f64e4e86559fcd48a40a2019f2997912147218#egg=Rattle"
-  - gitdb2==2.0.3
-  - gitpython==2.1.9
-  - smmap2==2.0.3
+ - pytest-workflow
+ - python>3.6
+ - snakemake=5.9

@@ -1,2 +1,14 @@
 include: srcdir("Snakefile.flt3")
 include: srcdir("Snakefile.kmt2a")
+
+# We need the QC-seq output
+include: "../qc-seq/Snakefile"
+
+rule all_itd:
+    input:
+        kmt2a_csv=expand("{sample}/itd/{sample}.kmt2a.csv", sample=config["samples"]),
+        kmt2a_bg_csv=expand("{sample}/itd/{sample}.kmt2a.bg.csv", sample=config["samples"]),
+        kmt2a_plots=expand("{sample}/itd/{sample}.kmt2a.png", sample=config["samples"]),
+        flt3_csv=expand("{sample}/itd/{sample}.flt3.csv", sample=config["samples"]),
+        flt3_bg_csv=expand("{sample}/itd/{sample}.flt3.bg.csv", sample=config["samples"]),
+        flt3_plots=expand("{sample}/itd/{sample}.flt3.png", sample=config["samples"]),

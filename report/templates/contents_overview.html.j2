@@ -2,7 +2,7 @@
 
 <div class="keep-together">
   <div class="table-title">
-    <p>Table 3 | High-impact variants in genes of interest</p>
+    <p>Table 9 | High-impact variants in genes of interest</p>
   </div>
   <table class="table-wide" id="var-overview" style="margin-bottom: 2em;">
     <thead>
@@ -10,6 +10,9 @@
         <th>Gene</th>
         <th>HGVS description</th>
         <th>Known database identifiers</th>
+        <th>Allele frequency</th>
+        <th>Hotspot</th>
+        <th>P-value</th>
       </tr>
     </thead>
     <tbody>
@@ -22,6 +25,9 @@
         {% endif %}
         <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ item.HGVSc }}</td>
         <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}><small>{{ item.Existing_variation.split(",")|join(", ") }}</small></td>
+        <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ item.FREQ }}</td>
+        <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ item.is_in_hotspot }}</td>
+        <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ item.PVAL }}</td>
       </tr>
       {% endfor %}
       {% endfor %}
@@ -31,7 +37,7 @@
 
 <div class="keep-together">
   <div class="table-title">
-    <p>Table 4 | Top 5 detected fusion genes by supporting reads</p>
+    <p>Table 10 | Top 5 detected fusion genes by supporting reads</p>
   </div>
   <table class="table-wide" style="margin-bottom: 2em;">
     <thead>
@@ -59,7 +65,7 @@
 
 <div class="keep-together">
   <div class="table-title">
-    <p>Table 5 | Detected reciprocal soft clip events</p>
+    <p>Table 11 | Detected reciprocal soft clip events</p>
   </div>
   <table class="table-wide" style="margin-bottom: 2em; width: 30%;">
     <thead>
@@ -83,7 +89,7 @@
 
 <div class="keep-together">
   <div class="table-title">
-    <p>Table 6 | Exon base count ratio over divisor gene</p>
+    <p>Table 12 | Exon base count ratio over divisor gene</p>
   </div>
   <table class="table-wide">
     <thead>

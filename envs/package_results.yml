@@ -1,8 +1,0 @@
-name: package_results
-channels:
-- bioconda
-- defaults
-- conda-forge
-dependencies:
-- zip=3.0
-- libgcc-ng=7.2.0
