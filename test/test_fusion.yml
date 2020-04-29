@@ -90,11 +90,9 @@
   command: >
     snakemake -rpn
     --snakefile includes/fusion/Snakefile
-    --configfile test/data/config/test-fusion-NB4.config
+    --configfile test/data/config/test-fusion-NB4-dry-run.config
     --verbose
     --use-singularity
-    --singularity-args ' --containall --bind /exports'
-    --singularity-prefix /exports/hem-leukemia/testing/singularity
 
 - name: test-fusion-integration-NB-4
   tags:
@@ -105,8 +103,6 @@
     --configfile test/data/config/test-fusion-NB4.config
     --verbose
     --use-singularity
-    --singularity-args ' --containall --bind /exports'
-    --singularity-prefix /exports/hem-leukemia/testing/singularity
   files:
     - path: "NB4/fusion/star-fusion/star-fusion.fusion_predictions.abridged.tsv"
     - path: "NB4/fusion/star-fusion/star-fusion.fusion_predictions.tsv"

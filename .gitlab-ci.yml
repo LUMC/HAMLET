@@ -1,0 +1,94 @@
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+.slurm_before_script_anchor: &slurm_before_script_anchor
+  before_script:
+    - export BASETEMP=$RUN_BASE_DIR/$CI_COMMIT_REF_NAME/$CI_JOB_ID
+    - source ${CONDA_SH}
+    - conda activate HAMLET
+    - export PATH=${PATH}:${SINGULARITY_PATH}
+    - echo "#!/usr/bin/env bash" > snakemake
+    - echo "$(which snakemake) --profile slurm-test \"\$@\"" >> snakemake
+    - chmod +x snakemake
+    - export PATH=$(pwd):${PATH}
+    - echo $PATH
+    - echo $BASETEMP
+    - hash -r
+
+stages:
+  - sanity
+  - dry-run
+  - integration
+  - report
+
+test_sanity:
+  <<: *slurm_before_script_anchor
+  script:
+    - pytest --tag sanity --basetemp ${BASETEMP} --workflow-threads 12 --keep-workflow-wd-on-fail
+  image: lumc/singularity-snakemake:3.5.2-5.15.0
+  tags:
+    - slurm
+  stage: sanity
+
+test_dry_run:
+  <<: *slurm_before_script_anchor
+  script:
+    - pytest --tag dry-run --basetemp ${BASETEMP} --workflow-threads 12 --keep-workflow-wd-on-fail
+  image: lumc/singularity-snakemake:3.5.2-5.15.0
+  tags:
+    - slurm
+  stage: dry-run
+
+qc_seq:
+  <<: *slurm_before_script_anchor
+  script:
+    - pytest --tag integration --basetemp ${BASETEMP} --workflow-threads 12 --keep-workflow-wd-on-fail test/test_qc_seq.yml
+  image: lumc/singularity-snakemake:3.5.2-5.15.0
+  tags:
+    - slurm
+  stage: integration
+
+snv_indels:
+  <<: *slurm_before_script_anchor
+  script:
+    - pytest --tag integration --basetemp ${BASETEMP} --workflow-threads 12 --keep-workflow-wd-on-fail test/test_snv_indels.yml
+  image: lumc/singularity-snakemake:3.5.2-5.15.0
+  tags:
+    - slurm
+  stage: integration
+
+expression:
+  <<: *slurm_before_script_anchor
+  script:
+    - pytest --tag integration --basetemp ${BASETEMP} --workflow-threads 12 --keep-workflow-wd-on-fail test/test_expression.yml
+  image: lumc/singularity-snakemake:3.5.2-5.15.0
+  tags:
+    - slurm
+  stage: integration
+
+fusion:
+  <<: *slurm_before_script_anchor
+  script:
+    - pytest --tag integration --basetemp ${BASETEMP} --workflow-threads 12 --keep-workflow-wd-on-fail test/test_fusion.yml
+  image: lumc/singularity-snakemake:3.5.2-5.15.0
+  tags:
+    - slurm
+  stage: integration
+
+itd:
+  <<: *slurm_before_script_anchor
+  script:
+    - pytest --tag integration --basetemp ${BASETEMP} --workflow-threads 12 --keep-workflow-wd-on-fail test/test_itd.yml
+  image: lumc/singularity-snakemake:3.5.2-5.15.0
+  tags:
+    - slurm
+  stage: integration
+
+hamlet_report:
+  <<: *slurm_before_script_anchor
+  script:
+    - pytest --tag integration --basetemp ${BASETEMP} --workflow-threads 12 --keep-workflow-wd-on-fail test/test_hamlet.yml 
+  image: lumc/singularity-snakemake:3.5.2-5.15.0
+  tags:
+    - slurm
+  stage: report
