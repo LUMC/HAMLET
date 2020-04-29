@@ -51,9 +51,14 @@ def find_repo_tag(repo):
         # If the current commit is in devel, return devel
         if 'devel' in branches:
             return 'devel'
-        # Otherwise, just return any of the branches
+        # Otherwise, just return any of the branches after cleaning up all
+        # special characters
         else:
-            return branches[0]
+            # Replace space by underscore
+            branch = branches[0].replace(' ', '_')
+            # Remove all other special characters
+            branch = ''.join([c for c in branch if c.isalnum() or c == '_'])
+            return branch
 
 try:
     repo = git.Repo(path=srcdir(""), search_parent_directories=True)
