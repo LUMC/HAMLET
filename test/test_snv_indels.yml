@@ -62,8 +62,6 @@
     --configfile test/data/config/test-p53-NB4.config
     --verbose
     --use-singularity
-    --singularity-args ' --containall --bind /exports'
-    --singularity-prefix /exports/hem-leukemia/testing/singularity
   files:
     - path: "NB4/snv-indels/variant_plots/sample_NB4_gene_TP53.png"
     - path: "NB4/snv-indels/variant_plots/.done"
@@ -114,8 +112,6 @@
     --configfile test/data/config/test-itd-MV4-11.config
     --verbose
     --use-singularity
-    --singularity-args ' --containall --bind /exports'
-    --singularity-prefix /exports/hem-leukemia/testing/singularity
   files:
     - path: "MV4-11/snv-indels/variant_plots/sample_MV4-11_gene_FLT3.png"
     - path: "MV4-11/snv-indels/MV4-11.variants.json"

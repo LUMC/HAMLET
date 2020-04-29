@@ -55,6 +55,13 @@ def find_repo_tag(repo):
         else:
             return branches[0]
 
+def find_head_name(repo):
+    """ Return the name of head, or None """
+    try:
+        return repo.head.reference.name
+    except TypeError:
+        return None
+
 try:
     repo = git.Repo(path=srcdir(""), search_parent_directories=True)
 except git.exc.InvalidGitRepositoryError:

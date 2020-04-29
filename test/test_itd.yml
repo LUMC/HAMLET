@@ -72,8 +72,6 @@
     --configfile test/data/config/test-itd-MV4-11.config
     --verbose
     --use-singularity
-    --singularity-args ' --containall --bind /exports'
-    --singularity-prefix /exports/hem-leukemia/testing/singularity
       MV4-11/itd/MV4-11.flt3.csv
       MV4-11/itd/MV4-11.flt3.png
   files:
@@ -101,8 +99,6 @@
     --configfile test/data/config/test-kmt2a-EoL-1.config
     --verbose
     --use-singularity
-    --singularity-args ' --containall --bind /exports'
-    --singularity-prefix /exports/hem-leukemia/testing/singularity
     EoL-1/itd/EoL-1.kmt2a.png
   files:
     - path: "EoL-1/itd/EoL-1.kmt2a.png"
@@ -127,8 +123,6 @@
     --configfile test/data/config/test-p53-NB4.config
     --verbose
     --use-singularity
-    --singularity-args ' --containall --bind /exports'
-    --singularity-prefix /exports/hem-leukemia/testing/singularity
   files:
     - path: "NB4/itd/NB4.kmt2a.png"
     - path: "NB4/itd/NB4.kmt2a.bg.csv"

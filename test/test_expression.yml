@@ -67,8 +67,6 @@
     --configfile test/data/config/test-expression-HEL.config
     --verbose
     --use-singularity
-    --singularity-args ' --containall --bind /exports'
-    --singularity-prefix /exports/hem-leukemia/testing/singularity
   files:
     - path: "HEL/expression/HEL.bases_per_exon"
       contains:

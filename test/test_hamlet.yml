@@ -65,8 +65,6 @@
     --configfile test/data/config/test-hamlet-frankenstein.config
     --verbose
     --use-singularity
-    --singularity-args ' --containall --bind /exports'
-    --singularity-prefix /exports/hem-leukemia/testing/singularity
   files:
     - path: "Frankenstein/hamlet_results.Frankenstein.zip"
     - path: "Frankenstein/Frankenstein.summary.json"
