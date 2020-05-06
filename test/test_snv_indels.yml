@@ -131,7 +131,6 @@
 - name: test-TET2-insertion-config
   tags:
     - integration
-    - new
   command: >
     snakemake -rp
     --snakefile includes/snv-indels/Snakefile
@@ -150,3 +149,18 @@
           - "chr4\t105259623\t.\tA\tC"
           - "chr4\t105259624\t.\tC\tT"
           - "chr4\t105259626\t.\tT\tG"
+
+- name: test-RUNX1-insertion
+  tags:
+    - integration
+  command: >
+    snakemake -rp
+    --snakefile includes/snv-indels/Snakefile
+    --configfile test/data/config/test-RUNX1-insertion.config
+    --verbose
+    --use-singularity
+    "7075-04-001-002/snv-indels/7075-04-001-002.raw.vcf.gz"
+  files:
+    - path: "7075-04-001-002/snv-indels/7075-04-001-002.raw.vcf.gz"
+      contains:
+        - "chr21\t34792223\t.\tA\tACGTCGCTCTGGTT"
