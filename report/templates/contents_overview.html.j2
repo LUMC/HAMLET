@@ -23,7 +23,7 @@
         {% if loop.index == 1 %}
         <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %} rowspan="{{ results.var.overview[gene]|length }}" class="hl">{{ gene }}</td>
         {% endif %}
-        <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ item.HGVSc }}</td>
+        <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ item.HGVSc }} {{ item.HGVSp }}</td>
         <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}><small>{{ item.Existing_variation.split(",")|join(", ") }}</small></td>
         <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ item.FREQ }}</td>
         <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ item.is_in_hotspot }}</td>
