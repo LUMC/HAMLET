@@ -68,7 +68,6 @@
     - path: "NB4/snv-indels/NB4.variants_all.csv"
     - path: "NB4/snv-indels/NB4.vep_stats.txt"
     - path: "NB4/snv-indels/NB4.variants.json"
-    - path: "NB4/snv-indels/NB4.exon_cov_stats.json"
     - path: "NB4/snv-indels/NB4.snv-indel.bam"
     - path: "NB4/snv-indels/NB4.snv-indel.bai"
     - path: "NB4/snv-indels/NB4.insert_stats.pdf"
@@ -101,6 +100,10 @@
       contains:
         - "sample_id,gene_symbol,gene_id,CHROM,POS,REF,alleles,genotype,is_in_hotspot"
         - "NB4,TP53,ENSG00000141510,chr17,7674220,C,\"T,T\",T/T,no"
+    - path: "NB4/snv-indels/NB4.exon_cov_stats.json"
+      contains:
+        - "ENST00000269305|1"
+        - "ENST00000269305|11"
 
 - name: test-flt3-integration-MV4-11
   tags:
