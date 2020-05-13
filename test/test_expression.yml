@@ -94,3 +94,18 @@
       contains:
         - "chr11\t119084882\t119085066\t121064\t657.956522\tHMBS"
         - "chr3\t169115382\t169116739\t174584\t128.654385\tMECOM"
+
+- name: test-expression-MECOM-vs-MECOM
+  tags:
+    - integration
+  command: >
+    snakemake -rp
+    --snakefile includes/expression/Snakefile
+    --configfile test/data/config/test-expression-MECOM-vs-MECOM.config
+    --verbose
+    --use-singularity
+  files:
+    - path: "HEL/expression/HEL.exon_ratios"
+      contains:
+        - "HEL\tMECOM:169146722-169147734\t28454"
+        - "yes\tMECOM\t707074"
