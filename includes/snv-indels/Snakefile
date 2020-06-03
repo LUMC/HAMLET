@@ -8,7 +8,7 @@ localrules: plot_vars, table_vars_all, table_vars_hi
 containers = {
     "bedtools-2.27-grep-2.14-gawk-5.0-click-7-python-3.7": "docker://quay.io/biocontainers/mulled-v2-a4b89e0b16b1d7db92e5a069e5c40405b3b53aab:98c4ac2f0e27869be58f6a4d8bb7ae3bc02a3a70-0",
     "debian": "docker://debian:buster-slim",
-    "gsnap": "docker://quay.io/biocontainers/gmap:2019.06.10--pl526h2f06484_0",
+    "gsnap": "docker://quay.io/biocontainers/gmap:2020.06.01--pl526h2f06484_0",
     "hamlet-scripts": "docker://lumc/hamlet-scripts:0.2",
     "picard": "docker://quay.io/biocontainers/picard:2.20.5--0",
     "python3": "docker://python:3.7.4-slim-stretch",
@@ -57,9 +57,9 @@ rule align_vars:
     params:
         rg_sample="{sample}"
     threads: 8
-    #singularity: containers["gsnap"]
+    singularity: containers["gsnap"]
     shell:
-        "/exports/kg/rrvandenberg/bin/gsnap --dir `dirname {input.index}` --db `basename {input.index}`"
+        "gsnap --dir `dirname {input.index}` --db `basename {input.index}`"
         " --batch 4 --nthreads {threads}"
         " --novelsplicing 1 --npaths 1 --quiet-if-excessive"
         " --read-group-name={params.rg_sample} --read-group-id={params.rg_sample}"

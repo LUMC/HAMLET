@@ -7,6 +7,6 @@ channels:
   - conda-forge
   - defaults
 dependencies:
- - pytest-workflow
+ - pytest-workflow>=1.4.0
  - python>3.6
  - snakemake=5.9

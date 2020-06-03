@@ -78,23 +78,26 @@
         - "chr17\t7674220\t.\tC\tT\t.\tPASS"
 
     - path: "NB4/snv-indels/NB4.annotated.vcf.gz"
-      contains:
-        - "chr17\t7674220\t.\tC\tT\t.\tPASS\tADP=416;WT=0;HET=0;HOM=1;NC=0;CSQ=T|missense_variant|MODERATE|TP53|ENSG00000141510|Transcript|ENST00000269305|protein_coding|7/11||ENST00000269305.8:c.743G>A"
+      contains_regex:
+        - 'chr17\t7674220\t.\tC\tT\t.\tPASS\t.*ENST00000269305.8:c.743G>A'
 
     - path: "NB4/snv-indels/NB4.aln_stats"
       contains:
         - "CATEGORY\tTOTAL_READS\tPF_READS\tPCT_PF_READS\tPF_NOISE_READS\tPF_READS_ALIGNED\tPCT_PF_READS_ALIGNED\tPF_ALIGNED_BASES\tPF_HQ_ALIGNED_READS\tPF_HQ_ALIGNED_BASES\tPF_HQ_ALIGNED_Q20_BASES\tPF_HQ_MEDIAN_MISMATCHES\tPF_MISMATCH_RATE\tPF_HQ_ERROR_RATE\tPF_INDEL_RATE\tMEAN_READ_LENGTH\tREADS_ALIGNED_IN_PAIRS\tPCT_READS_ALIGNED_IN_PAIRS\tPF_READS_IMPROPER_PAIRS\tPCT_PF_READS_IMPROPER_PAIRS\tBAD_CYCLES\tSTRAND_BALANCE\tPCT_CHIMERAS\tPCT_ADAPTER"
-        - "PAIR\t14266\t14266\t1\t0\t14242\t0.998318\t1287643\t14242\t1287643\t1244050\t0\t0.002528\t0.002528\t0.000081\t92.401023\t14218\t0.998315\t148\t0.010392\t0\t0.501123\t0.013341\t0.000491"
+      contains_regex:
+        - 'PAIR\t14266\t14266\t1\t0\t14\d{3}\t0.99\d{4}\t12\d{5}\t14\d{3}\t12\d{5}\t124\d{4}\t0\t0.00[2,3]\d{3}\t0.00[2,3]\d{3}\t0.000081\t92.4\d{5}\t14\d{3}\t0.99\d{4}'
 
     - path: "NB4/snv-indels/NB4.insert_stats"
       contains:
         - "MEDIAN_INSERT_SIZE\tMODE_INSERT_SIZE\tMEDIAN_ABSOLUTE_DEVIATION\tMIN_INSERT_SIZE\tMAX_INSERT_SIZE\tMEAN_INSERT_SIZE\tSTANDARD_DEVIATION\tREAD_PAIRS\tPAIR_ORIENTATION"
-        - "177\t128\t54\t31\t20794276\t199.914744\t106.425583\t7016\tFR"
+      contains_regex:
+        - '177\t128\t54\t31\t20794276\t200\.\d*\t106.4\d{5}\t699\d\tFR'
 
     - path: "NB4/snv-indels/NB4.rna_stats"
       contains:
         - "PF_BASES\tPF_ALIGNED_BASES\tRIBOSOMAL_BASES\tCODING_BASES\tUTR_BASES\tINTRONIC_BASES\tINTERGENIC_BASES\tIGNORED_READS\tCORRECT_STRAND_READS\tINCORRECT_STRAND_READS\tNUM_R1_TRANSCRIPT_STRAND_READS\tNUM_R2_TRANSCRIPT_STRAND_READS\tNUM_UNEXPLAINED_READS"
-        - "1320386\t1289751\t0\t562538\t680479\t46273\t461\t0\t0\t0\t2802\t3145\t79"
+      contains_regex:
+        - '1320386\t12[8,9]\d{4}\t0\t56\d{4}\t68\d{4}\t4[6,7]\d{3}\t50\d\t0\t0\t0\t2[7,8]\d{2}\t31\d{2}\t89'
 
     - path: "NB4/snv-indels/NB4.variants_hi.csv"
       contains:
@@ -123,7 +126,7 @@
     - path: "MV4-11/snv-indels/MV4-11.variants_hi.csv"
       contains:
         - "sample_id,gene_symbol,gene_id,CHROM,POS,REF,alleles,genotype,is_in_hotspot"
-        - "MV4-11,FLT3,ENSG00000122025,chr13,28034148,A,\"A,G\",A/G,yes"
+        - "MV4-11,FLT3,ENSG00000122025,chr13,28034117,A,\"A,T\",A/T,yes"
 
 - name: test-TET2-insertion-config
   tags:
