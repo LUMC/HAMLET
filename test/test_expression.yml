@@ -72,21 +72,21 @@
       contains:
         - "exon\tHEL"
       contains_regex:
-        - 'HMBS:119084882-119085066\t121\d{3}'
+        - 'HMBS:119084882-119085066\t12[01]\d{3}'
         - 'MECOM:169083498-169085043\t211\d{3}'
 
     - path: "HEL/expression/HEL.bases_per_gene"
       contains:
         - "gene\tHEL"
       contains_regex:
-        - 'HMBS\t166\d{4}'
-        - 'MECOM\t70\d{4}'
+        - 'HMBS\t16[56]\d{4}'
+        - 'MECOM\t7[01]\d{4}'
 
     - path: "HEL/expression/HEL.exon_ratios"
       contains:
         - "sample_name\texon\tcount\tratio\tabove_threshold\tdivisor_gene\tdivisor_exp"
       contains_regex:
-        - 'HEL\tMECOM:169146722-169147734\t28\d{3}\t0.017\d*\tno\tHMBS\t166\d{4}'
+        - 'HEL\tMECOM:169146722-169147734\t28\d{3}\t0.017\d*\tno\tHMBS\t16[56]\d{4}'
 
     - path: "HEL/expression/HEL.fragments_per_gene"
       contains_regex:
@@ -95,7 +95,7 @@
 
     - path: "HEL/expression/HEL.raw_base"
       contains_regex:
-        - 'chr11\t119084882\t119085066\t121\d{3}\t65\d\.\d*\tHMBS'
+        - 'chr11\t119084882\t119085066\t12[01]\d{3}\t65\d\.\d*\tHMBS'
         - 'chr3\t169115382\t169116739\t17\d{4}\t128.\d*\tMECOM'
 
 - name: test-expression-MECOM-vs-MECOM
@@ -110,4 +110,4 @@
   files:
     - path: "HEL/expression/HEL.exon_ratios"
       contains_regex:
-        - 'HEL\tMECOM:169146722-169147734\t28\d{3}\t0.04\d*\tyes\tMECOM\t70\d{4}'
+        - 'HEL\tMECOM:169146722-169147734\t28\d{3}\t0.04\d*\tyes\tMECOM\t7[01]\d{4}'
