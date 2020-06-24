@@ -68,10 +68,6 @@ star_fusion:
   threads: 8
   time: 00:30:00
 
-extract_sc_flt3:
-  vmem: 10G
-  threads: 3
-
 extract_sc_kmt2a:
   vmem: 10G
   threads: 3
