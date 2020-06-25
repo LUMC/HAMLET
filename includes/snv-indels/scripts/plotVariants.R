@@ -5,6 +5,7 @@
 # Copyright (c) 2015 Leiden University Medical Center <http://lumc.nl>
 # All rights reserved.
 
+library("tools")
 suppressMessages(library(Gviz))
 
 RenameEnsemblChroms <- function(annots) {
@@ -359,7 +360,7 @@ MakePlot <- function(parsed.data, sample.name, gene.id, gene.model, genome = "hg
     plot.title <- paste(c("Variant Calls - Sample '", sample.name, "'\n", gene.symbol,
                           " (", gene.id, ")"), collapse = "")
 
-    if (!is.null(out.file) & tolower(unlist(strsplit(out.file, "\\."))[-1]) == "png") {
+    if (!is.null(out.file) & file_ext(out.file) == "png") {
       png(out.file, height = to.plot$height, width = to.plot$width)
       Gviz::plotTracks(to.plot$tracks, chromosome = chrom, main = plot.title,
                 col = NULL, sizes=to.plot$sizes)
