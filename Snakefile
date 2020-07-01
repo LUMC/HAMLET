@@ -1,9 +1,8 @@
 import os
+import subprocess
 from functools import partial
 from os.path import dirname
 from uuid import uuid4
-
-import git
 
 include: "includes/qc-seq/Snakefile"
 include: "includes/snv-indels/Snakefile"
@@ -22,64 +21,11 @@ containers = {
 
 settings=config["settings"]
 
-# Get run name and pipeline version
-def find_repo_tag(repo):
-    """ Return the tag of head, or the branch we are on"""
-    # First we try to find a tag
-    for tag in repo.tags:
-        if tag.commit == repo.head.commit:
-            return tag
+# Determine version of HAMLET from git
+out = subprocess.Popen(['git', 'describe', '--tags'], stdout=subprocess.PIPE)
+stdout, stderr = out.communicate()
+PIPELINE_VERSION = stdout.strip().decode('utf-8')
 
-    # If that fails, we return the branch we are on, unless we are in a
-    # detached head state
-    if not repo.head.is_detached:
-        return repo.head.reference.name
-
-    # If we are in a detached head state, we have to search which branch
-    # has the commit we are on
-    else:
-        branches = repo.git.branch('--contains', repo.head.commit).split('\n')
-        # Cut of first two characters of the output of the command
-        # git branch --contains COMMIT_HASH
-        branches = [branch[2:] for branch in branches]
-        # Remove the current detached branch we are on
-        branches = [branch for branch in branches
-                    if not branch.startswith('(detached from ')]
-        # If the current commit is in master, return master
-        if 'master' in branches:
-            return 'master'
-        # If the current commit is in devel, return devel
-        if 'devel' in branches:
-            return 'devel'
-        # Otherwise, just return any of the branches after cleaning up all
-        # special characters
-        else:
-            # Replace space by underscore
-            branch = branches[0].replace(' ', '_')
-            # Remove all other special characters
-            branch = ''.join([c for c in branch if c.isalnum() or c == '_'])
-            return branch
-
-def find_head_name(repo):
-    """ Return the name of head, or None """
-    try:
-        return repo.head.reference.name
-    except TypeError:
-        return None
-
-try:
-    repo = git.Repo(path=srcdir(""), search_parent_directories=True)
-except git.exc.InvalidGitRepositoryError:
-    repo = None
-    sha = "unknown"
-    is_dirty = "?"
-    tag = None
-else:
-    sha = repo.head.object.hexsha[:8]
-    is_dirty = "*" if repo.is_dirty() else ""
-    tag = find_repo_tag(repo)
-
-PIPELINE_VERSION = f"HAMLET-{tag}-{sha}{is_dirty}"
 RUN_NAME = settings.get("run_name") or f"hamlet-{uuid4().hex[:8]}"
 
 
