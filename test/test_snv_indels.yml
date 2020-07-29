@@ -95,7 +95,7 @@
       contains:
         - "PF_BASES\tPF_ALIGNED_BASES\tRIBOSOMAL_BASES\tCODING_BASES\tUTR_BASES\tINTRONIC_BASES\tINTERGENIC_BASES\tIGNORED_READS\tCORRECT_STRAND_READS\tINCORRECT_STRAND_READS\tNUM_R1_TRANSCRIPT_STRAND_READS\tNUM_R2_TRANSCRIPT_STRAND_READS\tNUM_UNEXPLAINED_READS"
       contains_regex:
-        - '1320386\t1[2,3]\d{5}\t0\t5\d{5}\t68\d{4}\t4[6,7]\d{3}\t37\d\t0\t0\t0\t2[7,8]\d{2}\t31\d{2}\t[8,9]\d'
+        - '1320386\t12[8,9]\d{4}\t0\t56\d{4}\t68\d{4}\t4[6,7]\d{3}\t(49|50)\d\t0\t0\t0\t2[7,8]\d{2}\t31\d{2}\t89'
 
     - path: "NB4/snv-indels/NB4.variants_hi.csv"
       contains:
