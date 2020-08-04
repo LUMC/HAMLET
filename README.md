@@ -27,6 +27,12 @@ environment is also defined by an `environment.yml` file.
 In addition to the raw output files, Hamlet also generates a PDF report containing an overview of the essential results
 and a zipped file containing this report and the essential result files.
 
+# Which version should you use?
+The version of HAMLET on the 'devel' branch is the latest version, and is probably the version most people are
+interested in. The tagged versions on the 'master' branch have been validated more extensively and are used by the LUMC
+for clinical purposes. Although we can give **no guarantees** that the output of HAMLET is correct or complete, this is
+probably the version you should use (**at your own risk**) if you plan to analyse clinical samples.
+
 # Installation
 
 The dependencies required for running the pipeline are listed in the provided `environment.yml` file. To use it, first
@@ -83,9 +89,15 @@ pytest --tag integration
 **Important: pytest copies the current directory to /tmp to run the tests.  Therefore, do not place large reference
 or sample files inside the HAMLET root folder when running tests, or these will be copied over dozens of times.**
 
+If you want to manually test HAMLET without using pytest-workflow, you can run the following command. Please make sure
+you have updated the paths in `test/data/config/test-hamlet-frankenstein.config` to point to the copy of the HAMLET
+reference files.
+
+```bash
+snakemake -rp --snakefile Snakefile --configfile test/data/config/test-hamlet-frankenstein.config --use-singularity
+```
 
 # Usage
-
 ## Input files
 
 Hamlet requires gzipped, paired-end mRNA-seq files. Any number of samples can be processed in a single execution, and
@@ -105,14 +117,25 @@ this type of configuration on the official [Snakemake
 documentation](https://snakemake.readthedocs.io/en/stable/snakefiles/configuration.html#cluster-configuration). For this
 file, let's call it `config-cluster.yml`
 
-You can then run the pipeline by invoking Snakemake, for example:
-
+### Example command
 ```bash
-    $ snakemake -s Snakefile \
-        --configfile config.yml --cluster-config config-cluster.yml \
-        --rerun-incomplete
-        # ... other flags
+$ snakemake -s Snakefile \
+    --configfile config.yml \
+    --cluster-config config-cluster.yml \
+    --rerun-incomplete \
+    --use-singularity \
+    --singularity-args ' --containall --bind /exports/:/exports/ \
+    # ... other flags
 ```
+
+### Explanation for the various flags
+| flag | description | required |
+| ---- | ----------- | -------- |
+| --configfile config.yml | The configuration file for the pipeline | Yes |
+| --cluster-config | A cluster configuration file, only relevant when you are running HAMLET on a cluster | No |
+| --rerun-incomplete | Re-run jobs if the output appears incomplete | No |
+| --use-singularity | Use Singularity images to fetch all required dependencies. | Yes |
+| --singularity-args | Arguments to pass to singularity. Use --bind to specify which folders on your system should be accessible inside the container. This should at least be the folders where your samples and reference files are located | Yes |
 
 See `test/test_hamlet.yml` for a working example of the flags required to run HAMLET with Singularity.
 
@@ -123,14 +146,23 @@ sample present in the config file. Inside the directory, all the essential resul
 `hamlet_results.{sample_name}.zip`. This includes a PDF report called `hamlet_report.{sample_name}.pdf` which contains
 the overview of the essential results.
 
-
 ## Notes
 
 1. You can run Hamlet from anywhere, but preferably this is done outside of the repository. This way, the temporary
-   Snakemake files are written elsewhere and does not pollute the repository.
+Snakemake files are written elsewhere and does not pollute the repository.
 
 2. You can direct Hamlet to create the output directory anywhere. This is a configuration value that is supplied in the
-   config file via `output_dir`.
+config file via `output_dir`.
 
 # Citation
 If you use HAMLET in your research, please cite the [HAMLET publication](https://www.nature.com/articles/s41375-020-0762-8).
+
+# Common issues
+## Using singularity
+If you forget the `--use-singularity` flag for snakemake, you will find that many rules break due to the required tools
+not being available on your system.
+
+## Snakemake errors about reserved keywords
+If you install snakemake manually instead of using conda and the provided `environment.yml` file, you might get errors
+about reserved keyword that are used in the Snakefiles. Please use the snakemake version specified in the
+`environment.yml` file.
