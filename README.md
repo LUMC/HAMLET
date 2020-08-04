@@ -124,7 +124,7 @@ $ snakemake -s Snakefile \
     --cluster-config config-cluster.yml \
     --rerun-incomplete \
     --use-singularity \
-    --singularity-args ' --containall --bind /exports/:/exports/ \
+    --singularity-args ' --containall --bind /exports/:/exports/' \
     # ... other flags
 ```
 
