@@ -3,13 +3,12 @@ __default__:
   queue: short
   vmem: 4G
   threads: 1
-  time: 00:10:00
+  time: 01:00:00
   tmp: 1G
 
 exon_cov:
   vmem: 4G
   threads: 1
-  time: 00:30:00
 
 align_flt3:
   vmem: 4G
@@ -66,7 +65,6 @@ sort_bamfile:
 star_fusion:
   vmem: 8G
   threads: 8
-  time: 00:30:00
 
 extract_sc_kmt2a:
   vmem: 10G
