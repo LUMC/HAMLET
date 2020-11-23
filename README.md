@@ -52,7 +52,7 @@ Additionally, `singularity` version 3 or greater should be installed on the syst
 
 ## Data files
 HAMLET requires around 100GB of reference files to run. You can download the data files [here](https://barmsijs.lumc.nl/HAMLET/deps.tar.gz),
-the md5sum for the archive is `5541718e8bc17bcd00ec90ff23ebcfae`.
+the md5sum for the archive is `5ca99cde00955cae44cb63ef3f7d3fd4`.
 Please contact the author or open an issue if the link is not working.
 
 ## Testing
