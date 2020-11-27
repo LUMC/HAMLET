@@ -21,9 +21,9 @@
       {% for item in results.expr %}
       <tr>
         <td class="text-left">{{ item.exon }}</td>
-        <td class="text-right">{{ item.count|show_int }}</td>
+        <td class="text-right">{{ item.count|show_float}}</td>
         <td class="text-left">{{ item.divisor_gene }}</td>
-        <td class="text-right">{{ item.divisor_exp|show_int }}</td>
+        <td class="text-right">{{ item.divisor_exp|show_float }}</td>
         <td class="text-right">{{ item.ratio|show_float }}</td>
         <td class="text-left">{{ item.above_threshold }}</td>
       </tr>
