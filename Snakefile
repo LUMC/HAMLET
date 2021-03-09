@@ -21,10 +21,8 @@ containers = {
 
 settings=config["settings"]
 
-# Determine version of HAMLET from git
-out = subprocess.Popen(['git', 'describe', '--tags'], stdout=subprocess.PIPE)
-stdout, stderr = out.communicate()
-PIPELINE_VERSION = stdout.strip().decode('utf-8')
+# The version of HAMLET
+PIPELINE_VERSION = "v1.0.2-dev-1"
 
 RUN_NAME = settings.get("run_name") or f"hamlet-{uuid4().hex[:8]}"
 

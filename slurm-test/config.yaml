@@ -1,8 +1,0 @@
-cluster: ' sbatch --parsable --job-name={jobid} --time={cluster.time} --partition={cluster.queue} --cpus-per-task={cluster.threads} --mem-per-cpu={cluster.vmem} --tmp={cluster.tmp}'
-cluster-config: 'slurm-test/cluster.yaml'
-cluster-status: 'slurm-cluster-status/slurm-cluster-status.py'
-singularity-args: ' --containall --bind /exports'
-singularity-prefix: '/exports/sasc-testing/singularity/snakemake_prefix'
-use-singularity: true
-jobs: 70
-latency-wait: 120
