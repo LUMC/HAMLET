@@ -53,8 +53,8 @@
   command: >
     singularity --version
   stdout:
-    contains:
-      - "singularity version 3"
+    contains_regex:
+      - "singularity(-ce)? version 3"
 
 - name: test-hamlet-frankenstein-integration
   tags:
