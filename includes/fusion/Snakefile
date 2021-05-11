@@ -94,7 +94,8 @@ rule fusioncatcher:
         fq1="{sample}/{sample}-R1.raw.fq.gz",
         fq2="{sample}/{sample}-R2.raw.fq.gz",
     params:
-        data=settings["fusioncatcher_data"]
+        data=settings["fusioncatcher_data"],
+        max_junctions=1500000
     output:
         txt="{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
     threads: 8
@@ -102,7 +103,7 @@ rule fusioncatcher:
     shell:
         " dir=`dirname {output.txt}` "
         " && fusioncatcher.py --threads {threads} -i {input.fq1},{input.fq2} -o ${{dir}}"
-        " --data {params.data} || test -f {output.txt}"
+        " --data {params.data} --limitSjdbInsertNsj {params.max_junctions} || test -f {output.txt}"
 
 rule fusioncatcher_cp:
     input:
