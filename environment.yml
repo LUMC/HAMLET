@@ -9,3 +9,4 @@ dependencies:
  - pytest-workflow>=1.4.0
  - python>3.6
  - snakemake-minimal=6.3.0
+ - smart_open>=3
