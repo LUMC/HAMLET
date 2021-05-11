@@ -5,7 +5,6 @@ name: HAMLET
 channels:
   - bioconda
   - conda-forge
-  - defaults
 dependencies:
  - pytest-workflow>=1.4.0
  - python>3.6
