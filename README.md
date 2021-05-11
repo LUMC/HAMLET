@@ -1,4 +1,4 @@
-[![Continuous Integration](https://github.com/LUMC/HAMLET/actions/workflows/ci.yml/badge.svg)](https://github.com/HAMLET/actions/workflows/ci.yml)
+[![Continuous Integration](https://github.com/LUMC/HAMLET/actions/workflows/ci.yml/badge.svg)](https://github.com/LUMC/HAMLET/actions/workflows/ci.yml)
 
 # Hamlet
 
