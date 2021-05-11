@@ -75,8 +75,8 @@
   command: >
     singularity --version
   stdout:
-    contains:
-      - "singularity version 3"
+    contains_regex:
+      - "singularity(-ce)? version 3"
 
 - name: test-fusion-integration-NB-4-dry-run
   tags:
