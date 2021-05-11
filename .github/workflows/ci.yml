@@ -1,0 +1,68 @@
+name: Continuous Integration
+
+on: [push, pull_request]
+
+defaults:
+  run:
+    # This is needed for miniconda, see:
+    # https://github.com/marketplace/actions/setup-miniconda#important.
+    shell: bash -l {0}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test:
+          - sanity
+          - dry-run
+        module:
+          - qc
+          - itd
+          - fusion
+          - expression
+          - snv-indels
+          - hamlet
+    steps:
+      - uses: actions/checkout@v2.3.4 # https://github.com/actions/checkout.
+        with:
+          submodules: recursive
+
+      - name: Set up Conda environment
+        uses: conda-incubator/setup-miniconda@v2.0.1 # https://github.com/conda-incubator/setup-miniconda.
+        with:
+          activate-environment: HAMLET
+          environment-file: environment.yml
+          auto-activate-base: false
+
+      - name: Install singularity
+        uses: eWaterCycle/setup-singularity@v6
+        with:
+          singularity-version: 3.6.4
+
+      - name: Run test in conda environment
+        # Use --symlink to limit disk usage.
+        run: >-
+          pytest --keep-workflow-wd-on-fail
+          --tag ${{ matrix.test }}
+          --tag ${{ matrix.module }}
+          --symlink test/
+
+      - name: Check cromwell log in case of failure.
+        if: ${{ failure() }}
+        # Get the last 1000 lines of the cromwell log to catch the error.
+        run: bash -c 'tail -n 1000 /tmp/pytest_workflow_*/*/log.out'
+
+      - name: Check pytest stdout messages in case of failure
+        if: ${{ failure() }}
+        run: >-
+          bash -c '
+          for file in $(find /tmp -name log.out);
+          do echo $file; cat $file; done'
+
+      - name: Check pytest stderr messages in case of failure
+        if: ${{ failure() }}
+        run: >-
+          bash -c '
+          for file in $(find /tmp -name log.err);
+          do echo $file; cat $file; done'

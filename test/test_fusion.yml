@@ -1,6 +1,7 @@
 - name: test-fusion-dry-run-single
   tags:
     - dry-run
+    - fusion
   command: >
     snakemake -n
     --snakefile includes/fusion/Snakefile
@@ -23,6 +24,7 @@
 - name: test-fusion-dry-run-trio
   tags:
     - dry-run
+    - fusion
   command: >
     snakemake -n
     --snakefile includes/fusion/Snakefile
@@ -69,6 +71,7 @@
 - name: test-fusion-sanity-snakemake
   tags:
     - sanity
+    - fusion
   command: >
     snakemake --version
   stdout:
@@ -78,6 +81,7 @@
 - name: test-fusion-sanity-singularity
   tags:
     - sanity
+    - fusion
   command: >
     singularity --version
   stdout:
@@ -87,6 +91,7 @@
 - name: test-fusion-integration-NB-4-dry-run
   tags:
     - dry-run
+    - fusion
   command: >
     snakemake -rpn
     --snakefile includes/fusion/Snakefile
@@ -97,6 +102,7 @@
 - name: test-fusion-integration-NB-4
   tags:
     - integration
+    - fusion
   command: >
     snakemake -rp
     --snakefile includes/fusion/Snakefile

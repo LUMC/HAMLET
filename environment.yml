@@ -1,12 +1,11 @@
 # This file may be used to create an environment using:
-# $ conda create --name <env> --file <this file>
+# $ conda env create -f environment.yml
 # platform: linux-64
 name: HAMLET
 channels:
   - bioconda
   - conda-forge
-  - defaults
 dependencies:
  - pytest-workflow>=1.4.0
  - python>3.6
- - snakemake=5.9
+ - snakemake-minimal=5.9
