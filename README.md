@@ -1,3 +1,5 @@
+[![Continuous Integration](https://github.com/LUMC/HAMLET/actions/workflows/ci.yml/badge.svg)](https://github.com/HAMLET/actions/workflows/ci.yml)
+
 # Hamlet
 
 Hamlet is a pipeline for analysis of human acute myeloid leukemia RNA-seq samples. Please use the
