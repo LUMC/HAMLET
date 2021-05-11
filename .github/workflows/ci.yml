@@ -34,9 +34,9 @@ jobs:
 
       - name: Run test in conda environment
         # Use --symlink to limit disk usage.
-        run: >- 
-          pytest --keep-workflow-wd-on-fail --tag ${{ matrix.test }} 
-          --symlink tests/ 
+        run: >-
+          pytest --keep-workflow-wd-on-fail --tag ${{ matrix.test }}
+          --symlink test/
 
       - name: Check cromwell log in case of failure.
         if: ${{ failure() }}
@@ -45,14 +45,14 @@ jobs:
 
       - name: Check pytest stdout messages in case of failure
         if: ${{ failure() }}
-        run: >- 
+        run: >-
           bash -c '
-          for file in $(find /tmp -name log.out); 
+          for file in $(find /tmp -name log.out);
           do echo $file; cat $file; done'
 
       - name: Check pytest stderr messages in case of failure
         if: ${{ failure() }}
-        run: >- 
+        run: >-
           bash -c '
-          for file in $(find /tmp -name log.err); 
+          for file in $(find /tmp -name log.err);
           do echo $file; cat $file; done'
