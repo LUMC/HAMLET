@@ -1,6 +1,7 @@
 - name: test-snv-indels-dry-run-single
   tags:
     - dry-run
+    - snv-indels
   command: >
     snakemake -n
     --snakefile includes/snv-indels/Snakefile
@@ -15,6 +16,7 @@
 - name: test-snv-indels-dry-run-trio
   tags:
     - dry-run
+    - snv-indels
   command: >
     snakemake -n
     --snakefile includes/snv-indels/Snakefile
@@ -37,6 +39,7 @@
 - name: test-snv-indels-sanity-snakemake
   tags:
     - sanity
+    - snv-indels
   command: >
     snakemake --version
   stdout:
@@ -46,6 +49,7 @@
 - name: test-snv-indels-sanity-singularity
   tags:
     - sanity
+    - snv-indels
   command: >
     singularity --version
   stdout:
@@ -56,6 +60,7 @@
   tags:
     - integration
     - p53
+    - snv-indels
   command: >
     snakemake -rp
     --snakefile includes/snv-indels/Snakefile
@@ -108,8 +113,9 @@
 
 - name: test-flt3-integration-MV4-11
   tags:
-    - flt3
     - integration
+    - flt3
+    - snv-indels
   command: >
     snakemake -rp
     --snakefile includes/snv-indels/Snakefile
@@ -128,6 +134,7 @@
 - name: test-TET2-insertion-config
   tags:
     - integration
+    - snv-indels
   command: >
     snakemake -rp
     --snakefile includes/snv-indels/Snakefile
@@ -150,6 +157,7 @@
 - name: test-RUNX1-insertion
   tags:
     - integration
+    - snv-indels
   command: >
     snakemake -rp
     --snakefile includes/snv-indels/Snakefile
@@ -165,6 +173,7 @@
 - name: test-TET2-false-positive-mutation
   tags:
     - integration
+    - snv-indels
   command: >
     snakemake -rp
     --snakefile includes/snv-indels/Snakefile

@@ -1,6 +1,7 @@
 - name: test-hamlet-dry-run-single
   tags:
     - dry-run
+    - hamlet
   command: >
     snakemake -n
     --snakefile Snakefile
@@ -16,6 +17,7 @@
 - name: test-hamlet-dry-run-trio
   tags:
     - dry-run
+    - hamlet
   command: >
     snakemake -n
     --snakefile Snakefile
@@ -41,6 +43,7 @@
 - name: test-hamlet-sanity-snakemake
   tags:
     - sanity
+    - hamlet
   command: >
     snakemake --version
   stdout:
@@ -50,6 +53,7 @@
 - name: test-hamlet-sanity-singularity
   tags:
     - sanity
+    - hamlet
   command: >
     singularity --version
   stdout:
@@ -59,6 +63,7 @@
 - name: test-hamlet-frankenstein-integration
   tags:
     - integration
+    - hamlet
   command: >
     snakemake -rp
     --snakefile Snakefile

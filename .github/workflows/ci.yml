@@ -16,6 +16,13 @@ jobs:
         test:
           - sanity
           - dry-run
+        module:
+          - qc
+          - itd
+          - fusion
+          - expression
+          - snv-indels
+          - hamlet
     steps:
       - uses: actions/checkout@v2.3.4 # https://github.com/actions/checkout.
         with:
@@ -36,7 +43,9 @@ jobs:
       - name: Run test in conda environment
         # Use --symlink to limit disk usage.
         run: >-
-          pytest --keep-workflow-wd-on-fail --tag ${{ matrix.test }}
+          pytest --keep-workflow-wd-on-fail
+          --tag ${{ matrix.test }}
+          --tag ${{ matrix.module }}
           --symlink test/
 
       - name: Check cromwell log in case of failure.

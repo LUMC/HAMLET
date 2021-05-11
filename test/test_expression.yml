@@ -1,6 +1,7 @@
 - name: test-expression-dry-run-single
   tags:
     - dry-run
+    - expression
   command: >
     snakemake -n
     --snakefile includes/expression/Snakefile
@@ -17,6 +18,7 @@
 - name: test-expression-dry-run-trio
   tags:
     - dry-run
+    - expression
   command: >
     snakemake -n
     --snakefile includes/expression/Snakefile
@@ -43,6 +45,7 @@
 - name: test-expression-sanity-snakemake
   tags:
     - sanity
+    - expression
   command: >
     snakemake --version
   stdout:
@@ -52,6 +55,7 @@
 - name: test-expression-sanity-singularity
   tags:
     - sanity
+    - expression
   command: >
     singularity --version
   stdout:
@@ -61,6 +65,7 @@
 - name: test-expression-integration-HEL
   tags:
     - integration
+    - expression
   command: >
     snakemake -rp
     --snakefile includes/expression/Snakefile
@@ -101,6 +106,7 @@
 - name: test-expression-MECOM-vs-MECOM
   tags:
     - integration
+    - expression
   command: >
     snakemake -rp
     --snakefile includes/expression/Snakefile
