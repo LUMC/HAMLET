@@ -40,16 +40,6 @@
       - "TestSample3/hamlet_report.TestSample3.pdf"
       - "TestSample3/TestSample3.summary.json"
 
-- name: test-hamlet-sanity-snakemake
-  tags:
-    - sanity
-    - hamlet
-  command: >
-    snakemake --version
-  stdout:
-    contains:
-      - "5.9"
-
 - name: test-hamlet-sanity-singularity
   tags:
     - sanity

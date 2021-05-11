@@ -68,16 +68,6 @@
       - "TestSample3/fusion/TestSample3.sf-isect-circos/fsnviz.svg"
       - "TestSample3/fusion/TestSample3.fusions-combined.svg"
 
-- name: test-fusion-sanity-snakemake
-  tags:
-    - sanity
-    - fusion
-  command: >
-    snakemake --version
-  stdout:
-    contains:
-      - "5.9"
-
 - name: test-fusion-sanity-singularity
   tags:
     - sanity

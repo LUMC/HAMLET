@@ -42,16 +42,6 @@
       - "TestSample3/expression/TestSample3.fragments_per_gene"
       - "TestSample3/expression/TestSample3.raw_base"
 
-- name: test-expression-sanity-snakemake
-  tags:
-    - sanity
-    - expression
-  command: >
-    snakemake --version
-  stdout:
-    contains:
-      - "5.9"
-
 - name: test-expression-sanity-singularity
   tags:
     - sanity

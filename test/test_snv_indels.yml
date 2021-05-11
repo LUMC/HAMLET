@@ -36,16 +36,6 @@
       - "TestSample3/snv-indels/TestSample3.variants_all.csv"
       - "TestSample3/snv-indels/TestSample3.variants_hi.csv"
 
-- name: test-snv-indels-sanity-snakemake
-  tags:
-    - sanity
-    - snv-indels
-  command: >
-    snakemake --version
-  stdout:
-    contains:
-      - "5.9"
-
 - name: test-snv-indels-sanity-singularity
   tags:
     - sanity

@@ -46,16 +46,6 @@
       - "TestSample3/itd/TestSample3.flt3.bg.csv"
       - "TestSample3/itd/TestSample3.flt3.png"
 
-- name: test-itd-sanity-snakemake
-  tags:
-    - sanity
-    - itd
-  command: >
-    snakemake --version
-  stdout:
-    contains:
-      - "5.9"
-
 - name: test-itd-sanity-singularity
   tags:
     - sanity

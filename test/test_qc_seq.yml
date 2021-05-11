@@ -22,16 +22,6 @@
     contains:
       - "Job counts:"
 
-- name: test-qc-sanity-snakemake
-  tags:
-    - sanity
-    - qc
-  command: >
-    snakemake --version
-  stdout:
-    contains:
-      - "5.9"
-
 - name: test-qc-sanity-singularity
   tags:
     - sanity
