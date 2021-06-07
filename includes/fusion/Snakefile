@@ -12,7 +12,7 @@ containers = {
     "fuma": "docker://quay.io/biocontainers/fuma:3.0.5--py27h24bf2e0_1",
     "fusioncatcher": "docker://quay.io/biocontainers/fusioncatcher:1.20--2",
     "star-fusion": "docker://quay.io/biocontainers/star-fusion:1.6.0--1",
-    "hamlet-scripts": "docker://lumc/hamlet-scripts:0.2"
+    "hamlet-scripts": "docker://quay.io/redmar_van_den_berg/hamlet-scripts:0.2"
 }
 
 settings=config["settings"]

@@ -14,9 +14,9 @@ localrules: create_summary, generate_report, package_results
 
 containers = {
     "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py_3",
-    "hamlet-scripts": "docker://lumc/hamlet-scripts:0.3",
+    "hamlet-scripts": "docker://quay.io/redmar_van_den_berg/hamlet-scripts:0.3",
     "debian": "docker://debian:buster-slim",
-    "zip": "docker://lumc/zip:3.0"
+    "zip": "docker://quay.io/redmar_van_den_berg/zip:3.0"
 }
 
 settings=config["settings"]
