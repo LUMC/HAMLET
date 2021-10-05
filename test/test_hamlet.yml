@@ -64,3 +64,13 @@
     - path: "Frankenstein/hamlet_results.Frankenstein.zip"
     - path: "Frankenstein/Frankenstein.summary.json"
     - path: "Frankenstein/hamlet_report.Frankenstein.pdf"
+
+- name: test-hamlet-NOMO
+  tags:
+    - integration
+  command: >
+    snakemake -rp
+    --snakefile Snakefile
+    --configfile test/data/config/test-NOMO.config
+    --verbose
+    --use-singularity
