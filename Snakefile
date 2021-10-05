@@ -14,7 +14,7 @@ include: "includes/itd/Snakefile"
 localrules: create_summary, generate_report, package_results
 
 containers = {
-    "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py_3",
+    "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--pyhdfd78af_5",
     "hamlet-scripts": "docker://lumc/hamlet-scripts:0.3",
     "debian": "docker://debian:buster-slim",
     "zip": "docker://lumc/zip:3.0"
