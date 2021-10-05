@@ -1,6 +1,7 @@
 - name: test-hamlet-dry-run-single
   tags:
     - dry-run
+    - hamlet
   command: >
     snakemake -n
     --snakefile Snakefile
@@ -16,6 +17,7 @@
 - name: test-hamlet-dry-run-trio
   tags:
     - dry-run
+    - hamlet
   command: >
     snakemake -n
     --snakefile Snakefile
@@ -38,27 +40,20 @@
       - "TestSample3/hamlet_report.TestSample3.pdf"
       - "TestSample3/TestSample3.summary.json"
 
-- name: test-hamlet-sanity-snakemake
-  tags:
-    - sanity
-  command: >
-    snakemake --version
-  stdout:
-    contains:
-      - "5.9"
-
 - name: test-hamlet-sanity-singularity
   tags:
     - sanity
+    - hamlet
   command: >
     singularity --version
   stdout:
-    contains:
-      - "singularity version 3"
+    contains_regex:
+      - "singularity(-ce)? version 3"
 
 - name: test-hamlet-frankenstein-integration
   tags:
     - integration
+    - hamlet
   command: >
     snakemake -rp
     --snakefile Snakefile

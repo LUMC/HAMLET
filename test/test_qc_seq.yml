@@ -1,6 +1,7 @@
 - name: test-qc-dry-run-single
   tags:
     - dry-run
+    - qc
   command: >
     snakemake -n
     --snakefile includes/qc-seq/Snakefile
@@ -12,6 +13,7 @@
 - name: test-qc-dry-run-trio
   tags:
     - dry-run
+    - qc
   command: >
     snakemake -n
     --snakefile includes/qc-seq/Snakefile
@@ -20,27 +22,20 @@
     contains:
       - "Job counts:"
 
-- name: test-qc-sanity-snakemake
-  tags:
-    - sanity
-  command: >
-    snakemake --version
-  stdout:
-    contains:
-      - "5.9"
-
 - name: test-qc-sanity-singularity
   tags:
     - sanity
+    - qc
   command: >
     singularity --version
   stdout:
-    contains:
-      - "singularity version 3"
+    contains_regex:
+      - "singularity(-ce)? version 3"
 
 - name: test-qc-single
   tags:
     - integration
+    - qc
   command: >
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
@@ -60,6 +55,7 @@
 - name: test-qc-duo
   tags:
     - functional
+    - qc
   command: >
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
@@ -79,6 +75,7 @@
 - name: test-qc-trio
   tags:
     - functional
+    - qc
   command: >
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
@@ -93,6 +90,7 @@
 - name: test-qc-single-low-qual-adapters
   tags:
     - functional
+    - qc
   command: >
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile

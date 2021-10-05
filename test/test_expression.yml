@@ -1,6 +1,7 @@
 - name: test-expression-dry-run-single
   tags:
     - dry-run
+    - expression
   command: >
     snakemake -n
     --snakefile includes/expression/Snakefile
@@ -17,6 +18,7 @@
 - name: test-expression-dry-run-trio
   tags:
     - dry-run
+    - expression
   command: >
     snakemake -n
     --snakefile includes/expression/Snakefile
@@ -40,27 +42,20 @@
       - "TestSample3/expression/TestSample3.fragments_per_gene"
       - "TestSample3/expression/TestSample3.raw_base"
 
-- name: test-expression-sanity-snakemake
-  tags:
-    - sanity
-  command: >
-    snakemake --version
-  stdout:
-    contains:
-      - "5.9"
-
 - name: test-expression-sanity-singularity
   tags:
     - sanity
+    - expression
   command: >
     singularity --version
   stdout:
-    contains:
-      - "singularity version 3"
+    contains_regex:
+      - "singularity(-ce)? version 3"
 
 - name: test-expression-integration-HEL
   tags:
     - integration
+    - expression
   command: >
     snakemake -rp
     --snakefile includes/expression/Snakefile
@@ -101,6 +96,7 @@
 - name: test-expression-MECOM-vs-MECOM
   tags:
     - integration
+    - expression
   command: >
     snakemake -rp
     --snakefile includes/expression/Snakefile

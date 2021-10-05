@@ -1,6 +1,7 @@
 - name: test-itd-dry-run-single
   tags:
     - dry-run
+    - itd
   command: >
     snakemake -n
     --snakefile includes/itd/Snakefile
@@ -18,6 +19,7 @@
 - name: test-itd-dry-run-trio
   tags:
     - dry-run
+    - itd
   command: >
     snakemake -n
     --snakefile includes/itd/Snakefile
@@ -44,27 +46,20 @@
       - "TestSample3/itd/TestSample3.flt3.bg.csv"
       - "TestSample3/itd/TestSample3.flt3.png"
 
-- name: test-itd-sanity-snakemake
-  tags:
-    - sanity
-  command: >
-    snakemake --version
-  stdout:
-    contains:
-      - "5.9"
-
 - name: test-itd-sanity-singularity
   tags:
     - sanity
+    - itd
   command: >
     singularity --version
   stdout:
-    contains:
-      - "singularity version 3"
+    contains_regex:
+      - "singularity(-ce)? version 3"
 
 - name: test-itd-MV4-11-flt3
   tags:
     - integration
+    - itd
     - flt3
   command: >
     snakemake -rp
@@ -92,6 +87,7 @@
 - name: test-ptd-EoL-1-KMT2A
   tags:
     - integration
+    - itd
     - kmt2a
   command: >
     snakemake -rp
@@ -117,6 +113,7 @@
 - name: test-flt3-kmt2a-no-reads
   tags:
     - integration
+    - itd
   command: >
     snakemake -rp
     --snakefile includes/itd/Snakefile
