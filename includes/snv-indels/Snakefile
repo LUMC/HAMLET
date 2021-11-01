@@ -225,6 +225,7 @@ rule annotate_vars:
         " --custom {input.ref_gonl},GONL,vcf,exact,0,AF"
         " --fork {threads} --offline --cache_version 97 --assembly GRCh38 --everything --merged"
         " --allele_number --stats_text --vcf --cache --force_overwrite"
+        " --format vcf"
         " --stats_file {output.stats} -o STDOUT | bgzip -c > {output.vcf}"
 
 rule extract_vars:

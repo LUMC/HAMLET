@@ -3,6 +3,7 @@
 import json
 import csv
 from pathlib import Path
+from collections import defaultdict
 
 import click
 from crimson import picard, vep
@@ -119,16 +120,20 @@ def process_insert_stats(path):
 
 def process_var_stats(path):
     pd = vep.parse(path)
+
+    # If there are no variants, insert an empty defaultdict so that any queried
+    # value returns 0
+    if "Variants by chromosome" not in pd:
+        pd["Variants by chromosome"] = defaultdict(int)
+
     return {
-        "coding_consequences":
-        {k: v for k, v in pd["Coding consequences"].items()},
+        "coding_consequences": {k: v for k, v in pd["Coding consequences"].items()},
         "num_deletions": pd["Variant classes"].get("deletion", 0),
         "num_insertions": pd["Variant classes"].get("insertion", 0),
         "num_snvs": pd["Variant classes"].get("SNV", 0),
-        "per_chromosome":
-        {k: v
-         for k, v in pd["Variants by chromosome"].items()
-         if k in {str(i) for i in range(1, 23)}.union({"X", "Y", "MT"})},
+        "per_chromosome": {k: v
+                             for k, v in pd["Variants by chromosome"].items()
+                             if k in {str(i) for i in range(1, 23)}.union({"X", "Y", "MT"})},
         "polyphen": {
             "num_benign_variants": pd["PolyPhen summary"].get("benign", 0),
             "num_possibly_damaging_variants":

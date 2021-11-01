@@ -14,7 +14,7 @@ localrules: create_summary, generate_report, package_results
 
 containers = {
     "debian": "docker://debian:buster-slim",
-    "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--pyhdfd78af_5",
+    "crimson": "docker://quay.io/biocontainers/crimson:1.0.0--pyh5e36f6f_0",
     "hamlet-scripts": "docker://quay.io/redmar_van_den_berg/hamlet-scripts:0.3",
     "zip": "docker://quay.io/redmar_van_den_berg/zip:3.0"
 }
@@ -119,7 +119,7 @@ rule create_summary:
         run_name=RUN_NAME,
     output:
         js=OUTPUTS["summary"]
-    singularity: containers["fsnviz"]
+    singularity: containers["crimson"]
     shell:
         "python {input.scr}"
         " {input.idm}"
