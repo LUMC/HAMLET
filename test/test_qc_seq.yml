@@ -40,8 +40,10 @@
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
     --configfile test/data/config/test-qc-single.config
+    --cores 1
     --verbose
     --use-singularity
+    --singularity-args '--cleanenv --bind /tmp'
   files:
     - path: "TestSample/TestSample-R1.fq.gz"
     - path: "TestSample/TestSample-R2.fq.gz"
@@ -60,8 +62,10 @@
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
     --configfile test/data/config/test-qc-duo.config
+    --cores 1
     --verbose
     --use-singularity
+    --singularity-args '--cleanenv --bind /tmp'
   files:
     - path: "TestSample1/TestSample1-R1.fq.gz"
     - path: "TestSample1/TestSample1-R2.fq.gz"
@@ -80,8 +84,10 @@
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
     --configfile test/data/config/test-qc-trio.config
+    --cores 1
     --verbose
     --use-singularity
+    --singularity-args '--cleanenv --bind /tmp'
   files:
     - path: "TestSample3/qc-seq/rg_1"
     - path: "TestSample3/qc-seq/rg_2"
@@ -95,8 +101,10 @@
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
     --configfile test/data/config/test-qc-single-low-qual-adapters.config
+    --cores 1
     --verbose
     --use-singularity
+    --singularity-args '--cleanenv --bind /tmp'
   files:
     - path: "low_qual/low_qual-R1.fq.gz"
     - path: "low_qual/low_qual-R2.fq.gz"
