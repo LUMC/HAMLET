@@ -34,7 +34,7 @@
 
 - name: test-qc-single
   tags:
-    - integration
+    - functional
     - qc
   command: >
     snakemake -rp
