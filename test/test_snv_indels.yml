@@ -175,3 +175,66 @@
     - path: "7075-04-001-006/snv-indels/7075-04-001-006.raw.vcf.gz"
       must_not_contain:
         - "chr4\t105243576\t.\tC\tA"
+
+- name: test-chrM
+  tags:
+    - functional
+    - snv-indels
+  command: >
+    snakemake -rp
+    --snakefile includes/snv-indels/Snakefile
+    --configfile test/data/config/test-chrM.config
+    --cores 1
+    --notemp
+    --verbose
+    --use-singularity
+    --singularity-args '--cleanenv --bind /tmp'
+  stderr:
+    must_not_contain_regex:
+      - 'vep .* --offline'
+    contains:
+      - "rule index_reference"
+  files:
+    - path: "SRR8615409/snv-indels/SRR8615409.snv-indel.bam"
+    - path: "SRR8615409/snv-indels/SRR8615409.exon_cov_stats.json"
+    - path: "SRR8615409/snv-indels/SRR8615409.annotated.vcf.gz"
+      # Make sure the VEP output is in VCF format
+      contains:
+        - "##fileformat=VCFv4.1"
+    - path: "SRR8615409/snv-indels/SRR8615409.aln_stats"
+    - path: "SRR8615409/snv-indels/SRR8615409.variants.json"
+    - path: "SRR8615409/snv-indels/SRR8615409.variants_all.csv"
+    - path: "SRR8615409/snv-indels/SRR8615409.variants_hi.csv"
+    - path: "SRR8615409/snv-indels/variant_plots/.done"
+
+# Test if VEP switches to offline mode when "cache_vep" is specified
+- name: test-chrM-vep-cache
+  tags:
+    - dry-run
+    - snv-indels
+  command: >
+    snakemake -n
+    --snakefile includes/snv-indels/Snakefile
+    --printshellcmds
+    --configfile test/data/config/test-chrM-vep-cache.config
+  stdout:
+    contains_regex:
+      - 'vep .* --offline'
+    must_not_contain_regex:
+      - 'vep .* --database'
+
+# Test that index_reference is not ran if genome_gmap_index is specified
+- name: test-chrM-gmap-index
+  tags:
+    - dry-run
+    - snv-indels
+  command: >
+    snakemake -n
+    --snakefile includes/snv-indels/Snakefile
+    --printshellcmds
+    --configfile test/data/config/test-chrM-gmap-index.config
+  stdout:
+    contains:
+      - "gsnap --dir `dirname test/data/reference`"
+    must_not_contain:
+      - "rule index_reference"

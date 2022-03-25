@@ -15,7 +15,7 @@ containers = {
     "samtools": "docker://quay.io/biocontainers/samtools:1.6--h244ad75_4",
     "varscan-2.4.2-samtools-1.3.1-tabix-0.2.6-grep-2.14":
     "docker://quay.io/biocontainers/mulled-v2-58936b48a08c4e06505165c6f560ec9460b431ea:ef260d10ee671f4c7bd8e783939839bb2e0b684e-0",
-    "vep": "docker://quay.io/biocontainers/ensembl-vep:97.3--pl526hecc5488_0"
+    "vep": "docker://quay.io/biocontainers/ensembl-vep:101.0--pl526hecda079_1"
 }
 
 settings=config["settings"]
@@ -47,11 +47,32 @@ rule all_snv_indels:
         high_csv=expand("{sample}/snv-indels/{sample}.variants_hi.csv", sample=config["samples"])
 
 
+rule index_reference:
+    """Index the reference fasta"""
+    input:
+        ref=settings["genome_fasta"],
+    output:
+        directory("gmap_index/reference"),
+    params:
+        "reference",
+    log:
+        "log/index_reference.txt",
+    container:
+        containers["gsnap"]
+    shell:
+        """
+        # Clear the existing folder
+        rm -rf gmap_index
+        mkdir gmap_index
+
+        gmap_build -D gmap_index -d {params} {input.ref} 2>&1 > {log}
+        """
+
 rule align_vars:
     input:
         fq1="{sample}/{sample}-R1.fq.gz",
         fq2="{sample}/{sample}-R2.fq.gz",
-        index=settings["genome_gmap_index"],
+        index=settings.get("genome_gmap_index") or rules.index_reference.output,
     output:
         sam=temp("{sample}/snv-indels/{sample}.snv-indel.raw.sam"),
     params:
@@ -211,8 +232,10 @@ rule annotate_vars:
         vcf="{sample}/snv-indels/{sample}.raw.vcf.gz",
         ref_1kg=settings["vcf_1kg"],
         ref_gonl=settings["vcf_gonl"],
-        cache_vep=settings["cache_vep"],
-        fasta_vep=settings["fasta_vep"],
+        fasta_vep=settings["genome_fasta"],
+    params:
+        online="" if settings.get("cache_vep") else "--database",
+        offline=" --offline --cache_version 97 --everything --merged --dir {settings['cache_vep']}" if settings.get("cache_vep") else "",
     output:
         vcf="{sample}/snv-indels/{sample}.annotated.vcf.gz",
         stats="{sample}/snv-indels/{sample}.vep_stats.txt",
@@ -220,11 +243,13 @@ rule annotate_vars:
     singularity: containers["vep"]
     shell:
         "vep -i {input.vcf}"
-        " --fasta {input.fasta_vep} --dir {input.cache_vep}"
+        " --fasta {input.fasta_vep}"
+        " {params.online}"
+        " {params.offline}"
         " --custom {input.ref_1kg},P3,vcf,exact,0,AF,AFR_AF,AMR_AF,EAS_AF,EUR_AF,SAS_AF"
         " --custom {input.ref_gonl},GONL,vcf,exact,0,AF"
-        " --fork {threads} --offline --cache_version 97 --assembly GRCh38 --everything --merged"
-        " --allele_number --stats_text --vcf --cache --force_overwrite"
+        " --fork {threads}"
+        " --allele_number --stats_text --vcf --force_overwrite --assembly GRCh38"
         " --format vcf"
         " --stats_file {output.stats} -o STDOUT | bgzip -c > {output.vcf}"
 
