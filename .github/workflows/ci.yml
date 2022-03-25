@@ -16,6 +16,7 @@ jobs:
         test:
           - sanity
           - dry-run
+          - functional
         module:
           - qc
           - itd
