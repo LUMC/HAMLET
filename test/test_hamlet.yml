@@ -5,7 +5,7 @@
   command: >
     snakemake -n
     --snakefile Snakefile
-    --configfile test/data/config/test-qc-single.config
+    --configfile test/data/config/test-dry-run-single.config
   stdout:
     contains:
       - "Job counts:"
@@ -21,7 +21,7 @@
   command: >
     snakemake -n
     --snakefile Snakefile
-    --configfile test/data/config/test-qc-trio.config
+    --configfile test/data/config/test-dry-run-trio.config
   stdout:
     contains:
       - "Job counts:"
