@@ -176,7 +176,7 @@
       must_not_contain:
         - "chr4\t105243576\t.\tC\tA"
 
-- name: test-chrM
+- name: test-snv-indels-chrM
   tags:
     - functional
     - snv-indels

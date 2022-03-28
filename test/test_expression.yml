@@ -107,3 +107,19 @@
     - path: "HEL/expression/HEL.exon_ratios"
       contains_regex:
         - 'HEL\tMECOM:169146722-169147734\t28\d{3}\t0.04\d*\tyes\tMECOM\t7[01]\d{4}'
+
+- name: test-expression-chrM
+  tags:
+    - functional
+    - expression
+  command: >
+    snakemake -rp
+    --snakefile includes/expression/Snakefile
+    --configfile test/data/config/test-chrM.config
+    --cores 1
+    --notemp
+    --verbose
+    --use-singularity
+    --singularity-args '--cleanenv --bind /tmp'
+  files:
+    - path: "SRR8615409/expression/SRR8615409.exon_ratios"
