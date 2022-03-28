@@ -17,13 +17,6 @@ jobs:
           - sanity
           - dry-run
           - functional
-        module:
-          - qc
-          - itd
-          - fusion
-          - expression
-          - snv-indels
-          - hamlet
     steps:
       - uses: actions/checkout@v2.3.4 # https://github.com/actions/checkout.
         with:
@@ -46,7 +39,6 @@ jobs:
         run: >-
           pytest --keep-workflow-wd-on-fail
           --tag ${{ matrix.test }}
-          --tag ${{ matrix.module }}
           --symlink test/
 
       - name: Check cromwell log in case of failure.
