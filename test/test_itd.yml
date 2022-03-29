@@ -58,15 +58,18 @@
 
 - name: test-itd-MV4-11-flt3
   tags:
-    - integration
+    - functional
     - itd
     - flt3
   command: >
     snakemake -rp
     --snakefile includes/itd/Snakefile
     --configfile test/data/config/test-itd-MV4-11.config
+    --cores 1
+    --notemp
     --verbose
     --use-singularity
+    --singularity-args '--cleanenv --bind /tmp'
       MV4-11/itd/MV4-11.flt3.csv
       MV4-11/itd/MV4-11.flt3.png
   files:
@@ -86,15 +89,18 @@
 
 - name: test-ptd-EoL-1-KMT2A
   tags:
-    - integration
+    - functional
     - itd
     - kmt2a
   command: >
     snakemake -rp
     --snakefile includes/itd/Snakefile
     --configfile test/data/config/test-kmt2a-EoL-1.config
+    --cores 1
+    --notemp
     --verbose
     --use-singularity
+    --singularity-args '--cleanenv --bind /tmp'
     EoL-1/itd/EoL-1.kmt2a.png
   files:
     - path: "EoL-1/itd/EoL-1.kmt2a.png"
@@ -110,31 +116,35 @@
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
         - "453,457\t4106,4110\t39\t25\t452\t4106\t4111\t457\tfuzzy\t4"
 
+# Test flt3 and kmt2a ITD when there are no reads that map to flt3 or kmt2a
 - name: test-flt3-kmt2a-no-reads
   tags:
-    - integration
+    - functional
     - itd
   command: >
     snakemake -rp
     --snakefile includes/itd/Snakefile
-    --configfile test/data/config/test-p53-NB4.config
+    --configfile test/data/config/test-chrM.config
+    --cores 1
+    --notemp
     --verbose
     --use-singularity
+    --singularity-args '--cleanenv --bind /tmp'
   files:
-    - path: "NB4/itd/NB4.kmt2a.png"
-    - path: "NB4/itd/NB4.kmt2a.bg.csv"
+    - path: "SRR8615409/itd/SRR8615409.kmt2a.png"
+    - path: "SRR8615409/itd/SRR8615409.kmt2a.bg.csv"
       contains:
         - "position\tcoverage\tsoft_clip_count"
 
-    - path: "NB4/itd/NB4.kmt2a.csv"
+    - path: "SRR8615409/itd/SRR8615409.kmt2a.csv"
       contains:
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
 
-    - path: "NB4/itd/NB4.flt3.png"
-    - path: "NB4/itd/NB4.flt3.bg.csv"
+    - path: "SRR8615409/itd/SRR8615409.flt3.png"
+    - path: "SRR8615409/itd/SRR8615409.flt3.bg.csv"
       contains:
         - "position\tcoverage\tsoft_clip_count"
 
-    - path: "NB4/itd/NB4.flt3.csv"
+    - path: "SRR8615409/itd/SRR8615409.flt3.csv"
       contains:
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"

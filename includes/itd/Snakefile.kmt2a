@@ -15,8 +15,8 @@ def set_default(key, value):
 
 # Region of interest ~ exon 2-10 in transcript coordinates.
 set_default("kmt2a_name", "KMT2A-213")
-set_default("kmt2a_start", 456)
-set_default("kmt2a_end", 4719)
+set_default("kmt2a_start", 406)
+set_default("kmt2a_end", 4769)
 
 localrules: detect_kmt2a, plot_itd_kmt2a
 
