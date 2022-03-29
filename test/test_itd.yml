@@ -56,62 +56,43 @@
     contains_regex:
       - "singularity(-ce)? version 3"
 
-- name: test-itd-MV4-11-flt3
+- name: test-itd
   tags:
     - functional
     - itd
     - flt3
+    - kmt2a
   command: >
     snakemake -rp
     --snakefile includes/itd/Snakefile
-    --configfile test/data/config/test-itd-MV4-11.config
+    --configfile test/data/config/test-itd.config
     --cores 1
     --notemp
     --verbose
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
-      MV4-11/itd/MV4-11.flt3.csv
-      MV4-11/itd/MV4-11.flt3.png
+    ITD/itd/ITD.flt3.png
+    ITD/itd/ITD.kmt2a.png
   files:
-    - path: "MV4-11/itd/MV4-11.flt3.png"
-
-    - path: "MV4-11/itd/MV4-11.flt3.bg.csv"
+    - path: "ITD/itd/ITD.flt3.png"
+    - path: "ITD/itd/ITD.flt3.bg.csv"
       contains:
         - "position\tcoverage\tsoft_clip_count"
         - "1852\t1670\t500"
         - "1883\t1588\t1048"
-
-    - path: "MV4-11/itd/MV4-11.flt3.csv"
+    - path: "ITD/itd/ITD.flt3.csv"
       contains:
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
         - "1853\t1881,1882\t494\t4\t1852\t1882\t1882\t1853\tfuzzy-end\t1"
         - "1853\t1882\t494\t1046\t1852\t1882\t1883\t1853\texact\t0"
 
-- name: test-ptd-EoL-1-KMT2A
-  tags:
-    - functional
-    - itd
-    - kmt2a
-  command: >
-    snakemake -rp
-    --snakefile includes/itd/Snakefile
-    --configfile test/data/config/test-kmt2a-EoL-1.config
-    --cores 1
-    --notemp
-    --verbose
-    --use-singularity
-    --singularity-args '--cleanenv --bind /tmp'
-    EoL-1/itd/EoL-1.kmt2a.png
-  files:
-    - path: "EoL-1/itd/EoL-1.kmt2a.png"
-
-    - path: "EoL-1/itd/EoL-1.kmt2a.bg.csv"
+    - path: "ITD/itd/ITD.kmt2a.png"
+    - path: "ITD/itd/ITD.kmt2a.bg.csv"
       contains:
         - "position\tcoverage\tsoft_clip_count"
         - "452\t39\t44"
         - "4111\t256\t25"
-
-    - path: "EoL-1/itd/EoL-1.kmt2a.csv"
+    - path: "ITD/itd/ITD.kmt2a.csv"
       contains:
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
         - "453,457\t4106,4110\t39\t25\t452\t4106\t4111\t457\tfuzzy\t4"
