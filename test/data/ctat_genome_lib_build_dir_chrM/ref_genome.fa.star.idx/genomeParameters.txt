@@ -1,0 +1,19 @@
+### /usr/local/bin/STAR   --runMode genomeGenerate      --genomeDir ctat_genome_lib_build_dir_chrM/ref_genome.fa.star.idx   --genomeFastaFiles ../../test/data/reference/chrM.fa      --genomeSAindexNbases 6   --genomeChrBinNbits 16   --limitGenomeGenerateRAM 40419136213   --sjdbGTFfile GRCh38_gencode_v22_CTAT_lib_Mar012021.source/gencode.v22.annotation.chrM.gtf   --sjdbOverhang 150
+### GstrandBit 32
+versionGenome	2.7.4a
+genomeType	Full
+genomeFastaFiles	../../test/data/reference/chrM.fa 
+genomeSAindexNbases	6
+genomeChrBinNbits	16
+genomeSAsparseD	1
+genomeTransformType	None
+genomeTransformVCF	-
+sjdbOverhang	150
+sjdbFileChrStartEnd	- 
+sjdbGTFfile	GRCh38_gencode_v22_CTAT_lib_Mar012021.source/gencode.v22.annotation.chrM.gtf
+sjdbGTFchrPrefix	-
+sjdbGTFfeatureExon	exon
+sjdbGTFtagExonParentTranscript	transcript_id
+sjdbGTFtagExonParentGene	gene_id
+sjdbInsertSave	Basic
+genomeFileSizes	65536 136689

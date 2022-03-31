@@ -164,3 +164,21 @@
         - "PML"
         - "HAGH"
         - "PCNT"
+
+- name: test-fusion-chrM
+  tags:
+    - functional
+    - fusion
+  command: >
+    snakemake -rp
+    --snakefile includes/fusion/Snakefile
+    --configfile test/data/config/test-chrM.config
+    --cores 1
+    --notemp
+    --verbose
+    --use-singularity
+    --singularity-args '--cleanenv --bind /tmp'
+    SRR8615409/fusion/SRR8615409.star-fusion
+  files:
+    - path: SRR8615409/fusion/star-fusion/star-fusion.fusion_predictions.tsv
+    - path: SRR8615409/fusion/SRR8615409.star-fusion
