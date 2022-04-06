@@ -25,6 +25,7 @@ def set_default(key, value):
 
 set_default("sf_subset_script", srcdir(path.join("scripts", "subset_sf.py")))
 set_default("plot_combined_script", srcdir(path.join("scripts", "combine_svgs.py")))
+set_default("fusioncatcher_data", False)
 
 rule all_fusion:
     input:
