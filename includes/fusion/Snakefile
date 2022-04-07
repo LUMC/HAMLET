@@ -2,6 +2,7 @@ from os import path
 
 # We need the QC-seq output
 include: "../qc-seq/Snakefile"
+include: "common.smk"
 
 localrules: combine_plots, fusioncatcher_cp, intersect_fusions, plot_cp, plot_isect, plot_sf star_fusion_cp, subset_sf
 
@@ -25,22 +26,16 @@ def set_default(key, value):
 
 set_default("sf_subset_script", srcdir(path.join("scripts", "subset_sf.py")))
 set_default("plot_combined_script", srcdir(path.join("scripts", "combine_svgs.py")))
+set_default("sf_rewrite_script", srcdir(path.join("scripts", "rewrite_star_fusion_header.py")))
 set_default("fusioncatcher_data", False)
 
 rule all_fusion:
     input:
         star_predictions=expand("{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv", sample=config["samples"]),
         star_final=expand("{sample}/fusion/{sample}.star-fusion", sample=config["samples"]),
-        fusion_catcher=expand("{sample}/fusion/{sample}.fusioncatcher", sample=config["samples"]),
-        fuma=expand("{sample}/fusion/{sample}.fuma", sample=config["samples"]),
-        subset=expand("{sample}/fusion/{sample}.sf-isect", sample=config["samples"]),
-        is_svg=expand("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.svg", sample=config["samples"]),
-        is_png=expand("{sample}/fusion/{sample}.sf-isect-circos/fsnviz.png", sample=config["samples"]),
         sf_svg=expand("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg", sample=config["samples"]),
         sf_png=expand("{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png", sample=config["samples"]),
-        fc_svg=expand("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg", sample=config["samples"]),
-        fc_png=expand("{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png", sample=config["samples"]),
-        combined_svg=expand("{sample}/fusion/{sample}.fusions-combined.svg", sample=config["samples"]),
+        fusion_catcher_outputs=get_fusioncatcher_outputs(),
 
 rule star_fusion:
     input:
@@ -62,11 +57,12 @@ rule star_fusion:
 rule star_fusion_cp:
     input:
         txt="{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv",
+        src=settings["sf_rewrite_script"],
     output:
         txt="{sample}/fusion/{sample}.star-fusion",
-    singularity: containers["debian"]
+    singularity: containers["fsnviz"]
     shell:
-        "cp {input.txt} {output.txt}"
+        "python3 {input.src} {input.txt} > {output.txt}"
 
 rule plot_sf:
     input:
