@@ -83,11 +83,11 @@ OUTPUTS = dict(
 
 # Fusioncatcher outputs
 if settings.get("fusioncatcher_data"):
-    OUTPUT["fusioncatcher_txt"] = fusion_output(".fusioncatcher")
-    OUTPUT["fusioncatcher_svg"] = fusion_output(".fusioncatcher.svg")
-    OUTPUT["fusions_txt"] = fusion_output(".fuma")
-    OUTPUT["isect_svg"] = fusion_output(".sf-isect.svg")
-    OUTPUT["isect_txt"] = fusion_output(".sf-isect")
+    OUTPUTS["fusioncatcher_txt"] = fusion_output(".fusioncatcher")
+    OUTPUTS["fusioncatcher_svg"] = fusion_output(".fusioncatcher.svg")
+    OUTPUTS["fusions_txt"] = fusion_output(".fuma")
+    OUTPUTS["isect_svg"] = fusion_output(".sf-isect.svg")
+    OUTPUTS["isect_txt"] = fusion_output(".sf-isect")
 
 rule all:
     input:
