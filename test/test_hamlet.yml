@@ -89,3 +89,20 @@
   stdout:
     must_not_contain:
       - fusioncatcher
+
+# Test the full HAMLET pipeline, without running fusioncatcher
+- name: test-hamlet-chrM
+  tags:
+    - functional
+    - hamlet
+  command: >
+    snakemake
+    --snakefile Snakefile
+    --configfile test/data/config/test-chrM.config
+    --cores 1
+    --notemp
+    --verbose
+    --use-singularity
+    --singularity-args '--cleanenv --bind /tmp'
+  files:
+    - path: SRR8615409/hamlet_report.SRR8615409.pdf

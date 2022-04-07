@@ -88,7 +88,6 @@ if settings.get("fusioncatcher_data"):
     OUTPUT["fusions_txt"] = fusion_output(".fuma")
     OUTPUT["isect_svg"] = fusion_output(".sf-isect.svg")
     OUTPUT["isect_txt"] = fusion_output(".sf-isect")
-    OUTPUT["fusions_svg"] = fusion_output(".fusions-combined.svg")
 
 rule all:
     input:
@@ -108,7 +107,7 @@ rule create_summary:
         idm=settings["ref_id_mapping"],
         var_plots=OUTPUTS["smallvars_plots"],
         var_csv=OUTPUTS["smallvars_csv_hi"],
-        fusions_svg=OUTPUTS.get("fusions_svg", []),
+        fusions_svg=OUTPUTS["star_fusion_svg"],
         flt3_plot=OUTPUTS["flt3_png"],
         kmt2a_plot=OUTPUTS["kmt2a_png"],
         flt3_csv=OUTPUTS["flt3_csv"],

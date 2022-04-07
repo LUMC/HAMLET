@@ -10,7 +10,7 @@
     <figcaption>Figure {{ figure_idx }} | Intersected fusion candidates</figcaption>
   </figure>
   <div id="fusion-imgs">
-    <img class="fusion" src="{{ results.fusion.plots['star-fusion'] }}"></img>
+    <img class="fusion" src="{{ results.fusion.plots["star-fusion"] }}"></img>
     <img class="fusion" src="{{ results.fusion.plots.fusioncatcher }}"></img>
   </div>
   <figure>
@@ -45,7 +45,7 @@
   </div>
   {% else %}
   <figure>
-    <img class="half" src="{{ results.fusion.plots.intersection }}"></img>
+    <img class="half" src="{{ results.fusion.plots["star-fusion"]}}"></img>
     <figcaption>Figure {{ figure_idx }} | STAR-Fusion fusion candidates</figcaption>
   </figure>
   <div class="keep-together">
@@ -62,7 +62,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for item in results.fusion.tables['star-fusion'].top20 %}
+        {% for item in results.fusion.tables["star-fusion"].top20 %}
         <tr>
           <td>{{ item.name }}</td>
           <td>{{ item.type }}</td>

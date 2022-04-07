@@ -48,6 +48,7 @@
         <th class="text-right">Spanning fragments count</th>
       </tr>
     </thead>
+  {% if results.fusion.intersected %}
     <tbody>
       {% for item in results.fusion.tables.intersection.top20[:5] %}
       <tr>
@@ -60,6 +61,20 @@
       <tr>
       </tr>
     </tbody>
+  {% else %}
+    <tbody>
+      {% for item in results.fusion.tables["star-fusion"]["top20"][:5] %}
+      <tr>
+        <td>{{ item.name }}</td>
+        <td>{{ item.type }}</td>
+        <td class="text-right">{{ item.jr_count }}</td>
+        <td class="text-right">{{ item.sf_count }}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+      </tr>
+    </tbody>
+  {% endif %}
   </table>
 </div>
 
