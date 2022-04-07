@@ -74,3 +74,18 @@
     --configfile test/data/config/test-NOMO.config
     --verbose
     --use-singularity
+
+# Test a dry-run for the full HAMLET pipeline, without running fusioncatcher
+- name: test-hamlet-dry-run-chrM
+  tags:
+    - dry-run
+    - hamlet
+  command: >
+    snakemake -n
+    --snakefile Snakefile
+    --reason
+    --printshellcmds
+    --configfile test/data/config/test-chrM.config
+  stdout:
+    must_not_contain:
+      - fusioncatcher

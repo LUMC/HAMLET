@@ -55,14 +55,6 @@ OUTPUTS = dict(
     # Fusion
     star_fusion_txt=fusion_output(".star-fusion"),
     star_fusion_svg=fusion_output(".star-fusion.svg"),
-    fusions_svg=fusion_output(".fusions-combined.svg"),
-
-    # Fusioncatcher
-    fusioncatcher_txt=fusion_output(".fusioncatcher"),
-    fusioncatcher_svg=fusion_output(".fusioncatcher.svg"),
-    fusions_txt=fusion_output(".fuma"),
-    isect_svg=fusion_output(".sf-isect.svg"),
-    isect_txt=fusion_output(".sf-isect"),
 
     # Expression
     count_fragments_per_gene=expr_output(".fragments_per_gene"),
@@ -89,6 +81,15 @@ OUTPUTS = dict(
     kmt2a_png=itd_output(".kmt2a.png"),
 )
 
+# Fusioncatcher outputs
+if settings.get("fusioncatcher_data"):
+    OUTPUT["fusioncatcher_txt"] = fusion_output(".fusioncatcher")
+    OUTPUT["fusioncatcher_svg"] = fusion_output(".fusioncatcher.svg")
+    OUTPUT["fusions_txt"] = fusion_output(".fuma")
+    OUTPUT["isect_svg"] = fusion_output(".sf-isect.svg")
+    OUTPUT["isect_txt"] = fusion_output(".sf-isect")
+    OUTPUT["fusions_svg"] = fusion_output(".fusions-combined.svg")
+
 rule all:
     input:
         [expand(p, sample=config["samples"], pair={"R1", "R2"})
@@ -107,7 +108,7 @@ rule create_summary:
         idm=settings["ref_id_mapping"],
         var_plots=OUTPUTS["smallvars_plots"],
         var_csv=OUTPUTS["smallvars_csv_hi"],
-        fusions_svg=OUTPUTS["fusions_svg"],
+        fusions_svg=OUTPUTS.get("fusions_svg", []),
         flt3_plot=OUTPUTS["flt3_png"],
         kmt2a_plot=OUTPUTS["kmt2a_png"],
         flt3_csv=OUTPUTS["flt3_csv"],
@@ -162,7 +163,7 @@ rule package_results:
         smallvars_csv_all=OUTPUTS["smallvars_csv_all"],
         smallvars_csv_hi=OUTPUTS["smallvars_csv_hi"],
         smallvars_plots=OUTPUTS["smallvars_plots"],
-        fusions_svg=OUTPUTS["fusions_svg"],
+        fusions_svg=OUTPUTS.get("fusions_svg", []),
         count_fragments_per_gene=OUTPUTS["count_fragments_per_gene"],
         count_bases_per_gene=OUTPUTS["count_bases_per_gene"],
         count_bases_per_exon=OUTPUTS["count_bases_per_exon"],
