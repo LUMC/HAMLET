@@ -251,6 +251,8 @@ rule annotate_vars:
         " --fork {threads}"
         " --allele_number --stats_text --vcf --force_overwrite --assembly GRCh38"
         " --format vcf"
+        " --polyphen b"
+        " --sift b"
         " --stats_file {output.stats} -o STDOUT | bgzip -c > {output.vcf}"
 
 rule extract_vars:
