@@ -235,7 +235,7 @@ rule annotate_vars:
         fasta_vep=settings["genome_fasta"],
     params:
         online="" if settings.get("cache_vep") else "--database",
-        offline=" --offline --cache_version 97 --everything --merged --dir {settings['cache_vep']}" if settings.get("cache_vep") else "",
+        offline=f" --offline --cache_version 97 --everything --merged --dir {settings['cache_vep']}" if settings.get("cache_vep") else "",
     output:
         vcf="{sample}/snv-indels/{sample}.annotated.vcf.gz",
         stats="{sample}/snv-indels/{sample}.vep_stats.txt",
