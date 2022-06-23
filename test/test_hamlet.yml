@@ -50,13 +50,16 @@
     contains_regex:
       - "singularity(-ce)? version 3"
 
+# HAMLET should run whithout crashing on targetted RNAseq data, which gives no
+# results for most modules (Does not run fusioncatcher)
 - name: test-hamlet-NOMO
   tags:
-    - integration
+    - functional
   command: >
     snakemake -rp
     --snakefile Snakefile
     --configfile test/data/config/test-NOMO.config
+    --cores 1
     --verbose
     --use-singularity
 
