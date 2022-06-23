@@ -46,26 +46,6 @@
     contains_regex:
       - "singularity(-ce)? version 3"
 
-- name: test-flt3-integration-MV4-11
-  tags:
-    - integration
-    - flt3
-    - snv-indels
-  command: >
-    snakemake -rp
-    --snakefile includes/snv-indels/Snakefile
-    --configfile test/data/config/test-itd-MV4-11.config
-    --verbose
-    --use-singularity
-  files:
-    - path: "MV4-11/snv-indels/variant_plots/sample_MV4-11_gene_FLT3.png"
-    - path: "MV4-11/snv-indels/MV4-11.variants.json"
-    - path: "MV4-11/snv-indels/MV4-11.variants_all.csv"
-
-    - path: "MV4-11/snv-indels/MV4-11.variants_hi.csv"
-      contains:
-        - "sample_id,gene_symbol,gene_id,CHROM,POS,REF,alleles,genotype,is_in_hotspot"
-
 - name: test-TET2-insertion-config
   tags:
     - integration
