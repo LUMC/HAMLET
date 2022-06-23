@@ -46,29 +46,6 @@
     contains_regex:
       - "singularity(-ce)? version 3"
 
-- name: test-TET2-insertion-config
-  tags:
-    - integration
-    - snv-indels
-  command: >
-    snakemake -rp
-    --snakefile includes/snv-indels/Snakefile
-    --configfile test/data/config/test-TET2-insertion.config
-    --verbose
-    --use-singularity
-    7075-04-001-005/snv-indels/7075-04-001-005.raw.vcf.gz
-  files:
-    - path: "7075-04-001-005/snv-indels/7075-04-001-005.raw.vcf.gz"
-      contains:
-          - "chr4\t105259626\t.\tT\tTG"
-      must_not_contain:
-          - "chr4\t105259619\t.\tG\tA"
-          - "chr4\t105259620\t.\tA\tG"
-          - "chr4\t105259621\t.\tG\tA"
-          - "chr4\t105259623\t.\tA\tC"
-          - "chr4\t105259624\t.\tC\tT"
-          - "chr4\t105259626\t.\tT\tG"
-
 - name: test-RUNX1-insertion
   tags:
     - integration
