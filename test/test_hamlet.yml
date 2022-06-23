@@ -50,21 +50,6 @@
     contains_regex:
       - "singularity(-ce)? version 3"
 
-- name: test-hamlet-frankenstein-integration
-  tags:
-    - integration
-    - hamlet
-  command: >
-    snakemake -rp
-    --snakefile Snakefile
-    --configfile test/data/config/test-hamlet-frankenstein.config
-    --verbose
-    --use-singularity
-  files:
-    - path: "Frankenstein/hamlet_results.Frankenstein.zip"
-    - path: "Frankenstein/Frankenstein.summary.json"
-    - path: "Frankenstein/hamlet_report.Frankenstein.pdf"
-
 - name: test-hamlet-NOMO
   tags:
     - integration
@@ -105,4 +90,6 @@
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
   files:
+    - path: SRR8615409/hamlet_results.SRR8615409.zip
+    - path: SRR8615409/SRR8615409.summary.json
     - path: SRR8615409/hamlet_report.SRR8615409.pdf
