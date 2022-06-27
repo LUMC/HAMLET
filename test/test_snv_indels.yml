@@ -46,22 +46,6 @@
     contains_regex:
       - "singularity(-ce)? version 3"
 
-- name: test-TET2-false-positive-mutation
-  tags:
-    - integration
-    - snv-indels
-  command: >
-    snakemake -rp
-    --snakefile includes/snv-indels/Snakefile
-    --configfile test/data/config/test-TET2-mutation.config
-    --verbose
-    --use-singularity
-    "7075-04-001-006/snv-indels/7075-04-001-006.raw.vcf.gz"
-  files:
-    - path: "7075-04-001-006/snv-indels/7075-04-001-006.raw.vcf.gz"
-      must_not_contain:
-        - "chr4\t105243576\t.\tC\tA"
-
 - name: test-snv-indels-chrM
   tags:
     - functional
