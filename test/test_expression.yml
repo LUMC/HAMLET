@@ -1,20 +1,4 @@
-- name: test-expression-dry-run-single
-  tags:
-    - dry-run
-    - expression
-  command: >
-    snakemake -n
-    --snakefile includes/expression/Snakefile
-    --configfile test/data/config/test-dry-run-single.config
-  stdout:
-    contains:
-      - "Job counts:"
-      - "TestSample/expression/TestSample.bases_per_exon"
-      - "TestSample/expression/TestSample.bases_per_gene"
-      - "TestSample/expression/TestSample.exon_ratios"
-      - "TestSample/expression/TestSample.fragments_per_gene"
-      - "TestSample/expression/TestSample.raw_base"
-
+# Expression pipeline should attempt to generate specified files
 - name: test-expression-dry-run-trio
   tags:
     - dry-run
@@ -42,6 +26,7 @@
       - "TestSample3/expression/TestSample3.fragments_per_gene"
       - "TestSample3/expression/TestSample3.raw_base"
 
+# Singularity should be available
 - name: test-expression-sanity-singularity
   tags:
     - sanity
@@ -52,6 +37,7 @@
     contains_regex:
       - "singularity(-ce)? version 3"
 
+# Expression pipeline should run succesfully
 - name: test-expression-chrM
   tags:
     - functional
@@ -66,22 +52,20 @@
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
   files:
-    # Test the exon ratio's vs HMBS (which has 0 expression in our test sample)
+    # Should calculate the exon ratio's vs HMBS (which has 0 expression in our test sample)
     - path: "SRR8615409/expression/SRR8615409.exon_ratios"
       contains:
         - "sample_name\texon\tcount\tratio\tabove_threshold\tdivisor_gene\tdivisor_exp"
         - "SRR8615409\tMT-TA:5586-5655\t219\tinf\tyes\tHMBS\t0"
 
-    # Test that the file contains all transcripts specified in the expression
-    # bedfile
+    # Should contain all transcripts specified in the expression bedfile
     - path: "SRR8615409/expression/SRR8615409.bases_per_exon"
       contains:
         - "exon\tSRR8615409"
         - "MT-TF,MT-RNR1,MT-TV,MT-RNR2,MT-TL1"
         - "MT-TP"
-    # Test that the bases per gene is the sum of the bases of the
-    # exons of that gene. For this, we fake the data in the test expression bed
-    # file to split MT-CO1 into two (adjacent) exons
+    # Bases per gene should be the sum of bases per exons. To test this, we
+    # artifically split MT-CO1 into two (adjacent) exons
     - path: "SRR8615409/expression/SRR8615409.bases_per_exon"
       contains:
         - "MT-CO1:5903-6500\t37353"
@@ -90,16 +74,16 @@
       contains:
         - "gene\tSRR8615409"
         - "MT-CO1\t87575"
-    # Test the number of fragments This only counts the unique sequenced
-    # molecules, so a forward and read that map to the same exon count as one
-    # 'fragment'
+    # The number of fragments should only include unique molecules. If the
+    # forward and reverse map to the same exon, they are counted as one
+    # fragment
     - path: "SRR8615409/expression/SRR8615409.fragments_per_gene"
       contains:
         - "MT-CO1\t455"
-        # Special fields with stats about unusable reads
+        # Should contain special fields with stats about unusable reads
         - "__no_feature"
         - "__ambiguous"
         - "__not_aligned"
         - "__alignment_not_unique"
-    # Test that the file with raw bases counts exists
+    # Expression pipeline should create the file with raw base counts
     - path: "SRR8615409/expression/SRR8615409.raw_base"
