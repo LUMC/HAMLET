@@ -16,7 +16,6 @@ jobs:
         test:
           - sanity
           - dry-run
-          - functional
     steps:
       - uses: actions/checkout@v2.3.4 # https://github.com/actions/checkout.
         with:
