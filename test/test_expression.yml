@@ -37,7 +37,7 @@
     contains_regex:
       - "singularity(-ce)? version 3"
 
-# Expression pipeline should run succesfully
+# Expression pipeline should run successfully
 - name: test-expression-chrM
   tags:
     - functional
