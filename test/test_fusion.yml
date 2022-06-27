@@ -1,26 +1,4 @@
-- name: test-fusion-dry-run-single
-  tags:
-    - dry-run
-    - fusion
-  command: >
-    snakemake -n
-    --snakefile includes/fusion/Snakefile
-    --configfile test/data/config/test-dry-run-single.config
-  stdout:
-    contains:
-      - "Job counts:"
-      - "TestSample/fusion/TestSample.star-fusion"
-      - "TestSample/fusion/TestSample.star-fusion-circos/fsnviz.svg"
-      - "TestSample/fusion/TestSample.star-fusion-circos/fsnviz.png"
-      - "TestSample/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
-      - "TestSample/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
-      - "TestSample/fusion/TestSample.fusioncatcher"
-      - "TestSample/fusion/TestSample.fusioncatcher-circos/fsnviz.png"
-      - "TestSample/fusion/TestSample.fuma"
-      - "TestSample/fusion/TestSample.sf-isect"
-      - "TestSample/fusion/TestSample.sf-isect-circos/fsnviz.svg"
-      - "TestSample/fusion/TestSample.fusions-combined.svg"
-
+# Fusion pipeline should attempt to generate specified files
 - name: test-fusion-dry-run-trio
   tags:
     - dry-run
@@ -68,6 +46,7 @@
       - "TestSample3/fusion/TestSample3.sf-isect-circos/fsnviz.svg"
       - "TestSample3/fusion/TestSample3.fusions-combined.svg"
 
+# Singularity should be available
 - name: test-fusion-sanity-singularity
   tags:
     - sanity
@@ -78,6 +57,7 @@
     contains_regex:
       - "singularity(-ce)? version 3"
 
+# Fusion pipeline should run successfully
 - name: test-fusion-chrM
   tags:
     - functional
@@ -91,5 +71,7 @@
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
   files:
+    # Should create the star-fusion output file
     - path: chrM-fusion/fusion/star-fusion/star-fusion.fusion_predictions.tsv
+    # Should create the star-fusion output folder
     - path: chrM-fusion/fusion/chrM-fusion.star-fusion
