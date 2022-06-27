@@ -9,7 +9,7 @@ defaults:
     shell: bash -l {0}
 
 jobs:
-  test-dry-run:
+  snakemake-tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:
