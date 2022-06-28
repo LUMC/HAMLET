@@ -1,19 +1,4 @@
-- name: test-hamlet-dry-run-single
-  tags:
-    - dry-run
-    - hamlet
-  command: >
-    snakemake -n
-    --snakefile Snakefile
-    --configfile test/data/config/test-dry-run-single.config
-  stdout:
-    contains:
-      - "Job counts:"
-      - "TestSample/TestSample.summary.json"
-      - "TestSample/hamlet_results.TestSample.zip"
-      - "TestSample/hamlet_report.TestSample.pdf"
-      - "TestSample/TestSample.summary.json"
-
+# HAMLET pipeline should attempt to generate specified files
 - name: test-hamlet-dry-run-trio
   tags:
     - dry-run
@@ -40,6 +25,7 @@
       - "TestSample3/hamlet_report.TestSample3.pdf"
       - "TestSample3/TestSample3.summary.json"
 
+# Singularity should be available
 - name: test-hamlet-sanity-singularity
   tags:
     - sanity
@@ -50,7 +36,7 @@
     contains_regex:
       - "singularity(-ce)? version 3"
 
-# HAMLET should run whithout crashing on targetted RNAseq data, which gives no
+# HAMLET should run without crashing on targetted RNAseq data, which gives no
 # results for most modules (Does not run fusioncatcher)
 - name: test-hamlet-NOMO
   tags:
@@ -63,7 +49,7 @@
     --verbose
     --use-singularity
 
-# Test a dry-run for the full HAMLET pipeline, without running fusioncatcher
+# HAMLET pipeline should not run fusioncatcher by default
 - name: test-hamlet-dry-run-chrM
   tags:
     - dry-run
@@ -78,7 +64,22 @@
     must_not_contain:
       - fusioncatcher
 
-# Test the full HAMLET pipeline, without running fusioncatcher
+# HAMLET pipeline should run fusioncatcher when fusioncatcher_data is specified
+- name: test-hamlet-dry-run-chrM-fusioncatcher
+  tags:
+    - dry-run
+    - hamlet
+  command: >
+    snakemake -n
+    --snakefile Snakefile
+    --reason
+    --printshellcmds
+    --configfile test/data/config/test-chrM-fusioncatcher.config
+  stdout:
+    contains:
+      - fusioncatcher
+
+# HAMLET pipeline should run successfully with default settings
 - name: test-hamlet-chrM
   tags:
     - functional
@@ -93,6 +94,7 @@
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
   files:
+    # HAMLET pipeline should generate the final output files
     - path: SRR8615409/hamlet_results.SRR8615409.zip
     - path: SRR8615409/SRR8615409.summary.json
     - path: SRR8615409/hamlet_report.SRR8615409.pdf
