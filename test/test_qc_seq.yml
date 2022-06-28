@@ -6,7 +6,7 @@
   command: >
     snakemake -n
     --snakefile includes/qc-seq/Snakefile
-    --configfile test/data/config/test-qc-trio.config
+    --configfile test/data/config/test-qc-trio.json
   stdout:
     contains:
     # TestSample1 should contain a single readgroup
@@ -41,7 +41,7 @@
   command: >
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
-    --configfile test/data/config/test-qc-trio.config
+    --configfile test/data/config/test-qc-trio.json
     --cores 1
     --verbose
     --use-singularity
@@ -80,7 +80,7 @@
   command: >
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
-    --configfile test/data/config/test-qc-single-low-qual-adapters.config
+    --configfile test/data/config/test-qc-single-low-qual-adapters.json
     --cores 1
     --verbose
     --use-singularity

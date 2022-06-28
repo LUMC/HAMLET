@@ -6,7 +6,7 @@
   command: >
     snakemake -n
     --snakefile includes/itd/Snakefile
-    --configfile test/data/config/test-dry-run-trio.config
+    --configfile test/data/config/test-dry-run-trio.json
   stdout:
     contains:
       - "Job counts:"
@@ -50,7 +50,7 @@
   command: >
     snakemake -rp
     --snakefile includes/itd/Snakefile
-    --configfile test/data/config/test-itd.config
+    --configfile test/data/config/test-itd.json
     --cores 1
     --notemp
     --verbose
@@ -106,7 +106,7 @@
   command: >
     snakemake -rp
     --snakefile includes/itd/Snakefile
-    --configfile test/data/config/test-chrM.config
+    --configfile test/data/config/test-chrM.json
     --cores 1
     --notemp
     --verbose

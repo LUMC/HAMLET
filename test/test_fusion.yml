@@ -6,7 +6,7 @@
   command: >
     snakemake -n
     --snakefile includes/fusion/Snakefile
-    --configfile test/data/config/test-dry-run-trio.config
+    --configfile test/data/config/test-dry-run-trio.json
   stdout:
     contains:
       - "Job counts:"
@@ -64,7 +64,7 @@
     - fusion
   command: >
     snakemake -rp
-    --configfile test/data/config/test-chrM-fusion.config
+    --configfile test/data/config/test-chrM-fusion.json
     --cores 1
     --notemp
     --verbose

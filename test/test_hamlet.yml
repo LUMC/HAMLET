@@ -6,7 +6,7 @@
   command: >
     snakemake -n
     --snakefile Snakefile
-    --configfile test/data/config/test-dry-run-trio.config
+    --configfile test/data/config/test-dry-run-trio.json
   stdout:
     contains:
       - "Job counts:"
@@ -44,7 +44,7 @@
   command: >
     snakemake -rp
     --snakefile Snakefile
-    --configfile test/data/config/test-NOMO.config
+    --configfile test/data/config/test-NOMO.json
     --cores 1
     --verbose
     --use-singularity
@@ -59,7 +59,7 @@
     --snakefile Snakefile
     --reason
     --printshellcmds
-    --configfile test/data/config/test-chrM.config
+    --configfile test/data/config/test-chrM.json
   stdout:
     must_not_contain:
       - fusioncatcher
@@ -74,7 +74,7 @@
     --snakefile Snakefile
     --reason
     --printshellcmds
-    --configfile test/data/config/test-chrM-fusioncatcher.config
+    --configfile test/data/config/test-chrM-fusioncatcher.json
   stdout:
     contains:
       - fusioncatcher
@@ -87,7 +87,7 @@
   command: >
     snakemake
     --snakefile Snakefile
-    --configfile test/data/config/test-chrM.config
+    --configfile test/data/config/test-chrM.json
     --cores 1
     --notemp
     --verbose
