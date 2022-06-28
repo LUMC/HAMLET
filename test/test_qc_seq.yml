@@ -45,6 +45,7 @@
     --cores 1
     --verbose
     --use-singularity
+    --singularity-args '--cleanenv --bind /tmp'
     --singularity-prefix '~/.singularity/cache/snakemake'
   files:
     # QC pipeline should create output files for TestSample1
@@ -84,6 +85,7 @@
     --cores 1
     --verbose
     --use-singularity
+    --singularity-args '--cleanenv --bind /tmp'
     --singularity-prefix '~/.singularity/cache/snakemake'
   files:
     # FastQC summary should exist, and contain the following results

@@ -55,6 +55,7 @@
     --notemp
     --verbose
     --use-singularity
+    --singularity-args '--cleanenv --bind /tmp'
     --singularity-prefix '~/.singularity/cache/snakemake'
     ITD/itd/ITD.flt3.png
     ITD/itd/ITD.kmt2a.png
@@ -111,6 +112,7 @@
     --notemp
     --verbose
     --use-singularity
+    --singularity-args '--cleanenv --bind /tmp'
     --singularity-prefix '~/.singularity/cache/snakemake'
   files:
     # ITD pipeline should create the output files for kmt2a
