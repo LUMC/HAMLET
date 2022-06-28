@@ -1,18 +1,4 @@
-- name: test-snv-indels-dry-run-single
-  tags:
-    - dry-run
-    - snv-indels
-  command: >
-    snakemake -n
-    --snakefile includes/snv-indels/Snakefile
-    --configfile test/data/config/test-dry-run-single.config
-  stdout:
-    contains:
-      - "Job counts:"
-      - "TestSample/snv-indels/variant_plots/.done"
-      - "TestSample/snv-indels/TestSample.variants_all.csv"
-      - "TestSample/snv-indels/TestSample.variants_hi.csv"
-
+# snv-indel pipeline should attempt to generate specified files
 - name: test-snv-indels-dry-run-trio
   tags:
     - dry-run
@@ -36,6 +22,7 @@
       - "TestSample3/snv-indels/TestSample3.variants_all.csv"
       - "TestSample3/snv-indels/TestSample3.variants_hi.csv"
 
+# Singularity should be available
 - name: test-snv-indels-sanity-singularity
   tags:
     - sanity
@@ -46,6 +33,7 @@
     contains_regex:
       - "singularity(-ce)? version 3"
 
+# snv-indel pipeline should run successfully on chrM test data
 - name: test-snv-indels-chrM
   tags:
     - functional
@@ -60,15 +48,18 @@
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
   stderr:
+    # snv-indel should not use a local VEP database, but query ensembl
     must_not_contain_regex:
       - 'vep .* --offline'
+    # snv-indel should index the reference file for GSNAP if genome_gmap_index
+    # is not specified in the configuration
     contains:
       - "rule index_reference"
   files:
     - path: "SRR8615409/snv-indels/SRR8615409.snv-indel.bam"
     - path: "SRR8615409/snv-indels/SRR8615409.exon_cov_stats.json"
     - path: "SRR8615409/snv-indels/SRR8615409.annotated.vcf.gz"
-      # Make sure the VEP output is in VCF format
+      # VEP output should be in VCF format
       contains:
         - "##fileformat=VCFv4.1"
     - path: "SRR8615409/snv-indels/SRR8615409.aln_stats"
@@ -77,7 +68,7 @@
     - path: "SRR8615409/snv-indels/SRR8615409.variants_hi.csv"
     - path: "SRR8615409/snv-indels/variant_plots/.done"
 
-# Test if VEP switches to offline mode when "cache_vep" is specified
+# VEP should switch to offline mode when "cache_vep" is specified
 - name: test-chrM-vep-cache
   tags:
     - dry-run
@@ -93,7 +84,7 @@
     must_not_contain_regex:
       - 'vep .* --database'
 
-# Test that index_reference is not ran if genome_gmap_index is specified
+# index_reference should not run if genome_gmap_index is specified
 - name: test-chrM-gmap-index
   tags:
     - dry-run
