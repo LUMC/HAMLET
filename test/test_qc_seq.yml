@@ -45,7 +45,7 @@
     --cores 1
     --verbose
     --use-singularity
-    --singularity-args '--cleanenv --bind /tmp'
+    --singularity-prefix '~/.singularity/cache/snakemake'
   files:
     # QC pipeline should create output files for TestSample1
     - path: "TestSample1/TestSample1-R1.fq.gz"
@@ -84,7 +84,7 @@
     --cores 1
     --verbose
     --use-singularity
-    --singularity-args '--cleanenv --bind /tmp'
+    --singularity-prefix '~/.singularity/cache/snakemake'
   files:
     # FastQC summary should exist, and contain the following results
     - path: "low_qual/qc-seq/readgroup1/fastqc-R1-raw/ct_r1_fastqc/summary.txt"

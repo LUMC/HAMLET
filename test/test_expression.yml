@@ -50,7 +50,7 @@
     --notemp
     --verbose
     --use-singularity
-    --singularity-args '--cleanenv --bind /tmp'
+    --singularity-prefix '~/.singularity/cache/snakemake'
   files:
     # Should calculate the exon ratio's vs HMBS (which has 0 expression in our test sample)
     - path: "SRR8615409/expression/SRR8615409.exon_ratios"

@@ -46,7 +46,7 @@
     --notemp
     --verbose
     --use-singularity
-    --singularity-args '--cleanenv --bind /tmp'
+    --singularity-prefix '~/.singularity/cache/snakemake'
   stderr:
     # snv-indel should not use a local VEP database, but query ensembl
     must_not_contain_regex:

@@ -69,7 +69,7 @@
     --notemp
     --verbose
     --use-singularity
-    --singularity-args '--cleanenv --bind /tmp'
+    --singularity-prefix '~/.singularity/cache/snakemake'
   files:
     # Should create the star-fusion output file
     - path: chrM-fusion/fusion/star-fusion/star-fusion.fusion_predictions.tsv
