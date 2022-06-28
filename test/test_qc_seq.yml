@@ -1,15 +1,4 @@
-- name: test-qc-dry-run-single
-  tags:
-    - dry-run
-    - qc
-  command: >
-    snakemake -n
-    --snakefile includes/qc-seq/Snakefile
-    --configfile test/data/config/test-qc-single.config
-  stdout:
-    contains:
-      - "Job counts:"
-
+# QC pipeline should attempt to generate the specified files
 - name: test-qc-dry-run-trio
   tags:
     - dry-run
@@ -20,8 +9,19 @@
     --configfile test/data/config/test-qc-trio.config
   stdout:
     contains:
-      - "Job counts:"
+    # TestSample1 should contain a single readgroup
+    - "TestSample1/qc-seq/rg_1"
 
+    # TestSample2 should contain two readgroups
+    - "TestSample2/qc-seq/rg_2"
+    - "TestSample2/qc-seq/rg_3"
+
+    # TestSample3 should contain three readgroups
+    - "TestSample3/qc-seq/rg_1"
+    - "TestSample3/qc-seq/rg_2"
+    - "TestSample3/qc-seq/rg_3"
+
+# Singularity should be available
 - name: test-qc-sanity-singularity
   tags:
     - sanity
@@ -32,50 +32,8 @@
     contains_regex:
       - "singularity(-ce)? version 3"
 
-- name: test-qc-single
-  tags:
-    - functional
-    - qc
-  command: >
-    snakemake -rp
-    --snakefile includes/qc-seq/Snakefile
-    --configfile test/data/config/test-qc-single.config
-    --cores 1
-    --verbose
-    --use-singularity
-    --singularity-args '--cleanenv --bind /tmp'
-  files:
-    - path: "TestSample/TestSample-R1.fq.gz"
-    - path: "TestSample/TestSample-R2.fq.gz"
-    - path: "TestSample/qc-seq/rg_1/stats.json"
-    - path: "TestSample/qc-seq/rg_1"
-    - path: "TestSample/qc-seq/rg_1/fastqc-R1-processed"
-    - path: "TestSample/qc-seq/rg_1/fastqc-R2-processed"
-    - path: "TestSample/qc-seq/rg_1/fastqc-R1-raw"
-    - path: "TestSample/qc-seq/rg_1/fastqc-R2-raw"
-
-- name: test-qc-duo
-  tags:
-    - functional
-    - qc
-  command: >
-    snakemake -rp
-    --snakefile includes/qc-seq/Snakefile
-    --configfile test/data/config/test-qc-duo.config
-    --cores 1
-    --verbose
-    --use-singularity
-    --singularity-args '--cleanenv --bind /tmp'
-  files:
-    - path: "TestSample1/TestSample1-R1.fq.gz"
-    - path: "TestSample1/TestSample1-R2.fq.gz"
-    - path: "TestSample2/TestSample2-R1.fq.gz"
-    - path: "TestSample2/TestSample2-R2.fq.gz"
-    - path: "TestSample2/qc-seq/rg_2/TestSample2-rg_2-R1.fq.gz"
-    - path: "TestSample2/qc-seq/rg_2/TestSample2-rg_2-R2.fq.gz"
-    - path: "TestSample2/qc-seq/rg_3/TestSample2-rg_3-R1.fq.gz"
-    - path: "TestSample2/qc-seq/rg_3/TestSample2-rg_3-R2.fq.gz"
-
+# QC pipeline should run successfully on multiple samples with differing number
+# of readgroups
 - name: test-qc-trio
   tags:
     - functional
@@ -89,10 +47,32 @@
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
   files:
-    - path: "TestSample3/qc-seq/rg_1"
-    - path: "TestSample3/qc-seq/rg_2"
-    - path: "TestSample3/qc-seq/rg_3"
+    # QC pipeline should create output files for TestSample1
+    - path: "TestSample1/TestSample1-R1.fq.gz"
+    - path: "TestSample1/TestSample1-R2.fq.gz"
+    - path: "TestSample1/qc-seq/rg_1/stats.json"
+    - path: "TestSample1/qc-seq/rg_1"
+    - path: "TestSample1/qc-seq/rg_1/fastqc-R1-processed"
+    - path: "TestSample1/qc-seq/rg_1/fastqc-R2-processed"
+    - path: "TestSample1/qc-seq/rg_1/fastqc-R1-raw"
+    - path: "TestSample1/qc-seq/rg_1/fastqc-R2-raw"
 
+    # QC pipeline should create output files for TestSample2
+    - path: "TestSample2/TestSample2-R1.fq.gz"
+    - path: "TestSample2/TestSample2-R2.fq.gz"
+    - path: "TestSample2/qc-seq/rg_2/TestSample2-rg_2-R1.fq.gz"
+    - path: "TestSample2/qc-seq/rg_2/TestSample2-rg_2-R2.fq.gz"
+    - path: "TestSample2/qc-seq/rg_3/TestSample2-rg_3-R1.fq.gz"
+    - path: "TestSample2/qc-seq/rg_3/TestSample2-rg_3-R2.fq.gz"
+
+    # QC pipeline should create output file for TestSample3
+    - path: "TestSample3/TestSample3-R1.fq.gz"
+    - path: "TestSample3/TestSample3-R2.fq.gz"
+    - path: "TestSample3/qc-seq/rg_1/TestSample3-rg_1-R1.fq.gz"
+    - path: "TestSample3/qc-seq/rg_2/TestSample3-rg_2-R1.fq.gz"
+    - path: "TestSample3/qc-seq/rg_3/TestSample3-rg_3-R1.fq.gz"
+
+# QC pipeline should detect low quality fastq files
 - name: test-qc-single-low-qual-adapters
   tags:
     - functional
@@ -106,14 +86,7 @@
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
   files:
-    - path: "low_qual/low_qual-R1.fq.gz"
-    - path: "low_qual/low_qual-R2.fq.gz"
-    - path: "low_qual/qc-seq/readgroup1/stats.json"
-    - path: "low_qual/qc-seq/readgroup1"
-    - path: "low_qual/qc-seq/readgroup1/fastqc-R1-processed"
-    - path: "low_qual/qc-seq/readgroup1/fastqc-R2-processed"
-    - path: "low_qual/qc-seq/readgroup1/fastqc-R1-raw"
-    - path: "low_qual/qc-seq/readgroup1/fastqc-R2-raw"
+    # FastQC summary should exist, and contain the following results
     - path: "low_qual/qc-seq/readgroup1/fastqc-R1-raw/ct_r1_fastqc/summary.txt"
       contains:
         - "FAIL\tPer base sequence quality\tct_r1.fq.gz"
