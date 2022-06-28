@@ -1,21 +1,4 @@
-- name: test-itd-dry-run-single
-  tags:
-    - dry-run
-    - itd
-  command: >
-    snakemake -n
-    --snakefile includes/itd/Snakefile
-    --configfile test/data/config/test-dry-run-single.config
-  stdout:
-    contains:
-      - "Job counts:"
-      - "TestSample/itd/TestSample.kmt2a.csv"
-      - "TestSample/itd/TestSample.kmt2a.bg.csv"
-      - "TestSample/itd/TestSample.kmt2a.png"
-      - "TestSample/itd/TestSample.flt3.csv"
-      - "TestSample/itd/TestSample.flt3.bg.csv"
-      - "TestSample/itd/TestSample.flt3.png"
-
+# ITD pipeline should attempt to generate the specified files
 - name: test-itd-dry-run-trio
   tags:
     - dry-run
@@ -46,6 +29,7 @@
       - "TestSample3/itd/TestSample3.flt3.bg.csv"
       - "TestSample3/itd/TestSample3.flt3.png"
 
+# Singularity should be available
 - name: test-itd-sanity-singularity
   tags:
     - sanity
@@ -56,6 +40,7 @@
     contains_regex:
       - "singularity(-ce)? version 3"
 
+# ITD pipeline should run successfully and actually create the specified files
 - name: test-itd
   tags:
     - functional
@@ -74,30 +59,46 @@
     ITD/itd/ITD.flt3.png
     ITD/itd/ITD.kmt2a.png
   files:
+    # ITD pipeline should create a png of the detected repeat events for flt3
     - path: "ITD/itd/ITD.flt3.png"
+    # ITD pipeline should create a csv file of the detected soft-clip reads per
+    # position for flt3
     - path: "ITD/itd/ITD.flt3.bg.csv"
+      # The csv file should contain the following events
       contains:
         - "position\tcoverage\tsoft_clip_count"
         - "1852\t1670\t500"
         - "1883\t1588\t1048"
+    # ITD pipeline should create a final csv file of the detected internal
+    # tandem repeats
     - path: "ITD/itd/ITD.flt3.csv"
+      # The csv file should contain the header, and two internal tandem repeats
       contains:
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
         - "1853\t1881,1882\t494\t4\t1852\t1882\t1882\t1853\tfuzzy-end\t1"
         - "1853\t1882\t494\t1046\t1852\t1882\t1883\t1853\texact\t0"
 
+    # ITD pipeline should create a png of the detected repeat events for kmt2a
     - path: "ITD/itd/ITD.kmt2a.png"
+    # ITD pipeline should create a csv file of the detected soft-clipped reads
+    # per position for kmt2a
     - path: "ITD/itd/ITD.kmt2a.bg.csv"
+      # The csv file should contain the header, and soft-clip counts on two
+      # positions
       contains:
         - "position\tcoverage\tsoft_clip_count"
         - "452\t39\t44"
         - "4111\t256\t25"
+    # ITD pipeline should create a final csv file of the detected internal
+    # tandem repeats
     - path: "ITD/itd/ITD.kmt2a.csv"
+      # The csv file should contain the header, and a single internal tandem
+      # repeat
       contains:
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
         - "453,457\t4106,4110\t39\t25\t452\t4106\t4111\t457\tfuzzy\t4"
 
-# Test flt3 and kmt2a ITD when there are no reads that map to flt3 or kmt2a
+# ITD pipeline should run successfully when there are no reads that map to flt3 or kmt2a
 - name: test-flt3-kmt2a-no-reads
   tags:
     - functional
@@ -112,20 +113,26 @@
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
   files:
+    # ITD pipeline should create the output files for kmt2a
     - path: "SRR8615409/itd/SRR8615409.kmt2a.png"
+    # The csv output file should only contain the header
     - path: "SRR8615409/itd/SRR8615409.kmt2a.bg.csv"
       contains:
         - "position\tcoverage\tsoft_clip_count"
 
+    # The final csv output file for kmt2a should only contain the header
     - path: "SRR8615409/itd/SRR8615409.kmt2a.csv"
       contains:
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
 
+    # ITD pipeline should create the output files for flt3
     - path: "SRR8615409/itd/SRR8615409.flt3.png"
+    # The csv output file should only contain the header
     - path: "SRR8615409/itd/SRR8615409.flt3.bg.csv"
       contains:
         - "position\tcoverage\tsoft_clip_count"
 
+    # The final csv output file for kmt2a should only contain the header
     - path: "SRR8615409/itd/SRR8615409.flt3.csv"
       contains:
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
