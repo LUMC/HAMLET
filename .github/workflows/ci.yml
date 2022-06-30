@@ -83,7 +83,8 @@ jobs:
           - fusion
           - expression
           - snv-indels
-          - hamlet
+          - test-hamlet-targetted-RNA
+          - test-hamlet-chrM
     steps:
       - uses: actions/checkout@v2.3.4 # https://github.com/actions/checkout.
         with:
@@ -131,6 +132,9 @@ jobs:
           path:
             ~/.singularity/cache/snakemake
           key: singularity-${{ hashFiles('**/common.smk') }}-${{ matrix.module}}-${{ env.CACHE_NUMBER }}
+          restore_key: |
+            singularity-${{ hashFiles('**/common.smk') }}-
+            singularity-
 
       - name: Run test in conda environment
         run: >-
