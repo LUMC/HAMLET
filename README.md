@@ -23,7 +23,7 @@ separation of output per-sample are taken care of automatically by Hamlet. Addit
 cluster-specific YAML configuration to determine how much resource such as memory or CPU cores should be allocated to
 the jobs.
 
-Hamlet tries to make use of isolated conda environment per Snakemake rule whenever possible. The base execution
+Hamlet tries to make use of isolated Conda environment per Snakemake rule whenever possible. The base execution
 environment is also defined by an `environment.yml` file.
 
 In addition to the raw output files, Hamlet also generates a PDF report containing an overview of the essential results
@@ -58,7 +58,7 @@ the md5sum for the archive is `5ca99cde00955cae44cb63ef3f7d3fd4`.
 Please contact the author or open an issue if the link is not working.
 
 ## Testing
-The following commands can be used to test different aspects of HAMLET. First, activate the HAMLET conda environment
+The following commands can be used to test different aspects of HAMLET. First, activate the HAMLET Conda environment
 which was created in the previous step.
 ```bash
 conda activate HAMLET
@@ -161,10 +161,10 @@ If you use HAMLET in your research, please cite the [HAMLET publication](https:/
 
 # Common issues
 ## Using singularity
-If you forget the `--use-singularity` flag for snakemake, you will find that many rules break due to the required tools
+If you forget the `--use-singularity` flag for Snakemake, you will find that many rules break due to the required tools
 not being available on your system.
 
 ## Snakemake errors about reserved keywords
-If you install snakemake manually instead of using conda and the provided `environment.yml` file, you might get errors
-about reserved keyword that are used in the Snakefiles. Please use the snakemake version specified in the
+If you install Snakemake manually instead of using Conda and the provided `environment.yml` file, you might get errors
+about reserved keyword that are used in the Snakefiles. Please use the Snakemake version specified in the
 `environment.yml` file.
