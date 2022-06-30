@@ -105,7 +105,7 @@ jobs:
         shell: bash
 
       - name: Cache conda environment
-        id: conda
+        id: conda-cache
         uses: actions/cache@v2
         env:
           # Increase this value to manually invalidate the cache
@@ -116,7 +116,7 @@ jobs:
 
       - name: Update HAMLET environment
         run: mamba env update -n HAMLET -f environment.yml
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.conda-cache.outputs.cache-hit != 'true'
 
       - name: Install singularity
         uses: eWaterCycle/setup-singularity@v6
