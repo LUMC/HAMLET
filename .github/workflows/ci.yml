@@ -21,17 +21,38 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Set up Conda environment
-        uses: conda-incubator/setup-miniconda@v2.0.1 # https://github.com/conda-incubator/setup-miniconda.
+      - name: Setup Mambaforge
+        uses: conda-incubator/setup-miniconda@v2
         with:
+          miniforge-variant: Mambaforge
+          miniforge-version: latest
           activate-environment: HAMLET
-          environment-file: environment.yml
-          auto-activate-base: false
+          use-mamba: true
 
       - name: Install singularity
         uses: eWaterCycle/setup-singularity@v6
         with:
           singularity-version: 3.6.4
+
+      # This is used to invalidate the conda environment every week
+      - name: Get year and week (for conda cache)
+        id: get-date
+        run: echo "::set-output name=week::$(/bin/date -u '+%Y-w%V')"
+        shell: bash
+
+      - name: Cache conda environment
+        uses: actions/cache@v2
+        env:
+          # Increase this value to manually invalidate the cache
+          CACHE_NUMBER: 0
+        with:
+          path: ${{ env.CONDA }}/envs
+          key: conda-${{ hashFiles('environment.yml') }}-${{ steps.get-date.outputs.week }}-${{ env.CACHE_NUMBER }}
+        id: cache
+
+      - name: Update HAMLET environment
+        run: mamba env update -n HAMLET -f environment.yml
+        if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Run test in conda environment
         run: >-
@@ -68,17 +89,48 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Set up Conda environment
-        uses: conda-incubator/setup-miniconda@v2.0.1 # https://github.com/conda-incubator/setup-miniconda.
+      - name: Setup Mambaforge
+        uses: conda-incubator/setup-miniconda@v2
         with:
+          miniforge-variant: Mambaforge
+          miniforge-version: latest
           activate-environment: HAMLET
-          environment-file: environment.yml
-          auto-activate-base: false
+          use-mamba: true
+
+      # This is used to invalidate the conda environment every week
+      - name: Get week number
+        id: get-date
+        run: echo "::set-output name=week::$(/bin/date -u '+%Y-w%V')"
+        shell: bash
+
+      - name: Cache conda environment
+        id: conda
+        uses: actions/cache@v2
+        env:
+          # Increase this value to manually invalidate the cache
+          CACHE_NUMBER: 0
+        with:
+          path: ${{ env.CONDA }}/envs
+          key: conda-${{ hashFiles('environment.yml') }}-${{ steps.get-date.outputs.week }}-${{ env.CACHE_NUMBER }}
+
+      - name: Update HAMLET environment
+        run: mamba env update -n HAMLET -f environment.yml
+        if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Install singularity
         uses: eWaterCycle/setup-singularity@v6
         with:
           singularity-version: 3.6.4
+
+      - name: Cache singularity images
+        uses: actions/cache@v3
+        env:
+          # Increase this value to manually invalidate the cache
+          CACHE_NUMBER: 0
+        with:
+          path:
+            ~/.singularity/cache/snakemake
+          key: singularity-${{ hashFiles('**/common.smk') }}-${{ matrix.module}}-${{ env.CACHE_NUMBER }}
 
       - name: Run test in conda environment
         run: >-
