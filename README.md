@@ -69,8 +69,9 @@ To test if all dependencies of HAMLET have been installed, use
 pytest --tag sanity
 ```
 
-If any of the tests fail, append `--keep-workflow-wd-on-fail` to the pytest command and inspect the `log.err` and
-`log.out` files in the run folder.
+If any of the tests fail, append `--keep-workflow-wd-on-fail` or `--kwdof` to
+the pytest command and inspect the `log.err` and `log.out` files in the run
+folder.
 
 To test if HAMLET can parse the Snakemake files and find the appropriate output files, use
 ```bash
@@ -82,21 +83,20 @@ To test if HAMLET can run the quality control part of the pipeline, using exampl
 pytest --tag functional
 ```
 
-To test the full behaviour of HAMLET, please make sure that all required reference files are present and have been set
-correctly in the config files which are present in the `test/data/config/` folder. Then, use
+To test the full behaviour of HAMLET, you can use
 ```bash
-pytest --tag integration
+pytest --tag functional
 ```
 
 **Important: pytest copies the current directory to /tmp to run the tests.  Therefore, do not place large reference
 or sample files inside the HAMLET root folder when running tests, or these will be copied over dozens of times.**
 
 If you want to manually test HAMLET without using pytest-workflow, you can run the following command. Please make sure
-you have updated the paths in `test/data/config/test-hamlet-frankenstein.config` to point to the copy of the HAMLET
+you have updated the paths in `test/data/config/test-hamlet-chrM.json` to point to the copy of the HAMLET
 reference files.
 
 ```bash
-snakemake -rp --snakefile Snakefile --configfile test/data/config/test-hamlet-frankenstein.config --use-singularity
+snakemake -rp --snakefile Snakefile --configfile test/data/config/test-chrM.json --use-singularity
 ```
 
 # Usage
@@ -111,8 +111,8 @@ correctly in the configuration files.
 After installation of all the required tools, you will need to fill in the required settings and configurations in
 several YAML files.
 
-For the runtime settings, use the provided `test/data/config/test-hamlet-frankenstein.config` file as template and
-update the values as required. Let's call this file `config.yml`.
+For the runtime settings, use the provided `test/data/config/test-chrM.json` file as template and
+update the values as required. Let's call this file `config.json`.
 
 If running in a cluster, you may also want to define the resource configurations in another YAML file. Read more about
 this type of configuration on the official [Snakemake
@@ -122,7 +122,7 @@ file, let's call it `config-cluster.yml`
 ### Example command
 ```bash
 $ snakemake -s Snakefile \
-    --configfile config.yml \
+    --configfile config.json \
     --cluster-config config-cluster.yml \
     --rerun-incomplete \
     --use-singularity \
@@ -133,7 +133,7 @@ $ snakemake -s Snakefile \
 ### Explanation for the various flags
 | flag | description | required |
 | ---- | ----------- | -------- |
-| --configfile config.yml | The configuration file for the pipeline | Yes |
+| --configfile config.json | The configuration file for the pipeline | Yes |
 | --cluster-config | A cluster configuration file, only relevant when you are running HAMLET on a cluster | No |
 | --rerun-incomplete | Re-run jobs if the output appears incomplete | No |
 | --use-singularity | Use Singularity images to fetch all required dependencies. | Yes |
