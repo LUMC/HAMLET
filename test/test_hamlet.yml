@@ -38,7 +38,7 @@
 
 # HAMLET should run without crashing on targetted RNAseq data, which gives no
 # results for most modules (Does not run fusioncatcher)
-- name: test-hamlet-NOMO
+- name: test-hamlet-targetted-RNA
   tags:
     - functional
   command: >
