@@ -132,7 +132,7 @@ jobs:
           path:
             ~/.singularity/cache/snakemake
           key: singularity-${{ hashFiles('**/common.smk') }}-${{ matrix.module}}-${{ env.CACHE_NUMBER }}
-          restore_key: |
+          restore-keys: |
             singularity-${{ hashFiles('**/common.smk') }}-
             singularity-
 
