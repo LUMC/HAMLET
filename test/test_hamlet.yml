@@ -41,6 +41,7 @@
 - name: test-hamlet-targetted-RNA
   tags:
     - functional
+    - hamlet
   command: >
     snakemake -rp
     --snakefile Snakefile
@@ -48,6 +49,7 @@
     --cores 1
     --verbose
     --use-singularity
+    --singularity-args '--cleanenv --bind /tmp'
     --singularity-prefix '~/.singularity/cache/snakemake'
 
 # HAMLET pipeline should not run fusioncatcher by default
