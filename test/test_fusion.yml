@@ -64,6 +64,7 @@
     - fusion
   command: >
     snakemake -rp
+    --snakefile includes/fusion/Snakefile
     --configfile test/data/config/test-chrM-fusion.json
     --cores 1
     --notemp
@@ -71,6 +72,8 @@
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
     --singularity-prefix '~/.singularity/cache/snakemake'
+    chrM-fusion/fusion/star-fusion/star-fusion.fusion_predictions.tsv
+    chrM-fusion/fusion/chrM-fusion.star-fusion
   files:
     # Should create the star-fusion output file
     - path: chrM-fusion/fusion/star-fusion/star-fusion.fusion_predictions.tsv
