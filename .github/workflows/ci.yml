@@ -41,6 +41,7 @@ jobs:
         shell: bash
 
       - name: Cache conda environment
+        id: conda-cache
         uses: actions/cache@v2
         env:
           # Increase this value to manually invalidate the cache
@@ -48,11 +49,10 @@ jobs:
         with:
           path: ${{ env.CONDA }}/envs
           key: conda-${{ hashFiles('environment.yml') }}-${{ steps.get-date.outputs.week }}-${{ env.CACHE_NUMBER }}
-        id: cache
 
       - name: Update HAMLET environment
         run: mamba env update -n HAMLET -f environment.yml
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.conda-cache.outputs.cache-hit != 'true'
 
       - name: Run test in conda environment
         run: >-
