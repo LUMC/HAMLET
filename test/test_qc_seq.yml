@@ -6,20 +6,53 @@
   command: >
     snakemake -n
     --snakefile includes/qc-seq/Snakefile
-    --configfile test/data/config/test-qc-trio.json
+    --config pepfile=test/pep/qc-seq/qc-trio.yml
   stdout:
     contains:
     # TestSample1 should contain a single readgroup
     - "TestSample1/qc-seq/rg_1"
 
     # TestSample2 should contain two readgroups
+    - "TestSample2/qc-seq/rg_1"
     - "TestSample2/qc-seq/rg_2"
-    - "TestSample2/qc-seq/rg_3"
 
     # TestSample3 should contain three readgroups
     - "TestSample3/qc-seq/rg_1"
     - "TestSample3/qc-seq/rg_2"
     - "TestSample3/qc-seq/rg_3"
+
+    # Cutadapt should run for TestSample3
+    - "TestSample3/qc-seq/rg_1/TestSample3-rg_1-R1.fq.gz"
+    - "TestSample3/qc-seq/rg_1/TestSample3-rg_1-R2.fq.gz"
+    - "TestSample3/qc-seq/rg_2/TestSample3-rg_2-R1.fq.gz"
+    - "TestSample3/qc-seq/rg_2/TestSample3-rg_2-R2.fq.gz"
+    - "TestSample3/qc-seq/rg_3/TestSample3-rg_3-R1.fq.gz"
+    - "TestSample3/qc-seq/rg_3/TestSample3-rg_3-R2.fq.gz"
+
+    # FastQC should be run on the output of cutadapt
+    - "TestSample3/qc-seq/rg_1/fastqc-R1-processed"
+    - "TestSample3/qc-seq/rg_3/fastqc-R2-processed"
+
+    # There should be one stats file per sample/readgroup
+    - "TestSample3/qc-seq/rg_1/stats.json"
+    - "TestSample3/qc-seq/rg_2/stats.json"
+    - "TestSample3/qc-seq/rg_3/stats.json"
+
+    # The trimmed fastq files should be merged
+    - "TestSample1/TestSample1-R1.fq.gz"
+    - "TestSample1/TestSample1-R2.fq.gz"
+    - "TestSample2/TestSample2-R1.fq.gz"
+    - "TestSample2/TestSample2-R2.fq.gz"
+    - "TestSample3/TestSample3-R1.fq.gz"
+    - "TestSample3/TestSample3-R2.fq.gz"
+
+    # The raw fastq files should be merged
+    - "TestSample1/TestSample1-R1.raw.fq.gz"
+    - "TestSample1/TestSample1-R2.raw.fq.gz"
+    - "TestSample2/TestSample2-R1.raw.fq.gz"
+    - "TestSample2/TestSample2-R2.raw.fq.gz"
+    - "TestSample3/TestSample3-R1.raw.fq.gz"
+    - "TestSample3/TestSample3-R2.raw.fq.gz"
 
 # Singularity should be available
 - name: test-qc-sanity-singularity
@@ -41,7 +74,7 @@
   command: >
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
-    --configfile test/data/config/test-qc-trio.json
+    --config pepfile=test/pep/qc-seq/qc-trio.yml
     --cores 1
     --verbose
     --use-singularity
@@ -61,10 +94,10 @@
     # QC pipeline should create output files for TestSample2
     - path: "TestSample2/TestSample2-R1.fq.gz"
     - path: "TestSample2/TestSample2-R2.fq.gz"
+    - path: "TestSample2/qc-seq/rg_1/TestSample2-rg_1-R1.fq.gz"
+    - path: "TestSample2/qc-seq/rg_1/TestSample2-rg_1-R2.fq.gz"
     - path: "TestSample2/qc-seq/rg_2/TestSample2-rg_2-R1.fq.gz"
     - path: "TestSample2/qc-seq/rg_2/TestSample2-rg_2-R2.fq.gz"
-    - path: "TestSample2/qc-seq/rg_3/TestSample2-rg_3-R1.fq.gz"
-    - path: "TestSample2/qc-seq/rg_3/TestSample2-rg_3-R2.fq.gz"
 
     # QC pipeline should create output file for TestSample3
     - path: "TestSample3/TestSample3-R1.fq.gz"
@@ -81,7 +114,7 @@
   command: >
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
-    --configfile test/data/config/test-qc-single-low-qual-adapters.json
+    --config pepfile=test/pep/qc-seq/qc-low-qual-adapters.yml
     --cores 1
     --verbose
     --use-singularity
@@ -89,15 +122,15 @@
     --singularity-prefix '~/.singularity/cache/snakemake'
   files:
     # FastQC summary should exist, and contain the following results
-    - path: "low_qual/qc-seq/readgroup1/fastqc-R1-raw/ct_r1_fastqc/summary.txt"
+    - path: "low_qual/qc-seq/rg_1/fastqc-R1-raw/ct_r1_fastqc/summary.txt"
       contains:
         - "FAIL\tPer base sequence quality\tct_r1.fq.gz"
         - "WARN\tPer base N content\tct_r1.fq.gz"
         - "FAIL\tOverrepresented sequences\tct_r1.fq.gz"
         - "FAIL\tAdapter Content\tct_r1.fq.gz"
-    - path: "low_qual/qc-seq/readgroup1/fastqc-R1-processed/low_qual-readgroup1-R1_fastqc/summary.txt"
+    - path: "low_qual/qc-seq/rg_1/fastqc-R1-processed/low_qual-rg_1-R1_fastqc/summary.txt"
       contains:
-        - "PASS\tPer base sequence quality\tlow_qual-readgroup1-R1.fq.gz"
-        - "PASS\tPer base N content\tlow_qual-readgroup1-R1.fq.gz"
-        - "WARN\tOverrepresented sequences\tlow_qual-readgroup1-R1.fq.gz"
-        - "PASS\tAdapter Content\tlow_qual-readgroup1-R1.fq.gz"
+        - "PASS\tPer base sequence quality\tlow_qual-rg_1-R1.fq.gz"
+        - "PASS\tPer base N content\tlow_qual-rg_1-R1.fq.gz"
+        - "WARN\tOverrepresented sequences\tlow_qual-rg_1-R1.fq.gz"
+        - "PASS\tAdapter Content\tlow_qual-rg_1-R1.fq.gz"
