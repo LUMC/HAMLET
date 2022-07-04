@@ -20,3 +20,33 @@ def get_r(strand, wildcards):
 
 get_r1 = partial(get_r, "R1")
 get_r2 = partial(get_r, "R2")
+
+def get_readgroup_per_sample():
+    for sample in config["samples"]:
+        for rg in config["samples"][sample]["read_groups"]:
+            yield rg, sample
+
+
+def get_fastq(wildcards):
+    """ Get the fastq files from the config """
+    return (
+        config["samples"][wildcards.sample]["read_groups"]
+                [wildcards.read_group][wildcards.pair]
+    )
+
+def get_forward(wildcards):
+    """ Get the forward fastq file from the config """
+    return (
+        config["samples"][wildcards.sample]["read_groups"]
+                [wildcards.read_group]["R1"]
+    )
+
+def get_reverse(wildcards):
+    """ Get the reverse fastq file from the config """
+    return (
+        config["samples"][wildcards.sample]["read_groups"]
+            [wildcards.read_group]["R2"]
+    )
+
+def get_readgroup(wildcards):
+    return config["samples"][wildcards.sample]["read_groups"]
