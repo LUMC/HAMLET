@@ -1,5 +1,9 @@
 include: "common.smk"
 
+pepfile: config["pepfile"]
+
+samples = pep.sample_table["sample_name"]
+
 localrules: rg_stats, sample_stats
 
 rule all_qc:
@@ -15,8 +19,7 @@ rule all_qc:
             ("{sample}/qc-seq/{read_group}/{sample}-{read_group}-{{pair}}.fq.gz".format(
                 sample=s, read_group=rg
             )
-            for rg, s in get_readgroup_per_sample()),
-            pair=("R1", "R2")
+            for rg, s in get_readgroup_per_sample()), pair=("R1", "R2")
         ),
 
         fastqc_processed = expand(
@@ -32,14 +35,14 @@ rule all_qc:
         ],
 
         sample_stats_json = expand("{sample}/qc-seq/{sample}.seq_stats.json",
-                                    sample=config["samples"]
+                                    sample=samples,
         ),
 
-        merged_fastqs = expand("{sample}/{sample}-{pair}.fq.gz", sample=config["samples"],
+        merged_fastqs = expand("{sample}/{sample}-{pair}.fq.gz", sample=samples,
                                 pair=("R1", "R2")
         ),
 
-        merged_raw = expand("{sample}/{sample}-{pair}.raw.fq.gz", sample=config["samples"],
+        merged_raw = expand("{sample}/{sample}-{pair}.raw.fq.gz", sample=samples,
                                 pair=("R1", "R2")
         )
 
@@ -47,7 +50,8 @@ rule all_qc:
 rule fastqc_raw:
     """Runs FastQC for each pair of each read group of each sample given in the config file."""
     input:
-        fq=get_fastq
+        f=get_forward,
+        r=get_reverse,
     output:
         folder=directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-raw")
     threads: 4
@@ -55,7 +59,7 @@ rule fastqc_raw:
     shell:
         "mkdir -p {output.folder}"
         " && fastqc -o {output.folder} --dir /tmp --extract --nogroup -f fastq "
-        "--threads {threads} {input.fq}"
+        "--threads {threads} {input.f} {input.r}"
 
 
 rule cutadapt:
@@ -108,9 +112,10 @@ rule rg_stats:
 rule sample_stats:
     """Gathers read statistics on the sample level."""
     input:
-        rg_stats=lambda wildcards:
-        ("{sample}/qc-seq/{read_group}/stats.json".format(sample=wildcards.sample,
-        read_group=rg) for rg in get_readgroup(wildcards)),
+        #rg_stats=lambda wildcards:
+        #("{sample}/qc-seq/{read_group}/stats.json".format(sample=wildcards.sample,
+        #read_group=rg) for rg in get_readgroup(wildcards)),
+        rg_stats=get_readgroup,
         sample_stats_script=config["sample_stats_script"]
     output:
         stats="{sample}/qc-seq/{sample}.seq_stats.json"
@@ -123,10 +128,7 @@ rule sample_stats:
 rule merge_fastqs_r1:
     """Merges all FASTQ files for a given sample from its read groups."""
     input:
-        fqs = lambda wildcards: expand(
-            "{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz",
-            sample=wildcards.sample, read_group=get_readgroup(wildcards)
-        )
+        fqs = get_all_trimmed_forward,
     output:
         fq="{sample}/{sample}-R1.fq.gz",
     singularity: containers["debian"]
@@ -137,10 +139,7 @@ rule merge_fastqs_r1:
 rule merge_fastqs_r2:
     """Merges all FASTQ files for a given sample from its read groups."""
     input:
-        fqs = lambda wildcards: expand(
-            "{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz",
-            sample=wildcards.sample, read_group=get_readgroup(wildcards)
-        )
+        fqs = get_all_trimmed_reverse,
     output:
         fq="{sample}/{sample}-R2.fq.gz",
     singularity: containers["debian"]
