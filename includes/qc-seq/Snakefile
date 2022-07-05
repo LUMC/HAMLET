@@ -50,8 +50,8 @@ rule all_qc:
 rule fastqc_raw:
     """Runs FastQC for each pair of each read group of each sample given in the config file."""
     input:
-        f=get_forward,
-        r=get_reverse,
+        fq1=get_forward,
+        fq2=get_reverse,
     output:
         folder=directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-raw")
     threads: 4
@@ -59,7 +59,7 @@ rule fastqc_raw:
     shell:
         "mkdir -p {output.folder}"
         " && fastqc -o {output.folder} --dir /tmp --extract --nogroup -f fastq "
-        "--threads {threads} {input.f} {input.r}"
+        "--threads {threads} {input.fq1} {input.fq2}"
 
 
 rule cutadapt:
@@ -112,10 +112,7 @@ rule rg_stats:
 rule sample_stats:
     """Gathers read statistics on the sample level."""
     input:
-        #rg_stats=lambda wildcards:
-        #("{sample}/qc-seq/{read_group}/stats.json".format(sample=wildcards.sample,
-        #read_group=rg) for rg in get_readgroup(wildcards)),
-        rg_stats=get_readgroup,
+        rg_stats=get_sample_stats,
         sample_stats_script=config["sample_stats_script"]
     output:
         stats="{sample}/qc-seq/{sample}.seq_stats.json"
@@ -150,7 +147,7 @@ rule merge_fastqs_r2:
 rule merge_fastqs_raw_r1:
     """Merges all raw FASTQ files for a given sample from its read groups."""
     input:
-        fq = get_r1
+        fq = get_all_r1
     output:
         merged = temp("{sample}/{sample}-R1.raw.fq.gz")
     singularity: containers["debian"]
@@ -161,7 +158,7 @@ rule merge_fastqs_raw_r1:
 rule merge_fastqs_raw_r2:
     """Merges all raw FASTQ files for a given sample from its read groups."""
     input:
-        fq = get_r2
+        fq = get_all_r2
     output:
         merged = temp("{sample}/{sample}-R2.raw.fq.gz")
     singularity: containers["debian"]
