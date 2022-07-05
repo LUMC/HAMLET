@@ -1,46 +1,22 @@
-from os import path
+include: "common.smk"
 
+pepfile: config["pepfile"]
 
-# We need the QC-seq output
-include: "../qc-seq/Snakefile"
-include: "../snv-indels/Snakefile"
+samples = pep.sample_table["sample_name"]
 
 localrules: calc_exon_ratios, count_bases_exon, count_bases_gene
 
-containers = {
-    "bedtools-2.17-python-2.7": "docker://quay.io/biocontainers/mulled-v2-a9ddcbd438a66450297b5e0b61ac390ee9bfdb61:e60f3cfda0dfcf4a72f2091c6fa1ebe5a5400220-0",
-    "htseq": "docker://quay.io/biocontainers/htseq:0.11.2--py27h637b7d7_1",
-    "picard": "docker://quay.io/biocontainers/picard:2.20.5--0",
-    "hamlet-scripts": "docker://quay.io/redmar_van_den_berg/hamlet-scripts:0.2"
-}
-
-settings=config["settings"]
-
-# Set the default settings
-def set_default(key, value):
-    """ Set default value for settings """
-    if key not in settings:
-        settings[key] = value
-
-set_default("base_count_script", srcdir(path.join("scripts", "hist2count.py")))
-set_default("aggr_base_count_script", srcdir(path.join("scripts", "aggr_base_count.R")))
-set_default("calc_ratio_script", srcdir(path.join("scripts", "calc_ratio.py")))
-set_default("relative_gene_name", "HMBS")
-
-if "exon_names" not in settings:
-    raise ValueError("No exon names for exon ratio calculation defined")
-
 rule all_expression:
     input:
-        base_per_exon=expand("{sample}/expression/{sample}.bases_per_exon", sample=config["samples"]),
-        base_per_gene=expand("{sample}/expression/{sample}.bases_per_gene", sample=config["samples"]),
-        exon_ratio=expand("{sample}/expression/{sample}.exon_ratios", sample=config["samples"]),
-        fragment_per_gene=expand("{sample}/expression/{sample}.fragments_per_gene", sample=config["samples"]),
-        raw_base=expand("{sample}/expression/{sample}.raw_base", sample=config["samples"]),
+        base_per_exon=expand("{sample}/expression/{sample}.bases_per_exon", sample=samples),
+        base_per_gene=expand("{sample}/expression/{sample}.bases_per_gene", sample=samples),
+        exon_ratio=expand("{sample}/expression/{sample}.exon_ratios", sample=samples),
+        fragment_per_gene=expand("{sample}/expression/{sample}.fragments_per_gene", sample=samples),
+        raw_base=expand("{sample}/expression/{sample}.raw_base", sample=samples),
 
 rule idsort_aln:
     input:
-        bam="{sample}/snv-indels/{sample}.snv-indel.bam",
+        bam=get_bamfile,
     output:
         bam=temp("{sample}/snv-indels/{sample}.snv-indel.idsorted.bam"),
     params:
@@ -65,7 +41,7 @@ rule count_fragments:
 
 rule count_raw_bases:
     input:
-        bam="{sample}/snv-indels/{sample}.snv-indel.bam",
+        bam=get_bamfile,
         bed=settings["expression_bed"],
         count_script=settings["base_count_script"],
     output:

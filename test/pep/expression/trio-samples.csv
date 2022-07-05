@@ -1,0 +1,4 @@
+sample_name,bam
+TestSample1,test/data/bam/SRR8615409.snv-indel.bam
+TestSample2,test/data/bam/SRR8615409.snv-indel.bam
+TestSample3,test/data/bam/SRR8615409.snv-indel.bam
