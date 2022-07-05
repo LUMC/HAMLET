@@ -2,7 +2,7 @@
 - name: test-qc-dry-run-trio
   tags:
     - dry-run
-    - qc
+    - qc-seq
   command: >
     snakemake -n
     --snakefile includes/qc-seq/Snakefile
@@ -58,7 +58,7 @@
 - name: test-qc-sanity-singularity
   tags:
     - sanity
-    - qc
+    - qc-seq
   command: >
     singularity --version
   stdout:
@@ -70,7 +70,7 @@
 - name: test-qc-trio
   tags:
     - functional
-    - qc
+    - qc-seq
   command: >
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
@@ -110,7 +110,7 @@
 - name: test-qc-single-low-qual-adapters
   tags:
     - functional
-    - qc
+    - qc-seq
   command: >
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
