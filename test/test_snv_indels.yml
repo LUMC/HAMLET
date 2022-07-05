@@ -7,6 +7,7 @@
     snakemake -n
     --snakefile includes/snv-indels/Snakefile
     --configfile test/data/config/test-dry-run-trio.json
+    --config pepfile=test/pep/qc-seq/qc-trio.yml
   stdout:
     contains:
       - "Job counts:"
@@ -42,6 +43,7 @@
     snakemake -rp
     --snakefile includes/snv-indels/Snakefile
     --configfile test/data/config/test-chrM.json
+    --config pepfile=test/pep/snv-indels/chrM.yml
     --cores 1
     --notemp
     --verbose
@@ -79,6 +81,7 @@
     --snakefile includes/snv-indels/Snakefile
     --printshellcmds
     --configfile test/data/config/test-chrM-vep-cache.json
+    --config pepfile=test/pep/snv-indels/chrM.yml
   stdout:
     contains_regex:
       - 'vep .* --offline'
@@ -95,6 +98,7 @@
     --snakefile includes/snv-indels/Snakefile
     --printshellcmds
     --configfile test/data/config/test-chrM-gmap-index.json
+    --config pepfile=test/pep/snv-indels/chrM.yml
   stdout:
     contains:
       - "gsnap --dir `dirname test/data/reference`"

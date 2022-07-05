@@ -10,15 +10,5 @@
     "vcf_1kg": "test/data/reference/1KG.phase3.GRCh38.with_chr.vcf.gz",
     "cache_vep": "test/data/reference",
     "annotation_refflat": "test/data/reference/chrM.refFlat"
-  },
-  "samples": {
-    "SRR8615409": {
-      "read_groups": {
-        "rg_1": {
-            "R1": "test/data/fastq/SRR8615409_chrM_1.fastq.gz",
-            "R2": "test/data/fastq/SRR8615409_chrM_2.fastq.gz"
-        }
-      }
-    }
   }
 }
