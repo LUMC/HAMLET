@@ -7,6 +7,7 @@
     snakemake -n
     --snakefile includes/expression/Snakefile
     --configfile test/data/config/test-dry-run-trio.json
+    --config pepfile=test/pep/expression/trio.yml
   stdout:
     contains:
       - "Job counts:"
@@ -46,6 +47,7 @@
     snakemake -rp
     --snakefile includes/expression/Snakefile
     --configfile test/data/config/test-chrM.json
+    --config pepfile=test/pep/expression/chrM.yml
     --cores 1
     --notemp
     --verbose
