@@ -4,7 +4,7 @@ pepfile: config["pepfile"]
 
 samples = pep.sample_table["sample_name"]
 
-rule all_itd:
+rule all:
     input:
         kmt2a_csv=expand("{sample}/itd/{sample}.kmt2a.csv", sample=samples),
         kmt2a_bg_csv=expand("{sample}/itd/{sample}.kmt2a.bg.csv", sample=samples),

@@ -6,7 +6,7 @@ samples = pep.sample_table["sample_name"]
 
 localrules: table_vars_all, table_vars_hi
 
-rule all_snv_indels:
+rule all:
     input:
         plots_mark=expand("{sample}/snv-indels/variant_plots/.done", sample=samples),
         stats=expand("{sample}/snv-indels/{sample}.aln_stats", sample=samples),
