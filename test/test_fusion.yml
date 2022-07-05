@@ -7,6 +7,7 @@
     snakemake -n
     --snakefile includes/fusion/Snakefile
     --configfile test/data/config/test-dry-run-trio.json
+    --config pepfile=test/pep/fusion/trio.yml
   stdout:
     contains:
       - "Job counts:"
@@ -66,6 +67,7 @@
     snakemake -rp
     --snakefile includes/fusion/Snakefile
     --configfile test/data/config/test-chrM-fusion.json
+    --config pepfile=test/pep/fusion/fusion.yml
     --cores 1
     --notemp
     --verbose

@@ -19,15 +19,5 @@
     "genome_star_fusion_lib": "test/data/ctat_genome_lib_build_dir_chrM",
     "transcripts_bed": "test/data/reference/transcripts_chrM.bed",
     "annotation_refflat": "test/data/reference/chrM.refFlat"
-  },
-  "samples": {
-    "chrM-fusion": {
-      "read_groups": {
-        "rg_1": {
-            "R1": "test/data/fastq/MT-ND2--MT-ND5-fusion_forward.fq.gz",
-            "R2": "test/data/fastq/MT-ND2--MT-ND5-fusion_reverse.fq.gz"
-        }
-      }
-    }
   }
 }
