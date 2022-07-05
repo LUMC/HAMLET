@@ -7,6 +7,7 @@
     snakemake -n
     --snakefile includes/itd/Snakefile
     --configfile test/data/config/test-dry-run-trio.json
+    --config pepfile=test/pep/qc-seq/qc-trio.yml
   stdout:
     contains:
       - "Job counts:"
@@ -51,53 +52,54 @@
     snakemake -rp
     --snakefile includes/itd/Snakefile
     --configfile test/data/config/test-itd.json
+    --config pepfile=test/pep/itd/itd.yml
     --cores 1
     --notemp
     --verbose
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
     --singularity-prefix '~/.singularity/cache/snakemake'
-    ITD/itd/ITD.flt3.png
-    ITD/itd/ITD.kmt2a.png
+    SRR8615687/itd/SRR8615687.flt3.png
+    SRR8616218/itd/SRR8616218.kmt2a.png
   files:
     # ITD pipeline should create a png of the detected repeat events for flt3
-    - path: "ITD/itd/ITD.flt3.png"
+    - path: "SRR8615687/itd/SRR8615687.flt3.png"
     # ITD pipeline should create a csv file of the detected soft-clip reads per
     # position for flt3
-    - path: "ITD/itd/ITD.flt3.bg.csv"
+    - path: "SRR8615687/itd/SRR8615687.flt3.bg.csv"
       # The csv file should contain the following events
       contains:
         - "position\tcoverage\tsoft_clip_count"
-        - "1852\t1670\t500"
-        - "1883\t1588\t1048"
+        - "1852\t1686\t501"
+        - "1883\t1614\t1063"
     # ITD pipeline should create a final csv file of the detected internal
     # tandem repeats
-    - path: "ITD/itd/ITD.flt3.csv"
+    - path: "SRR8615687/itd/SRR8615687.flt3.csv"
       # The csv file should contain the header, and two internal tandem repeats
       contains:
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
-        - "1853\t1881,1882\t494\t4\t1852\t1882\t1882\t1853\tfuzzy-end\t1"
-        - "1853\t1882\t494\t1046\t1852\t1882\t1883\t1853\texact\t0"
+        - "1853\t1881,1882\t495\t4\t1852\t1882\t1882\t1853\tfuzzy-end\t1"
+        - "1853\t1882\t495\t1059\t1852\t1882\t1883\t1853\texact\t0"
 
     # ITD pipeline should create a png of the detected repeat events for kmt2a
-    - path: "ITD/itd/ITD.kmt2a.png"
+    - path: "SRR8616218/itd/SRR8616218.kmt2a.png"
     # ITD pipeline should create a csv file of the detected soft-clipped reads
     # per position for kmt2a
-    - path: "ITD/itd/ITD.kmt2a.bg.csv"
+    - path: "SRR8616218/itd/SRR8616218.kmt2a.bg.csv"
       # The csv file should contain the header, and soft-clip counts on two
       # positions
       contains:
         - "position\tcoverage\tsoft_clip_count"
-        - "452\t39\t44"
-        - "4111\t256\t25"
+        - "452\t32\t46"
+        - "4111\t252\t26"
     # ITD pipeline should create a final csv file of the detected internal
     # tandem repeats
-    - path: "ITD/itd/ITD.kmt2a.csv"
+    - path: "SRR8616218/itd/SRR8616218.kmt2a.csv"
       # The csv file should contain the header, and a single internal tandem
       # repeat
       contains:
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
-        - "453,457\t4106,4110\t39\t25\t452\t4106\t4111\t457\tfuzzy\t4"
+        - "453,457\t4106,4110\t40\t26\t452\t4106\t4111\t457\tfuzzy\t4"
 
 # ITD pipeline should run successfully when there are no reads that map to flt3 or kmt2a
 - name: test-flt3-kmt2a-no-reads
@@ -108,6 +110,7 @@
     snakemake -rp
     --snakefile includes/itd/Snakefile
     --configfile test/data/config/test-chrM.json
+    --config pepfile=test/pep/snv-indels/chrM.yml
     --cores 1
     --notemp
     --verbose
