@@ -1,0 +1,3 @@
+sample_name,R1,R2
+SRR8615687,test/data/fastq/SRR8615687_flt3_1.fastq.gz,test/data/fastq/SRR8615687_flt3_2.fastq.gz
+SRR8616218,test/data/fastq/SRR8616218_KMT2A_1.fastq.gz,test/data/fastq/SRR8616218_KMT2A_2.fastq.gz

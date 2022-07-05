@@ -1,14 +1,128 @@
-include: srcdir("Snakefile.flt3")
-include: srcdir("Snakefile.kmt2a")
+include: "common.smk"
 
-# We need the QC-seq output
-include: "../qc-seq/Snakefile"
+pepfile: config["pepfile"]
+
+samples = pep.sample_table["sample_name"]
 
 rule all_itd:
     input:
-        kmt2a_csv=expand("{sample}/itd/{sample}.kmt2a.csv", sample=config["samples"]),
-        kmt2a_bg_csv=expand("{sample}/itd/{sample}.kmt2a.bg.csv", sample=config["samples"]),
-        kmt2a_plots=expand("{sample}/itd/{sample}.kmt2a.png", sample=config["samples"]),
-        flt3_csv=expand("{sample}/itd/{sample}.flt3.csv", sample=config["samples"]),
-        flt3_bg_csv=expand("{sample}/itd/{sample}.flt3.bg.csv", sample=config["samples"]),
-        flt3_plots=expand("{sample}/itd/{sample}.flt3.png", sample=config["samples"]),
+        kmt2a_csv=expand("{sample}/itd/{sample}.kmt2a.csv", sample=samples),
+        kmt2a_bg_csv=expand("{sample}/itd/{sample}.kmt2a.bg.csv", sample=samples),
+        kmt2a_plots=expand("{sample}/itd/{sample}.kmt2a.png", sample=samples),
+        flt3_csv=expand("{sample}/itd/{sample}.flt3.csv", sample=samples),
+        flt3_bg_csv=expand("{sample}/itd/{sample}.flt3.bg.csv", sample=samples),
+        flt3_plots=expand("{sample}/itd/{sample}.flt3.png", sample=samples),
+
+rule align:
+    """Parent rule, not run directly"""
+    input:
+        fq1="{sample}/{sample}-R1.fq.gz",
+        fq2="{sample}/{sample}-R2.fq.gz",
+    output:
+        bam="{sample}/itd/{sample}.bam",
+        bai="{sample}/itd/{sample}.bai",
+    params:
+        rg="@RG\\tID:{sample}\\tSM:{sample}"
+    threads: 3
+    singularity: containers["bwa-0.7.17-samtools-1.3.1-picard-2.9.2"]
+    shell:
+        "bwa mem -R \'{params.rg}\' -t {threads} -L 2,2 {input.fasta} {input.fq1} {input.fq2}"
+        " | samtools view -Sbh -F 0x4 -"
+        " | picard -Xmx4G SortSam I=/dev/stdin O={output.bam} SO=coordinate CREATE_INDEX=true"
+
+rule detect_itd:
+    """Parent rule, not run directly"""
+    input:
+        bam="{sample}/itd/{sample}.bam",
+        bai="{sample}/itd/{sample}.bai",
+    output:
+        csv="{sample}/itd/{sample}.csv",
+        bg_csv="{sample}/itd/{sample}.bg.csv",
+    threads: 1
+    params:
+        trx_name="",
+        start="",
+        end="",
+    singularity: containers["rose"]
+    shell:
+        "rose-dt -r {params.trx_name}:{params.start}-{params.end} --bg-counts {output.bg_csv} {input.ref} {input.bam} > {output.csv}"
+
+rule plot_itd:
+    """Parent rule, not run directly"""
+    input:
+        csv="{sample}/itd/{sample}.csv",
+        bg_csv="{sample}/itd/{sample}.bg.csv",
+    output:
+        png="{sample}/itd/{sample}.png",
+    threads: 1
+    singularity: containers["rose"]
+    shell:
+        "rose-dt-plot.py"
+        " --sample-id {wildcards.sample} --mode per-event"
+        " {input.csv} {input.bg_csv} {output.png}"
+
+## KMT2A ##
+use rule align as align_kmt2a with:
+    input:
+        fq1=get_forward,
+        fq2=get_reverse,
+        fasta=settings["kmt2a_fasta"]
+    output:
+        bam="{sample}/itd/{sample}.kmt2a.bam",
+        bai="{sample}/itd/{sample}.kmt2a.bai",
+    singularity: containers["bwa-0.7.17-samtools-1.3.1-picard-2.9.2"]
+
+use rule detect_itd as detect_itd_kmt2a with:
+    input:
+        bam=rules.align_kmt2a.output.bam,
+        bai=rules.align_kmt2a.output.bai,
+        ref=settings["kmt2a_fasta"],
+    params:
+        trx_name=settings["kmt2a_name"],
+        start=settings["kmt2a_start"],
+        end=settings["kmt2a_end"],
+    output:
+        csv="{sample}/itd/{sample}.kmt2a.csv",
+        bg_csv="{sample}/itd/{sample}.kmt2a.bg.csv",
+    singularity: containers["rose"]
+
+use rule plot_itd as plot_itd_kmt2a with:
+    input:
+        csv=rules.detect_itd_kmt2a.output.csv,
+        bg_csv=rules.detect_itd_kmt2a.output.bg_csv,
+    output:
+        png="{sample}/itd/{sample}.kmt2a.png",
+    singularity: containers["rose"]
+
+## FLT3 ##
+use rule align as align_flt3 with:
+    input:
+        fq1=get_forward,
+        fq2=get_reverse,
+        fasta=settings["flt3_fasta"]
+    output:
+        bam="{sample}/itd/{sample}.flt3.bam",
+        bai="{sample}/itd/{sample}.flt3.bai",
+    singularity: containers["bwa-0.7.17-samtools-1.3.1-picard-2.9.2"]
+
+use rule detect_itd as detect_itd_flt3 with:
+    input:
+        bam=rules.align_flt3.output.bam,
+        bai=rules.align_flt3.output.bai,
+        ref=settings["flt3_fasta"],
+    params:
+        trx_name=settings["flt3_name"],
+        start=settings["flt3_start"],
+        end=settings["flt3_end"],
+    output:
+        csv="{sample}/itd/{sample}.flt3.csv",
+        bg_csv="{sample}/itd/{sample}.flt3.bg.csv",
+    singularity: containers["rose"]
+
+use rule plot_itd as plot_itd_flt3 with:
+    input:
+        csv=rules.detect_itd_flt3.output.csv,
+        bg_csv=rules.detect_itd_flt3.output.bg_csv,
+    output:
+        png="{sample}/itd/{sample}.flt3.png",
+    singularity: containers["rose"]
