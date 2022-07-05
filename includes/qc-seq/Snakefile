@@ -6,7 +6,7 @@ samples = pep.sample_table["sample_name"]
 
 localrules: rg_stats, sample_stats
 
-rule all_qc:
+rule all:
     input:
         fastqc_raw = expand(
             ("{sample}/qc-seq/{read_group}/fastqc-{{pair}}-raw".format(

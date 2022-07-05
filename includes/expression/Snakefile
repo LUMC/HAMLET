@@ -6,7 +6,7 @@ samples = pep.sample_table["sample_name"]
 
 localrules: calc_exon_ratios, count_bases_exon, count_bases_gene
 
-rule all_expression:
+rule all:
     input:
         base_per_exon=expand("{sample}/expression/{sample}.bases_per_exon", sample=samples),
         base_per_gene=expand("{sample}/expression/{sample}.bases_per_gene", sample=samples),

@@ -2,8 +2,7 @@ include: "common.smk"
 
 localrules: combine_plots, fusioncatcher_cp, intersect_fusions, plot_cp, plot_isect, plot_sf, star_fusion_cp, subset_sf
 
-
-rule all_fusion:
+rule all:
     input:
         star_predictions=expand("{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv", sample=samples),
         star_final=expand("{sample}/fusion/{sample}.star-fusion", sample=samples),
