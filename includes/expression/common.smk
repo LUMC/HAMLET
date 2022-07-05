@@ -22,6 +22,4 @@ if "exon_names" not in settings:
     raise ValueError("No exon names for exon ratio calculation defined")
 
 def get_bamfile(wildcards):
-    print(pep.sample_table)
-    print(wildcards)
     return pep.sample_table.loc[wildcards.sample, "bam"]
