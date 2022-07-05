@@ -10,7 +10,6 @@
     --config pepfile=test/pep/qc-seq/qc-trio.yml
   stdout:
     contains:
-      - "Job counts:"
       - "TestSample1/itd/TestSample1.kmt2a.csv"
       - "TestSample1/itd/TestSample1.kmt2a.bg.csv"
       - "TestSample1/itd/TestSample1.kmt2a.png"
