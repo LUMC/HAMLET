@@ -1,42 +1,10 @@
-import os
-import subprocess
-from functools import partial
-from os.path import dirname
-from uuid import uuid4
+include: "common.smk"
 
-include: "includes/qc-seq/Snakefile"
-include: "includes/snv-indels/Snakefile"
-include: "includes/fusion/Snakefile"
-include: "includes/expression/Snakefile"
-include: "includes/itd/Snakefile"
+#pepfile: config["pepfile"]
+
+samples =["TestSample1", "TestSample2", "TestSample3"]
 
 localrules: create_summary, generate_report, package_results
-
-containers = {
-    "debian": "docker://debian:buster-slim",
-    "crimson": "docker://quay.io/biocontainers/crimson:1.0.0--pyh5e36f6f_0",
-    "hamlet-scripts": "docker://quay.io/redmar_van_den_berg/hamlet-scripts:0.3",
-    "zip": "docker://quay.io/redmar_van_den_berg/zip:3.0"
-}
-
-settings=config["settings"]
-
-# The version of HAMLET
-PIPELINE_VERSION = "v1.0.2-dev-1"
-
-RUN_NAME = settings.get("run_name") or f"hamlet-{uuid4().hex[:8]}"
-
-
-def make_pattern(extension, dirname):
-    """Helper function to create a wildcard-containing path for output files."""
-    return f"{{sample}}/{dirname}/{{sample}}{extension}"
-
-seqqc_output = partial(make_pattern, dirname="qc-seq")
-var_output = partial(make_pattern, dirname="snv-indels")
-fusion_output = partial(make_pattern, dirname="fusion")
-expr_output = partial(make_pattern, dirname="expression")
-itd_output = partial(make_pattern, dirname="itd")
-
 
 OUTPUTS = dict(
     # Merged FASTQs, stats, and packaged results
@@ -91,9 +59,102 @@ if settings.get("fusioncatcher_data"):
 
 rule all:
     input:
-        [expand(p, sample=config["samples"], pair={"R1", "R2"})
+        [expand(p, sample=samples, pair={"R1", "R2"})
          for p in OUTPUTS.values()]
 
+
+# Define HAMLET modules
+module qc_seq:
+    snakefile:
+        "includes/qc-seq/Snakefile"
+    config:
+        config
+use rule * from qc_seq as qc_seq_*
+
+module align:
+    snakefile:
+        "includes/snv-indels/Snakefile"
+    config:
+        config
+use rule * from align as align_*
+
+# Connect the align rule to the output of qc-seq
+use rule align_vars from align as align_align_vars with:
+    input:
+        fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
+        fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
+
+
+module expression:
+    snakefile:
+        "includes/expression/Snakefile"
+    config:
+        config
+use rule * from expression as expression_*
+
+# Connect the idsort rule to the output of snv-indels
+use rule idsort_aln from expression as expression_idsort_aln with:
+    input:
+        bam=rules.align_reorder_aln_header.output.bam,
+    singularity:
+        "docker://quay.io/biocontainers/picard:2.20.5--0"
+
+# Connect the count_raw_bases rule to the output of snv-indels
+use rule count_raw_bases from expression as expression_count_raw_bases with:
+    input:
+        bam=rules.align_reorder_aln_header.output.bam,
+        bed=settings["expression_bed"],
+        count_script=settings["base_count_script"],
+    singularity:
+        "docker://quay.io/biocontainers/mulled-v2-a9ddcbd438a66450297b5e0b61ac390ee9bfdb61:e60f3cfda0dfcf4a72f2091c6fa1ebe5a5400220-0"
+
+module fusion:
+    snakefile:
+        "includes/fusion/Snakefile"
+    config:
+        config
+use rule * from fusion as fusion_*
+
+# Connect the star_fusion rule to the output of qc-seq
+use rule star_fusion from fusion as fusion_star_fusion with:
+    input:
+        fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
+        fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
+        lib=settings["genome_star_fusion_lib"],
+    singularity:
+        "docker://quay.io/biocontainers/star-fusion:1.10.0--hdfd78af_1",
+
+# Connect the fusioncather rule to the output of qc-seq
+use rule fusioncatcher from fusion as fusion_fusioncatcher with:
+    input:
+        fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
+        fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
+    singularity:
+        "docker://quay.io/biocontainers/fusioncatcher:1.20--2",
+
+module itd:
+    snakefile:
+        "includes/itd/Snakefile"
+    config:
+        config
+use rule * from itd as itd_*
+
+# Connect the align_kmt2a rule to the output of qc-seq
+use rule align_kmt2a from itd as itd_align_kmt2a with:
+    input:
+        fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
+        fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
+        fasta=settings["kmt2a_fasta"],
+    singularity:
+        "docker://quay.io/biocontainers/mulled-v2-1c6be8ad49e4dfe8ab70558e8fb200d7b2fd7509:5900b4e68c4051137fffd99165b00e98f810acae-0",
+
+use rule align_flt3 from itd as itd_align_flt3 with:
+    input:
+        fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
+        fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
+        fasta=settings["flt3_fasta"],
+    singularity:
+        "docker://quay.io/biocontainers/mulled-v2-1c6be8ad49e4dfe8ab70558e8fb200d7b2fd7509:5900b4e68c4051137fffd99165b00e98f810acae-0",
 
 rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""
