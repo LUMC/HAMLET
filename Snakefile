@@ -1,9 +1,5 @@
 include: "common.smk"
 
-#pepfile: config["pepfile"]
-
-samples =["TestSample1", "TestSample2", "TestSample3"]
-
 localrules: create_summary, generate_report, package_results
 
 OUTPUTS = dict(
@@ -71,6 +67,27 @@ module qc_seq:
         config
 use rule * from qc_seq as qc_seq_*
 
+module itd:
+    snakefile:
+        "includes/itd/Snakefile"
+    config:
+        config
+use rule * from itd as itd_*
+
+# Connect the align_kmt2a rule to the output of qc-seq
+use rule align_kmt2a from itd as itd_align_kmt2a with:
+    input:
+        fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
+        fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
+        fasta=settings["kmt2a_fasta"]
+
+# Connect the align_flt3 rule to the output of qc-seq
+use rule align_flt3 from itd as itd_align_flt3 with:
+    input:
+        fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
+        fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
+        fasta=settings["flt3_fasta"]
+
 module align:
     snakefile:
         "includes/snv-indels/Snakefile"
@@ -83,7 +100,6 @@ use rule align_vars from align as align_align_vars with:
     input:
         fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
         fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
-
 
 module expression:
     snakefile:
@@ -131,30 +147,6 @@ use rule fusioncatcher from fusion as fusion_fusioncatcher with:
         fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
     singularity:
         "docker://quay.io/biocontainers/fusioncatcher:1.20--2",
-
-module itd:
-    snakefile:
-        "includes/itd/Snakefile"
-    config:
-        config
-use rule * from itd as itd_*
-
-# Connect the align_kmt2a rule to the output of qc-seq
-use rule align_kmt2a from itd as itd_align_kmt2a with:
-    input:
-        fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
-        fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
-        fasta=settings["kmt2a_fasta"],
-    singularity:
-        "docker://quay.io/biocontainers/mulled-v2-1c6be8ad49e4dfe8ab70558e8fb200d7b2fd7509:5900b4e68c4051137fffd99165b00e98f810acae-0",
-
-use rule align_flt3 from itd as itd_align_flt3 with:
-    input:
-        fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
-        fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
-        fasta=settings["flt3_fasta"],
-    singularity:
-        "docker://quay.io/biocontainers/mulled-v2-1c6be8ad49e4dfe8ab70558e8fb200d7b2fd7509:5900b4e68c4051137fffd99165b00e98f810acae-0",
 
 rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""

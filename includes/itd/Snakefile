@@ -1,9 +1,5 @@
 include: "common.smk"
 
-pepfile: config["pepfile"]
-
-samples = pep.sample_table["sample_name"]
-
 rule all:
     input:
         kmt2a_csv=expand("{sample}/itd/{sample}.kmt2a.csv", sample=samples),
@@ -13,7 +9,6 @@ rule all:
         flt3_bg_csv=expand("{sample}/itd/{sample}.flt3.bg.csv", sample=samples),
         flt3_plots=expand("{sample}/itd/{sample}.flt3.png", sample=samples),
 
-## KMT2A ##
 rule align_kmt2a:
     input:
         fq1=get_forward,
@@ -33,8 +28,8 @@ rule align_kmt2a:
 
 rule detect_itd_kmt2a:
     input:
-        bam=rules.align_kmt2a.output.bam,
-        bai=rules.align_kmt2a.output.bai,
+        bam="{sample}/itd/{sample}.kmt2a.bam",
+        bai="{sample}/itd/{sample}.kmt2a.bai",
         ref=settings["kmt2a_fasta"],
     params:
         trx_name=settings["kmt2a_name"],
@@ -49,8 +44,8 @@ rule detect_itd_kmt2a:
 
 rule plot_itd_kmt2a:
     input:
-        csv=rules.detect_itd_kmt2a.output.csv,
-        bg_csv=rules.detect_itd_kmt2a.output.bg_csv,
+        csv="{sample}/itd/{sample}.kmt2a.csv",
+        bg_csv="{sample}/itd/{sample}.kmt2a.bg.csv",
     output:
         png="{sample}/itd/{sample}.kmt2a.png",
     singularity: containers["rose"]
@@ -79,8 +74,8 @@ rule align_flt3:
 
 rule detect_itd_flt3:
     input:
-        bam=rules.align_flt3.output.bam,
-        bai=rules.align_flt3.output.bai,
+        bam="{sample}/itd/{sample}.flt3.bam",
+        bai="{sample}/itd/{sample}.flt3.bai",
         ref=settings["flt3_fasta"],
     params:
         trx_name=settings["flt3_name"],
@@ -95,8 +90,8 @@ rule detect_itd_flt3:
 
 rule plot_itd_flt3:
     input:
-        csv=rules.detect_itd_flt3.output.csv,
-        bg_csv=rules.detect_itd_flt3.output.bg_csv,
+        csv="{sample}/itd/{sample}.flt3.csv",
+        bg_csv="{sample}/itd/{sample}.flt3.bg.csv",
     output:
         png="{sample}/itd/{sample}.flt3.png",
     singularity: containers["rose"]
