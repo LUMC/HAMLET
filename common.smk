@@ -2,6 +2,10 @@ from functools import partial
 from os.path import dirname
 from uuid import uuid4
 
+pepfile: config["pepfile"]
+
+samples = pep.sample_table["sample_name"]
+
 containers = {
     "debian": "docker://debian:buster-slim",
     "crimson": "docker://quay.io/biocontainers/crimson:1.0.0--pyh5e36f6f_0",

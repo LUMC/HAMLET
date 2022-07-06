@@ -5,6 +5,11 @@ containers = {
 
 settings = config ["settings"]
 
+pepfile: config["pepfile"]
+
+samples = pep.sample_table["sample_name"]
+
+
 # Set the default settings
 def set_default(key, value):
     """ Set default value for settings """
