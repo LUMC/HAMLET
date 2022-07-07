@@ -6,7 +6,7 @@
   command: >
     snakemake -n
     --snakefile includes/fusion/Snakefile
-    --configfile test/data/config/test-dry-run-trio.json
+    --configfile test/data/config/chrM-fusioncatcher.json
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
@@ -65,7 +65,7 @@
   command: >
     snakemake -rp
     --snakefile includes/fusion/Snakefile
-    --configfile test/data/config/test-chrM-fusion.json
+    --configfile test/data/config/chrM.json
     --config pepfile=test/pep/chrM.csv
     --cores 1
     --notemp

@@ -1,4 +1,5 @@
-# HAMLET pipeline should attempt to generate specified files
+# HAMLET pipeline should attempt to generate specified files, including the
+# output files of fusioncatcher
 - name: test-hamlet-dry-run-trio
   tags:
     - dry-run
@@ -9,7 +10,7 @@
     --reason
     --printshellcmds
     --verbose
-    --configfile test/data/config/test-dry-run-trio.json
+    --configfile test/data/config/chrM-fusioncatcher.json
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
@@ -79,7 +80,7 @@
   command: >
     snakemake -rp
     --snakefile Snakefile
-    --configfile test/data/config/test-NOMO.json
+    --configfile test/data/config/chrM.json
     --config pepfile=test/pep/targetted.csv
     --cores 1
     --verbose
@@ -97,7 +98,7 @@
     --snakefile Snakefile
     --reason
     --printshellcmds
-    --configfile test/data/config/test-chrM.json
+    --configfile test/data/config/chrM.json
     --config pepfile=test/pep/chrM.csv
   stdout:
     must_not_contain:
@@ -113,7 +114,7 @@
     --snakefile Snakefile
     --reason
     --printshellcmds
-    --configfile test/data/config/test-chrM-fusioncatcher.json
+    --configfile test/data/config/chrM-fusioncatcher.json
     --config pepfile=test/pep/chrM.csv
   stdout:
     contains:
@@ -127,7 +128,7 @@
   command: >
     snakemake
     --snakefile Snakefile
-    --configfile test/data/config/test-chrM.json
+    --configfile test/data/config/chrM.json
     --config pepfile=test/pep/chrM.csv
     --cores 1
     --notemp

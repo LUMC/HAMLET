@@ -6,7 +6,7 @@
   command: >
     snakemake -n
     --snakefile includes/snv-indels/Snakefile
-    --configfile test/data/config/test-dry-run-trio.json
+    --configfile test/data/config/chrM.json
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
@@ -41,7 +41,7 @@
   command: >
     snakemake -rp
     --snakefile includes/snv-indels/Snakefile
-    --configfile test/data/config/test-chrM.json
+    --configfile test/data/config/chrM.json
     --config pepfile=test/pep/chrM.csv
     --cores 1
     --notemp
@@ -79,7 +79,7 @@
     snakemake -n
     --snakefile includes/snv-indels/Snakefile
     --printshellcmds
-    --configfile test/data/config/test-chrM-vep-cache.json
+    --configfile test/data/config/chrM-vep-cache.json
     --config pepfile=test/pep/chrM.csv
   stdout:
     contains_regex:
@@ -96,7 +96,7 @@
     snakemake -n
     --snakefile includes/snv-indels/Snakefile
     --printshellcmds
-    --configfile test/data/config/test-chrM-gmap-index.json
+    --configfile test/data/config/chrM-gmap-index.json
     --config pepfile=test/pep/chrM.csv
   stdout:
     contains:
