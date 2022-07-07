@@ -1,6 +1,6 @@
 include: "common.smk"
 
-localrules: combine_plots, fusioncatcher_cp, intersect_fusions, plot_cp, plot_isect, plot_sf, star_fusion_cp, subset_sf
+localrules: combine_plots, intersect_fusions, plot_cp, plot_isect, plot_sf, star_fusion_cp, subset_sf
 
 rule all:
     input:

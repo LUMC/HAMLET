@@ -45,7 +45,7 @@ rule align_vars:
     input:
         fq1=get_forward,
         fq2=get_reverse,
-        index=settings.get("genome_gmap_index") or rules.index_reference.output,
+        index=settings.get("genome_gmap_index") or "gmap_index/reference",
     output:
         sam=temp("{sample}/snv-indels/{sample}.snv-indel.raw.sam"),
     params:

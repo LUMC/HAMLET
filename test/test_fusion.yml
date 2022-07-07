@@ -10,7 +10,6 @@
     --config pepfile=test/pep/fusion/trio.yml
   stdout:
     contains:
-      - "Job counts:"
       - "TestSample1/fusion/TestSample1.star-fusion"
       - "TestSample1/fusion/TestSample1.star-fusion-circos/fsnviz.svg"
       - "TestSample1/fusion/TestSample1.star-fusion-circos/fsnviz.png"
