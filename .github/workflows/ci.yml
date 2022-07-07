@@ -16,12 +16,6 @@ jobs:
         test:
           - sanity
           - dry-run
-        module:
-          - expression
-          - fusion
-          - itd
-          - qc-seq
-          - snv-indels
     steps:
       - uses: actions/checkout@v2.3.4 # https://github.com/actions/checkout.
         with:
@@ -64,7 +58,6 @@ jobs:
         run: >-
           pytest --keep-workflow-wd-on-fail
           --tag ${{ matrix.test }}
-          --tag ${{ matrix.module }}
 
       - name: Check pytest stdout messages in case of failure
         if: ${{ failure() }}
@@ -85,11 +78,13 @@ jobs:
     strategy:
       matrix:
         module:
-          - expression
-          - fusion
-          - itd
           - qc-seq
+          - itd
+          - fusion
+          - expression
           - snv-indels
+          - test-hamlet-targetted-RNA
+          - test-hamlet-chrM
     steps:
       - uses: actions/checkout@v2.3.4 # https://github.com/actions/checkout.
         with:
