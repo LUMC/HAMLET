@@ -6,7 +6,7 @@
   command: >
     snakemake -n
     --snakefile includes/itd/Snakefile
-    --configfile test/data/config/test-dry-run-trio.json
+    --configfile test/data/config/chrM.json
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
@@ -50,7 +50,7 @@
   command: >
     snakemake -rp
     --snakefile includes/itd/Snakefile
-    --configfile test/data/config/test-itd.json
+    --configfile test/data/config/chrM.json
     --config pepfile=test/pep/itd.csv
     --cores 1
     --notemp
@@ -108,7 +108,7 @@
   command: >
     snakemake -rp
     --snakefile includes/itd/Snakefile
-    --configfile test/data/config/test-chrM.json
+    --configfile test/data/config/chrM.json
     --config pepfile=test/pep/chrM.csv
     --cores 1
     --notemp
