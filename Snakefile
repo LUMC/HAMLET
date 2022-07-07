@@ -100,6 +100,7 @@ use rule align_vars from align as align_align_vars with:
     input:
         fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
         fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
+        index=settings.get("genome_gmap_index") or "gmap_index/reference",
 
 module expression:
     snakefile:

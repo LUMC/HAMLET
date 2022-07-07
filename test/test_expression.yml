@@ -10,7 +10,6 @@
     --config pepfile=test/pep/expression/trio.yml
   stdout:
     contains:
-      - "Job counts:"
       - "TestSample1/expression/TestSample1.bases_per_exon"
       - "TestSample1/expression/TestSample1.bases_per_gene"
       - "TestSample1/expression/TestSample1.exon_ratios"

@@ -79,6 +79,7 @@
     snakemake -rp
     --snakefile Snakefile
     --configfile test/data/config/test-NOMO.json
+    --config pepfile=test/pep/hamlet/targetted.yml
     --cores 1
     --verbose
     --use-singularity
@@ -96,6 +97,7 @@
     --reason
     --printshellcmds
     --configfile test/data/config/test-chrM.json
+    --config pepfile=test/pep/itd/itd.yml
   stdout:
     must_not_contain:
       - fusioncatcher
@@ -111,6 +113,7 @@
     --reason
     --printshellcmds
     --configfile test/data/config/test-chrM-fusioncatcher.json
+    --config pepfile=test/pep/itd/itd.yml
   stdout:
     contains:
       - fusioncatcher
@@ -124,6 +127,7 @@
     snakemake
     --snakefile Snakefile
     --configfile test/data/config/test-chrM.json
+    --config pepfile=test/pep/snv-indels/chrM.yml
     --cores 1
     --notemp
     --verbose
