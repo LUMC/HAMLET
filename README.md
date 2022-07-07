@@ -15,16 +15,10 @@ Four distinct analysis modules comprise Hamlet, which can be run independently:
 
 There is also a `qc-seq` module which does quality control for input sequence files. Everything is tied together by
 a main `Snakefile` using
-the [`include`](https://snakemake.readthedocs.io/en/stable/snakefiles/modularization.html#includes) statement.
+[modules](https://snakemake.readthedocs.io/en/stable/snakefiles/modularization.html#modules).
 
-Configurations and input file definitions are supplied in a single YAML configuration file. Here you can specify
-arbitrary number of samples, each containing an arbitrary number of paired-end files. The merging of these files and
-separation of output per-sample are taken care of automatically by Hamlet. Additionally, if you may also supply your own
-cluster-specific YAML configuration to determine how much resource such as memory or CPU cores should be allocated to
-the jobs.
-
-Hamlet tries to make use of isolated Conda environment per Snakemake rule whenever possible. The base execution
-environment is also defined by an `environment.yml` file.
+HAMLET is build to use Singularity to run every Snakemake rule inside its own container. The base execution
+environment is for HAMLET defined by an `environment.yml` file.
 
 In addition to the raw output files, Hamlet also generates a PDF report containing an overview of the essential results
 and a zipped file containing this report and the essential result files.
@@ -36,7 +30,6 @@ for clinical purposes. Although we can give **no guarantees** that the output of
 probably the version you should use (**at your own risk**) if you plan to analyse clinical samples.
 
 # Installation
-
 The dependencies required for running the pipeline are listed in the provided `environment.yml` file. To use it, first
 make sure that you have [Conda](https://docs.conda.io/en/latest/miniconda.html) installed on your system.
 Then, set up a Conda virtual environment and then update it:
@@ -58,53 +51,51 @@ the md5sum for the archive is `5541718e8bc17bcd00ec90ff23ebcfae`.
 Please contact the author or open an issue if the link is not working.
 
 ## Testing
-The following commands can be used to test different aspects of HAMLET. First, activate the HAMLET Conda environment
-which was created in the previous step.
+The following commands can be used to test different aspects of HAMLET. If any
+of the tests fail, you can inspect the `log.err` and `log.out` files in the run
+folder.
+
+Activate the HAMLET conda environment you installed above.
 ```bash
 conda activate HAMLET
 ```
 
 To test if all dependencies of HAMLET have been installed, use
 ```bash
-pytest --tag sanity
+pytest --kwd --tag sanity
 ```
 
-If any of the tests fail, append `--keep-workflow-wd-on-fail` or `--kwdof` to
-the pytest command and inspect the `log.err` and `log.out` files in the run
-folder.
 
-To test if HAMLET can parse the Snakemake files and find the appropriate output files, use
+To test if HAMLET can parse the example configurations and find the appropriate output files, use
 ```bash
-pytest --tag dry-run
-```
-
-To test if HAMLET can run the quality control part of the pipeline, using example data, use
-```bash
-pytest --tag functional
+pytest --kwd --tag dry-run
 ```
 
 To test the full behaviour of HAMLET, you can use
 ```bash
-pytest --tag functional
+pytest --kwd --tag functional
 ```
 
-**Important: pytest copies the current directory to /tmp to run the tests.  Therefore, do not place large reference
-or sample files inside the HAMLET root folder when running tests, or these will be copied over dozens of times.**
-
-If you want to manually test HAMLET without using pytest-workflow, you can run the following command. Please make sure
-you have updated the paths in `test/data/config/test-hamlet-chrM.json` to point to the copy of the HAMLET
-reference files.
+If you want to manually test HAMLET without using pytest-workflow, you can run the following command.
 
 ```bash
-snakemake -rp --snakefile Snakefile --configfile test/data/config/test-chrM.json --use-singularity
+snakemake --cores 1 --configfile test/data/config/chrM.json --config pepfile=test/pep/chrM.csv --use-singularity
 ```
 
 # Usage
 ## Input files
+HAMLET requires two separate input files. Firstly, a `json` file that contains
+the settings and reference files for the pipeline, you can see an example
+[here](test/data/config/chrM.json).
 
-Hamlet requires gzipped, paired-end mRNA-seq files. Any number of samples can be processed in a single execution, and
-each of them may have differing number of pair sets. These files may have arbitrary names, but they *must* be supplied
-correctly in the configuration files.
+Secondly, HAMLET requires a [Portable Encapsulated
+Project](http://pep.databio.org/en/2.1.0/) configuration that specifies the
+samples and their associated gzipped, paired-end mRNA-seq files. For simple use
+cases, this can be a csv file with one line per read-pair, as can be seen
+[here](test/pep/chrM-trio-subsamples.csv).
+
+Any number of samples can be processed in a single execution, and each sample
+may have any number of read pairs, and HAMLET will handle those properly.
 
 ## Execution
 
