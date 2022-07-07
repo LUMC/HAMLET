@@ -6,7 +6,7 @@
   command: >
     snakemake -n
     --snakefile includes/qc-seq/Snakefile
-    --config pepfile=test/pep/qc-seq/qc-trio.yml
+    --config pepfile=test/pep/chrM-trio-subsamples.csv
   stdout:
     contains:
     # TestSample1 should contain a single readgroup
@@ -74,7 +74,7 @@
   command: >
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
-    --config pepfile=test/pep/qc-seq/qc-trio.yml
+    --config pepfile=test/pep/chrM-trio-subsamples.csv
     --cores 1
     --verbose
     --use-singularity
@@ -114,7 +114,7 @@
   command: >
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
-    --config pepfile=test/pep/qc-seq/qc-low-qual-adapters.yml
+    --config pepfile=test/pep/low-qual-adapters.csv
     --cores 1
     --verbose
     --use-singularity

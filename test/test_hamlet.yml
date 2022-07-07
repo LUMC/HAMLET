@@ -10,19 +10,20 @@
     --printshellcmds
     --verbose
     --configfile test/data/config/test-dry-run-trio.json
-    --config pepfile=test/pep/qc-seq/qc-trio.yml
+    --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
+      # The pipeline should create the final output files for TestSample1
       - "TestSample1/TestSample1.summary.json"
       - "TestSample1/hamlet_results.TestSample1.zip"
       - "TestSample1/hamlet_report.TestSample1.pdf"
       - "TestSample1/TestSample1.summary.json"
-
+      # The pipeline should create the final output files for TestSample2
       - "TestSample2/TestSample2.summary.json"
       - "TestSample2/hamlet_results.TestSample2.zip"
       - "TestSample2/hamlet_report.TestSample2.pdf"
       - "TestSample2/TestSample2.summary.json"
-        
+      # The pipeline should create the final output files for TestSample3
       - "TestSample3/TestSample3.summary.json"
       - "TestSample3/hamlet_results.TestSample3.zip"
       - "TestSample3/hamlet_report.TestSample3.pdf"
@@ -79,7 +80,7 @@
     snakemake -rp
     --snakefile Snakefile
     --configfile test/data/config/test-NOMO.json
-    --config pepfile=test/pep/hamlet/targetted.yml
+    --config pepfile=test/pep/targetted.csv
     --cores 1
     --verbose
     --use-singularity
@@ -97,7 +98,7 @@
     --reason
     --printshellcmds
     --configfile test/data/config/test-chrM.json
-    --config pepfile=test/pep/itd/itd.yml
+    --config pepfile=test/pep/chrM.csv
   stdout:
     must_not_contain:
       - fusioncatcher
@@ -113,7 +114,7 @@
     --reason
     --printshellcmds
     --configfile test/data/config/test-chrM-fusioncatcher.json
-    --config pepfile=test/pep/itd/itd.yml
+    --config pepfile=test/pep/chrM.csv
   stdout:
     contains:
       - fusioncatcher
@@ -127,7 +128,7 @@
     snakemake
     --snakefile Snakefile
     --configfile test/data/config/test-chrM.json
-    --config pepfile=test/pep/snv-indels/chrM.yml
+    --config pepfile=test/pep/chrM.csv
     --cores 1
     --notemp
     --verbose

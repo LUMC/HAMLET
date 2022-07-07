@@ -7,7 +7,7 @@
     snakemake -n
     --snakefile includes/fusion/Snakefile
     --configfile test/data/config/test-dry-run-trio.json
-    --config pepfile=test/pep/fusion/trio.yml
+    --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
       - "TestSample1/fusion/TestSample1.star-fusion"
@@ -66,17 +66,17 @@
     snakemake -rp
     --snakefile includes/fusion/Snakefile
     --configfile test/data/config/test-chrM-fusion.json
-    --config pepfile=test/pep/fusion/fusion.yml
+    --config pepfile=test/pep/chrM.csv
     --cores 1
     --notemp
     --verbose
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
     --singularity-prefix '~/.singularity/cache/snakemake'
-    chrM-fusion/fusion/star-fusion/star-fusion.fusion_predictions.tsv
-    chrM-fusion/fusion/chrM-fusion.star-fusion
+    SRR8615409/fusion/star-fusion/star-fusion.fusion_predictions.tsv
+    SRR8615409/fusion/SRR8615409.star-fusion
   files:
     # Should create the star-fusion output file
-    - path: chrM-fusion/fusion/star-fusion/star-fusion.fusion_predictions.tsv
+    - path: SRR8615409/fusion/star-fusion/star-fusion.fusion_predictions.tsv
     # Should create the star-fusion output folder
-    - path: chrM-fusion/fusion/chrM-fusion.star-fusion
+    - path: SRR8615409/fusion/SRR8615409.star-fusion

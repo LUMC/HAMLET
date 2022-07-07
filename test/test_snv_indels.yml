@@ -7,7 +7,7 @@
     snakemake -n
     --snakefile includes/snv-indels/Snakefile
     --configfile test/data/config/test-dry-run-trio.json
-    --config pepfile=test/pep/qc-seq/qc-trio.yml
+    --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
       - "TestSample1/snv-indels/variant_plots/.done"
@@ -42,7 +42,7 @@
     snakemake -rp
     --snakefile includes/snv-indels/Snakefile
     --configfile test/data/config/test-chrM.json
-    --config pepfile=test/pep/snv-indels/chrM.yml
+    --config pepfile=test/pep/chrM.csv
     --cores 1
     --notemp
     --verbose
@@ -80,7 +80,7 @@
     --snakefile includes/snv-indels/Snakefile
     --printshellcmds
     --configfile test/data/config/test-chrM-vep-cache.json
-    --config pepfile=test/pep/snv-indels/chrM.yml
+    --config pepfile=test/pep/chrM.csv
   stdout:
     contains_regex:
       - 'vep .* --offline'
@@ -97,7 +97,7 @@
     --snakefile includes/snv-indels/Snakefile
     --printshellcmds
     --configfile test/data/config/test-chrM-gmap-index.json
-    --config pepfile=test/pep/snv-indels/chrM.yml
+    --config pepfile=test/pep/chrM.csv
   stdout:
     contains:
       - "gsnap --dir `dirname test/data/reference`"
