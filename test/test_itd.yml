@@ -7,7 +7,7 @@
     snakemake -n
     --snakefile includes/itd/Snakefile
     --configfile test/data/config/test-dry-run-trio.json
-    --config pepfile=test/pep/qc-seq/qc-trio.yml
+    --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
       - "TestSample1/itd/TestSample1.kmt2a.csv"
@@ -51,7 +51,7 @@
     snakemake -rp
     --snakefile includes/itd/Snakefile
     --configfile test/data/config/test-itd.json
-    --config pepfile=test/pep/itd/itd.yml
+    --config pepfile=test/pep/itd.csv
     --cores 1
     --notemp
     --verbose
@@ -109,7 +109,7 @@
     snakemake -rp
     --snakefile includes/itd/Snakefile
     --configfile test/data/config/test-chrM.json
-    --config pepfile=test/pep/snv-indels/chrM.yml
+    --config pepfile=test/pep/chrM.csv
     --cores 1
     --notemp
     --verbose

@@ -1,7 +1,0 @@
-sample_name,R1,R2
-TestSample1,test/data/fastq/R1.fq.gz,test/data/fastq/R2.fq.gz
-TestSample2,test/data/fastq/R1.fq.gz,test/data/fastq/R2.fq.gz
-TestSample2,test/data/fastq/R1.fq.gz,test/data/fastq/R2.fq.gz
-TestSample3,test/data/fastq/R1.fq.gz,test/data/fastq/R2.fq.gz
-TestSample3,test/data/fastq/R1.fq.gz,test/data/fastq/R2.fq.gz
-TestSample3,test/data/fastq/R1.fq.gz,test/data/fastq/R2.fq.gz
