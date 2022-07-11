@@ -65,7 +65,6 @@ To test if all dependencies of HAMLET have been installed, use
 pytest --kwd --tag sanity
 ```
 
-
 To test if HAMLET can parse the example configurations and find the appropriate output files, use
 ```bash
 pytest --kwd --tag dry-run
@@ -85,8 +84,42 @@ snakemake --cores 1 --configfile test/data/config/chrM.json --config pepfile=tes
 # Usage
 ## Input files
 HAMLET requires two separate input files. Firstly, a `json` file that contains
-the settings and reference files for the pipeline, you can see an example
-[here](test/data/config/chrM.json).
+the settings and reference files for the pipeline. You can use the example
+below, just update the path to the `deps-1.0.0` folder.
+```json
+{
+  "kmt2a_fasta": "deps-1.0.0/data/bwa-kmt2a-index/kmt2a-213.fa",
+  "genome_star_fusion_lib": "deps-1.0.0/data/GRCh38_gencode_v31_CTAT_lib_Aug152019.plug-n-play/ctat_genome_lib_build_dir",
+  "flt3_start": 1787,
+  "expression_gtf": "deps-1.0.0/data/ucsc_gencode.gtf",
+  "expression_bed": "deps-1.0.0/data/ucsc_gencode.flat.bed",
+  "vcf_gonl": "deps-1.0.0/data/gonl.grch38.sorted.filtered.snps_indels.r5.vcf.gz",
+  "kmt2a_start": 406,
+  "annotation_refflat": "deps-1.0.0/data/ucsc_gencode.refFlat",
+  "kmt2a_end": 4769,
+  "kmt2a_name": "KMT2A-213",
+  "bed_variant_hotspots": "deps-1.0.0/data/hotspots_genome.bed",
+  "exon_names": [
+    "MECOM:169146722-169147734"
+  ],
+  "exon_min_ratio": 0.1,
+  "ref_annot_goi": "deps-1.0.0/data/Homo_sapiens.GRCh38.77.goi-extended.gtf",
+  "flt3_end": 2024,
+  "genome_fasta": "deps-1.0.0/data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa",
+  "fasta_vep": "deps-1.0.0/vep/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz",
+  "fusioncatcher_data": "deps-1.0.0/fusioncatcher/human_v98",
+  "flt3_name": "FLT3-001",
+  "cache_vep": "deps-1.0.0/vep/ensembl-vep/cache_dir/",
+  "ref_id_mapping": "deps-1.0.0/data/id_mappings.tsv",
+  "flt3_fasta": "deps-1.0.0/data/bwa-flt3-index/flt3-001.fa",
+  "rrna_refflat": "deps-1.0.0/data/ucsc_rrna.refFlat",
+  "ref_amplicons": "deps-1.0.0/data/amplicons.bed",
+  "genome_gmap_index": "deps-1.0.0/data/gmap-genome-index/GCA_000001405.15_GRCh38_no_alt_analysis_set",
+  "run_name": "104372-045",
+  "vcf_1kg": "deps-1.0.0/data/1KG.phase3.GRCh38.with_chr.vcf.gz",
+  "transcripts_bed": "deps-1.0.0/data/transcripts.bed"
+}
+```
 
 Secondly, HAMLET requires a [Portable Encapsulated
 Project](http://pep.databio.org/en/2.1.0/) configuration that specifies the
@@ -98,12 +131,6 @@ Any number of samples can be processed in a single execution, and each sample
 may have any number of read pairs, and HAMLET will handle those properly.
 
 ## Execution
-
-After installation of all the required tools, you will need to fill in the pipeline settings in a JSON file, and create a PEP or CSV sample sheet.
-
-For the runtime settings, use the provided `test/data/config/test-chrM.json` file as template and
-update the values as required. Let's call this file `config.json`.
-
 If running in a cluster, you may also want to define the resource configurations in another YAML file. Read more about
 this type of configuration on the official [Snakemake
 documentation](https://snakemake.readthedocs.io/en/stable/snakefiles/configuration.html#cluster-configuration). For this
