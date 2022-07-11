@@ -14,7 +14,7 @@ rule star_fusion:
     input:
         fq1=get_forward,
         fq2=get_reverse,
-        lib=settings["genome_star_fusion_lib"]
+        lib=config["genome_star_fusion_lib"]
     params:
         folder="{sample}/fusion/star-fusion"
     output:
@@ -30,7 +30,7 @@ rule star_fusion:
 rule star_fusion_cp:
     input:
         txt="{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv",
-        src=settings["sf_rewrite_script"],
+        src=config["sf_rewrite_script"],
     output:
         txt="{sample}/fusion/{sample}.star-fusion",
     singularity: containers["fsnviz"]
@@ -64,7 +64,7 @@ rule fusioncatcher:
         fq1=get_forward,
         fq2=get_reverse,
     params:
-        data=settings["fusioncatcher_data"],
+        data=config["fusioncatcher_data"],
         max_junctions=1500000
     output:
         txt="{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
@@ -99,7 +99,7 @@ rule intersect_fusions:
     input:
         sf="{sample}/fusion/{sample}.star-fusion",
         fc="{sample}/fusion/{sample}.fusioncatcher",
-        bed=settings["transcripts_bed"],
+        bed=config["transcripts_bed"],
     output:
         txt="{sample}/fusion/{sample}.fuma",
     singularity: containers["fuma"]
@@ -116,7 +116,7 @@ rule subset_sf:
     input:
         sf="{sample}/fusion/{sample}.star-fusion",
         isect="{sample}/fusion/{sample}.fuma",
-        subset_script=settings["sf_subset_script"],
+        subset_script=config["sf_subset_script"],
     output:
         sf="{sample}/fusion/{sample}.sf-isect",
     singularity: containers["hamlet-scripts"]
@@ -139,7 +139,7 @@ rule combine_plots:
         sf="{sample}/fusion/{sample}.star-fusion.svg",
         fc="{sample}/fusion/{sample}.fusioncatcher.svg",
         isect="{sample}/fusion/{sample}.sf-isect.svg",
-        combine_script=settings["plot_combined_script"]
+        combine_script=config["plot_combined_script"]
     output:
         svg="{sample}/fusion/{sample}.fusions-combined.svg",
     singularity: containers["hamlet-scripts"]

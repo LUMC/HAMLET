@@ -30,7 +30,7 @@ rule idsort_aln:
 rule count_fragments:
     input:
         bam="{sample}/snv-indels/{sample}.snv-indel.idsorted.bam",
-        gtf=settings["expression_gtf"],
+        gtf=config["expression_gtf"],
     output:
         fragments_per_gene="{sample}/expression/{sample}.fragments_per_gene",
     threads: 1
@@ -42,8 +42,8 @@ rule count_fragments:
 rule count_raw_bases:
     input:
         bam=get_bamfile,
-        bed=settings["expression_bed"],
-        count_script=settings["base_count_script"],
+        bed=config["expression_bed"],
+        count_script=config["base_count_script"],
     output:
         raw_base_count="{sample}/expression/{sample}.raw_base",
     threads: 1
@@ -55,7 +55,7 @@ rule count_raw_bases:
 rule count_bases_exon:
     input:
         raw="{sample}/expression/{sample}.raw_base",
-        aggr_script=settings["aggr_base_count_script"],
+        aggr_script=config["aggr_base_count_script"],
     output:
         bases_per_exon="{sample}/expression/{sample}.bases_per_exon",
     params:
@@ -69,7 +69,7 @@ rule count_bases_exon:
 rule count_bases_gene:
     input:
         raw="{sample}/expression/{sample}.raw_base",
-        aggr_script=settings["aggr_base_count_script"],
+        aggr_script=config["aggr_base_count_script"],
     output:
         bases_per_gene="{sample}/expression/{sample}.bases_per_gene",
     params:
@@ -83,14 +83,14 @@ rule count_bases_gene:
 rule calc_exon_ratios:
     input:
         table="{sample}/expression/{sample}.bases_per_exon",
-        calc_script=settings["calc_ratio_script"],
+        calc_script=config["calc_ratio_script"],
     output:
         table="{sample}/expression/{sample}.exon_ratios",
     params:
         exon_ratio_names=" ".join(
-            [settings["relative_gene_name"]] + settings.get("exon_names")
+            [config["relative_gene_name"]] + config.get("exon_names")
         ),
-        exon_min_ratio=settings["exon_min_ratio"],
+        exon_min_ratio=config["exon_min_ratio"],
     threads: 1
     singularity: containers["hamlet-scripts"]
     shell:

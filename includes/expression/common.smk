@@ -5,20 +5,17 @@ containers = {
     "hamlet-scripts": "docker://quay.io/redmar_van_den_berg/hamlet-scripts:0.2"
 }
 
-settings=config["settings"]
-
-# Set the default settings
 def set_default(key, value):
     """ Set default value for settings """
-    if key not in settings:
-        settings[key] = value
+    if key not in config:
+        config[key] = value
 
 set_default("base_count_script", srcdir("scripts/hist2count.py"))
 set_default("aggr_base_count_script", srcdir("scripts/aggr_base_count.R"))
 set_default("calc_ratio_script", srcdir("scripts/calc_ratio.py"))
 set_default("relative_gene_name", "HMBS")
 
-if "exon_names" not in settings:
+if "exon_names" not in config:
     raise ValueError("No exon names for exon ratio calculation defined")
 
 def get_bamfile(wildcards):
