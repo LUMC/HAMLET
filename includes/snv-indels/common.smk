@@ -11,16 +11,13 @@ containers = {
     "vep": "docker://quay.io/biocontainers/ensembl-vep:101.0--pl526hecda079_1"
 }
 
-settings = config["settings"]
-
-# Set the default settings
 def set_default(key, value):
     """ Set default value for settings """
-    if key not in settings:
-        settings[key] = value
+    if key not in config:
+        config[key] = value
 
-set_default("genome_dict", settings["genome_fasta"].rsplit(".", 1)[0] + ".dict")
-set_default("genome_fai", settings["genome_fasta"] + ".fai")
+set_default("genome_dict", config["genome_fasta"].rsplit(".", 1)[0] + ".dict")
+set_default("genome_fai", config["genome_fasta"] + ".fai")
 set_default("exon_cov_script", srcdir("scripts/aggr_exon_cov.py"))
 set_default("extract_script", srcdir("scripts/vcf2json.py"))
 set_default("csv_script", srcdir("scripts/json2csv.py"))

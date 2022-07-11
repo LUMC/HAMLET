@@ -46,7 +46,7 @@ OUTPUTS = dict(
 )
 
 # Fusioncatcher outputs
-if settings.get("fusioncatcher_data"):
+if config.get("fusioncatcher_data"):
     OUTPUTS["fusioncatcher_txt"] = fusion_output(".fusioncatcher")
     OUTPUTS["fusioncatcher_svg"] = fusion_output(".fusioncatcher.svg")
     OUTPUTS["fusions_txt"] = fusion_output(".fuma")
@@ -79,14 +79,14 @@ use rule align_kmt2a from itd as itd_align_kmt2a with:
     input:
         fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
         fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
-        fasta=settings["kmt2a_fasta"]
+        fasta=config["kmt2a_fasta"]
 
 # Connect the align_flt3 rule to the output of qc-seq
 use rule align_flt3 from itd as itd_align_flt3 with:
     input:
         fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
         fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
-        fasta=settings["flt3_fasta"]
+        fasta=config["flt3_fasta"]
 
 module align:
     snakefile:
@@ -100,7 +100,7 @@ use rule align_vars from align as align_align_vars with:
     input:
         fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
         fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
-        index=settings.get("genome_gmap_index") or "gmap_index/reference",
+        index=config.get("genome_gmap_index") or "gmap_index/reference",
 
 module expression:
     snakefile:
@@ -120,8 +120,8 @@ use rule idsort_aln from expression as expression_idsort_aln with:
 use rule count_raw_bases from expression as expression_count_raw_bases with:
     input:
         bam=rules.align_reorder_aln_header.output.bam,
-        bed=settings["expression_bed"],
-        count_script=settings["base_count_script"],
+        bed=config["expression_bed"],
+        count_script=config["base_count_script"],
     singularity:
         "docker://quay.io/biocontainers/mulled-v2-a9ddcbd438a66450297b5e0b61ac390ee9bfdb61:e60f3cfda0dfcf4a72f2091c6fa1ebe5a5400220-0"
 
@@ -137,7 +137,7 @@ use rule star_fusion from fusion as fusion_star_fusion with:
     input:
         fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
         fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
-        lib=settings["genome_star_fusion_lib"],
+        lib=config["genome_star_fusion_lib"],
     singularity:
         "docker://quay.io/biocontainers/star-fusion:1.10.0--hdfd78af_1",
 
@@ -158,7 +158,7 @@ rule create_summary:
         insert_stats=OUTPUTS["insert_stats"],
         vep_stats=OUTPUTS["vep_stats"],
         exon_cov_stats=OUTPUTS["exon_cov_stats"],
-        idm=settings["ref_id_mapping"],
+        idm=config["ref_id_mapping"],
         var_plots=OUTPUTS["smallvars_plots"],
         var_csv=OUTPUTS["smallvars_csv_hi"],
         fusions_svg=OUTPUTS["star_fusion_svg"],

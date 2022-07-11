@@ -13,11 +13,9 @@ containers = {
     "zip": "docker://quay.io/redmar_van_den_berg/zip:3.0"
 }
 
-settings=config["settings"]
-
 # The version of HAMLET
 PIPELINE_VERSION = "v1.0.2-dev-1"
-RUN_NAME = settings.get("run_name") or f"hamlet-{uuid4().hex[:8]}"
+RUN_NAME = config.get("run_name") or f"hamlet-{uuid4().hex[:8]}"
 
 def make_pattern(extension, dirname):
     """Helper function to create a wildcard-containing path for output files."""

@@ -13,7 +13,7 @@ rule align_kmt2a:
     input:
         fq1=get_forward,
         fq2=get_reverse,
-        fasta=settings["kmt2a_fasta"]
+        fasta=config["kmt2a_fasta"]
     output:
         bam="{sample}/itd/{sample}.kmt2a.bam",
         bai="{sample}/itd/{sample}.kmt2a.bai",
@@ -30,11 +30,11 @@ rule detect_itd_kmt2a:
     input:
         bam="{sample}/itd/{sample}.kmt2a.bam",
         bai="{sample}/itd/{sample}.kmt2a.bai",
-        ref=settings["kmt2a_fasta"],
+        ref=config["kmt2a_fasta"],
     params:
-        trx_name=settings["kmt2a_name"],
-        start=settings["kmt2a_start"],
-        end=settings["kmt2a_end"],
+        trx_name=config["kmt2a_name"],
+        start=config["kmt2a_start"],
+        end=config["kmt2a_end"],
     output:
         csv="{sample}/itd/{sample}.kmt2a.csv",
         bg_csv="{sample}/itd/{sample}.kmt2a.bg.csv",
@@ -59,7 +59,7 @@ rule align_flt3:
     input:
         fq1=get_forward,
         fq2=get_reverse,
-        fasta=settings["flt3_fasta"]
+        fasta=config["flt3_fasta"]
     output:
         bam="{sample}/itd/{sample}.flt3.bam",
         bai="{sample}/itd/{sample}.flt3.bai",
@@ -76,11 +76,11 @@ rule detect_itd_flt3:
     input:
         bam="{sample}/itd/{sample}.flt3.bam",
         bai="{sample}/itd/{sample}.flt3.bai",
-        ref=settings["flt3_fasta"],
+        ref=config["flt3_fasta"],
     params:
-        trx_name=settings["flt3_name"],
-        start=settings["flt3_start"],
-        end=settings["flt3_end"],
+        trx_name=config["flt3_name"],
+        start=config["flt3_start"],
+        end=config["flt3_end"],
     output:
         csv="{sample}/itd/{sample}.flt3.csv",
         bg_csv="{sample}/itd/{sample}.flt3.bg.csv",

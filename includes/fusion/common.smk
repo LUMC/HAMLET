@@ -11,12 +11,10 @@ pepfile: config["pepfile"]
 
 samples = pep.sample_table["sample_name"]
 
-# Set the default settings
-settings=config["settings"]
 def set_default(key, value):
     """ Set default value for settings """
-    if key not in settings:
-        settings[key] = value
+    if key not in config:
+        config[key] = value
 
 set_default("sf_subset_script", srcdir("scripts/subset_sf.py"))
 set_default("plot_combined_script", srcdir("scripts/combine_svgs.py"))
@@ -26,7 +24,7 @@ set_default("fusioncatcher_data", False)
 def get_fusioncatcher_outputs():
     # If no fusioncatcher data is specified, we do not run it and there are no
     # outputs
-    if not settings["fusioncatcher_data"]:
+    if not config["fusioncatcher_data"]:
         return list()
 
     fs = expand("{sample}/fusion/{sample}.fusioncatcher", sample=samples)

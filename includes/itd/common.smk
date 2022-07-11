@@ -3,18 +3,14 @@ containers = {
     "rose": "docker://quay.io/redmar_van_den_berg/rose-dt:0.4"
 }
 
-settings = config ["settings"]
-
 pepfile: config["pepfile"]
 
 samples = pep.sample_table["sample_name"]
 
-
-# Set the default settings
 def set_default(key, value):
     """ Set default value for settings """
-    if key not in settings:
-        settings[key] = value
+    if key not in config:
+        config[key] = value
 
 # Region of interest for kmt2a ~ exon 2-10 in transcript coordinates.
 set_default("kmt2a_name", "KMT2A-213")
