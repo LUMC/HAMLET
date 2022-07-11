@@ -18,7 +18,7 @@ a main `Snakefile` using
 [modules](https://snakemake.readthedocs.io/en/stable/snakefiles/modularization.html#modules).
 
 HAMLET is build to use Singularity to run every Snakemake rule inside its own container. The base execution
-environment is for HAMLET defined by an `environment.yml` file.
+environment for HAMLET defined by an `environment.yml` file.
 
 In addition to the raw output files, Hamlet also generates a PDF report containing an overview of the essential results
 and a zipped file containing this report and the essential result files.
@@ -32,7 +32,7 @@ probably the version you should use (**at your own risk**) if you plan to analys
 # Installation
 The dependencies required for running the pipeline are listed in the provided `environment.yml` file. To use it, first
 make sure that you have [Conda](https://docs.conda.io/en/latest/miniconda.html) installed on your system.
-Then, set up a Conda virtual environment and then update it:
+Then, set up a Conda virtual environment and activate it:
 
 ```bash
 # Set up and activate your conda environment.
@@ -43,7 +43,7 @@ conda env create -f environment.yml
 conda activate HAMLET
 ```
 
-Additionally, `singularity` version 3 or greater should be installed on the system.
+Additionally, [singularity](https://docs.sylabs.io/guides/3.0/user-guide/installation.html) version 3 or greater should be installed on the system.
 
 ## Data files
 HAMLET requires around 100GB of reference files to run. You can download the data files [here](https://barmsijs.lumc.nl/HAMLET/deps-1.0.0.tar.gz),
@@ -99,8 +99,7 @@ may have any number of read pairs, and HAMLET will handle those properly.
 
 ## Execution
 
-After installation of all the required tools, you will need to fill in the required settings and configurations in
-several YAML files.
+After installation of all the required tools, you will need to fill in the pipeline settings in a JSON file, and create a PEP or CSV sample sheet.
 
 For the runtime settings, use the provided `test/data/config/test-chrM.json` file as template and
 update the values as required. Let's call this file `config.json`.
@@ -114,6 +113,7 @@ file, let's call it `config-cluster.yml`
 ```bash
 $ snakemake -s Snakefile \
     --configfile config.json \
+    --config pepfile=sample_sheet.csv \
     --cluster-config config-cluster.yml \
     --rerun-incomplete \
     --use-singularity \
@@ -126,11 +126,10 @@ $ snakemake -s Snakefile \
 | ---- | ----------- | -------- |
 | --configfile config.json | The configuration file for the pipeline | Yes |
 | --cluster-config | A cluster configuration file, only relevant when you are running HAMLET on a cluster | No |
+| --config pepfile=sample_sheet.csv | A PEP configuration file that contains all samples, can be CSV | Yes |
 | --rerun-incomplete | Re-run jobs if the output appears incomplete | No |
 | --use-singularity | Use Singularity images to fetch all required dependencies. | Yes |
 | --singularity-args | Arguments to pass to singularity. Use --bind to specify which folders on your system should be accessible inside the container. This should at least be the folders where your samples and reference files are located | Yes |
-
-See `test/test_hamlet.yml` for a working example of the flags required to run HAMLET with Singularity.
 
 ## Output files
 
