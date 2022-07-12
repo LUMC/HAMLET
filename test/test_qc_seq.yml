@@ -142,6 +142,7 @@
         - "PASS\tPer base N content\tlow_qual-rg_1-R1.fq.gz"
         - "WARN\tOverrepresented sequences\tlow_qual-rg_1-R1.fq.gz"
         - "PASS\tAdapter Content\tlow_qual-rg_1-R1.fq.gz"
+
 - name: lint-qc
   tags:
     - sanity
@@ -151,3 +152,9 @@
     --lint
     --snakefile includes/qc-seq/Snakefile
     --config pepfile=test/pep/chrM-trio-subsamples.csv
+
+- name: snakefmt-qc
+  tags:
+    - sanity
+    - qc-seq
+  command: snakefmt --check includes/qc-seq/
