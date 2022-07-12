@@ -1,14 +1,26 @@
 include: "common.smk"
 
-localrules: calc_exon_ratios, count_bases_exon, count_bases_gene
+
+localrules:
+    calc_exon_ratios,
+    count_bases_exon,
+    count_bases_gene,
+
 
 rule all:
     input:
-        base_per_exon=expand("{sample}/expression/{sample}.bases_per_exon", sample=samples),
-        base_per_gene=expand("{sample}/expression/{sample}.bases_per_gene", sample=samples),
+        base_per_exon=expand(
+            "{sample}/expression/{sample}.bases_per_exon", sample=samples
+        ),
+        base_per_gene=expand(
+            "{sample}/expression/{sample}.bases_per_gene", sample=samples
+        ),
         exon_ratio=expand("{sample}/expression/{sample}.exon_ratios", sample=samples),
-        fragment_per_gene=expand("{sample}/expression/{sample}.fragments_per_gene", sample=samples),
+        fragment_per_gene=expand(
+            "{sample}/expression/{sample}.fragments_per_gene", sample=samples
+        ),
         raw_base=expand("{sample}/expression/{sample}.raw_base", sample=samples),
+
 
 rule idsort_aln:
     input:
@@ -18,12 +30,14 @@ rule idsort_aln:
     params:
         tmp=temp("tmp"),
     log:
-        "log/idsort_aln.{sample}.txt"
+        "log/idsort_aln.{sample}.txt",
     threads: 1
-    container: containers["picard"]
+    container:
+        containers["picard"]
     shell:
         "picard -Xmx4G SortSam I={input.bam} O={output.bam} SORT_ORDER=queryname"
         " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=false TMP_DIR={params.tmp} 2> {log}"
+
 
 rule count_fragments:
     input:
@@ -32,12 +46,14 @@ rule count_fragments:
     output:
         fragments_per_gene="{sample}/expression/{sample}.fragments_per_gene",
     log:
-        "log/count_fragments.{sample}.txt"
+        "log/count_fragments.{sample}.txt",
     threads: 1
-    container: containers["htseq"]
+    container:
+        containers["htseq"]
     shell:
         "htseq-count --format bam --order name --stranded no"
         " {input.bam} {input.gtf} > {output.fragments_per_gene} 2> {log}"
+
 
 rule count_raw_bases:
     input:
@@ -47,12 +63,14 @@ rule count_raw_bases:
     output:
         raw_base_count="{sample}/expression/{sample}.raw_base",
     log:
-        "log/count_raw_bases.{sample}.txt"
+        "log/count_raw_bases.{sample}.txt",
     threads: 1
-    container: containers["bedtools-2.17-python-2.7"]
+    container:
+        containers["bedtools-2.17-python-2.7"]
     shell:
         "bedtools coverage -split -hist -abam {input.bam} -b {input.bed}"
         " 2> {log} | python {input.count_script} -c 3 > {output.raw_base_count}"
+
 
 rule count_bases_exon:
     input:
@@ -63,12 +81,14 @@ rule count_bases_exon:
     params:
         sample=lambda wildcards: wildcards.sample,
     log:
-        "log/count_bases_exon.{sample}.txt"
+        "log/count_bases_exon.{sample}.txt",
     threads: 1
-    container: containers["hamlet-scripts"]
+    container:
+        containers["hamlet-scripts"]
     shell:
         "Rscript {input.aggr_script} -I {input.raw} -N {params.sample}"
         " -E {output.bases_per_exon} 2> {log}"
+
 
 rule count_bases_gene:
     input:
@@ -79,12 +99,14 @@ rule count_bases_gene:
     params:
         sample=lambda wildcards: wildcards.sample,
     log:
-        "log/count_bases_gene.{sample}.txt"
+        "log/count_bases_gene.{sample}.txt",
     threads: 1
-    container: containers["hamlet-scripts"]
+    container:
+        containers["hamlet-scripts"]
     shell:
         "Rscript {input.aggr_script} -I {input.raw} -N {params.sample}"
         " -G {output.bases_per_gene} 2> {log}"
+
 
 rule calc_exon_ratios:
     input:
@@ -98,9 +120,10 @@ rule calc_exon_ratios:
         ),
         exon_min_ratio=config["exon_min_ratio"],
     log:
-        "log/calc_exon_ratios.{sample}.txt"
+        "log/calc_exon_ratios.{sample}.txt",
     threads: 1
-    container: containers["hamlet-scripts"]
+    container:
+        containers["hamlet-scripts"]
     shell:
         "cat {input.table}"
         " | python3 {input.calc_script} -r {params.exon_min_ratio}"
