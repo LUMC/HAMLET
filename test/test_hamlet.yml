@@ -157,7 +157,7 @@
     --configfile test/data/config/chrM.json
     --config pepfile=test/pep/chrM.csv
 
-- name: snakefmt-fusion
+- name: snakefmt-hamlet
   tags:
     - sanity
     - hamlet
