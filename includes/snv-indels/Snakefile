@@ -46,7 +46,10 @@ rule align_vars:
         sam=temp("{sample}/snv-indels/{sample}.snv-indel.raw.sam"),
     params:
         rg_sample="{sample}"
-    threads: 8
+    log:
+        "log/align_vars_{sample}.txt"
+    threads:
+        8
     container: containers["gsnap"]
     shell:
         "gsnap --dir `dirname {input.index}` --db `basename {input.index}`"

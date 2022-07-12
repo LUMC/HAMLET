@@ -54,12 +54,14 @@ rule fastqc_raw:
         fq2=get_reverse,
     output:
         folder=directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-raw")
+    log:
+        "log/fastqc_raw.{sample}.{read_group}.{pair}.txt"
     threads: 4
     container: containers["fastqc"]
     shell:
         "mkdir -p {output.folder}"
         " && fastqc -o {output.folder} --dir /tmp --extract --nogroup -f fastq "
-        "--threads {threads} {input.fq1} {input.fq2}"
+        "--threads {threads} {input.fq1} {input.fq2} 2> {log}"
 
 
 rule cutadapt:
@@ -70,11 +72,13 @@ rule cutadapt:
     output:
         fq1="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz",
         fq2="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz"
+    log:
+        "log/cutadapt.{sample}.{read_group}.txt"
     container: containers["cutadapt"]
     shell: "cutadapt -a AGATCGGAAGAG -A AGATCGGAAGAG "
            "--minimum-length=20 --quality-cutoff=20,20 "
            "--output={output.fq1} --paired-output={output.fq2} "
-           "{input.fq1} {input.fq2}"
+           "{input.fq1} {input.fq2} > {log}"
 
 
 rule fastqc_processed:
@@ -84,12 +88,13 @@ rule fastqc_processed:
         fq2="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz"
     output:
         folder = directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-processed")
+    log: "log/fastqc_processed.{sample}.{read_group}.{pair}.txt"
     threads: 4
     container: containers["fastqc"]
     shell:
         "mkdir -p {output.folder}"
         " && fastqc -o {output.folder} --dir /tmp --extract --nogroup -f fastq "
-        "--threads {threads} {input.fq1} {input.fq2}"
+        "--threads {threads} {input.fq1} {input.fq2} 2> {log}"
 
 
 rule rg_stats:
@@ -102,11 +107,12 @@ rule rg_stats:
         rg_stats_script=config["rg_stats_script"],
     output:
         stats="{sample}/qc-seq/{read_group}/stats.json",
+    log: "log/rg_stats.{sample}.{read_group}.txt"
     container: containers["crimson"]
     shell:
         "python {input.rg_stats_script} --name {wildcards.read_group}"
         " {input.raw1} {input.raw2} {input.proc1} {input.proc2}"
-        " > {output.stats}"
+        " > {output.stats} 2> {log}"
 
 
 rule sample_stats:
@@ -116,10 +122,11 @@ rule sample_stats:
         sample_stats_script=config["sample_stats_script"]
     output:
         stats="{sample}/qc-seq/{sample}.seq_stats.json"
+    log: "log/sample_stats.{sample}.txt"
     container: containers["crimson"]
     shell:
         "python {input.sample_stats_script} --name {wildcards.sample}"
-        " {input.rg_stats} > {output.stats}"
+        " {input.rg_stats} > {output.stats} 2> {log}"
 
 
 rule merge_fastqs_r1:
@@ -128,9 +135,10 @@ rule merge_fastqs_r1:
         fqs = get_all_trimmed_forward,
     output:
         merged = "{sample}/{sample}-R1.fq.gz",
+    log: "log/merge_fastqs_r1.{sample}.txt"
     container: containers["debian"]
     shell:
-        "cp {input.fqs} {output.merged} || cat {input.fqs} > {output.merged}"
+        "cp {input.fqs} {output.merged} 2> {log} || cat {input.fqs} > {output.merged} 2> {log}"
 
 
 rule merge_fastqs_r2:
@@ -139,9 +147,10 @@ rule merge_fastqs_r2:
         fqs = get_all_trimmed_reverse,
     output:
         merged = "{sample}/{sample}-R2.fq.gz",
+    log: "log/merge_fastqs_r2.{sample}.txt"
     container: containers["debian"]
     shell:
-        "cp {input.fqs} {output.merged} || cat {input.fqs} > {output.merged}"
+        "cp {input.fqs} {output.merged} 2> {log} || cat {input.fqs} > {output.merged} 2> {log}"
 
 
 rule merge_fastqs_raw_r1:
@@ -150,9 +159,10 @@ rule merge_fastqs_raw_r1:
         fqs = get_all_r1
     output:
         merged = temp("{sample}/{sample}-R1.raw.fq.gz")
+    log: "log/merge_fastqs_raw_r1.{sample}.txt"
     container: containers["debian"]
     shell:
-        "cp {input.fqs} {output.merged} || cat {input.fqs} > {output.merged}"
+        "cp {input.fqs} {output.merged} 2> {log} || cat {input.fqs} > {output.merged} 2> {log}"
 
 
 rule merge_fastqs_raw_r2:
@@ -161,6 +171,7 @@ rule merge_fastqs_raw_r2:
         fqs = get_all_r2
     output:
         merged = temp("{sample}/{sample}-R2.raw.fq.gz")
+    log: "log/merge_fastqs_raw_r2.{sample}.txt"
     container: containers["debian"]
     shell:
-        "cp {input.fqs} {output.merged} || cat {input.fqs} > {output.merged}"
+        "cp {input.fqs} {output.merged} 2> {log} || cat {input.fqs} > {output.merged} 2> {log}"
