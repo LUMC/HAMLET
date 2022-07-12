@@ -1,5 +1,6 @@
 include: "common.smk"
 
+
 rule all:
     input:
         kmt2a_csv=expand("{sample}/itd/{sample}.kmt2a.csv", sample=samples),
@@ -9,24 +10,27 @@ rule all:
         flt3_bg_csv=expand("{sample}/itd/{sample}.flt3.bg.csv", sample=samples),
         flt3_plots=expand("{sample}/itd/{sample}.flt3.png", sample=samples),
 
+
 rule align_kmt2a:
     input:
         fq1=get_forward,
         fq2=get_reverse,
-        fasta=config["kmt2a_fasta"]
+        fasta=config["kmt2a_fasta"],
     output:
         bam="{sample}/itd/{sample}.kmt2a.bam",
         bai="{sample}/itd/{sample}.kmt2a.bai",
     log:
-        "log/align_kmt2a.{sample}.txt"
+        "log/align_kmt2a.{sample}.txt",
     params:
-        rg="@RG\\tID:{sample}\\tSM:{sample}"
+        rg="@RG\\tID:{sample}\\tSM:{sample}",
     threads: 3
-    container: containers["bwa-0.7.17-samtools-1.3.1-picard-2.9.2"]
+    container:
+        containers["bwa-0.7.17-samtools-1.3.1-picard-2.9.2"]
     shell:
-        "bwa mem -R \'{params.rg}\' -t {threads} -L 2,2 {input.fasta} {input.fq1} {input.fq2} 2> {log}"
+        "bwa mem -R '{params.rg}' -t {threads} -L 2,2 {input.fasta} {input.fq1} {input.fq2} 2> {log}"
         " | samtools view -Sbh -F 0x4 -"
         " | picard -Xmx4G SortSam I=/dev/stdin O={output.bam} SO=coordinate CREATE_INDEX=true"
+
 
 rule detect_itd_kmt2a:
     input:
@@ -41,11 +45,13 @@ rule detect_itd_kmt2a:
         start=config["kmt2a_start"],
         end=config["kmt2a_end"],
     log:
-        "log/detect_itd_kmt2a.{sample}.txt"
-    container: containers["rose"]
+        "log/detect_itd_kmt2a.{sample}.txt",
+    container:
+        containers["rose"]
     shell:
         "rose-dt -r {params.trx_name}:{params.start}-{params.end} --bg-counts "
         "{output.bg_csv} {input.ref} {input.bam} > {output.csv} 2> {log}"
+
 
 rule plot_itd_kmt2a:
     input:
@@ -54,32 +60,36 @@ rule plot_itd_kmt2a:
     output:
         png="{sample}/itd/{sample}.kmt2a.png",
     log:
-        "log/plot_itd_kmt2a.{sample}.txt"
-    container: containers["rose"]
+        "log/plot_itd_kmt2a.{sample}.txt",
+    container:
+        containers["rose"]
     shell:
         "rose-dt-plot.py"
         " --sample-id {wildcards.sample} --mode per-event"
         " {input.csv} {input.bg_csv} {output.png} 2> {log}"
+
 
 ## FLT3 ##
 rule align_flt3:
     input:
         fq1=get_forward,
         fq2=get_reverse,
-        fasta=config["flt3_fasta"]
+        fasta=config["flt3_fasta"],
     output:
         bam="{sample}/itd/{sample}.flt3.bam",
         bai="{sample}/itd/{sample}.flt3.bai",
     params:
-        rg="@RG\\tID:{sample}\\tSM:{sample}"
+        rg="@RG\\tID:{sample}\\tSM:{sample}",
     log:
-        "log/align_flt3.{sample}.txt"
+        "log/align_flt3.{sample}.txt",
     threads: 3
-    container: containers["bwa-0.7.17-samtools-1.3.1-picard-2.9.2"]
+    container:
+        containers["bwa-0.7.17-samtools-1.3.1-picard-2.9.2"]
     shell:
-        "bwa mem -R \'{params.rg}\' -t {threads} -L 2,2 {input.fasta} {input.fq1} {input.fq2} 2> {log}"
+        "bwa mem -R '{params.rg}' -t {threads} -L 2,2 {input.fasta} {input.fq1} {input.fq2} 2> {log}"
         " | samtools view -Sbh -F 0x4 -"
         " | picard -Xmx4G SortSam I=/dev/stdin O={output.bam} SO=coordinate CREATE_INDEX=true"
+
 
 rule detect_itd_flt3:
     input:
@@ -94,11 +104,13 @@ rule detect_itd_flt3:
         start=config["flt3_start"],
         end=config["flt3_end"],
     log:
-        "log/detect_itd_flt3.{sample}.txt"
-    container: containers["rose"]
+        "log/detect_itd_flt3.{sample}.txt",
+    container:
+        containers["rose"]
     shell:
         "rose-dt -r {params.trx_name}:{params.start}-{params.end} --bg-counts "
         "{output.bg_csv} {input.ref} {input.bam} > {output.csv} 2> {log}"
+
 
 rule plot_itd_flt3:
     input:
@@ -107,8 +119,9 @@ rule plot_itd_flt3:
     output:
         png="{sample}/itd/{sample}.flt3.png",
     log:
-        "log/plot_itd_flt3.{sample}.txt"
-    container: containers["rose"]
+        "log/plot_itd_flt3.{sample}.txt",
+    container:
+        containers["rose"]
     shell:
         "rose-dt-plot.py"
         " --sample-id {wildcards.sample} --mode per-event"

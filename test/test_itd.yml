@@ -172,4 +172,4 @@
   tags:
     - sanity
     - itd
-  command: snakefmt --check includes/fusion
+  command: snakefmt --check includes/itd
