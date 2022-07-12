@@ -45,9 +45,9 @@ rule align_vars:
     output:
         sam=temp("{sample}/snv-indels/{sample}.snv-indel.raw.sam"),
     params:
-        rg_sample="{sample}"
+        rg_sample=lambda wildcards: wildcards.sample,
     log:
-        "log/align_vars_{sample}.txt"
+        "log/align_vars.{sample}.txt"
     threads:
         8
     container: containers["gsnap"]
@@ -56,7 +56,7 @@ rule align_vars:
         " --batch 4 --nthreads {threads}"
         " --novelsplicing 1 --npaths 1 --quiet-if-excessive"
         " --read-group-name={params.rg_sample} --read-group-id={params.rg_sample}"
-        " --format sam --gunzip {input.fq1} {input.fq2} > {output.sam}"
+        " --format sam --gunzip {input.fq1} {input.fq2} > {output.sam} 2> {log}"
 
 rule sort_bamfile:
     input:
@@ -66,10 +66,12 @@ rule sort_bamfile:
         bai=temp("{sample}/snv-indels/{sample}.snv-indel.sort.bai"),
     params:
         tmp=temp("tmp"),
+    log:
+        "log/sort_bamfile.{sample}.txt"
     container: containers["picard"]
     shell:
         "picard -Xmx4G SortSam I={input.sam} O={output.bam} SORT_ORDER=coordinate "
-        "VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true TMP_DIR={params.tmp}"
+        "VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true TMP_DIR={params.tmp} 2> {log}"
 
 
 rule reorder_aln_header:
@@ -82,18 +84,22 @@ rule reorder_aln_header:
         bam="{sample}/snv-indels/{sample}.snv-indel.bam",
         bai="{sample}/snv-indels/{sample}.snv-indel.bai",
     params:
-        rg_sample="{sample}"
+        rg_sample=lambda wildcards: wildcards.sample,
+    log:
+        "log/reorder_aln_header.{sample}.txt"
     threads: 1
     container: containers["picard"]
     shell:
         "picard -Xmx4G ReorderSam I={input.bam} O={output.bam} R={input.ref}"
-        " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true"
+        " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true 2> {log}"
 
 rule genome_txt:
     input:
         ref_dict=config["genome_dict"],
     output:
         genome=temp(".tmp.genome.txt")
+    log:
+        "log/tmp.genome.txt"
     container: containers["debian"]
     shell:
         " cat {input.ref_dict}"
@@ -101,7 +107,7 @@ rule genome_txt:
         " | sed 's/@SQ\\tSN://'"
         " | sed 's/\\tLN:/\\t/'"
         " | cut -f1,2"
-        " > {output.genome}"
+        " > {output.genome} 2> {log}"
 
 rule exon_cov_ref:
     input:
@@ -109,13 +115,15 @@ rule exon_cov_ref:
         ref_refflat=config["annotation_refflat"],
     output:
         bed=temp(".tmp.exon_cov_ref.bed")
+    log:
+        "log/exon_cov_ref.txt"
     container: containers["bedtools-2.27-grep-2.14-gawk-5.0-click-7-python-3.7"]
     shell:
         "cat {input.ref_refflat}"
         " | grep -vP \"chr.*alt\t\""
         " | awk '{{ split($10, starts, \",\"); split($11, ends, \",\"); for (i=1; i < length(starts); i++) {{ print $3\"\\t\"starts[i]\"\\t\"ends[i]\"\\t\"gensub(/(\.[0-9]+)/,\"\", \"g\", $2)\"\\t\"i\"\\t\"$4 }} }}'"
         " | bedtools sort -faidx {input.ref_fai}"
-        " > {output.bed}"
+        " > {output.bed} 2> {log}"
 
 rule exon_cov:
     input:
@@ -126,9 +134,11 @@ rule exon_cov:
         scr=config["exon_cov_script"]
     output:
         json="{sample}/snv-indels/{sample}.exon_cov_stats.json"
+    log:
+        "log/exon_cov.{sample}.txt"
     container: containers["bedtools-2.27-grep-2.14-gawk-5.0-click-7-python-3.7"]
     shell:
-        "bedtools coverage -d -sorted -g {input.genome} -a {input.bed} -b {input.bam}"
+        "bedtools coverage -d -sorted -g {input.genome} -a {input.bed} -b {input.bam} 2> {log}"
         " | cut -f1,2,3,4,5,8,7"
         " | python {input.scr} --id-mapping {input.idm} - {output.json}"
 
@@ -138,12 +148,14 @@ rule call_vars:
         ref=config["genome_fasta"],
     output:
         vcf="{sample}/snv-indels/{sample}.raw.vcf.gz"
+    log:
+        "log/call_vars.{sample}.txt"
     threads: 3
     container: containers["varscan-2.4.2-samtools-1.3.1-tabix-0.2.6-grep-2.14"]
     shell:
         "samtools mpileup -f {input.ref} -d 1000000 -s -B {input.bam}"
         " | grep -vP '\\t\\t'"
-        " | varscan mpileup2cns --strand-filter 0 --output-vcf 1 --min-var-freq 0.1 --p-value 0.05"
+        " | varscan mpileup2cns --strand-filter 0 --output-vcf 1 --min-var-freq 0.1 --p-value 0.05 2> {log}"
         " | grep -vP '\\t\./\.|\\t0/0'"
         " | bgzip -c > {output.vcf}"
 
@@ -155,12 +167,14 @@ rule aln_stats:
         ref_dict=config["genome_dict"],
     output:
         stats="{sample}/snv-indels/{sample}.aln_stats"
+    log:
+        "log/aln_stats.{sample}.txt"
     threads: 1
     container: containers["picard"]
     shell:
         "picard -Xmx4G CollectAlignmentSummaryMetrics"
         " VALIDATION_STRINGENCY=LENIENT"
-        " R={input.ref} I={input.bam} O={output.stats}"
+        " R={input.ref} I={input.bam} O={output.stats} 2> {log}"
 
 rule insert_stats:
     input:
@@ -171,12 +185,14 @@ rule insert_stats:
     output:
         stats="{sample}/snv-indels/{sample}.insert_stats",
         histo="{sample}/snv-indels/{sample}.insert_stats.pdf",
+    log:
+        "log/insert_stats.{sample}.txt"
     threads: 1
     container: containers["picard"]
     shell:
         "picard -Xmx4G CollectInsertSizeMetrics"
         " VALIDATION_STRINGENCY=LENIENT"
-        " R={input.ref} I={input.bam} O={output.stats} H={output.histo}"
+        " R={input.ref} I={input.bam} O={output.stats} H={output.histo} 2> {log}"
 
 rule rna_stats:
     input:
@@ -189,6 +205,8 @@ rule rna_stats:
     output:
         stats="{sample}/snv-indels/{sample}.rna_stats",
         histo="{sample}/snv-indels/{sample}.rna_stats.pdf",
+    log:
+        "log/rna_stats.{sample}.txt"
     threads: 1
     container: containers["picard"]
     shell:
@@ -197,7 +215,7 @@ rule rna_stats:
         " R={input.ref} REF_FLAT={input.annot}"
         " RIBOSOMAL_INTERVALS={input.ref_rrna}"
         " STRAND_SPECIFICITY=NONE ASSUME_SORTED=true"
-        " CHART_OUTPUT={output.histo} I={input.bam} O={output.stats}"
+        " CHART_OUTPUT={output.histo} I={input.bam} O={output.stats} 2> {log}"
 
 rule annotate_vars:
     input:
@@ -211,6 +229,8 @@ rule annotate_vars:
     output:
         vcf="{sample}/snv-indels/{sample}.annotated.vcf.gz",
         stats="{sample}/snv-indels/{sample}.vep_stats.txt",
+    log:
+        "log/annotate_vars.{sample}.txt"
     threads: 8
     container: containers["vep"]
     shell:
@@ -225,7 +245,7 @@ rule annotate_vars:
         " --format vcf"
         " --polyphen b"
         " --sift b"
-        " --stats_file {output.stats} -o STDOUT | bgzip -c > {output.vcf}"
+        " --stats_file {output.stats} -o STDOUT 2> {log} | bgzip -c > {output.vcf}"
 
 rule extract_vars:
     input:
@@ -235,11 +255,13 @@ rule extract_vars:
         scr=config["extract_script"],
     output:
         json="{sample}/snv-indels/{sample}.variants.json",
+    log:
+        "log/extract_vars.{sample}.txt"
     threads: 1
     container: containers["hamlet-scripts"]
     shell:
         "python3 {input.scr} --hotspots {input.ref_hotspots} --sample-id {wildcards.sample}"
-        " {input.ref_id_mapping} {input.vcf} > {output.json}"
+        " {input.ref_id_mapping} {input.vcf} > {output.json} 2> {log}"
 
 rule table_vars_all:
     input:
@@ -247,10 +269,12 @@ rule table_vars_all:
         scr=config["csv_script"],
     output:
         csv="{sample}/snv-indels/{sample}.variants_all.csv",
+    log:
+        "log/table_vars_all.{sample}.txt"
     threads: 1
     container: containers["hamlet-scripts"]
     shell:
-        "python3 {input.scr} {input.json} > {output.csv}"
+        "python3 {input.scr} {input.json} > {output.csv} 2> {log}"
 
 rule table_vars_hi:
     input:
@@ -258,10 +282,12 @@ rule table_vars_hi:
         scr=config["csv_script"],
     output:
         csv="{sample}/snv-indels/{sample}.variants_hi.csv",
+    log:
+        "log/table_vars_hi.{sample}.txt"
     threads: 1
     container: containers["hamlet-scripts"]
     shell:
-        "python3 {input.scr} --hi {input.json} > {output.csv}"
+        "python3 {input.scr} --hi {input.json} > {output.csv} 2> {log}"
 
 rule plot_vars:
     input:
@@ -271,15 +297,16 @@ rule plot_vars:
         ref_hotspots=config["bed_variant_hotspots"],
         ref_amplicons=config["ref_amplicons"],
         ref_annot_goi=config["ref_annot_goi"],
-    params:
-        plotd="{sample}/snv-indels/variant_plots",
     output:
+        plotd="{sample}/snv-indels/variant_plots",
         plots_mark="{sample}/snv-indels/variant_plots/.done",
+    log:
+        "log/plot_vars.{sample}.txt"
     threads: 1
     container: containers["hamlet-scripts"]
     shell:
         "(Rscript {input.scr} -j {input.json}"
         " -i {input.ref_id_mapping} -m {input.ref_annot_goi}"
         " -a {input.ref_amplicons} -t {input.ref_hotspots}"
-        " -o `dirname {params.plotd}` && touch {params.plotd}/.done)"
+        " -o `dirname {output.plotd}` 2> {log} && touch {output.plotd}/.done)"
         " || rm -rf {params.plotd}"
