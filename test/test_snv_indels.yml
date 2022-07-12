@@ -136,7 +136,7 @@
 - name: lint-snv-indels
   tags:
     - sanity
-    - qc-seq
+    - snv-indels
   command: >
     snakemake
     --lint
@@ -147,5 +147,5 @@
 - name: snakefmt-snv-indels
   tags:
     - sanity
-    - qc-seq
+    - snv-indels
   command: snakefmt --check includes/snv-indels/

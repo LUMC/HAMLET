@@ -89,3 +89,31 @@
         - "__alignment_not_unique"
     # Expression pipeline should create the file with raw base counts
     - path: "SRR8615409/expression/SRR8615409.raw_base"
+    # Test the log files
+    - path: "log/idsort_aln.SRR8615409.txt"
+      contains:
+        - "SortSam"
+    - path: "log/count_fragments.SRR8615409.txt"
+      contains:
+        - "GFF lines processed."
+    - path: "log/count_raw_bases.SRR8615409.txt"
+    - path: "log/count_bases_exon.SRR8615409.txt"
+    - path: "log/count_bases_gene.SRR8615409.txt"
+    - path: "log/calc_exon_ratios.SRR8615409.txt"
+
+- name: lint-expression
+  tags:
+    - sanity
+    - expression
+  command: >
+    snakemake
+    --lint
+    --snakefile includes/expression/Snakefile
+    --configfile test/data/config/chrM.json
+    --config pepfile=test/pep/chrM-bam.csv
+
+- name: snakefmt-expression
+  tags:
+    - sanity
+    - expression
+  command: snakefmt --check includes/snv-indels/
