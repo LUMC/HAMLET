@@ -17,12 +17,14 @@ rule align_kmt2a:
     output:
         bam="{sample}/itd/{sample}.kmt2a.bam",
         bai="{sample}/itd/{sample}.kmt2a.bai",
+    log:
+        "log/align_kmt2a.{sample}.txt"
     params:
         rg="@RG\\tID:{sample}\\tSM:{sample}"
     threads: 3
     container: containers["bwa-0.7.17-samtools-1.3.1-picard-2.9.2"]
     shell:
-        "bwa mem -R \'{params.rg}\' -t {threads} -L 2,2 {input.fasta} {input.fq1} {input.fq2}"
+        "bwa mem -R \'{params.rg}\' -t {threads} -L 2,2 {input.fasta} {input.fq1} {input.fq2} 2> {log}"
         " | samtools view -Sbh -F 0x4 -"
         " | picard -Xmx4G SortSam I=/dev/stdin O={output.bam} SO=coordinate CREATE_INDEX=true"
 
@@ -31,16 +33,19 @@ rule detect_itd_kmt2a:
         bam="{sample}/itd/{sample}.kmt2a.bam",
         bai="{sample}/itd/{sample}.kmt2a.bai",
         ref=config["kmt2a_fasta"],
+    output:
+        csv="{sample}/itd/{sample}.kmt2a.csv",
+        bg_csv="{sample}/itd/{sample}.kmt2a.bg.csv",
     params:
         trx_name=config["kmt2a_name"],
         start=config["kmt2a_start"],
         end=config["kmt2a_end"],
-    output:
-        csv="{sample}/itd/{sample}.kmt2a.csv",
-        bg_csv="{sample}/itd/{sample}.kmt2a.bg.csv",
+    log:
+        "log/detect_itd_kmt2a.{sample}.txt"
     container: containers["rose"]
     shell:
-        "rose-dt -r {params.trx_name}:{params.start}-{params.end} --bg-counts {output.bg_csv} {input.ref} {input.bam} > {output.csv}"
+        "rose-dt -r {params.trx_name}:{params.start}-{params.end} --bg-counts "
+        "{output.bg_csv} {input.ref} {input.bam} > {output.csv} 2> {log}"
 
 rule plot_itd_kmt2a:
     input:
@@ -48,11 +53,13 @@ rule plot_itd_kmt2a:
         bg_csv="{sample}/itd/{sample}.kmt2a.bg.csv",
     output:
         png="{sample}/itd/{sample}.kmt2a.png",
+    log:
+        "log/plot_itd_kmt2a.{sample}.txt"
     container: containers["rose"]
     shell:
         "rose-dt-plot.py"
         " --sample-id {wildcards.sample} --mode per-event"
-        " {input.csv} {input.bg_csv} {output.png}"
+        " {input.csv} {input.bg_csv} {output.png} 2> {log}"
 
 ## FLT3 ##
 rule align_flt3:
@@ -65,10 +72,12 @@ rule align_flt3:
         bai="{sample}/itd/{sample}.flt3.bai",
     params:
         rg="@RG\\tID:{sample}\\tSM:{sample}"
+    log:
+        "log/align_flt3.{sample}.txt"
     threads: 3
     container: containers["bwa-0.7.17-samtools-1.3.1-picard-2.9.2"]
     shell:
-        "bwa mem -R \'{params.rg}\' -t {threads} -L 2,2 {input.fasta} {input.fq1} {input.fq2}"
+        "bwa mem -R \'{params.rg}\' -t {threads} -L 2,2 {input.fasta} {input.fq1} {input.fq2} 2> {log}"
         " | samtools view -Sbh -F 0x4 -"
         " | picard -Xmx4G SortSam I=/dev/stdin O={output.bam} SO=coordinate CREATE_INDEX=true"
 
@@ -77,16 +86,19 @@ rule detect_itd_flt3:
         bam="{sample}/itd/{sample}.flt3.bam",
         bai="{sample}/itd/{sample}.flt3.bai",
         ref=config["flt3_fasta"],
+    output:
+        csv="{sample}/itd/{sample}.flt3.csv",
+        bg_csv="{sample}/itd/{sample}.flt3.bg.csv",
     params:
         trx_name=config["flt3_name"],
         start=config["flt3_start"],
         end=config["flt3_end"],
-    output:
-        csv="{sample}/itd/{sample}.flt3.csv",
-        bg_csv="{sample}/itd/{sample}.flt3.bg.csv",
+    log:
+        "log/detect_itd_flt3.{sample}.txt"
     container: containers["rose"]
     shell:
-        "rose-dt -r {params.trx_name}:{params.start}-{params.end} --bg-counts {output.bg_csv} {input.ref} {input.bam} > {output.csv}"
+        "rose-dt -r {params.trx_name}:{params.start}-{params.end} --bg-counts "
+        "{output.bg_csv} {input.ref} {input.bam} > {output.csv} 2> {log}"
 
 rule plot_itd_flt3:
     input:
@@ -94,8 +106,10 @@ rule plot_itd_flt3:
         bg_csv="{sample}/itd/{sample}.flt3.bg.csv",
     output:
         png="{sample}/itd/{sample}.flt3.png",
+    log:
+        "log/plot_itd_flt3.{sample}.txt"
     container: containers["rose"]
     shell:
         "rose-dt-plot.py"
         " --sample-id {wildcards.sample} --mode per-event"
-        " {input.csv} {input.bg_csv} {output.png}"
+        " {input.csv} {input.bg_csv} {output.png} 2> {log}"
