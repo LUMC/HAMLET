@@ -1,3 +1,7 @@
+pepfile: config["pepfile"]
+
+samples = pep.sample_table["sample_name"]
+
 containers = {
     "bedtools-2.27-grep-2.14-gawk-5.0-click-7-python-3.7": "docker://quay.io/biocontainers/mulled-v2-a4b89e0b16b1d7db92e5a069e5c40405b3b53aab:98c4ac2f0e27869be58f6a4d8bb7ae3bc02a3a70-0",
     "debian": "docker://debian:buster-slim",

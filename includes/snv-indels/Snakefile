@@ -1,9 +1,5 @@
 include: "common.smk"
 
-pepfile: config["pepfile"]
-
-samples = pep.sample_table["sample_name"]
-
 localrules: table_vars_all, table_vars_hi
 
 rule all:

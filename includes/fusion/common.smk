@@ -1,3 +1,7 @@
+pepfile: config["pepfile"]
+
+samples = pep.sample_table["sample_name"]
+
 containers = {
     "debian": "docker://debian:buster-slim",
     "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py_4",
@@ -6,10 +10,6 @@ containers = {
     "star-fusion": "docker://quay.io/biocontainers/star-fusion:1.10.0--hdfd78af_1",
     "hamlet-scripts": "docker://quay.io/redmar_van_den_berg/hamlet-scripts:0.2"
 }
-
-pepfile: config["pepfile"]
-
-samples = pep.sample_table["sample_name"]
 
 def set_default(key, value):
     """ Set default value for settings """

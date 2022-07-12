@@ -1,11 +1,11 @@
+pepfile: config["pepfile"]
+
+samples = pep.sample_table["sample_name"]
+
 containers = {
     "bwa-0.7.17-samtools-1.3.1-picard-2.9.2": "docker://quay.io/biocontainers/mulled-v2-1c6be8ad49e4dfe8ab70558e8fb200d7b2fd7509:5900b4e68c4051137fffd99165b00e98f810acae-0",
     "rose": "docker://quay.io/redmar_van_den_berg/rose-dt:0.4"
 }
-
-pepfile: config["pepfile"]
-
-samples = pep.sample_table["sample_name"]
 
 def set_default(key, value):
     """ Set default value for settings """

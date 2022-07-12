@@ -1,9 +1,5 @@
 include: "common.smk"
 
-pepfile: config["pepfile"]
-
-samples = pep.sample_table["sample_name"]
-
 localrules: calc_exon_ratios, count_bases_exon, count_bases_gene
 
 rule all:
