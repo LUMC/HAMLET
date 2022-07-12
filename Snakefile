@@ -14,7 +14,7 @@ OUTPUTS = dict(
     smallvars_vcf=var_output(".annotated.vcf.gz"),
     smallvars_csv_all=var_output(".variants_all.csv"),
     smallvars_csv_hi=var_output(".variants_hi.csv"),
-    smallvars_plots="{sample}/snv-indels/variant_plots/.done",
+    smallvars_plots="{sample}/snv-indels/variant_plots",
 
     # Fusion
     star_fusion_txt=fusion_output(".star-fusion"),
@@ -173,6 +173,8 @@ rule create_summary:
         run_name=RUN_NAME,
     output:
         js=OUTPUTS["summary"]
+    log:
+        "log/create_summary.{sample}.txt"
     container: containers["crimson"]
     shell:
         "python {input.scr}"
@@ -187,7 +189,7 @@ rule create_summary:
         " --pipeline-version {params.pipeline_ver}"
         " --run-name {params.run_name}"
         " --sample-name {wildcards.sample}"
-        " > {output.js}"
+        " > {output.js} 2>{log}"
 
 
 rule generate_report:
@@ -201,12 +203,14 @@ rule generate_report:
         scr=srcdir("scripts/generate_report.py"),
     output:
         pdf=OUTPUTS["reportje"],
+    log:
+        "log/generate_report.{sample}.txt"
     container: containers["hamlet-scripts"]
     shell:
         "python3 {input.scr}"
         " --templates-dir {input.templates} --imgs-dir {input.imgs}"
         " --css-path {input.css} --toc-path {input.toc}"
-        " {input.summary} {output.pdf}"
+        " {input.summary} {output.pdf} 2> {log}"
 
 
 rule package_results:
@@ -228,15 +232,17 @@ rule package_results:
         kmt_bg_csv=OUTPUTS["kmt2a_bg_csv"],
         kmt_png=OUTPUTS["kmt2a_png"],
         reportje=OUTPUTS["reportje"],
-    output:
-        pkg=OUTPUTS["package"],
     params:
         tmp=f"tmp/hamlet-pkg.{{sample}}.{uuid4()}/hamlet_results.{{sample}}"
+    output:
+        pkg=OUTPUTS["package"],
+    log:
+        "log/package_results.{sample}.txt"
     container: containers["zip"]
     shell:
         "(mkdir -p {params.tmp}"
         " && cp -r {input} {params.tmp}"
         " && cp -r $(dirname {input.smallvars_plots}) {params.tmp}"
         " && zip -9 -x *.done -r {output.pkg} {params.tmp}"
-        " && rm -rf {params.tmp})"
+        " && rm -rf {params.tmp}) 2> {log}"
         " || rm -rf {params.tmp}"

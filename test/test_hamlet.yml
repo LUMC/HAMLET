@@ -141,3 +141,24 @@
     - path: SRR8615409/hamlet_results.SRR8615409.zip
     - path: SRR8615409/SRR8615409.summary.json
     - path: SRR8615409/hamlet_report.SRR8615409.pdf
+    # Test log files
+    - path: "log/create_summary.SRR8615409.txt"
+    - path: "log/generate_report.SRR8615409.txt"
+    - path: "log/package_results.SRR8615409.txt"
+
+- name: lint-hamlet
+  tags:
+    - sanity
+    - hamlet
+  command: >
+    snakemake
+    --lint
+    --snakefile Snakefile
+    --configfile test/data/config/chrM.json
+    --config pepfile=test/pep/chrM.csv
+
+- name: snakefmt-fusion
+  tags:
+    - sanity
+    - hamlet
+  command: snakefmt --check .
