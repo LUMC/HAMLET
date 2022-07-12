@@ -116,4 +116,4 @@
   tags:
     - sanity
     - expression
-  command: snakefmt --check includes/snv-indels/
+  command: snakefmt --check includes/snv-expression
