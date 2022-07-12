@@ -10,6 +10,7 @@
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
+      # fusion pipeline should generate the following files
       - "TestSample1/fusion/TestSample1.star-fusion"
       - "TestSample1/fusion/TestSample1.star-fusion-circos/fsnviz.svg"
       - "TestSample1/fusion/TestSample1.star-fusion-circos/fsnviz.png"
@@ -21,7 +22,7 @@
       - "TestSample1/fusion/TestSample1.sf-isect"
       - "TestSample1/fusion/TestSample1.sf-isect-circos/fsnviz.svg"
       - "TestSample1/fusion/TestSample1.fusions-combined.svg"
-
+      # fusion pipeline should handle multiple samples
       - "TestSample2/fusion/TestSample2.star-fusion"
       - "TestSample2/fusion/TestSample2.star-fusion-circos/fsnviz.svg"
       - "TestSample2/fusion/TestSample2.star-fusion-circos/fsnviz.png"
@@ -33,18 +34,6 @@
       - "TestSample2/fusion/TestSample2.sf-isect"
       - "TestSample2/fusion/TestSample2.sf-isect-circos/fsnviz.svg"
       - "TestSample2/fusion/TestSample2.fusions-combined.svg"
-
-      - "TestSample3/fusion/TestSample3.star-fusion"
-      - "TestSample3/fusion/TestSample3.star-fusion-circos/fsnviz.svg"
-      - "TestSample3/fusion/TestSample3.star-fusion-circos/fsnviz.png"
-      - "TestSample3/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
-      - "TestSample3/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
-      - "TestSample3/fusion/TestSample3.fusioncatcher"
-      - "TestSample3/fusion/TestSample3.fusioncatcher-circos/fsnviz.png"
-      - "TestSample3/fusion/TestSample3.fuma"
-      - "TestSample3/fusion/TestSample3.sf-isect"
-      - "TestSample3/fusion/TestSample3.sf-isect-circos/fsnviz.svg"
-      - "TestSample3/fusion/TestSample3.fusions-combined.svg"
 
 # Singularity should be available
 - name: test-fusion-sanity-singularity
@@ -80,3 +69,25 @@
     - path: SRR8615409/fusion/star-fusion/star-fusion.fusion_predictions.tsv
     # Should create the star-fusion output folder
     - path: SRR8615409/fusion/SRR8615409.star-fusion
+    # Test for log files
+    - path: "log/star_fusion.SRR8615409.txt"
+      contains:
+        - "Running CMD: /usr/local/bin/STAR"
+    - path: "log/star_fusion_cp.SRR8615409.txt"
+
+- name: lint-fusion
+  tags:
+    - sanity
+    - fusion
+  command: >
+    snakemake
+    --lint
+    --snakefile includes/fusion/Snakefile
+    --configfile test/data/config/chrM.json
+    --config pepfile=test/pep/chrM-bam.csv
+
+- name: snakefmt-fusion
+  tags:
+    - sanity
+    - fusion
+  command: snakefmt --check includes/fusion

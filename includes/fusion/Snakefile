@@ -15,17 +15,18 @@ rule star_fusion:
         fq1=get_forward,
         fq2=get_reverse,
         lib=config["genome_star_fusion_lib"]
-    params:
-        folder="{sample}/fusion/star-fusion"
     output:
-        txt="{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
+        txt="{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv",
+        folder=directory("{sample}/fusion/star-fusion"),
+    log:
+        "log/star_fusion.{sample}.txt"
     threads: 8
     container: containers["star-fusion"]
     shell:
-        "(rm -rf {params.folder}"
+        "mkdir -p {output.folder}"
         " && STAR-Fusion --genome_lib_dir {input.lib}"
-        "   --output_dir {params.folder}"
-        "   --left_fq {input.fq1} --right_fq {input.fq2})"
+        " --output_dir {output.folder}"
+        " --left_fq {input.fq1} --right_fq {input.fq2} 2> {log}"
 
 rule star_fusion_cp:
     input:
@@ -33,9 +34,11 @@ rule star_fusion_cp:
         src=config["sf_rewrite_script"],
     output:
         txt="{sample}/fusion/{sample}.star-fusion",
+    log:
+        "log/star_fusion_cp.{sample}.txt"
     container: containers["fsnviz"]
     shell:
-        "python3 {input.src} {input.txt} > {output.txt}"
+        "python3 {input.src} {input.txt} > {output.txt} 2>{log}"
 
 rule plot_sf:
     input:
@@ -43,16 +46,20 @@ rule plot_sf:
     output:
         svg="{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg",
         png="{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png",
+    log:
+        "log/plot_sf.{sample}.txt"
     container: containers["fsnviz"]
     shell:
         "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` --png"
-        " -k human.hg38 star-fusion {input.txt}"
+        " -k human.hg38 star-fusion {input.txt} 2> {log}"
 
 rule plot_cp:
     input:
         svg="{sample}/fusion/{sample}.{ext}-circos/fsnviz.svg",
     output:
         svg="{sample}/fusion/{sample}.{ext}.svg",
+    log:
+        "log/plot_cp.{sample}.{ext}.txt"
     wildcard_constraints:
         ext="star-fusion|sf-isect|fusioncatcher",
     container: containers["debian"]
@@ -68,21 +75,25 @@ rule fusioncatcher:
         max_junctions=1500000
     output:
         txt="{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
+    log:
+        "log/fusioncatcher.{sample}.log"
     threads: 8
     container: containers["fusioncatcher"]
     shell:
         " dir=`dirname {output.txt}` "
         " && fusioncatcher.py --threads {threads} -i {input.fq1},{input.fq2} -o ${{dir}}"
-        " --data {params.data} --limitSjdbInsertNsj {params.max_junctions} || test -f {output.txt}"
+        " --data {params.data} --limitSjdbInsertNsj {params.max_junctions} 2> {log}"
 
 rule fusioncatcher_cp:
     input:
         txt="{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt",
     output:
         txt="{sample}/fusion/{sample}.fusioncatcher",
+    log:
+        "log/fusioncatcher_cp.{sample}.txt"
     container: containers["debian"]
     shell:
-        "cp {input.txt} {output.txt}"
+        "cp {input.txt} {output.txt} 2> {log}"
 
 rule plot_fc:
     input:
@@ -90,10 +101,12 @@ rule plot_fc:
     output:
         svg="{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg",
         png="{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png",
+    log:
+        "log/plot_fc.{sample}.txt"
     container: containers["fsnviz"]
     shell:
         "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` --png"
-        " -k human.hg38 fusioncatcher {input.txt}"
+        " -k human.hg38 fusioncatcher {input.txt} 2> {log}"
 
 rule intersect_fusions:
     input:
@@ -102,6 +115,8 @@ rule intersect_fusions:
         bed=config["transcripts_bed"],
     output:
         txt="{sample}/fusion/{sample}.fuma",
+    log:
+        "log/intersect_fusions.{sample}.txt"
     container: containers["fuma"]
     shell:
         "fuma -a hg38:{input.bed} -s"
@@ -110,7 +125,7 @@ rule intersect_fusions:
         " -l \"fc-{wildcards.sample}:hg38\" \"sf-{wildcards.sample}:hg38\""
         " -f extensive -o -"
         " | grep -vE \"FuMa::\""
-        " > {output.txt}"
+        " > {output.txt} 2> {log}"
 
 rule subset_sf:
     input:
@@ -119,9 +134,11 @@ rule subset_sf:
         subset_script=config["sf_subset_script"],
     output:
         sf="{sample}/fusion/{sample}.sf-isect",
+    log:
+        "log/subset_sf.{sample}.txt"
     container: containers["hamlet-scripts"]
     shell:
-        "python3 {input.subset_script} {input.isect} {input.sf} > {output.sf} || rm -f {output.sf}"
+        "python3 {input.subset_script} {input.isect} {input.sf} > {output.sf} 2> {log} || rm -f {output.sf}"
 
 rule plot_isect:
     input:
@@ -129,10 +146,12 @@ rule plot_isect:
     output:
         svg="{sample}/fusion/{sample}.sf-isect-circos/fsnviz.svg",
         png="{sample}/fusion/{sample}.sf-isect-circos/fsnviz.png",
+    log:
+        "log/plot_isect.{sample}.txt"
     container: containers["fsnviz"]
     shell:
         "PERL5LIB=\"\" fsnviz --out-dir `dirname {output.svg}` --png"
-        " -k human.hg38 star-fusion {input.txt}"
+        " -k human.hg38 star-fusion {input.txt} 2> {log}"
 
 rule combine_plots:
     input:
@@ -142,8 +161,10 @@ rule combine_plots:
         combine_script=config["plot_combined_script"]
     output:
         svg="{sample}/fusion/{sample}.fusions-combined.svg",
+    log:
+        "log/combine_plots.{sample}.txt"
     container: containers["hamlet-scripts"]
     shell:
         "python3 {input.combine_script}"
         " 'STAR-Fusion':{input.sf} 'FusionCatcher':{input.fc}"
-        " 'Intersection':{input.isect} {output.svg}"
+        " 'Intersection':{input.isect} {output.svg} 2> {log}"
