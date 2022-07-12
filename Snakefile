@@ -113,7 +113,7 @@ use rule * from expression as expression_*
 use rule idsort_aln from expression as expression_idsort_aln with:
     input:
         bam=rules.align_reorder_aln_header.output.bam,
-    singularity:
+    container:
         "docker://quay.io/biocontainers/picard:2.20.5--0"
 
 # Connect the count_raw_bases rule to the output of snv-indels
@@ -122,7 +122,7 @@ use rule count_raw_bases from expression as expression_count_raw_bases with:
         bam=rules.align_reorder_aln_header.output.bam,
         bed=config["expression_bed"],
         count_script=config["base_count_script"],
-    singularity:
+    container:
         "docker://quay.io/biocontainers/mulled-v2-a9ddcbd438a66450297b5e0b61ac390ee9bfdb61:e60f3cfda0dfcf4a72f2091c6fa1ebe5a5400220-0"
 
 module fusion:
@@ -138,7 +138,7 @@ use rule star_fusion from fusion as fusion_star_fusion with:
         fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
         fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
         lib=config["genome_star_fusion_lib"],
-    singularity:
+    container:
         "docker://quay.io/biocontainers/star-fusion:1.10.0--hdfd78af_1",
 
 # Connect the fusioncather rule to the output of qc-seq
@@ -146,7 +146,7 @@ use rule fusioncatcher from fusion as fusion_fusioncatcher with:
     input:
         fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
         fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
-    singularity:
+    container:
         "docker://quay.io/biocontainers/fusioncatcher:1.20--2",
 
 rule create_summary:
@@ -173,7 +173,7 @@ rule create_summary:
         run_name=RUN_NAME,
     output:
         js=OUTPUTS["summary"]
-    singularity: containers["crimson"]
+    container: containers["crimson"]
     shell:
         "python {input.scr}"
         " {input.idm}"
@@ -201,7 +201,7 @@ rule generate_report:
         scr=srcdir("scripts/generate_report.py"),
     output:
         pdf=OUTPUTS["reportje"],
-    singularity: containers["hamlet-scripts"]
+    container: containers["hamlet-scripts"]
     shell:
         "python3 {input.scr}"
         " --templates-dir {input.templates} --imgs-dir {input.imgs}"
@@ -231,8 +231,8 @@ rule package_results:
     output:
         pkg=OUTPUTS["package"],
     params:
-        tmp="tmp/hamlet-pkg.{sample}." + str(uuid4()) + "/hamlet_results.{sample}"
-    singularity: containers["zip"]
+        tmp=f"tmp/hamlet-pkg.{{sample}}.{uuid4()}/hamlet_results.{{sample}}"
+    container: containers["zip"]
     shell:
         "(mkdir -p {params.tmp}"
         " && cp -r {input} {params.tmp}"

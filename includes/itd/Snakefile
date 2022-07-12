@@ -20,7 +20,7 @@ rule align_kmt2a:
     params:
         rg="@RG\\tID:{sample}\\tSM:{sample}"
     threads: 3
-    singularity: containers["bwa-0.7.17-samtools-1.3.1-picard-2.9.2"]
+    container: containers["bwa-0.7.17-samtools-1.3.1-picard-2.9.2"]
     shell:
         "bwa mem -R \'{params.rg}\' -t {threads} -L 2,2 {input.fasta} {input.fq1} {input.fq2}"
         " | samtools view -Sbh -F 0x4 -"
@@ -38,7 +38,7 @@ rule detect_itd_kmt2a:
     output:
         csv="{sample}/itd/{sample}.kmt2a.csv",
         bg_csv="{sample}/itd/{sample}.kmt2a.bg.csv",
-    singularity: containers["rose"]
+    container: containers["rose"]
     shell:
         "rose-dt -r {params.trx_name}:{params.start}-{params.end} --bg-counts {output.bg_csv} {input.ref} {input.bam} > {output.csv}"
 
@@ -48,7 +48,7 @@ rule plot_itd_kmt2a:
         bg_csv="{sample}/itd/{sample}.kmt2a.bg.csv",
     output:
         png="{sample}/itd/{sample}.kmt2a.png",
-    singularity: containers["rose"]
+    container: containers["rose"]
     shell:
         "rose-dt-plot.py"
         " --sample-id {wildcards.sample} --mode per-event"
@@ -66,7 +66,7 @@ rule align_flt3:
     params:
         rg="@RG\\tID:{sample}\\tSM:{sample}"
     threads: 3
-    singularity: containers["bwa-0.7.17-samtools-1.3.1-picard-2.9.2"]
+    container: containers["bwa-0.7.17-samtools-1.3.1-picard-2.9.2"]
     shell:
         "bwa mem -R \'{params.rg}\' -t {threads} -L 2,2 {input.fasta} {input.fq1} {input.fq2}"
         " | samtools view -Sbh -F 0x4 -"
@@ -84,7 +84,7 @@ rule detect_itd_flt3:
     output:
         csv="{sample}/itd/{sample}.flt3.csv",
         bg_csv="{sample}/itd/{sample}.flt3.bg.csv",
-    singularity: containers["rose"]
+    container: containers["rose"]
     shell:
         "rose-dt -r {params.trx_name}:{params.start}-{params.end} --bg-counts {output.bg_csv} {input.ref} {input.bam} > {output.csv}"
 
@@ -94,7 +94,7 @@ rule plot_itd_flt3:
         bg_csv="{sample}/itd/{sample}.flt3.bg.csv",
     output:
         png="{sample}/itd/{sample}.flt3.png",
-    singularity: containers["rose"]
+    container: containers["rose"]
     shell:
         "rose-dt-plot.py"
         " --sample-id {wildcards.sample} --mode per-event"

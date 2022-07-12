@@ -55,7 +55,7 @@ rule fastqc_raw:
     output:
         folder=directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-raw")
     threads: 4
-    singularity: containers["fastqc"]
+    container: containers["fastqc"]
     shell:
         "mkdir -p {output.folder}"
         " && fastqc -o {output.folder} --dir /tmp --extract --nogroup -f fastq "
@@ -70,7 +70,7 @@ rule cutadapt:
     output:
         fq1="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz",
         fq2="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz"
-    singularity: containers["cutadapt"]
+    container: containers["cutadapt"]
     shell: "cutadapt -a AGATCGGAAGAG -A AGATCGGAAGAG "
            "--minimum-length=20 --quality-cutoff=20,20 "
            "--output={output.fq1} --paired-output={output.fq2} "
@@ -85,7 +85,7 @@ rule fastqc_processed:
     output:
         folder = directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-processed")
     threads: 4
-    singularity: containers["fastqc"]
+    container: containers["fastqc"]
     shell:
         "mkdir -p {output.folder}"
         " && fastqc -o {output.folder} --dir /tmp --extract --nogroup -f fastq "
@@ -102,7 +102,7 @@ rule rg_stats:
         rg_stats_script=config["rg_stats_script"],
     output:
         stats="{sample}/qc-seq/{read_group}/stats.json",
-    singularity: containers["crimson"]
+    container: containers["crimson"]
     shell:
         "python {input.rg_stats_script} --name {wildcards.read_group}"
         " {input.raw1} {input.raw2} {input.proc1} {input.proc2}"
@@ -116,7 +116,7 @@ rule sample_stats:
         sample_stats_script=config["sample_stats_script"]
     output:
         stats="{sample}/qc-seq/{sample}.seq_stats.json"
-    singularity: containers["crimson"]
+    container: containers["crimson"]
     shell:
         "python {input.sample_stats_script} --name {wildcards.sample}"
         " {input.rg_stats} > {output.stats}"
@@ -128,7 +128,7 @@ rule merge_fastqs_r1:
         fqs = get_all_trimmed_forward,
     output:
         merged = "{sample}/{sample}-R1.fq.gz",
-    singularity: containers["debian"]
+    container: containers["debian"]
     shell:
         "cp {input.fqs} {output.merged} || cat {input.fqs} > {output.merged}"
 
@@ -139,7 +139,7 @@ rule merge_fastqs_r2:
         fqs = get_all_trimmed_reverse,
     output:
         merged = "{sample}/{sample}-R2.fq.gz",
-    singularity: containers["debian"]
+    container: containers["debian"]
     shell:
         "cp {input.fqs} {output.merged} || cat {input.fqs} > {output.merged}"
 
@@ -150,7 +150,7 @@ rule merge_fastqs_raw_r1:
         fqs = get_all_r1
     output:
         merged = temp("{sample}/{sample}-R1.raw.fq.gz")
-    singularity: containers["debian"]
+    container: containers["debian"]
     shell:
         "cp {input.fqs} {output.merged} || cat {input.fqs} > {output.merged}"
 
@@ -161,6 +161,6 @@ rule merge_fastqs_raw_r2:
         fqs = get_all_r2
     output:
         merged = temp("{sample}/{sample}-R2.raw.fq.gz")
-    singularity: containers["debian"]
+    container: containers["debian"]
     shell:
         "cp {input.fqs} {output.merged} || cat {input.fqs} > {output.merged}"

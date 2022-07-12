@@ -18,7 +18,7 @@ rule idsort_aln:
     params:
         tmp=temp("tmp"),
     threads: 1
-    singularity: containers["picard"]
+    container: containers["picard"]
     shell:
         "picard -Xmx4G SortSam I={input.bam} O={output.bam} SORT_ORDER=queryname"
         " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=false TMP_DIR={params.tmp}"
@@ -30,7 +30,7 @@ rule count_fragments:
     output:
         fragments_per_gene="{sample}/expression/{sample}.fragments_per_gene",
     threads: 1
-    singularity: containers["htseq"]
+    container: containers["htseq"]
     shell:
         "htseq-count --format bam --order name --stranded no"
         " {input.bam} {input.gtf} > {output.fragments_per_gene}"
@@ -43,7 +43,7 @@ rule count_raw_bases:
     output:
         raw_base_count="{sample}/expression/{sample}.raw_base",
     threads: 1
-    singularity: containers["bedtools-2.17-python-2.7"]
+    container: containers["bedtools-2.17-python-2.7"]
     shell:
         "bedtools coverage -split -hist -abam {input.bam} -b {input.bed}"
         " | python {input.count_script} -c 3 > {output.raw_base_count}"
@@ -57,7 +57,7 @@ rule count_bases_exon:
     params:
         sample="{sample}"
     threads: 1
-    singularity: containers["hamlet-scripts"]
+    container: containers["hamlet-scripts"]
     shell:
         "Rscript {input.aggr_script} -I {input.raw} -N {params.sample}"
         " -E {output.bases_per_exon}"
@@ -71,7 +71,7 @@ rule count_bases_gene:
     params:
         sample="{sample}"
     threads: 1
-    singularity: containers["hamlet-scripts"]
+    container: containers["hamlet-scripts"]
     shell:
         "Rscript {input.aggr_script} -I {input.raw} -N {params.sample}"
         " -G {output.bases_per_gene}"
@@ -88,7 +88,7 @@ rule calc_exon_ratios:
         ),
         exon_min_ratio=config["exon_min_ratio"],
     threads: 1
-    singularity: containers["hamlet-scripts"]
+    container: containers["hamlet-scripts"]
     shell:
         "cat {input.table}"
         " | python3 {input.calc_script} -r {params.exon_min_ratio}"
