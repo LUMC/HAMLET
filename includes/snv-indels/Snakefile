@@ -8,7 +8,7 @@ localrules:
 
 rule all:
     input:
-        plots_mark=expand("{sample}/snv-indels/variant_plots/.done", sample=samples),
+        variant_plots=expand("{sample}/snv-indels/variant_plots", sample=samples),
         stats=expand("{sample}/snv-indels/{sample}.aln_stats", sample=samples),
         var_json=expand("{sample}/snv-indels/{sample}.variants.json", sample=samples),
         cov_json=expand(
@@ -335,16 +335,15 @@ rule plot_vars:
         ref_amplicons=config["ref_amplicons"],
         ref_annot_goi=config["ref_annot_goi"],
     output:
-        plotd="{sample}/snv-indels/variant_plots",
-        plots_mark="{sample}/snv-indels/variant_plots/.done",
+        plotd=directory("{sample}/snv-indels/variant_plots"),
     log:
         "log/plot_vars.{sample}.txt",
     threads: 1
     container:
         containers["hamlet-scripts"]
     shell:
-        "(Rscript {input.scr} -j {input.json}"
+        "mkdir -p {output.plotd} && "
+        "Rscript {input.scr} -j {input.json}"
         " -i {input.ref_id_mapping} -m {input.ref_annot_goi}"
         " -a {input.ref_amplicons} -t {input.ref_hotspots}"
-        " -o `dirname {output.plotd}` 2> {log} && touch {output.plotd}/.done)"
-        " || rm -rf {params.plotd}"
+        " -o {output.plotd} 2> {log} "

@@ -10,15 +10,12 @@
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
-      - "TestSample1/snv-indels/variant_plots/.done"
       - "TestSample1/snv-indels/TestSample1.variants_all.csv"
       - "TestSample1/snv-indels/TestSample1.variants_hi.csv"
 
-      - "TestSample2/snv-indels/variant_plots/.done"
       - "TestSample2/snv-indels/TestSample2.variants_all.csv"
       - "TestSample2/snv-indels/TestSample2.variants_hi.csv"
 
-      - "TestSample3/snv-indels/variant_plots/.done"
       - "TestSample3/snv-indels/TestSample3.variants_all.csv"
       - "TestSample3/snv-indels/TestSample3.variants_hi.csv"
 
@@ -68,7 +65,6 @@
     - path: "SRR8615409/snv-indels/SRR8615409.variants.json"
     - path: "SRR8615409/snv-indels/SRR8615409.variants_all.csv"
     - path: "SRR8615409/snv-indels/SRR8615409.variants_hi.csv"
-    - path: "SRR8615409/snv-indels/variant_plots/.done"
     # Test log files
     - path: "log/index_reference.txt"
       contains:
