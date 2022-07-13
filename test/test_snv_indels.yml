@@ -128,8 +128,8 @@
     --configfile test/data/config/chrM-gmap-index.json
     --config pepfile=test/pep/chrM.csv
   stdout:
-    contains:
-      - "gsnap --dir `dirname test/data/reference`"
+    contains_regex:
+      - "gsnap *--dir `dirname test/data/reference`"
     must_not_contain:
       - "rule index_reference"
 

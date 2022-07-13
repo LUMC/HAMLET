@@ -200,19 +200,21 @@ rule create_summary:
     container:
         containers["crimson"]
     shell:
-        "python {input.scr}"
-        " {input.idm}"
-        " `dirname {input.var_plots}` {input.var_csv}"
-        " `dirname {input.fusions_svg}`"
-        " {input.flt3_csv} {input.flt3_plot}"
-        " {input.kmt2a_csv} {input.kmt2a_plot}"
-        " {input.exon_ratios}"
-        " {input.seq_stats} {input.aln_stats} {input.rna_stats} {input.insert_stats}"
-        " {input.exon_cov_stats} {input.vep_stats}"
-        " --pipeline-version {params.pipeline_ver}"
-        " --run-name {params.run_name}"
-        " --sample-name {wildcards.sample}"
-        " > {output.js} 2>{log}"
+        """
+        python {input.scr} \
+            {input.idm} \
+            `dirname {input.var_plots}` \
+            {input.var_csv} \
+            `dirname {input.fusions_svg}` \
+            {input.flt3_csv} {input.flt3_plot} \
+            {input.kmt2a_csv} {input.kmt2a_plot} \
+            {input.exon_ratios} \
+            {input.seq_stats} {input.aln_stats} {input.rna_stats} {input.insert_stats} \
+            {input.exon_cov_stats} {input.vep_stats} \
+            --pipeline-version {params.pipeline_ver} \
+            --run-name {params.run_name} \
+            --sample-name {wildcards.sample} > {output.js} 2>{log}
+        """
 
 
 rule generate_report:
@@ -231,10 +233,15 @@ rule generate_report:
     container:
         containers["hamlet-scripts"]
     shell:
-        "python3 {input.scr}"
-        " --templates-dir {input.templates} --imgs-dir {input.imgs}"
-        " --css-path {input.css} --toc-path {input.toc}"
-        " {input.summary} {output.pdf} 2> {log}"
+        """
+        python3 {input.scr} \
+            --templates-dir {input.templates} \
+            --imgs-dir {input.imgs} \
+            --css-path {input.css} \
+            --toc-path {input.toc} \
+            {input.summary} \
+            {output.pdf} 2> {log}
+        """
 
 
 rule package_results:
@@ -265,9 +272,12 @@ rule package_results:
     container:
         containers["zip"]
     shell:
-        "(mkdir -p {params.tmp}"
-        " && cp -r {input} {params.tmp}"
-        " && cp -r $(dirname {input.smallvars_plots}) {params.tmp}"
-        " && zip -9 -x *.done -r {output.pkg} {params.tmp}"
-        " && rm -rf {params.tmp}) 2> {log}"
-        " || rm -rf {params.tmp}"
+        """
+        mkdir -p {params.tmp} && \
+        cp -r {input} {params.tmp} && \
+        cp -r $(dirname {input.smallvars_plots}) {params.tmp} && \
+        zip -9 -x *.done -r {output.pkg} {params.tmp} && \
+        rm -rf {params.tmp} 2> {log} \
+        \
+        || rm -rf {params.tmp}
+        """

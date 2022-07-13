@@ -70,9 +70,17 @@ rule fastqc_raw:
     container:
         containers["fastqc"]
     shell:
-        "mkdir -p {output.folder}"
-        " && fastqc -o {output.folder} --dir /tmp --extract --nogroup -f fastq "
-        "--threads {threads} {input.fq1} {input.fq2} 2> {log}"
+        """
+        mkdir -p {output.folder} &&
+        fastqc \
+            -o {output.folder} \
+            --dir /tmp \
+            --extract \
+            --nogroup \
+            -f fastq \
+            --threads {threads} \
+            {input.fq1} {input.fq2} 2> {log}
+        """
 
 
 rule cutadapt:
@@ -88,10 +96,16 @@ rule cutadapt:
     container:
         containers["cutadapt"]
     shell:
-        "cutadapt -a AGATCGGAAGAG -A AGATCGGAAGAG "
-        "--minimum-length=20 --quality-cutoff=20,20 "
-        "--output={output.fq1} --paired-output={output.fq2} "
-        "{input.fq1} {input.fq2} > {log}"
+        """
+        cutadapt \
+            -a AGATCGGAAGAG \
+            -A AGATCGGAAGAG \
+            --minimum-length=20 \
+            --quality-cutoff=20,20 \
+            --output={output.fq1} \
+            --paired-output={output.fq2} \
+            {input.fq1} {input.fq2} > {log}
+        """
 
 
 rule fastqc_processed:
@@ -107,9 +121,17 @@ rule fastqc_processed:
     container:
         containers["fastqc"]
     shell:
-        "mkdir -p {output.folder}"
-        " && fastqc -o {output.folder} --dir /tmp --extract --nogroup -f fastq "
-        "--threads {threads} {input.fq1} {input.fq2} 2> {log}"
+        """
+        mkdir -p {output.folder} &&
+        fastqc \
+            -o {output.folder} \
+            --dir /tmp \
+            --extract \
+            --nogroup \
+            -f fastq \
+            --threads {threads} \
+            {input.fq1} {input.fq2} 2> {log}
+        """
 
 
 rule rg_stats:
@@ -127,9 +149,12 @@ rule rg_stats:
     container:
         containers["crimson"]
     shell:
-        "python {input.rg_stats_script} --name {wildcards.read_group}"
-        " {input.raw1} {input.raw2} {input.proc1} {input.proc2}"
-        " > {output.stats} 2> {log}"
+        """
+        python {input.rg_stats_script} \
+            --name {wildcards.read_group} \
+            {input.raw1} {input.raw2} \
+            {input.proc1} {input.proc2} > {output.stats} 2> {log}
+        """
 
 
 rule sample_stats:
@@ -144,8 +169,11 @@ rule sample_stats:
     container:
         containers["crimson"]
     shell:
-        "python {input.sample_stats_script} --name {wildcards.sample}"
-        " {input.rg_stats} > {output.stats} 2> {log}"
+        """
+        python {input.sample_stats_script} \
+            --name {wildcards.sample} \
+            {input.rg_stats} > {output.stats} 2> {log}
+        """
 
 
 rule merge_fastqs_r1:
@@ -159,7 +187,11 @@ rule merge_fastqs_r1:
     container:
         containers["debian"]
     shell:
-        "cp {input.fqs} {output.merged} 2> {log} || cat {input.fqs} > {output.merged} 2> {log}"
+        """
+        cp {input.fqs} {output.merged} 2> {log} \
+        || \
+        cat {input.fqs} > {output.merged} 2> {log}
+        """
 
 
 rule merge_fastqs_r2:
@@ -173,7 +205,11 @@ rule merge_fastqs_r2:
     container:
         containers["debian"]
     shell:
-        "cp {input.fqs} {output.merged} 2> {log} || cat {input.fqs} > {output.merged} 2> {log}"
+        """
+        cp {input.fqs} {output.merged} 2> {log} \
+        || \
+        cat {input.fqs} > {output.merged} 2> {log}
+        """
 
 
 rule merge_fastqs_raw_r1:
@@ -187,7 +223,11 @@ rule merge_fastqs_raw_r1:
     container:
         containers["debian"]
     shell:
-        "cp {input.fqs} {output.merged} 2> {log} || cat {input.fqs} > {output.merged} 2> {log}"
+        """
+        cp {input.fqs} {output.merged} 2> {log} \
+        || \
+        cat {input.fqs} > {output.merged} 2> {log}
+        """
 
 
 rule merge_fastqs_raw_r2:
@@ -201,4 +241,8 @@ rule merge_fastqs_raw_r2:
     container:
         containers["debian"]
     shell:
-        "cp {input.fqs} {output.merged} 2> {log} || cat {input.fqs} > {output.merged} 2> {log}"
+        """
+        cp {input.fqs} {output.merged} 2> {log} \
+        || \
+        cat {input.fqs} > {output.merged} 2> {log}
+        """

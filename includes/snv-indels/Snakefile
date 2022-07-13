@@ -61,11 +61,20 @@ rule align_vars:
     container:
         containers["gsnap"]
     shell:
-        "gsnap --dir `dirname {input.index}` --db `basename {input.index}`"
-        " --batch 4 --nthreads {threads}"
-        " --novelsplicing 1 --npaths 1 --quiet-if-excessive"
-        " --read-group-name={params.rg_sample} --read-group-id={params.rg_sample}"
-        " --format sam --gunzip {input.fq1} {input.fq2} > {output.sam} 2> {log}"
+        """
+        gsnap \
+            --dir `dirname {input.index}` \
+            --db `basename {input.index}` \
+            --batch 4 \
+            --nthreads {threads} \
+            --novelsplicing 1 \
+            --npaths 1 \
+            --quiet-if-excessive \
+            --read-group-name={params.rg_sample} \
+            --read-group-id={params.rg_sample} \
+            --format sam \
+            --gunzip {input.fq1} {input.fq2} > {output.sam} 2> {log}
+        """
 
 
 rule sort_bamfile:
@@ -81,8 +90,15 @@ rule sort_bamfile:
     container:
         containers["picard"]
     shell:
-        "picard -Xmx4G SortSam I={input.sam} O={output.bam} SORT_ORDER=coordinate "
-        "VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true TMP_DIR={params.tmp} 2> {log}"
+        """
+        picard -Xmx4G SortSam \
+            I={input.sam} \
+            O={output.bam} \
+            SORT_ORDER=coordinate \
+            VALIDATION_STRINGENCY=SILENT \
+            CREATE_INDEX=true \
+            TMP_DIR={params.tmp} 2> {log}
+        """
 
 
 rule reorder_aln_header:
@@ -102,8 +118,14 @@ rule reorder_aln_header:
     container:
         containers["picard"]
     shell:
-        "picard -Xmx4G ReorderSam I={input.bam} O={output.bam} R={input.ref}"
-        " VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true 2> {log}"
+        """
+        picard -Xmx4G ReorderSam \
+            I={input.bam} \
+            O={output.bam} \
+            R={input.ref} \
+            VALIDATION_STRINGENCY=SILENT \
+            CREATE_INDEX=true 2> {log}
+        """
 
 
 rule genome_txt:
@@ -116,12 +138,14 @@ rule genome_txt:
     container:
         containers["debian"]
     shell:
-        " cat {input.ref_dict}"
-        ' | grep -P "@SQ\\tSN:"'
-        " | sed 's/@SQ\\tSN://'"
-        " | sed 's/\\tLN:/\\t/'"
-        " | cut -f1,2"
-        " > {output.genome} 2> {log}"
+        """
+        cat {input.ref_dict} \
+        | grep -P "@SQ\\tSN:" \
+        | sed 's/@SQ\\tSN://' \
+        | sed 's/\\tLN:/\\t/' \
+        | cut -f1,2 \
+        > {output.genome} 2> {log}
+        """
 
 
 rule exon_cov_ref:
@@ -135,11 +159,13 @@ rule exon_cov_ref:
     container:
         containers["bedtools-2.27-grep-2.14-gawk-5.0-click-7-python-3.7"]
     shell:
-        "cat {input.ref_refflat}"
-        ' | grep -vP "chr.*alt\t"'
-        ' | awk \'{{ split($10, starts, ","); split($11, ends, ","); for (i=1; i < length(starts); i++) {{ print $3"\\t"starts[i]"\\t"ends[i]"\\t"gensub(/(\.[0-9]+)/,"", "g", $2)"\\t"i"\\t"$4 }} }}\''
-        " | bedtools sort -faidx {input.ref_fai}"
-        " > {output.bed} 2> {log}"
+        """
+        cat {input.ref_refflat} \
+         | grep -vP "chr.*alt\t" \
+         | awk \'{{ split($10, starts, ","); split($11, ends, ","); for (i=1; i < length(starts); i++) {{ print $3"\\t"starts[i]"\\t"ends[i]"\\t"gensub(/(\.[0-9]+)/,"", "g", $2)"\\t"i"\\t"$4 }} }}\' \
+         | bedtools sort -faidx {input.ref_fai} \
+         > {output.bed} 2> {log}
+        """
 
 
 rule exon_cov:
@@ -156,9 +182,17 @@ rule exon_cov:
     container:
         containers["bedtools-2.27-grep-2.14-gawk-5.0-click-7-python-3.7"]
     shell:
-        "bedtools coverage -d -sorted -g {input.genome} -a {input.bed} -b {input.bam} 2> {log}"
-        " | cut -f1,2,3,4,5,8,7"
-        " | python {input.scr} --id-mapping {input.idm} - {output.json}"
+        """
+        bedtools coverage \
+            -d \
+            -sorted \
+            -g {input.genome} \
+            -a {input.bed} \
+            -b {input.bam} 2> {log} \
+        | cut -f1,2,3,4,5,8,7 \
+        | python {input.scr} \
+            --id-mapping {input.idm} - {output.json}
+        """
 
 
 rule call_vars:
@@ -173,11 +207,21 @@ rule call_vars:
     container:
         containers["varscan-2.4.2-samtools-1.3.1-tabix-0.2.6-grep-2.14"]
     shell:
-        "samtools mpileup -f {input.ref} -d 1000000 -s -B {input.bam}"
-        " | grep -vP '\\t\\t'"
-        " | varscan mpileup2cns --strand-filter 0 --output-vcf 1 --min-var-freq 0.1 --p-value 0.05 2> {log}"
-        " | grep -vP '\\t\./\.|\\t0/0'"
-        " | bgzip -c > {output.vcf}"
+        """
+        samtools mpileup \
+            -f {input.ref} \
+            -d 1000000 \
+            -s \
+            -B {input.bam} \
+        | grep -vP '\\t\\t' \
+        | varscan mpileup2cns \
+            --strand-filter 0 \
+            --output-vcf 1 \
+            --min-var-freq 0.1 \
+            --p-value 0.05 2> {log} \
+        | grep -vP '\\t\./\.|\\t0/0' \
+        | bgzip -c > {output.vcf}
+        """
 
 
 rule aln_stats:
@@ -194,9 +238,13 @@ rule aln_stats:
     container:
         containers["picard"]
     shell:
-        "picard -Xmx4G CollectAlignmentSummaryMetrics"
-        " VALIDATION_STRINGENCY=LENIENT"
-        " R={input.ref} I={input.bam} O={output.stats} 2> {log}"
+        """
+        picard -Xmx4G CollectAlignmentSummaryMetrics \
+            VALIDATION_STRINGENCY=LENIENT \
+            R={input.ref} \
+            I={input.bam} \
+            O={output.stats} 2> {log}
+        """
 
 
 rule insert_stats:
@@ -214,9 +262,14 @@ rule insert_stats:
     container:
         containers["picard"]
     shell:
-        "picard -Xmx4G CollectInsertSizeMetrics"
-        " VALIDATION_STRINGENCY=LENIENT"
-        " R={input.ref} I={input.bam} O={output.stats} H={output.histo} 2> {log}"
+        """
+        picard -Xmx4G CollectInsertSizeMetrics \
+            VALIDATION_STRINGENCY=LENIENT \
+            R={input.ref} \
+            I={input.bam} \
+            O={output.stats} \
+            H={output.histo} 2> {log}
+        """
 
 
 rule rna_stats:
@@ -236,12 +289,18 @@ rule rna_stats:
     container:
         containers["picard"]
     shell:
-        "picard -Xmx4G CollectRnaSeqMetrics"
-        " VALIDATION_STRINGENCY=LENIENT"
-        " R={input.ref} REF_FLAT={input.annot}"
-        " RIBOSOMAL_INTERVALS={input.ref_rrna}"
-        " STRAND_SPECIFICITY=NONE ASSUME_SORTED=true"
-        " CHART_OUTPUT={output.histo} I={input.bam} O={output.stats} 2> {log}"
+        """
+        picard -Xmx4G CollectRnaSeqMetrics \
+             VALIDATION_STRINGENCY=LENIENT \
+             R={input.ref} \
+             REF_FLAT={input.annot} \
+             RIBOSOMAL_INTERVALS={input.ref_rrna} \
+             STRAND_SPECIFICITY=NONE \
+             ASSUME_SORTED=true \
+             CHART_OUTPUT={output.histo} \
+             I={input.bam} \
+             O={output.stats} 2> {log}
+        """
 
 
 rule annotate_vars:
@@ -264,18 +323,22 @@ rule annotate_vars:
     container:
         containers["vep"]
     shell:
-        "vep -i {input.vcf}"
-        " --fasta {input.fasta_vep}"
-        " {params.online}"
-        " {params.offline}"
-        " --custom {input.ref_1kg},P3,vcf,exact,0,AF,AFR_AF,AMR_AF,EAS_AF,EUR_AF,SAS_AF"
-        " --custom {input.ref_gonl},GONL,vcf,exact,0,AF"
-        " --fork {threads}"
-        " --allele_number --stats_text --vcf --force_overwrite --assembly GRCh38"
-        " --format vcf"
-        " --polyphen b"
-        " --sift b"
-        " --stats_file {output.stats} -o STDOUT 2> {log} | bgzip -c > {output.vcf}"
+        """
+        vep \
+            -i {input.vcf} \
+            --fasta {input.fasta_vep} \
+            {params.online} \
+            {params.offline} \
+            --custom {input.ref_1kg},P3,vcf,exact,0,AF,AFR_AF,AMR_AF,EAS_AF,EUR_AF,SAS_AF \
+            --custom {input.ref_gonl},GONL,vcf,exact,0,AF \
+            --fork {threads} \
+            --allele_number --stats_text --vcf --force_overwrite --assembly GRCh38 \
+            --format vcf \
+            --polyphen b \
+            --sift b \
+            --stats_file {output.stats} -o STDOUT \
+            2> {log} | bgzip -c > {output.vcf}
+        """
 
 
 rule extract_vars:
@@ -292,8 +355,13 @@ rule extract_vars:
     container:
         containers["hamlet-scripts"]
     shell:
-        "python3 {input.scr} --hotspots {input.ref_hotspots} --sample-id {wildcards.sample}"
-        " {input.ref_id_mapping} {input.vcf} > {output.json} 2> {log}"
+        """
+        python3 {input.scr} \
+            --hotspots {input.ref_hotspots} \
+            --sample-id {wildcards.sample} \
+            {input.ref_id_mapping} \
+            {input.vcf} > {output.json} 2> {log}
+        """
 
 
 rule table_vars_all:
@@ -308,7 +376,9 @@ rule table_vars_all:
     container:
         containers["hamlet-scripts"]
     shell:
-        "python3 {input.scr} {input.json} > {output.csv} 2> {log}"
+        """
+        python3 {input.scr} {input.json} > {output.csv} 2> {log}
+        """
 
 
 rule table_vars_hi:
@@ -323,7 +393,9 @@ rule table_vars_hi:
     container:
         containers["hamlet-scripts"]
     shell:
-        "python3 {input.scr} --hi {input.json} > {output.csv} 2> {log}"
+        """
+        python3 {input.scr} --hi {input.json} > {output.csv} 2> {log}
+        """
 
 
 rule plot_vars:
@@ -342,8 +414,13 @@ rule plot_vars:
     container:
         containers["hamlet-scripts"]
     shell:
-        "mkdir -p {output.plotd} && "
-        "Rscript {input.scr} -j {input.json}"
-        " -i {input.ref_id_mapping} -m {input.ref_annot_goi}"
-        " -a {input.ref_amplicons} -t {input.ref_hotspots}"
-        " -o {output.plotd} 2> {log} "
+        """
+        mkdir -p {output.plotd} && \
+        Rscript {input.scr} \
+            -j {input.json} \
+            -i {input.ref_id_mapping} \
+            -m {input.ref_annot_goi} \
+            -a {input.ref_amplicons} \
+            -t {input.ref_hotspots} \
+            -o {output.plotd} 2> {log}
+        """
