@@ -99,6 +99,22 @@
       contains:
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
         - "453,457\t4106,4110\t40\t26\t452\t4106\t4111\t457\tfuzzy\t4"
+    # Test the log files
+    - path: "log/align_kmt2a.SRR8616218.txt"
+      contains:
+        - "M::bwa_idx_load_from_disk"
+    - path: "log/plot_itd_kmt2a.SRR8616218.txt"
+      contains:
+        - "plotting rose events"
+    - path: "log/detect_itd_kmt2a.SRR8616218.txt"
+
+    - path: "log/align_flt3.SRR8615687.txt"
+      contains:
+        - "M::bwa_idx_load_from_disk"
+    - path: "log/plot_itd_flt3.SRR8615687.txt"
+      contains:
+        - "plotting rose events"
+    - path: "log/detect_itd_flt3.SRR8615687.txt"
 
 # ITD pipeline should run successfully when there are no reads that map to flt3 or kmt2a
 - name: test-flt3-kmt2a-no-reads
@@ -140,3 +156,20 @@
     - path: "SRR8615409/itd/SRR8615409.flt3.csv"
       contains:
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
+
+- name: lint-itd
+  tags:
+    - sanity
+    - itd 
+  command: >
+    snakemake
+    --lint
+    --snakefile includes/itd/Snakefile
+    --configfile test/data/config/chrM.json
+    --config pepfile=test/pep/chrM-bam.csv
+
+- name: snakefmt-itd
+  tags:
+    - sanity
+    - itd
+  command: snakefmt --check includes/itd

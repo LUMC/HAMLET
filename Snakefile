@@ -1,6 +1,11 @@
 include: "common.smk"
 
-localrules: create_summary, generate_report, package_results
+
+localrules:
+    create_summary,
+    generate_report,
+    package_results,
+
 
 OUTPUTS = dict(
     # Merged FASTQs, stats, and packaged results
@@ -8,24 +13,20 @@ OUTPUTS = dict(
     summary="{sample}/{sample}.summary.json",
     reportje="{sample}/hamlet_report.{sample}.pdf",
     package="{sample}/hamlet_results.{sample}.zip",
-
     # Small variants
     smallvars_bam=var_output(".snv-indel.bam"),
     smallvars_vcf=var_output(".annotated.vcf.gz"),
     smallvars_csv_all=var_output(".variants_all.csv"),
     smallvars_csv_hi=var_output(".variants_hi.csv"),
-    smallvars_plots="{sample}/snv-indels/variant_plots/.done",
-
+    smallvars_plots="{sample}/snv-indels/variant_plots",
     # Fusion
     star_fusion_txt=fusion_output(".star-fusion"),
     star_fusion_svg=fusion_output(".star-fusion.svg"),
-
     # Expression
     count_fragments_per_gene=expr_output(".fragments_per_gene"),
     count_bases_per_gene=expr_output(".bases_per_gene"),
     count_bases_per_exon=expr_output(".bases_per_exon"),
     ratio_exons=expr_output(".exon_ratios"),
-
     # Stats
     seq_stats=seqqc_output(".seq_stats.json"),
     aln_stats=var_output(".aln_stats"),
@@ -33,7 +34,6 @@ OUTPUTS = dict(
     insert_stats=var_output(".insert_stats"),
     vep_stats=var_output(".vep_stats.txt"),
     exon_cov_stats=var_output(".exon_cov_stats.json"),
-
     # ITD module
     flt3_bam=itd_output(".flt3.bam"),
     flt3_csv=itd_output(".flt3.csv"),
@@ -53,10 +53,10 @@ if config.get("fusioncatcher_data"):
     OUTPUTS["isect_svg"] = fusion_output(".sf-isect.svg")
     OUTPUTS["isect_txt"] = fusion_output(".sf-isect")
 
+
 rule all:
     input:
-        [expand(p, sample=samples, pair={"R1", "R2"})
-         for p in OUTPUTS.values()]
+        [expand(p, sample=samples, pair={"R1", "R2"}) for p in OUTPUTS.values()],
 
 
 # Define HAMLET modules
@@ -65,35 +65,46 @@ module qc_seq:
         "includes/qc-seq/Snakefile"
     config:
         config
+
+
 use rule * from qc_seq as qc_seq_*
+
 
 module itd:
     snakefile:
         "includes/itd/Snakefile"
     config:
         config
+
+
 use rule * from itd as itd_*
+
 
 # Connect the align_kmt2a rule to the output of qc-seq
 use rule align_kmt2a from itd as itd_align_kmt2a with:
     input:
         fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
         fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
-        fasta=config["kmt2a_fasta"]
+        fasta=config["kmt2a_fasta"],
+
 
 # Connect the align_flt3 rule to the output of qc-seq
 use rule align_flt3 from itd as itd_align_flt3 with:
     input:
         fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
         fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
-        fasta=config["flt3_fasta"]
+        fasta=config["flt3_fasta"],
+
 
 module align:
     snakefile:
         "includes/snv-indels/Snakefile"
     config:
         config
+
+
 use rule * from align as align_*
+
 
 # Connect the align rule to the output of qc-seq
 use rule align_vars from align as align_align_vars with:
@@ -102,19 +113,24 @@ use rule align_vars from align as align_align_vars with:
         fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
         index=config.get("genome_gmap_index") or "gmap_index/reference",
 
+
 module expression:
     snakefile:
         "includes/expression/Snakefile"
     config:
         config
+
+
 use rule * from expression as expression_*
+
 
 # Connect the idsort rule to the output of snv-indels
 use rule idsort_aln from expression as expression_idsort_aln with:
     input:
         bam=rules.align_reorder_aln_header.output.bam,
-    singularity:
+    container:
         "docker://quay.io/biocontainers/picard:2.20.5--0"
+
 
 # Connect the count_raw_bases rule to the output of snv-indels
 use rule count_raw_bases from expression as expression_count_raw_bases with:
@@ -122,15 +138,19 @@ use rule count_raw_bases from expression as expression_count_raw_bases with:
         bam=rules.align_reorder_aln_header.output.bam,
         bed=config["expression_bed"],
         count_script=config["base_count_script"],
-    singularity:
+    container:
         "docker://quay.io/biocontainers/mulled-v2-a9ddcbd438a66450297b5e0b61ac390ee9bfdb61:e60f3cfda0dfcf4a72f2091c6fa1ebe5a5400220-0"
+
 
 module fusion:
     snakefile:
         "includes/fusion/Snakefile"
     config:
         config
+
+
 use rule * from fusion as fusion_*
+
 
 # Connect the star_fusion rule to the output of qc-seq
 use rule star_fusion from fusion as fusion_star_fusion with:
@@ -138,16 +158,18 @@ use rule star_fusion from fusion as fusion_star_fusion with:
         fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
         fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
         lib=config["genome_star_fusion_lib"],
-    singularity:
-        "docker://quay.io/biocontainers/star-fusion:1.10.0--hdfd78af_1",
+    container:
+        "docker://quay.io/biocontainers/star-fusion:1.10.0--hdfd78af_1"
+
 
 # Connect the fusioncather rule to the output of qc-seq
 use rule fusioncatcher from fusion as fusion_fusioncatcher with:
     input:
         fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
         fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
-    singularity:
-        "docker://quay.io/biocontainers/fusioncatcher:1.20--2",
+    container:
+        "docker://quay.io/biocontainers/fusioncatcher:1.20--2"
+
 
 rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""
@@ -172,22 +194,27 @@ rule create_summary:
         pipeline_ver=PIPELINE_VERSION,
         run_name=RUN_NAME,
     output:
-        js=OUTPUTS["summary"]
-    singularity: containers["crimson"]
+        js=OUTPUTS["summary"],
+    log:
+        "log/create_summary.{sample}.txt",
+    container:
+        containers["crimson"]
     shell:
-        "python {input.scr}"
-        " {input.idm}"
-        " `dirname {input.var_plots}` {input.var_csv}"
-        " `dirname {input.fusions_svg}`"
-        " {input.flt3_csv} {input.flt3_plot}"
-        " {input.kmt2a_csv} {input.kmt2a_plot}"
-        " {input.exon_ratios}"
-        " {input.seq_stats} {input.aln_stats} {input.rna_stats} {input.insert_stats}"
-        " {input.exon_cov_stats} {input.vep_stats}"
-        " --pipeline-version {params.pipeline_ver}"
-        " --run-name {params.run_name}"
-        " --sample-name {wildcards.sample}"
-        " > {output.js}"
+        """
+        python {input.scr} \
+            {input.idm} \
+            `dirname {input.var_plots}` \
+            {input.var_csv} \
+            `dirname {input.fusions_svg}` \
+            {input.flt3_csv} {input.flt3_plot} \
+            {input.kmt2a_csv} {input.kmt2a_plot} \
+            {input.exon_ratios} \
+            {input.seq_stats} {input.aln_stats} {input.rna_stats} {input.insert_stats} \
+            {input.exon_cov_stats} {input.vep_stats} \
+            --pipeline-version {params.pipeline_ver} \
+            --run-name {params.run_name} \
+            --sample-name {wildcards.sample} > {output.js} 2>{log}
+        """
 
 
 rule generate_report:
@@ -201,12 +228,20 @@ rule generate_report:
         scr=srcdir("scripts/generate_report.py"),
     output:
         pdf=OUTPUTS["reportje"],
-    singularity: containers["hamlet-scripts"]
+    log:
+        "log/generate_report.{sample}.txt",
+    container:
+        containers["hamlet-scripts"]
     shell:
-        "python3 {input.scr}"
-        " --templates-dir {input.templates} --imgs-dir {input.imgs}"
-        " --css-path {input.css} --toc-path {input.toc}"
-        " {input.summary} {output.pdf}"
+        """
+        python3 {input.scr} \
+            --templates-dir {input.templates} \
+            --imgs-dir {input.imgs} \
+            --css-path {input.css} \
+            --toc-path {input.toc} \
+            {input.summary} \
+            {output.pdf} 2> {log}
+        """
 
 
 rule package_results:
@@ -228,15 +263,21 @@ rule package_results:
         kmt_bg_csv=OUTPUTS["kmt2a_bg_csv"],
         kmt_png=OUTPUTS["kmt2a_png"],
         reportje=OUTPUTS["reportje"],
+    params:
+        tmp=f"tmp/hamlet-pkg.{{sample}}.{uuid4()}/hamlet_results.{{sample}}",
     output:
         pkg=OUTPUTS["package"],
-    params:
-        tmp="tmp/hamlet-pkg.{sample}." + str(uuid4()) + "/hamlet_results.{sample}"
-    singularity: containers["zip"]
+    log:
+        "log/package_results.{sample}.txt",
+    container:
+        containers["zip"]
     shell:
-        "(mkdir -p {params.tmp}"
-        " && cp -r {input} {params.tmp}"
-        " && cp -r $(dirname {input.smallvars_plots}) {params.tmp}"
-        " && zip -9 -x *.done -r {output.pkg} {params.tmp}"
-        " && rm -rf {params.tmp})"
-        " || rm -rf {params.tmp}"
+        """
+        mkdir -p {params.tmp} && \
+        cp -r {input} {params.tmp} && \
+        cp -r $(dirname {input.smallvars_plots}) {params.tmp} && \
+        zip -9 -x *.done -r {output.pkg} {params.tmp} && \
+        rm -rf {params.tmp} 2> {log} \
+        \
+        || rm -rf {params.tmp}
+        """

@@ -90,7 +90,6 @@
     - path: "TestSample1/qc-seq/rg_1/fastqc-R2-processed"
     - path: "TestSample1/qc-seq/rg_1/fastqc-R1-raw"
     - path: "TestSample1/qc-seq/rg_1/fastqc-R2-raw"
-
     # QC pipeline should create output files for TestSample2
     - path: "TestSample2/TestSample2-R1.fq.gz"
     - path: "TestSample2/TestSample2-R2.fq.gz"
@@ -98,13 +97,22 @@
     - path: "TestSample2/qc-seq/rg_1/TestSample2-rg_1-R2.fq.gz"
     - path: "TestSample2/qc-seq/rg_2/TestSample2-rg_2-R1.fq.gz"
     - path: "TestSample2/qc-seq/rg_2/TestSample2-rg_2-R2.fq.gz"
-
     # QC pipeline should create output file for TestSample3
     - path: "TestSample3/TestSample3-R1.fq.gz"
     - path: "TestSample3/TestSample3-R2.fq.gz"
     - path: "TestSample3/qc-seq/rg_1/TestSample3-rg_1-R1.fq.gz"
     - path: "TestSample3/qc-seq/rg_2/TestSample3-rg_2-R1.fq.gz"
     - path: "TestSample3/qc-seq/rg_3/TestSample3-rg_3-R1.fq.gz"
+    # Check if all rules write to their specified logfiles
+    - path: "log/fastqc_raw.TestSample3.rg_3.R1.txt"
+      contains:
+        - "Started analysis of SRR8615687_flt3_1.fastq.gz"
+    - path: "log/cutadapt.TestSample3.rg_3.txt"
+      contains:
+        - "This is cutadapt"
+    - path: "log/fastqc_processed.TestSample3.rg_3.R1.txt"
+      contains:
+        - "Started analysis of TestSample3-rg_3-R1.fq.gz"
 
 # QC pipeline should detect low quality fastq files
 - name: test-qc-single-low-qual-adapters
@@ -134,3 +142,19 @@
         - "PASS\tPer base N content\tlow_qual-rg_1-R1.fq.gz"
         - "WARN\tOverrepresented sequences\tlow_qual-rg_1-R1.fq.gz"
         - "PASS\tAdapter Content\tlow_qual-rg_1-R1.fq.gz"
+
+- name: lint-qc
+  tags:
+    - sanity
+    - qc-seq
+  command: >
+    snakemake
+    --lint
+    --snakefile includes/qc-seq/Snakefile
+    --config pepfile=test/pep/chrM-trio-subsamples.csv
+
+- name: snakefmt-qc
+  tags:
+    - sanity
+    - qc-seq
+  command: snakefmt --check includes/qc-seq/
