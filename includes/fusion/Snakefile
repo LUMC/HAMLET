@@ -203,7 +203,9 @@ rule subset_sf:
     container:
         containers["hamlet-scripts"]
     shell:
-        "python3 {input.subset_script} {input.isect} {input.sf} > {output.sf} 2> {log} || rm -f {output.sf}"
+        """
+        python3 {input.subset_script} {input.isect} {input.sf} > {output.sf} 2> {log}
+        """
 
 
 rule plot_isect:
