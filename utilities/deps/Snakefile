@@ -1,0 +1,197 @@
+import os
+
+# TODO
+# - remove scrdir
+# - add option to specify output folder
+containers = {
+    "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py_3",
+    "hamlet-scripts": "docker://lumc/hamlet-scripts:0.3",
+    "debian": "docker://debian:buster-slim",
+    "samtools": "docker://quay.io/biocontainers/samtools:1.6--h244ad75_4",
+    "picard": "docker://quay.io/biocontainers/picard:2.20.5--0",
+    "gsnap": "docker://quay.io/biocontainers/gmap:2021.02.22--pl526h2f06484_0",
+    "zip": "docker://lumc/zip:3.0",
+}
+
+settings = {
+    "reference_gzip": "GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz",
+    "reference_url": "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.15_GRCh38/seqs_for_alignment_pipelines.ucsc_ids/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz",
+    "reference_fai": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.15_GRCh38/seqs_for_alignment_pipelines.ucsc_ids/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.fai",
+    "refflat": "http://hgdownload.cse.ucsc.edu/goldenpath/hg38/database/refFlat.txt.gz",
+    #'gtf': 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/genes/hg38.ensGene.gtf.gz'
+    "gtf": "http://ftp.ensembl.org/pub/release-104/gtf/homo_sapiens/Homo_sapiens.GRCh38.104.gtf.gz",
+}
+
+os.makedirs("data", exist_ok=True)
+
+
+rule all:
+    input:
+        fasta="data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna",
+        fai="data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fai",
+        fasta_dict="data/GCA_000001405.15_GRCh38_no_alt_analysis_set.dict",
+        gmap_index="data/gmap-genome-index",
+        refflat="data/ucsc_gencode.refFlat",
+        id_mapping="data/id_mappings.tsv",
+        rRNA_refFlat="data/ucsc_rrna.refFlat",
+
+
+rule download_reference:
+    output:
+        fasta="data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna",
+    params:
+        url=settings["reference_url"],
+        gzip=settings["reference_gzip"],
+    singularity:
+        containers["hamlet-scripts"]
+    shell:
+        """
+        mkdir -p data &&
+        wget {params.url} &&
+        gzip -dc {params.gzip} > {output.fasta} &&
+        rm {params.gzip}
+        """
+
+
+rule download_fai:
+    output:
+        "data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fai",
+    params:
+        settings["reference_fai"],
+    singularity:
+        containers["hamlet-scripts"]
+    shell:
+        """
+        wget {params} -O {output}
+        """
+
+
+rule download_gtf:
+    output:
+        "Homo_sapiens.GRCh38.104.gtf",
+    params:
+        settings["gtf"],
+    singularity:
+        containers["hamlet-scripts"]
+    shell:
+        """
+        wget {params} &&
+        gunzip {output}.gz
+        """
+
+
+rule rewrite_gtf:
+    """ Add the 'chr' prefix to the chromosome names """
+    input:
+        gtf=rules.download_gtf.output,
+        rewrite=srcdir("scripts/rewrite-gtf.py"),
+    output:
+        gtf="data/Homo_sapiens.GRCh38.104.chr.gtf",
+    singularity:
+        containers["hamlet-scripts"]
+    shell:
+        """
+        {input.rewrite} {input.gtf} > {output.gtf}
+        """
+
+
+rule create_dict:
+    input:
+        rules.download_reference.output.fasta,
+    output:
+        "data/GCA_000001405.15_GRCh38_no_alt_analysis_set.dict",
+    singularity:
+        containers["picard"]
+    shell:
+        """
+        picard CreateSequenceDictionary R={input} O={output}
+        """
+
+
+rule create_gmap_index:
+    input:
+        fasta=rules.download_reference.output.fasta,
+    output:
+        directory("data/gmap-genome-index"),
+    singularity:
+        containers["gsnap"]
+    shell:
+        """
+        gmap_build \
+            --dir {output} \
+            --genomedb GCA_000001405.15_GRCh38_no_alt_analysis_set \
+            {input.fasta}
+        """
+
+
+rule download_refflat:
+    output:
+        "data/ucsc_gencode.refFlat",
+    params:
+        url=settings["refflat"],
+    singularity:
+        containers["hamlet-scripts"]
+    shell:
+        """
+        wget {params.url} &&
+        gzip -dc refFlat.txt.gz > {output} &&
+        rm refFlat.txt.gz
+        """
+
+
+rule create_id_mappings:
+    output:
+        "data/id_mappings.tsv",
+    singularity:
+        containers["hamlet-scripts"]
+    shell:
+        """
+                cat << EOF > {output}
+        GOI_ID    GOI_SYMBOL    TOI_IDS
+        ENSG00000171456    ASXL1    ENST00000375687
+        ENSG00000245848    CEBPA    ENST00000498907
+        ENSG00000119772    DNMT3A    ENST00000321117
+        ENSG00000122025    FLT3    ENST00000241453
+        ENSG00000138413    IDH1    ENST00000345146
+        ENSG00000182054    IDH2    ENST00000330062
+        ENSG00000157404    KIT    ENST00000288135
+        ENSG00000181163    NPM1    ENST00000517671
+        ENSG00000213281    NRAS    ENST00000369535
+        ENSG00000159216    RUNX1    ENST00000300305
+        ENSG00000168769    TET2    ENST00000380013
+        ENSG00000141510    TP53    ENST00000269305
+        ENSG00000184937    WT1    ENST00000332351
+        ENSG00000085276    MECOM    ENST00000464456,ENST00000494292
+        EOF
+        """
+
+
+rule create_rRNA_refflat:
+    """ Taken from https://gist.github.com/b8307038/55fb526e72141fac9f0aa2bc0e1f5997 """
+    input:
+        fai=rules.download_fai.output,
+        gtf=rules.rewrite_gtf.output,
+    output:
+        refflat="data/ucsc_rrna.refFlat",
+        sizes=temporary("sizes.genome"),
+    singularity:
+        containers["hamlet-scripts"]
+    shell:
+        """
+
+        cut -f1,2 {input.fai} > {output.sizes}
+
+        perl -lane 'print "\@SQ\tSN:$F[0]\tLN:$F[1]\tAS:GRCh38"' {output.sizes} | grep -v _ > {output.refflat}
+
+        # Pattern to find rebozyme transcripts
+        ribozyme='gene_biotype "rRNA"\|gene_biotype "Mt_rRNA"\|gene_biotype "Mt_tRNA"\|gene_biotype "ribozyme"'
+        # Intervals for rRNA transcripts
+        grep "$ribozyme" {input.gtf} | \
+        awk '$3 == "gene"' | \
+        cut -f1,4,5,7,9 | \
+        perl -lane '
+            /gene_id "([^"]+)"/ or die "no gene_id on $.";
+            print join "\t", (@F[0,1,2,3], $1)
+        ' | \
+        sort -k1V -k2n -k3n >> {output.refflat}
+        """
