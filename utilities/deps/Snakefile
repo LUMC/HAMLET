@@ -7,6 +7,7 @@ containers = {
     "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py_3",
     "hamlet-scripts": "docker://lumc/hamlet-scripts:0.3",
     "debian": "docker://debian:buster-slim",
+    "fuma": "docker://quay.io/biocontainers/fuma:4.0.0--pyhb7b1952_0",
     "samtools": "docker://quay.io/biocontainers/samtools:1.6--h244ad75_4",
     "picard": "docker://quay.io/biocontainers/picard:2.20.5--0",
     "gsnap": "docker://quay.io/biocontainers/gmap:2021.02.22--pl526h2f06484_0",
@@ -14,48 +15,45 @@ containers = {
 }
 
 settings = {
-    "reference_gzip": "GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz",
     "reference_url": "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.15_GRCh38/seqs_for_alignment_pipelines.ucsc_ids/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz",
     "reference_fai": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.15_GRCh38/seqs_for_alignment_pipelines.ucsc_ids/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.fai",
     "refflat": "http://hgdownload.cse.ucsc.edu/goldenpath/hg38/database/refFlat.txt.gz",
     #'gtf': 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/genes/hg38.ensGene.gtf.gz'
+    'gtf': 'https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_41/gencode.v41.annotation.gtf.gz',
     "gtf": "http://ftp.ensembl.org/pub/release-104/gtf/homo_sapiens/Homo_sapiens.GRCh38.104.gtf.gz",
 }
-
-os.makedirs("data", exist_ok=True)
 
 
 rule all:
     input:
-        fasta="data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna",
-        fai="data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fai",
-        fasta_dict="data/GCA_000001405.15_GRCh38_no_alt_analysis_set.dict",
-        gmap_index="data/gmap-genome-index",
-        refflat="data/ucsc_gencode.refFlat",
-        id_mapping="data/id_mappings.tsv",
-        rRNA_refFlat="data/ucsc_rrna.refFlat",
+        fasta="GCA_000001405.15_GRCh38_no_alt_analysis_set.fna",
+        fai="GCA_000001405.15_GRCh38_no_alt_analysis_set.fai",
+        fasta_dict="GCA_000001405.15_GRCh38_no_alt_analysis_set.dict",
+        gmap_index="gmap-genome-index",
+        refflat="ucsc_gencode.refFlat",
+        id_mapping="id_mappings.tsv",
+        rRNA_refFlat="ucsc_rrna.refFlat",
+        fuma_bedfile="transcripts.bed",
 
 
 rule download_reference:
     output:
-        fasta="data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna",
+        fasta=settings["reference_url"].split("/")[-1][:-3],
     params:
         url=settings["reference_url"],
-        gzip=settings["reference_gzip"],
     singularity:
         containers["hamlet-scripts"]
     shell:
         """
-        mkdir -p data &&
-        wget {params.url} &&
-        gzip -dc {params.gzip} > {output.fasta} &&
+        wget -O {output.fasta}.gz {params.url} &&
+        gzip -dc {output.fasta}.gz > {output.fasta} &&
         rm {params.gzip}
         """
 
 
 rule download_fai:
     output:
-        "data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fai",
+        "GCA_000001405.15_GRCh38_no_alt_analysis_set.fai",
     params:
         settings["reference_fai"],
     singularity:
@@ -86,7 +84,7 @@ rule rewrite_gtf:
         gtf=rules.download_gtf.output,
         rewrite=srcdir("scripts/rewrite-gtf.py"),
     output:
-        gtf="data/Homo_sapiens.GRCh38.104.chr.gtf",
+        gtf="Homo_sapiens.GRCh38.104.chr.gtf",
     singularity:
         containers["hamlet-scripts"]
     shell:
@@ -99,7 +97,7 @@ rule create_dict:
     input:
         rules.download_reference.output.fasta,
     output:
-        "data/GCA_000001405.15_GRCh38_no_alt_analysis_set.dict",
+        "GCA_000001405.15_GRCh38_no_alt_analysis_set.dict",
     singularity:
         containers["picard"]
     shell:
@@ -112,7 +110,7 @@ rule create_gmap_index:
     input:
         fasta=rules.download_reference.output.fasta,
     output:
-        directory("data/gmap-genome-index"),
+        directory("gmap-genome-index"),
     singularity:
         containers["gsnap"]
     shell:
@@ -126,7 +124,7 @@ rule create_gmap_index:
 
 rule download_refflat:
     output:
-        "data/ucsc_gencode.refFlat",
+        "ucsc_gencode.refFlat",
     params:
         url=settings["refflat"],
     singularity:
@@ -141,7 +139,7 @@ rule download_refflat:
 
 rule create_id_mappings:
     output:
-        "data/id_mappings.tsv",
+        "id_mappings.tsv",
     singularity:
         containers["hamlet-scripts"]
     shell:
@@ -172,7 +170,7 @@ rule create_rRNA_refflat:
         fai=rules.download_fai.output,
         gtf=rules.rewrite_gtf.output,
     output:
-        refflat="data/ucsc_rrna.refFlat",
+        refflat="ucsc_rrna.refFlat",
         sizes=temporary("sizes.genome"),
     singularity:
         containers["hamlet-scripts"]
@@ -194,4 +192,19 @@ rule create_rRNA_refflat:
             print join "\t", (@F[0,1,2,3], $1)
         ' | \
         sort -k1V -k2n -k3n >> {output.refflat}
+        """
+
+
+rule fuma_bedfile:
+    input:
+        rules.rewrite_gtf.output,
+    output:
+        "transcripts.bed",
+    singularity:
+        containers["fuma"]
+    shell:
+        """
+        fuma-gencode-gtf-to-bed \
+            {input} \
+            --output {output} \
         """
