@@ -23,12 +23,18 @@ settings = {
     "gtf": "http://ftp.ensembl.org/pub/release-104/gtf/homo_sapiens/Homo_sapiens.GRCh38.104.gtf.gz",
 }
 
+reference_fname = settings["reference_url"].split("/")[-1][:-3]
+reference_fai = os.path.basename(settings["reference_fai"])
+reference_dict = os.path.splitext(reference_fname)[0] + ".dict"
+
+gtf_file = os.path.splitext(os.path.basename(settings["gtf"]))[0]
+gtf_renamed = os.path.splitext(gtf_file)[0] + ".chr.gtf"
 
 rule all:
     input:
-        fasta="GCA_000001405.15_GRCh38_no_alt_analysis_set.fna",
-        fai="GCA_000001405.15_GRCh38_no_alt_analysis_set.fai",
-        fasta_dict="GCA_000001405.15_GRCh38_no_alt_analysis_set.dict",
+        fasta=reference_fname,
+        fai=reference_fai,
+        fasta_dict=reference_dict,
         gmap_index="gmap-genome-index",
         refflat="ucsc_gencode.refFlat",
         id_mapping="id_mappings.tsv",
@@ -38,7 +44,7 @@ rule all:
 
 rule download_reference:
     output:
-        fasta=settings["reference_url"].split("/")[-1][:-3],
+        fasta=reference_fname,
     params:
         url=settings["reference_url"],
     singularity:
@@ -53,7 +59,7 @@ rule download_reference:
 
 rule download_fai:
     output:
-        "GCA_000001405.15_GRCh38_no_alt_analysis_set.fai",
+        reference_fai,
     params:
         settings["reference_fai"],
     singularity:
@@ -66,7 +72,7 @@ rule download_fai:
 
 rule download_gtf:
     output:
-        "Homo_sapiens.GRCh38.104.gtf",
+        gtf_file,
     params:
         settings["gtf"],
     singularity:
@@ -84,7 +90,7 @@ rule rewrite_gtf:
         gtf=rules.download_gtf.output,
         rewrite=srcdir("scripts/rewrite-gtf.py"),
     output:
-        gtf="Homo_sapiens.GRCh38.104.chr.gtf",
+        gtf=gtf_renamed,
     singularity:
         containers["hamlet-scripts"]
     shell:
@@ -97,7 +103,7 @@ rule create_dict:
     input:
         rules.download_reference.output.fasta,
     output:
-        "GCA_000001405.15_GRCh38_no_alt_analysis_set.dict",
+        reference_dict,
     singularity:
         containers["picard"]
     shell:
@@ -109,6 +115,8 @@ rule create_dict:
 rule create_gmap_index:
     input:
         fasta=rules.download_reference.output.fasta,
+    params:
+        genomedb=os.path.splitext(reference_fname)[0]
     output:
         directory("gmap-genome-index"),
     singularity:
@@ -117,7 +125,7 @@ rule create_gmap_index:
         """
         gmap_build \
             --dir {output} \
-            --genomedb GCA_000001405.15_GRCh38_no_alt_analysis_set \
+            --genomedb {params.genomedb} \
             {input.fasta}
         """
 
