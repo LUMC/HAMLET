@@ -7,6 +7,7 @@
 
 library("tools")
 suppressMessages(library(Gviz))
+options(ucscChromosomeNames=FALSE)
 
 RenameEnsemblChroms <- function(annots) {
   # Renames Ensembl chromosomes in the given GenomicRanges object to use the GRCh38 naming.
