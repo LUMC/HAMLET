@@ -30,6 +30,7 @@ reference_dict = os.path.splitext(reference_fname)[0] + ".dict"
 gtf_file = os.path.splitext(os.path.basename(settings["gtf"]))[0]
 gtf_renamed = os.path.splitext(gtf_file)[0] + ".chr.gtf"
 
+
 rule all:
     input:
         fasta=reference_fname,
@@ -116,7 +117,7 @@ rule create_gmap_index:
     input:
         fasta=rules.download_reference.output.fasta,
     params:
-        genomedb=os.path.splitext(reference_fname)[0]
+        genomedb=os.path.splitext(reference_fname)[0],
     output:
         directory("gmap-genome-index"),
     singularity:
