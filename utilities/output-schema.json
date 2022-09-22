@@ -62,8 +62,17 @@
         "minProperties": 3,
         "properties": {
           "intersected": { "type": "boolean" },
-          "plots": { "type": "object" },
+          "plots": { "$ref": "#/definitions/results/fusion/plot" },
           "tables": { "type": "object" }
+        },
+        "plot": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "fusioncatcher": { "type": "string" },
+            "intersection": { "type": "string" },
+            "star-fusion": { "type": "string" }
+          }
         }
       }
     }
