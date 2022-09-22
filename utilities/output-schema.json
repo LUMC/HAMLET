@@ -39,7 +39,7 @@
           "items": { "$ref": "#/definitions/results/expression" }
         },
         "fusion": { "$ref": "#/definitions/results/fusion" },
-        "itd": { "type": "object" },
+        "itd": { "$ref": "#/definitions/results/itd" },
         "var": { "type": "object" }
       },
       "expression": {
@@ -107,6 +107,44 @@
               "type": "string",
               "enum": ["ONLY_REF_SPLICE", "INCL_NON_REF_SPLICE"]
             }
+          }
+        }
+      },
+      "itd": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 2,
+        "properties": {
+          "flt3": { "$ref": "#/definitions/results/itd/result" },
+          "kmt2a": { "$ref": "#/definitions/results/itd/result" }
+        },
+        "result": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 2,
+          "properties": {
+            "path": { "type": "string" },
+            "table": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/results/itd/event" }
+            }
+          }
+        },
+        "event": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 10,
+          "properties": {
+            "boundary_type": { "type": "string" },
+            "fuzziness": { "type": "string" },
+            "rose_end_anchor_pos": { "type": "string" },
+            "rose_end_count": { "type": "string" },
+            "rose_end_pos": { "type": "string" },
+            "rose_start_anchor_pos": { "type": "string" },
+            "rose_start_count": { "type": "string" },
+            "rose_start_pos": { "type": "string" },
+            "td_ends": { "type": "string" },
+            "td_starts": { "type": "string" }
           }
         }
       }
