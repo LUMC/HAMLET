@@ -5,12 +5,7 @@
     "metadata": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "genes_of_interest",
-        "pipeline_version",
-        "run_name",
-        "sample_name"
-      ],
+      "minProperties": 4,
       "properties": {
         "genes_of_interest": {
           "type": "array",
@@ -23,7 +18,7 @@
       "gene_of_interest": {
         "type": "object",
         "additionalProperties": false,
-        "required": [ "gene_id", "gene_symbol", "transcript_ids" ],
+        "minProperties": 3,
         "properties": {
           "gene_id": { "type": "string" },
           "gene_symbol": { "type": "string" },
@@ -37,7 +32,7 @@
     "results": {
       "type": "object",
       "additionalProperties": false,
-      "required": [ "expr", "fusion", "itd", "var" ],
+      "minProperties": 4,
       "properties": {
         "expr": {
           "type": "array",
@@ -50,15 +45,7 @@
       "expression": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "above_threshold",
-          "count",
-          "divisor_exp",
-          "divisor_gene",
-          "exon",
-          "ratio",
-          "sample_name"
-        ],
+        "minProperties": 7,
         "properties": {
           "above_threshold": { "type": "string" },
           "count": { "type": "string" },
@@ -72,11 +59,7 @@
     }
   },
   "additionalProperties": false,
-  "required": [
-    "metadata",
-    "results",
-    "stats"
-  ],
+  "minProperties": 3,
   "type": "object",
   "properties": {
     "metadata": { "$ref": "#/definitions/metadata" },
