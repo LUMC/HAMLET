@@ -38,7 +38,7 @@
           "type": "array",
           "items": { "$ref": "#/definitions/results/expression" }
         },
-        "fusion": { "type": "object" },
+        "fusion": { "$ref": "#/definitions/results/fusion" },
         "itd": { "type": "object" },
         "var": { "type": "object" }
       },
@@ -54,6 +54,16 @@
           "exon": { "type": "string"},
           "ratio": { "type": "string"},
           "sample_name": { "type": "string" }
+        }
+      },
+      "fusion": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 3,
+        "properties": {
+          "intersected": { "type": "boolean" },
+          "plots": { "type": "object" },
+          "tables": { "type": "object" }
         }
       }
     }
