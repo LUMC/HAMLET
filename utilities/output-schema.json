@@ -205,7 +205,7 @@
         "aln": { "$ref": "#/definitions/stats/aln" },
         "cov": { "$ref": "#/definitions/stats/cov" },
         "ins": { "$ref": "#/definitions/stats/ins" },
-        "rna": { "type": "object" },
+        "rna": { "$ref": "#/definitions/stats/rna" },
         "seq": { "type": "object" },
         "var": { "type": "object" }
       },
@@ -281,6 +281,30 @@
           "median_absolute_deviation": { "type": "number"},
           "median_insert_size": { "type": "number"},
           "min_insert_size": { "type": "integer"}
+        }
+      },
+      "rna": {
+        "type" : "object",
+        "additionalProperties": false,
+        "minProperties": 17,
+        "properties": {
+          "median_3prime_bias": { "type": "number" },
+          "median_5prime_bias": { "type": "number" },
+          "median_5prime_to_3prime_bias": { "type": "number" },
+          "median_cv_coverage": { "type": "number" },
+          "normalized_cov": { "type": "array", "items": { "type": "number" }},
+          "num_coding_bases": { "type": "integer" },
+          "num_intergenic_bases": { "type": "integer" },
+          "num_intronic_bases": { "type": "integer" },
+          "num_mrna_bases": { "type": "integer" },
+          "num_ribosomal_bases": { "type": "integer" },
+          "num_utr_bases": { "type": "integer" },
+          "pct_coding_bases": { "type": "number" },
+          "pct_intergenic_bases": { "type": "number" },
+          "pct_intronic_bases": { "type": "number" },
+          "pct_mrna_bases": { "type": "number" },
+          "pct_ribosomal_bases": { "type": "number" },
+          "pct_utr_bases": { "type": "number" }
         }
       }
     }
