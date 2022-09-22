@@ -207,7 +207,7 @@
         "ins": { "$ref": "#/definitions/stats/ins" },
         "rna": { "$ref": "#/definitions/stats/rna" },
         "seq": { "$ref": "#/definitions/stats/seq" },
-        "var": { "type": "object" }
+        "var": { "$ref": "#/definitions/stats/var" }
       },
       "aln": {
         "type": "object",
@@ -346,6 +346,59 @@
             "num_reads_r2": { "type": "integer" },
             "pct_gc_r1": { "type": "number" },
             "pct_gc_r2": { "type": "number" }
+          }
+        }
+      },
+      "var": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 7,
+        "properties": {
+          "coding_consequences": { "$ref": "#/definitions/stats/var/consequences" },
+          "num_deletions": { "type": "integer" },
+          "num_insertions":{ "type": "integer" },
+          "num_snvs": { "type": "integer" },
+          "per_chromosome": { "type": "object" },
+          "polyphen": { "$ref": "#/definitions/stats/var/polyphen" },
+          "sift": { "$ref": "#/definitions/stats/var/sift" }
+        },
+        "consequences": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 12,
+          "properties": {
+            "coding_sequence_variant": { "type": "integer" },
+            "frameshift_variant": { "type": "integer" },
+            "incomplete_terminal_codon_variant": { "type": "integer" },
+            "inframe_deletion": { "type": "integer" },
+            "inframe_insertion": { "type": "integer" },
+            "missense_variant": { "type": "integer" },
+            "protein_altering_variant": { "type": "integer" },
+            "start_lost": { "type": "integer" },
+            "stop_gained": { "type": "integer" },
+            "stop_lost": { "type": "integer" },
+            "stop_retained_variant": { "type": "integer" },
+            "synonymous_variant": { "type": "integer" }
+          }
+        },
+        "polyphen": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 4,
+          "properties": {
+            "num_benign_variants": { "type": "integer" },
+            "num_possibly_damaging_variants": { "type": "integer" },
+            "num_probably_damaging_variants": { "type": "integer" },
+            "num_unknown_variants": { "type": "integer" }
+          }
+        },
+        "sift": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 2,
+          "properties": {
+            "num_deleterious_variants": { "type": "integer" },
+            "num_tolerated_variants": { "type": "integer" }
           }
         }
       }
