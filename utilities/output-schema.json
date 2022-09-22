@@ -63,7 +63,7 @@
         "properties": {
           "intersected": { "type": "boolean" },
           "plots": { "$ref": "#/definitions/results/fusion/plot" },
-          "tables": { "type": "object" }
+          "tables": { "$ref": "#/definitions/results/fusion/tables" }
         },
         "plot": {
           "type": "object",
@@ -72,6 +72,41 @@
             "fusioncatcher": { "type": "string" },
             "intersection": { "type": "string" },
             "star-fusion": { "type": "string" }
+          }
+        },
+        "tables": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "fusioncatcher": { "$ref": "#/definitions/results/fusion/table" },
+            "intersection": { "$ref": "#/definitions/results/fusion/table" },
+            "star-fusion": { "$ref": "#/definitions/results/fusion/table" }
+          }
+        },
+        "table": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 2,
+          "properties": {
+            "path": { "type": "string" },
+            "top20": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/results/fusion/event" }
+            }
+          }
+        },
+        "event": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 4,
+          "properties": {
+            "jr_count": { "type": "string" },
+            "name": { "type": "string" },
+            "sf_count": { "type": "string"},
+            "type": {
+              "type": "string",
+              "enum": ["ONLY_REF_SPLICE", "INCL_NON_REF_SPLICE"]
+            }
           }
         }
       }
