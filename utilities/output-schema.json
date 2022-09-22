@@ -14,66 +14,35 @@
       "properties": {
         "genes_of_interest": {
           "type": "array",
-          "items": {
-            "$ref": "#/definitions/gene_of_interest"
-          }
+          "items": { "$ref": "#/definitions/gene_of_interest" }
         },
-        "pipeline_version": {
-          "type": "string"
-        },
-        "run_name": {
-          "type": "string"
-        },
-        "sample_name": {
-          "type": "string"
-        }
+        "pipeline_version": { "type": "string" },
+        "run_name": { "type": "string" },
+        "sample_name": { "type": "string" }
       }
     },
     "gene_of_interest": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "gene_id",
-        "gene_symbol",
-        "transcript_ids"
-      ],
+      "required": [ "gene_id", "gene_symbol", "transcript_ids" ],
       "properties": {
-        "gene_id": {
-          "type": "string"
-        },
-        "gene_symbol": {
-          "type": "string"
-        },
+        "gene_id": { "type": "string" },
+        "gene_symbol": { "type": "string" },
         "transcript_ids": {
           "type": "array",
-          "items": {
-            "type": "string"
-          }
+          "items": { "type": "string" }
         }
       }
     },
     "results": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "expr",
-        "fusion",
-        "itd",
-        "var"
-      ],
+      "required": [ "expr", "fusion", "itd", "var" ],
       "properties": {
-        "expr": {
-          "type": "array"
-        },
-        "fusion": {
-          "type": "object"
-        },
-        "itd": {
-          "type": "object"
-        },
-        "var": {
-          "type": "object"
-        }
+        "expr": { "type": "array" },
+        "fusion": { "type": "object" },
+        "itd": { "type": "object" },
+        "var": { "type": "object" }
       }
     }
   },
@@ -85,14 +54,8 @@
   ],
   "type": "object",
   "properties": {
-    "metadata": {
-      "$ref": "#/definitions/metadata"
-    },
-    "results": {
-      "$ref": "#definitions/results"
-    },
-    "stats": {
-      "type": "object"
-    }
+    "metadata": { "$ref": "#/definitions/metadata" },
+    "results": { "$ref": "#definitions/results" },
+    "stats": { "type": "object" }
   }
 }
