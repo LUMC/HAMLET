@@ -40,7 +40,7 @@
         },
         "fusion": { "$ref": "#/definitions/results/fusion" },
         "itd": { "$ref": "#/definitions/results/itd" },
-        "var": { "type": "object" }
+        "var": { "$ref": "#/definitions/results/var" }
       },
       "expression": {
         "type": "object",
@@ -147,6 +147,42 @@
             "td_starts": { "type": "string" }
           }
         }
+      },
+      "var": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 2,
+        "properties": {
+          "overview": { "$ref": "#/definitions/results/overview" },
+          "plots": { "type": "array" }
+        }
+      },
+      "overview": {
+        "type": "object",
+        "additionalProperties": { "$ref": "#/definitions/results/gene" }
+      },
+      "gene": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/results/variant" }
+      },
+      "variant": {
+        "type": "object",
+        "properties": {
+          "HGVSc": { "type": "string" },
+          "HGVSp": { "type": "string" },
+          "Existing_variation": { "type": "string" },
+          "FREQ": { "type": "string" },
+          "is_in_hotspot": { "type": "string" },
+          "PVAL": { "type": "string" }
+        },
+        "required": [
+          "HGVSc",
+          "HGVSp",
+          "Existing_variation",
+          "FREQ",
+          "is_in_hotspot",
+          "PVAL"
+        ]
       }
     }
   },
