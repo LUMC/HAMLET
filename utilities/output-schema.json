@@ -204,7 +204,7 @@
       "properties": {
         "aln": { "$ref": "#/definitions/stats/aln" },
         "cov": { "$ref": "#/definitions/stats/cov" },
-        "ins": { "type": "object" },
+        "ins": { "$ref": "#/definitions/stats/ins" },
         "rna": { "type": "object" },
         "seq": { "type": "object" },
         "var": { "type": "object" }
@@ -270,6 +270,17 @@
             "min": { "type": "integer" },
             "stdev": { "type": "number" }
           }
+        }
+      },
+      "ins": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 4,
+        "properties": {
+          "max_insert_size": { "type": "integer"},
+          "median_absolute_deviation": { "type": "number"},
+          "median_insert_size": { "type": "number"},
+          "min_insert_size": { "type": "integer"}
         }
       }
     }
