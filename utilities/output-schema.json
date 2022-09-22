@@ -14,23 +14,23 @@
       "properties": {
         "genes_of_interest": {
           "type": "array",
-          "items": { "$ref": "#/definitions/gene_of_interest" }
+          "items": { "$ref": "#/definitions/metadata/gene_of_interest" }
         },
         "pipeline_version": { "type": "string" },
         "run_name": { "type": "string" },
         "sample_name": { "type": "string" }
-      }
-    },
-    "gene_of_interest": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [ "gene_id", "gene_symbol", "transcript_ids" ],
-      "properties": {
-        "gene_id": { "type": "string" },
-        "gene_symbol": { "type": "string" },
-        "transcript_ids": {
-          "type": "array",
-          "items": { "type": "string" }
+      },
+      "gene_of_interest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [ "gene_id", "gene_symbol", "transcript_ids" ],
+        "properties": {
+          "gene_id": { "type": "string" },
+          "gene_symbol": { "type": "string" },
+          "transcript_ids": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
         }
       }
     },
