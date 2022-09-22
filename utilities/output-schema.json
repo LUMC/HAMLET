@@ -154,7 +154,10 @@
         "minProperties": 2,
         "properties": {
           "overview": { "$ref": "#/definitions/results/overview" },
-          "plots": { "type": "array" }
+          "plots": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/results/geneplot" }
+          }
         }
       },
       "overview": {
@@ -183,6 +186,15 @@
           "is_in_hotspot",
           "PVAL"
         ]
+      },
+      "geneplot": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 2,
+        "properties": {
+          "gene": { "type": "string" },
+          "path": { "type": "string" }
+        }
       }
     }
   },
