@@ -39,10 +39,35 @@
       "additionalProperties": false,
       "required": [ "expr", "fusion", "itd", "var" ],
       "properties": {
-        "expr": { "type": "array" },
+        "expr": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/results/expression" }
+        },
         "fusion": { "type": "object" },
         "itd": { "type": "object" },
         "var": { "type": "object" }
+      },
+      "expression": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "above_threshold",
+          "count",
+          "divisor_exp",
+          "divisor_gene",
+          "exon",
+          "ratio",
+          "sample_name"
+        ],
+        "properties": {
+          "above_threshold": { "type": "string" },
+          "count": { "type": "string" },
+          "divisor_exp": { "type": "string" },
+          "divisor_gene": { "type": "string" },
+          "exon": { "type": "string"},
+          "ratio": { "type": "string"},
+          "sample_name": { "type": "string" }
+        }
       }
     }
   },
