@@ -51,6 +51,30 @@
           }
         }
       }
+    },
+    "results": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expr",
+        "fusion",
+        "itd",
+        "var"
+      ],
+      "properties": {
+        "expr": {
+          "type": "array"
+        },
+        "fusion": {
+          "type": "object"
+        },
+        "itd": {
+          "type": "object"
+        },
+        "var": {
+          "type": "object"
+        }
+      }
     }
   },
   "additionalProperties": false,
@@ -65,7 +89,7 @@
       "$ref": "#/definitions/metadata"
     },
     "results": {
-      "type": "object"
+      "$ref": "#definitions/results"
     },
     "stats": {
       "type": "object"
