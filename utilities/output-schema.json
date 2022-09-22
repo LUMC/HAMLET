@@ -196,6 +196,39 @@
           "path": { "type": "string" }
         }
       }
+    },
+    "stats": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 6,
+      "properties": {
+        "aln": { "$ref": "#/definitions/stats/aln" },
+        "cov": { "type": "object" },
+        "ins": { "type": "object" },
+        "rna": { "type": "object" },
+        "seq": { "type": "object" },
+        "var": { "type": "object" }
+      },
+      "aln": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 13,
+        "properties": {
+          "num_aligned_bases": { "type": "integer" },
+          "num_aligned_reads": { "type": "integer" },
+          "num_aligned_reads_proper_pairs": { "type": "integer" },
+          "num_total_bases": { "type": "integer" },
+          "num_total_reads": { "type": "integer" },
+          "pct_adapter": { "type": "number" },
+          "pct_aligned_bases_from_total": { "type": "number" },
+          "pct_aligned_reads_from_total": { "type": "number" },
+          "pct_aligned_reads_proper_pairs": { "type": "number" },
+          "pct_chimeras": { "type": "number" },
+          "rate_indel": { "type": "number" },
+          "rate_mismatch": { "type": "number" },
+          "strand_balance": { "type": "number" }
+        }
+      }
     }
   },
   "additionalProperties": false,
@@ -203,7 +236,7 @@
   "type": "object",
   "properties": {
     "metadata": { "$ref": "#/definitions/metadata" },
-    "results": { "$ref": "#definitions/results" },
-    "stats": { "type": "object" }
+    "results": { "$ref": "#/definitions/results" },
+    "stats": { "$ref": "#/definitions/stats" }
   }
 }
