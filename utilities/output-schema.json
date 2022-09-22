@@ -203,7 +203,7 @@
       "minProperties": 6,
       "properties": {
         "aln": { "$ref": "#/definitions/stats/aln" },
-        "cov": { "type": "object" },
+        "cov": { "$ref": "#/definitions/stats/cov" },
         "ins": { "type": "object" },
         "rna": { "type": "object" },
         "seq": { "type": "object" },
@@ -227,6 +227,49 @@
           "rate_indel": { "type": "number" },
           "rate_mismatch": { "type": "number" },
           "strand_balance": { "type": "number" }
+        }
+      },
+      "cov": {
+        "type": "object",
+        "additionalProperties": { "$ref": "#/definitions/stats/cov/gene" },
+        "gene": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/stats/cov/transcript" },
+          "minProperties" : 1
+        },
+        "transcript": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/stats/cov/exon" },
+          "minItems": 1
+        },
+        "exon": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 4,
+          "properties": {
+            "chrom": { "type": "string" },
+            "end": { "type": "integer" },
+            "exon_num": { "type": "integer" },
+            "metrics": { "$ref": "#/definitions/stats/cov/exon_metrics" },
+            "start": { "type": "integer" }
+          }
+        },
+        "exon_metrics": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 7,
+          "properties": {
+            "avg": { "type": "number" },
+            "count": { "type": "integer" },
+            "frac_cov_at_least": {
+              "type": "object",
+              "additionalProperties": { "type": "number" }
+            },
+            "max": { "type": "integer" },
+            "median": { "type": "number" },
+            "min": { "type": "integer" },
+            "stdev": { "type": "number" }
+          }
         }
       }
     }
