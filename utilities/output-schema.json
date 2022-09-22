@@ -1,7 +1,32 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Schema of the output from the HAMLET pipeline",
-  "definitions": {},
+  "definitions": {
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "genes_of_interest",
+        "pipeline_version",
+        "run_name",
+        "sample_name"
+      ],
+      "properties": {
+        "genes_of_interest": {
+          "type": "array"
+        },
+        "pipeline_version": {
+          "type": "string"
+        },
+        "run_name": {
+          "type": "string"
+        },
+        "sample_name": {
+          "type": "string"
+        }
+      }
+    }
+  },
   "additionalProperties": false,
   "required": [
     "metadata",
@@ -11,7 +36,7 @@
   "type": "object",
   "properties": {
     "metadata": {
-      "type": "object"
+      "$ref": "#/definitions/metadata"
     },
     "results": {
       "type": "object"
