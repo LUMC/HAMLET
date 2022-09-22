@@ -206,7 +206,7 @@
         "cov": { "$ref": "#/definitions/stats/cov" },
         "ins": { "$ref": "#/definitions/stats/ins" },
         "rna": { "$ref": "#/definitions/stats/rna" },
-        "seq": { "type": "object" },
+        "seq": { "$ref": "#/definitions/stats/seq" },
         "var": { "type": "object" }
       },
       "aln": {
@@ -305,6 +305,48 @@
           "pct_mrna_bases": { "type": "number" },
           "pct_ribosomal_bases": { "type": "number" },
           "pct_utr_bases": { "type": "number" }
+        }
+      },
+      "seq": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 2,
+        "properties": {
+          "all_read_groups": { "$ref": "#/definitions/stats/seq/all_readgroups" },
+          "per_read_group": { "$ref": "#/definitions/stats/seq/per_readgroup" }
+        },
+        "all_readgroups": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 2,
+          "properties": {
+            "proc": { "$ref": "#/definitions/stats/seq/read_stats" },
+            "raw": { "$ref": "#/definitions/stats/seq/read_stats" }
+          }
+        },
+        "per_readgroup": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 3,
+            "properties": {
+              "name": { "type": "string" },
+              "proc": { "$ref": "#/definitions/stats/seq/read_stats" },
+              "raw": { "$ref": "#/definitions/stats/seq/read_stats" }
+            }
+          }
+        },
+        "read_stats": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["num_reads_r1", "num_reads_r2"],
+          "properties": {
+            "num_reads_r1": { "type": "integer" },
+            "num_reads_r2": { "type": "integer" },
+            "pct_gc_r1": { "type": "number" },
+            "pct_gc_r2": { "type": "number" }
+          }
         }
       }
     }
