@@ -259,8 +259,8 @@ def add_fusion_results(fusion_results_dir):
                 if lineno == 0:
                     continue
                 name, jr_count, sf_count, fusion_type, *_ = line.split("\t")
-                sft.append({"name": name, "jr_count": jr_count,
-                            "sf_count": sf_count, "type": fusion_type,})
+                sft.append({"name": name, "jr_count": int(jr_count),
+                            "sf_count": int(sf_count), "type": fusion_type,})
                 if lineno > 20:
                     break
         return sft

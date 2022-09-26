@@ -99,9 +99,9 @@
           "additionalProperties": false,
           "minProperties": 4,
           "properties": {
-            "jr_count": { "type": "string" },
+            "jr_count": { "type": "integer" },
             "name": { "type": "string" },
-            "sf_count": { "type": "string"},
+            "sf_count": { "type": "integer"},
             "type": {
               "type": "string",
               "enum": ["ONLY_REF_SPLICE", "INCL_NON_REF_SPLICE"]
