@@ -291,7 +291,14 @@ def add_expr_results(exon_ratios_path):
     with open(exon_ratios_path, "r") as src:
         header_cols = next(src).strip().split("\t")
         for line in (l.strip() for l in src):
-            rv.append(dict(zip(header_cols, line.split("\t"))))
+            d = dict(zip(header_cols, line.split("\t")))
+            # Update types
+            d["count"] = int(d["count"])
+            d["divisor_exp"] = int(d["divisor_exp"])
+            d["ratio" ] = float(d["ratio"])
+            d["above_threshold"] = d["above_threshold"] == "yes"
+            del d["sample_name"]
+            rv.append(d)
     return rv
 
 

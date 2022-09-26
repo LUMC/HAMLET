@@ -45,15 +45,14 @@
       "expression": {
         "type": "object",
         "additionalProperties": false,
-        "minProperties": 7,
+        "minProperties": 6,
         "properties": {
-          "above_threshold": { "type": "string" },
-          "count": { "type": "string" },
-          "divisor_exp": { "type": "string" },
+          "above_threshold": { "type": "boolean" },
+          "count": { "type": "integer" },
+          "divisor_exp": { "type": "integer" },
           "divisor_gene": { "type": "string" },
           "exon": { "type": "string"},
-          "ratio": { "type": "string"},
-          "sample_name": { "type": "string" }
+          "ratio": { "type": "number"}
         }
       },
       "fusion": {
