@@ -377,6 +377,7 @@
             "stop_gained": { "type": "integer" },
             "stop_lost": { "type": "integer" },
             "stop_retained_variant": { "type": "integer" },
+            "start_retained_variant": { "type": "integer" },
             "synonymous_variant": { "type": "integer" }
           }
         },
