@@ -169,22 +169,16 @@
       },
       "variant": {
         "type": "object",
+        "additionalProperties": false,
+        "minProperties": 6,
         "properties": {
           "HGVSc": { "type": "string" },
           "HGVSp": { "type": "string" },
-          "Existing_variation": { "type": "string" },
-          "FREQ": { "type": "string" },
-          "is_in_hotspot": { "type": "string" },
-          "PVAL": { "type": "string" }
-        },
-        "required": [
-          "HGVSc",
-          "HGVSp",
-          "Existing_variation",
-          "FREQ",
-          "is_in_hotspot",
-          "PVAL"
-        ]
+          "Existing_variation": { "type": "array", "items": { "type": "string" }},
+          "FREQ": { "type": "number" },
+          "is_in_hotspot": { "type": "boolean" },
+          "PVAL": { "type": "number" }
+        }
       },
       "geneplot": {
         "type": "object",

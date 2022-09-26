@@ -232,7 +232,22 @@ def add_variant_overview(idm, fn_csv):
                 continue
             if gs not in rv:
                 rv[gs] = []
-            rv[gs].append({k: v for k, v in row.items()})
+
+            # Fields to include in the variant overview
+            report_fields = {
+                "HGVSc", "HGVSp", "Existing_variation", "FREQ",
+                "is_in_hotspot", "PVAL"
+            }
+            # Extract relevant fields
+            d = {k: v for k, v in row.items() if k in report_fields}
+
+            # Update field types
+            d["FREQ"] = float(d["FREQ"][:-1]) # Cut off %
+            d["is_in_hotspot"] = d["is_in_hotspot"] == "yes"
+            d["Existing_variation"] = d["Existing_variation"].split(",")
+            d["PVAL"] = float(d["PVAL"])
+
+            rv[gs].append(d)
 
     return rv
 
