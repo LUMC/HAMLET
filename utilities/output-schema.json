@@ -365,7 +365,6 @@
         "consequences": {
           "type": "object",
           "additionalProperties": false,
-          "minProperties": 12,
           "properties": {
             "coding_sequence_variant": { "type": "integer" },
             "frameshift_variant": { "type": "integer" },
