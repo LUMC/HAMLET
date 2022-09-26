@@ -239,13 +239,19 @@ def add_variant_overview(idm, fn_csv):
                 "is_in_hotspot", "PVAL"
             }
             # Extract relevant fields
-            d = {k: v for k, v in row.items() if k in report_fields}
+            d = {k: v for k, v in row.items() if k in report_fields }
+
+            # Replace NA values with an empty string
+            d = {k: v if v != "NA" else "" for k, v in d.items()}
 
             # Update field types
             d["FREQ"] = float(d["FREQ"][:-1]) # Cut off %
             d["is_in_hotspot"] = d["is_in_hotspot"] == "yes"
-            d["Existing_variation"] = d["Existing_variation"].split(",")
             d["PVAL"] = float(d["PVAL"])
+            if not d["Existing_variation"]:
+                d["Existing_variation"] = list()
+            else:
+                d["Existing_variation"] = d["Existing_variation"].split(",")
 
             rv[gs].append(d)
 
