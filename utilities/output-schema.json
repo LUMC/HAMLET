@@ -134,16 +134,16 @@
           "additionalProperties": false,
           "minProperties": 10,
           "properties": {
-            "boundary_type": { "type": "string" },
-            "fuzziness": { "type": "string" },
-            "rose_end_anchor_pos": { "type": "string" },
-            "rose_end_count": { "type": "string" },
-            "rose_end_pos": { "type": "string" },
-            "rose_start_anchor_pos": { "type": "string" },
-            "rose_start_count": { "type": "string" },
-            "rose_start_pos": { "type": "string" },
-            "td_ends": { "type": "string" },
-            "td_starts": { "type": "string" }
+            "boundary_type": { "type": "string", "enum": ["fuzzy", "fuzzy-start", "fuzzy-end"] },
+            "fuzziness": { "type": "integer" },
+            "rose_end_anchor_pos": { "type": "integer" },
+            "rose_end_count": { "type": "integer" },
+            "rose_end_pos": { "type": "integer" },
+            "rose_start_anchor_pos": { "type": "integer" },
+            "rose_start_count": { "type": "integer" },
+            "rose_start_pos": { "type": "integer" },
+            "td_ends": { "type": "array", "items": { "type": "integer" } },
+            "td_starts": { "type": "array", "items": { "type": "integer" } }
           }
         }
       },

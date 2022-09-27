@@ -1,0 +1,7 @@
+# Test the full json schema
+- name: test-full-schema
+  tags:
+    - sanity
+    - schema
+  command: >
+    jsonschema -i test/data/json/full.json utilities/output-schema.json

@@ -1,0 +1,284 @@
+{
+  "metadata": {
+    "genes_of_interest": [
+      {
+        "gene_id": "ENSG00000228253",
+        "gene_symbol": "MT-ATP8",
+        "transcript_ids": [
+          "ENST00000361851"
+        ]
+      },
+      {
+        "gene_id": "ENSG00000198899",
+        "gene_symbol": "MT-ATP6",
+        "transcript_ids": [
+          "ENST00000361899"
+        ]
+      }
+    ],
+    "pipeline_version": "v1.0.2-dev-1",
+    "run_name": "hamlet-46fe6258",
+    "sample_name": "SRR8615409"
+  },
+  "results": {
+    "expr": [
+      {
+        "above_threshold": true,
+        "count": 219,
+        "divisor_exp": 0,
+        "divisor_gene": "HMBS",
+        "exon": "MT-TA:5586-5655",
+        "ratio": 1.7976931348623157e+308
+      }
+    ],
+    "fusion": {
+      "intersected": false,
+      "plots": {
+        "star-fusion": "/path/to/SRR8615409.star-fusion-circos/fsnviz.png"
+      },
+      "tables": {
+        "star-fusion": {
+          "path": "/path/to/SRR8615409.star-fusion",
+          "top20": []
+        }
+      }
+    },
+    "itd": {
+      "flt3": {
+        "path": "/path/to/SRR8615409.flt3.png",
+        "table": [
+          {
+            "boundary_type": "fuzzy",
+            "fuzziness": 1,
+            "rose_end_anchor_pos": 1853,
+            "rose_end_count": 126,
+            "rose_end_pos": 1910,
+            "rose_start_anchor_pos": 1908,
+            "rose_start_count": 196,
+            "rose_start_pos": 1851,
+            "td_ends": [
+              1908,
+              1909
+            ],
+            "td_starts": [
+              1852,
+              1853
+            ]
+          },
+          {
+            "boundary_type": "fuzzy-start",
+            "fuzziness": 3,
+            "rose_end_anchor_pos": 1853,
+            "rose_end_count": 126,
+            "rose_end_pos": 1910,
+            "rose_start_anchor_pos": 1909,
+            "rose_start_count": 3,
+            "rose_start_pos": 1855,
+            "td_ends": [
+              1909
+            ],
+            "td_starts": [
+              1853,
+              1856
+            ]
+          },
+          {
+            "boundary_type": "fuzzy-end",
+            "fuzziness": 3,
+            "rose_end_anchor_pos": 1853,
+            "rose_end_count": 126,
+            "rose_end_pos": 1910,
+            "rose_start_anchor_pos": 1909,
+            "rose_start_count": 3,
+            "rose_start_pos": 1855,
+            "td_ends": [
+              1909
+            ],
+            "td_starts": [
+              1853,
+              1856
+            ]
+          }
+        ]
+      },
+      "kmt2a": {
+        "path": "/path/to/SRR8615409.kmt2a.png",
+        "table": []
+      }
+    },
+    "var": {
+      "overview": {
+        "MT-ATP6": [
+          {
+            "Existing_variation": [],
+            "FREQ": 100,
+            "HGVSc": "",
+            "HGVSp": "",
+            "PVAL": 3.101e-14,
+            "is_in_hotspot": true
+          },
+          {
+            "Existing_variation": [],
+            "FREQ": 97.56,
+            "HGVSc": "",
+            "HGVSp": "",
+            "PVAL": 9.8874e-23,
+            "is_in_hotspot": true
+          },
+          {
+            "Existing_variation": [],
+            "FREQ": 100,
+            "HGVSc": "",
+            "HGVSp": "",
+            "PVAL": 3.698e-07,
+            "is_in_hotspot": true
+          }
+        ]
+      },
+      "plots": []
+    }
+  },
+  "stats": {
+    "aln": {
+      "num_aligned_bases": 511716,
+      "num_aligned_reads": 5426,
+      "num_aligned_reads_proper_pairs": 5370,
+      "num_total_bases": 515611,
+      "num_total_reads": 5454,
+      "pct_adapter": 0.0011,
+      "pct_aligned_bases_from_total": 99.24458554995917,
+      "pct_aligned_reads_from_total": 99.48661532819949,
+      "pct_aligned_reads_proper_pairs": 98.96793217840029,
+      "pct_chimeras": 0.00387,
+      "rate_indel": 7.2e-05,
+      "rate_mismatch": 0.005409,
+      "strand_balance": 0.499079
+    },
+    "cov": {
+      "MT-ATP6": {
+        "ENST00000361899": [
+          {
+            "chrom": "chrM",
+            "end": 9207,
+            "exon_num": 1,
+            "metrics": {
+              "avg": 46.04405286343612,
+              "count": 681,
+              "frac_cov_at_least": {
+                "10x": 1,
+                "20x": 0.9412628487518355
+              },
+              "max": 78,
+              "median": 48,
+              "min": 13,
+              "stdev": 15.510559894988475
+            },
+            "start": 8526
+          }
+        ]
+      },
+      "MT-ATP8": {
+        "ENST00000361851": [
+          {
+            "chrom": "chrM",
+            "end": 8572,
+            "exon_num": 1,
+            "metrics": {
+              "avg": 77.89371980676329,
+              "count": 207,
+              "frac_cov_at_least": {
+                "10x": 0.9420289855072463,
+                "20x": 0.8985507246376812
+              },
+              "max": 148,
+              "median": 71,
+              "min": 1,
+              "stdev": 45.5685582837227
+            },
+            "start": 8365
+          }
+        ]
+      }
+    },
+    "ins": {
+      "max_insert_size": 912,
+      "median_absolute_deviation": 49.5,
+      "median_insert_size": 176.5,
+      "min_insert_size": 41
+    },
+    "rna": {
+      "median_3prime_bias": 0.427261,
+      "median_5prime_bias": 0.902478,
+      "median_5prime_to_3prime_bias": 1.742359,
+      "median_cv_coverage": 0.435617,
+      "normalized_cov": [
+        0.315171,
+        0.704388,
+        0.263097
+      ],
+      "num_coding_bases": 453664,
+      "num_intergenic_bases": 3628,
+      "num_intronic_bases": 0,
+      "num_mrna_bases": 508460,
+      "num_ribosomal_bases": 399,
+      "num_utr_bases": 54796,
+      "pct_coding_bases": 0.885221,
+      "pct_intergenic_bases": 0.007079,
+      "pct_intronic_bases": 0,
+      "pct_mrna_bases": 0.992142,
+      "pct_ribosomal_bases": 0.07785563341118897,
+      "pct_utr_bases": 0.106922
+    },
+    "seq": {
+      "all_read_groups": {
+        "proc": {
+          "num_reads_r1": 2727,
+          "num_reads_r2": 2727
+        },
+        "raw": {
+          "num_reads_r1": 2727,
+          "num_reads_r2": 2727
+        }
+      },
+      "per_read_group": [
+        {
+          "name": "rg_1",
+          "proc": {
+            "num_reads_r1": 2727,
+            "num_reads_r2": 2727,
+            "pct_gc_r1": 45,
+            "pct_gc_r2": 45
+          },
+          "raw": {
+            "num_reads_r1": 2727,
+            "num_reads_r2": 2727,
+            "pct_gc_r1": 45,
+            "pct_gc_r2": 45
+          }
+        }
+      ]
+    },
+    "var": {
+      "coding_consequences": {
+        "missense_variant": 11,
+        "synonymous_variant": 36
+      },
+      "num_deletions": 1,
+      "num_insertions": 0,
+      "num_snvs": 52,
+      "per_chromosome": {
+        "MT": 53
+      },
+      "polyphen": {
+        "num_benign_variants": 11,
+        "num_possibly_damaging_variants": 0,
+        "num_probably_damaging_variants": 0,
+        "num_unknown_variants": 0
+      },
+      "sift": {
+        "num_deleterious_variants": 0,
+        "num_tolerated_variants": 4
+      }
+    }
+  }
+}
