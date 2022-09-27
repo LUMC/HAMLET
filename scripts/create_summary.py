@@ -313,6 +313,11 @@ def add_expr_results(exon_ratios_path):
         header_cols = next(src).strip().split("\t")
         for line in (l.strip() for l in src):
             d = dict(zip(header_cols, line.split("\t")))
+
+            # If there is no ratio, set it to zero
+            if d["ratio"] == "":
+                d["ratio"] = 0
+
             # Update types
             d["count"] = int(d["count"])
             d["divisor_exp"] = int(d["divisor_exp"])
