@@ -333,7 +333,24 @@ def add_itd_table(csv_fname):
     with open(csv_fname, "r") as src:
         header_cols = next(src).strip().split("\t")
         for line in (l.strip() for l in src):
-            rv.append(dict(zip(header_cols, line.split("\t"))))
+            d = dict(zip(header_cols, line.split("\t")))
+
+            # Integer fields
+            int_fields = [
+                "fuzziness", "rose_end_anchor_pos", "rose_end_count",
+                "rose_end_pos", "rose_start_anchor_pos", "rose_start_count",
+                "rose_start_pos"
+            ]
+
+            # Convert values to int
+            for field in int_fields:
+                d[field] = int(d[field])
+
+            # Convert to list of ints
+            d["td_ends"] = [int(x) for x in d["td_ends"].split(",")]
+            d["td_starts"] = [int(x) for x in d["td_starts"].split(",")]
+
+            rv.append(d)
     return rv
 
 
