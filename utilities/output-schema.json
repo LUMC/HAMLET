@@ -155,41 +155,41 @@
         "additionalProperties": false,
         "minProperties": 2,
         "properties": {
-          "overview": { "$ref": "#/definitions/modules/overview" },
+          "overview": { "$ref": "#/definitions/modules/var/overview" },
           "plots": {
             "type": "array",
-            "items": { "$ref": "#/definitions/modules/geneplot" }
+            "items": { "$ref": "#/definitions/modules/var/geneplot" }
           }
-        }
-      },
-      "overview": {
-        "type": "object",
-        "additionalProperties": { "$ref": "#/definitions/modules/gene" }
-      },
-      "gene": {
-        "type": "array",
-        "items": { "$ref": "#/definitions/modules/variant" }
-      },
-      "variant": {
-        "type": "object",
-        "additionalProperties": false,
-        "minProperties": 6,
-        "properties": {
-          "HGVSc": { "type": "string" },
-          "HGVSp": { "type": "string" },
-          "Existing_variation": { "type": "array", "items": { "type": "string" }},
-          "FREQ": { "type": "number" },
-          "is_in_hotspot": { "type": "boolean" },
-          "PVAL": { "type": "number" }
-        }
-      },
-      "geneplot": {
-        "type": "object",
-        "additionalProperties": false,
-        "minProperties": 2,
-        "properties": {
-          "gene": { "type": "string" },
-          "path": { "type": "string" }
+        },
+        "overview": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/modules/var/gene" }
+        },
+        "gene": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/modules/var/variant" }
+        },
+        "variant": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 6,
+          "properties": {
+            "HGVSc": { "type": "string" },
+            "HGVSp": { "type": "string" },
+            "Existing_variation": { "type": "array", "items": { "type": "string" }},
+            "FREQ": { "type": "number" },
+            "is_in_hotspot": { "type": "boolean" },
+            "PVAL": { "type": "number" }
+          }
+        },
+        "geneplot": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 2,
+          "properties": {
+            "gene": { "type": "string" },
+            "path": { "type": "string" }
+          }
         }
       }
     },
