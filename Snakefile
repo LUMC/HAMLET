@@ -83,16 +83,16 @@ use rule * from itd as itd_*
 # Connect the align_kmt2a rule to the output of qc-seq
 use rule align_kmt2a from itd as itd_align_kmt2a with:
     input:
-        fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
-        fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
+        fq1=qc_seq.module_output.forward,
+        fq2=qc_seq.module_output.reverse,
         fasta=config["kmt2a_fasta"],
 
 
 # Connect the align_flt3 rule to the output of qc-seq
 use rule align_flt3 from itd as itd_align_flt3 with:
     input:
-        fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
-        fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
+        fq1=qc_seq.module_output.forward,
+        fq2=qc_seq.module_output.reverse,
         fasta=config["flt3_fasta"],
 
 
@@ -109,8 +109,8 @@ use rule * from align as align_*
 # Connect the align rule to the output of qc-seq
 use rule align_vars from align as align_align_vars with:
     input:
-        fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
-        fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
+        fq1=qc_seq.module_output.forward,
+        fq2=qc_seq.module_output.reverse,
         index=config.get("genome_gmap_index") or "gmap_index/reference",
 
 
@@ -155,8 +155,8 @@ use rule * from fusion as fusion_*
 # Connect the star_fusion rule to the output of qc-seq
 use rule star_fusion from fusion as fusion_star_fusion with:
     input:
-        fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
-        fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
+        fq1=qc_seq.module_output.forward,
+        fq2=qc_seq.module_output.reverse,
         lib=config["genome_star_fusion_lib"],
     container:
         "docker://quay.io/biocontainers/star-fusion:1.10.0--hdfd78af_1"
@@ -165,8 +165,8 @@ use rule star_fusion from fusion as fusion_star_fusion with:
 # Connect the fusioncather rule to the output of qc-seq
 use rule fusioncatcher from fusion as fusion_fusioncatcher with:
     input:
-        fq1=rules.qc_seq_merge_fastqs_r1.output.merged,
-        fq2=rules.qc_seq_merge_fastqs_r2.output.merged,
+        fq1=qc_seq.module_output.forward,
+        fq2=qc_seq.module_output.reverse,
     container:
         "docker://quay.io/biocontainers/fusioncatcher:1.20--2"
 
