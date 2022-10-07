@@ -40,7 +40,7 @@
         },
         "fusion": { "$ref": "#/definitions/modules/fusion" },
         "itd": { "$ref": "#/definitions/modules/itd" },
-        "var": { "$ref": "#/definitions/modules/var" }
+        "snv_indels": { "$ref": "#/definitions/modules/snv_indels" }
       },
       "expression": {
         "type": "object",
@@ -150,24 +150,24 @@
           }
         }
       },
-      "var": {
+      "snv_indels": {
         "type": "object",
         "additionalProperties": false,
         "minProperties": 2,
         "properties": {
-          "overview": { "$ref": "#/definitions/modules/var/overview" },
+          "genes": { "$ref": "#/definitions/modules/snv_indels/genes" },
           "plots": {
             "type": "array",
-            "items": { "$ref": "#/definitions/modules/var/geneplot" }
+            "items": { "$ref": "#/definitions/modules/snv_indels/geneplot" }
           }
         },
-        "overview": {
+        "genes": {
           "type": "object",
-          "additionalProperties": { "$ref": "#/definitions/modules/var/gene" }
+          "additionalProperties": { "$ref": "#/definitions/modules/snv_indels/gene" }
         },
         "gene": {
           "type": "array",
-          "items": { "$ref": "#/definitions/modules/var/variant" }
+          "items": { "$ref": "#/definitions/modules/snv_indels/variant" }
         },
         "variant": {
           "type": "object",

@@ -413,13 +413,13 @@ def main(id_mappings_path, var_plot_dir, var_csv, fusion_results_dir,
             "var": process_var_stats(vep_stats_path),
         },
         "modules": {
-            "var": {"plots": [], "overview": {}},
+            "snv_indels": {"plots": [], "genes": {}},
             "fusion": {},
         },
     }
-    combined["modules"]["var"]["plots"].extend(
+    combined["modules"]["snv_indels"]["plots"].extend(
         add_variant_plots(idm, var_plot_dir))
-    combined["modules"]["var"]["overview"] = add_variant_overview(
+    combined["modules"]["snv_indels"]["genes"] = add_variant_overview(
         idm, var_csv)
     combined["modules"]["fusion"] = add_fusion_results(fusion_results_dir)
     combined["modules"]["itd"] = {

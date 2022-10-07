@@ -16,12 +16,12 @@
       </tr>
     </thead>
     <tbody>
-      {% for gene in modules.var.overview %}
+      {% for gene in modules.snv_indels.genes%}
       {% set outer_loop = loop %}
-      {% for item in modules.var.overview[gene] %}
+      {% for item in modules.snv_indels.genes[gene] %}
       <tr>
         {% if loop.index == 1 %}
-        <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %} rowspan="{{ modules.var.overview[gene]|length }}" class="hl">{{ gene }}</td>
+        <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %} rowspan="{{ modules.snv_indels.genes[gene]|length }}" class="hl">{{ gene }}</td>
         {% endif %}
         <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ item.HGVSc }} {{ item.HGVSp }}</td>
         <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}><small>{{ item.Existing_variation|join(", ") }}</small></td>

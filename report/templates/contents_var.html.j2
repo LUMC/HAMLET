@@ -39,7 +39,7 @@
 
 {% set vars = {'figure_idx': 1, 'table_idx': 14} %}
 
-{% for plot in modules.var.plots | sort(attribute='gene')%}
+{% for plot in modules.snv_indels.plots | sort(attribute='gene')%}
 <div class="keep-together">
   <h2 style="margin-bottom: -.5em;">{{ plot.gene }} variants</h2>
   <figure>

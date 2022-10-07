@@ -106,8 +106,8 @@
         "table": []
       }
     },
-    "var": {
-      "overview": {
+    "snv_indels": {
+      "genes": {
         "MT-ATP6": [
           {
             "Existing_variation": [],
