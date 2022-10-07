@@ -85,13 +85,13 @@ def get_readgroup_per_sample():
             yield readgroup, sample
 
 
-## Functions for module outputs ##
 def get_sample_stats(wildcards):
     """Get the stat files for every readgroup in wildcards.sample"""
     sample = wildcards.sample
     return [f"{sample}/qc-seq/{rg}/stats.json" for rg in get_readgroups(sample)]
 
 
+## Functions for module outputs ##
 def get_forward_output(wildcards):
     return get_output(wildcards, "R1")
 
