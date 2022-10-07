@@ -127,7 +127,7 @@ use rule * from expression as expression_*
 # Connect the idsort rule to the output of snv-indels
 use rule idsort_aln from expression as expression_idsort_aln with:
     input:
-        bam=rules.align_reorder_aln_header.output.bam,
+        bam=align.module_output.bam,
     container:
         "docker://quay.io/biocontainers/picard:2.20.5--0"
 
@@ -135,7 +135,7 @@ use rule idsort_aln from expression as expression_idsort_aln with:
 # Connect the count_raw_bases rule to the output of snv-indels
 use rule count_raw_bases from expression as expression_count_raw_bases with:
     input:
-        bam=rules.align_reorder_aln_header.output.bam,
+        bam=align.module_output.bam,
         bed=config["expression_bed"],
         count_script=config["base_count_script"],
     container:
