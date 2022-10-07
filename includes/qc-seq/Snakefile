@@ -49,9 +49,12 @@ rule all:
             "{sample}/qc-seq/{sample}.seq_stats.json",
             sample=samples,
         ),
-        merged_fastqs=expand(
-            "{sample}/{sample}-{pair}.fq.gz", sample=samples, pair=("R1", "R2")
-        ),
+        merged_forward=[
+            module_output.forward(SimpleNamespace(sample=sample)) for sample in samples
+        ],
+        merged_reverse=[
+            module_output.reverse(SimpleNamespace(sample=sample)) for sample in samples
+        ],
         merged_raw=expand(
             "{sample}/{sample}-{pair}.raw.fq.gz", sample=samples, pair=("R1", "R2")
         ),

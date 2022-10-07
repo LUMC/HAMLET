@@ -1,4 +1,5 @@
 from os import path
+from types import SimpleNamespace
 
 containers = {
     "crimson": "docker://quay.io/biocontainers/crimson:0.3.0--py27_1",
@@ -84,7 +85,23 @@ def get_readgroup_per_sample():
             yield readgroup, sample
 
 
+## Functions for module outputs ##
 def get_sample_stats(wildcards):
     """Get the stat files for every readgroup in wildcards.sample"""
     sample = wildcards.sample
     return [f"{sample}/qc-seq/{rg}/stats.json" for rg in get_readgroups(sample)]
+
+
+def get_forward_output(wildcards):
+    return get_output(wildcards, "R1")
+
+
+def get_reverse_output(wildcards):
+    return get_output(wildcards, "R2")
+
+
+def get_output(wildcards, pair):
+    return f"{wildcards.sample}/{wildcards.sample}-{pair}.fq.gz"
+
+
+module_output = SimpleNamespace(forward=get_forward_output, reverse=get_reverse_output)
