@@ -32,7 +32,7 @@
     "modules": {
       "type": "object",
       "additionalProperties": false,
-      "minProperties": 4,
+      "minProperties": 5,
       "properties": {
         "expr": {
           "type": "array",
@@ -40,7 +40,8 @@
         },
         "fusion": { "$ref": "#/definitions/modules/fusion" },
         "itd": { "$ref": "#/definitions/modules/itd" },
-        "snv_indels": { "$ref": "#/definitions/modules/snv_indels" }
+        "snv_indels": { "$ref": "#/definitions/modules/snv_indels" },
+        "qc_seq": { "$ref": "#/definitions/modules/qc_seq" }
       },
       "expression": {
         "type": "object",
@@ -195,13 +196,12 @@
         "stats": {
           "type": "object",
           "additionalProperties": false,
-          "minProperties": 6,
+          "minProperties": 5,
           "properties": {
             "aln": { "$ref": "#/definitions/modules/snv_indels/stats/aln" },
             "cov": { "$ref": "#/definitions/modules/snv_indels/stats/cov" },
             "ins": { "$ref": "#/definitions/modules/snv_indels/stats/ins" },
             "rna": { "$ref": "#/definitions/modules/snv_indels/stats/rna" },
-            "seq": { "$ref": "#/definitions/modules/snv_indels/stats/seq" },
             "var": { "$ref": "#/definitions/modules/snv_indels/stats/var" }
           },
           "aln": {
@@ -226,15 +226,15 @@
           },
           "cov": {
             "type": "object",
-            "additionalProperties": { "$ref": "#/definitions/stats/cov/gene" },
+            "additionalProperties": { "$ref": "#/definitions/modules/snv_indels/stats/cov/gene" },
             "gene": {
               "type": "object",
-              "additionalProperties": { "$ref": "#/definitions/stats/cov/transcript" },
+              "additionalProperties": { "$ref": "#/definitions/modules/snv_indels/stats/cov/transcript" },
               "minProperties" : 1
             },
             "transcript": {
               "type": "array",
-              "items": { "$ref": "#/definitions/stats/cov/exon" },
+              "items": { "$ref": "#/definitions/modules/snv_indels/stats/cov/exon" },
               "minItems": 1
             },
             "exon": {
@@ -245,7 +245,7 @@
                 "chrom": { "type": "string" },
                 "end": { "type": "integer" },
                 "exon_num": { "type": "integer" },
-                "metrics": { "$ref": "#/definitions/stats/cov/exon_metrics" },
+                "metrics": { "$ref": "#/definitions/modules/snv_indels/stats/cov/exon_metrics" },
                 "start": { "type": "integer" }
               }
             },
@@ -302,60 +302,18 @@
               "pct_utr_bases": { "type": "number" }
             }
           },
-          "seq": {
-            "type": "object",
-            "additionalProperties": false,
-            "minProperties": 2,
-            "properties": {
-              "all_read_groups": { "$ref": "#/definitions/stats/seq/all_readgroups" },
-              "per_read_group": { "$ref": "#/definitions/stats/seq/per_readgroup" }
-            },
-            "all_readgroups": {
-              "type": "object",
-              "additionalProperties": false,
-              "minProperties": 2,
-              "properties": {
-                "proc": { "$ref": "#/definitions/stats/seq/read_stats" },
-                "raw": { "$ref": "#/definitions/stats/seq/read_stats" }
-              }
-            },
-            "per_readgroup": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "minProperties": 3,
-                "properties": {
-                  "name": { "type": "string" },
-                  "proc": { "$ref": "#/definitions/stats/seq/read_stats" },
-                  "raw": { "$ref": "#/definitions/stats/seq/read_stats" }
-                }
-              }
-            },
-            "read_stats": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": ["num_reads_r1", "num_reads_r2"],
-              "properties": {
-                "num_reads_r1": { "type": "integer" },
-                "num_reads_r2": { "type": "integer" },
-                "pct_gc_r1": { "type": "number" },
-                "pct_gc_r2": { "type": "number" }
-              }
-            }
-          },
           "var": {
             "type": "object",
             "additionalProperties": false,
             "minProperties": 7,
             "properties": {
-              "coding_consequences": { "$ref": "#/definitions/stats/var/consequences" },
+              "coding_consequences": { "$ref": "#/definitions/modules/snv_indels/stats/var/consequences" },
               "num_deletions": { "type": "integer" },
               "num_insertions":{ "type": "integer" },
               "num_snvs": { "type": "integer" },
               "per_chromosome": { "type": "object" },
-              "polyphen": { "$ref": "#/definitions/stats/var/polyphen" },
-              "sift": { "$ref": "#/definitions/stats/var/sift" }
+              "polyphen": { "$ref": "#/definitions/modules/snv_indels/stats/var/polyphen" },
+              "sift": { "$ref": "#/definitions/modules/snv_indels/stats/var/sift" }
             },
             "consequences": {
               "type": "object",
@@ -396,6 +354,48 @@
                 "num_tolerated_variants": { "type": "integer" }
               }
             }
+          }
+        }
+      },
+      "qc_seq": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 2,
+        "properties": {
+          "all_read_groups": { "$ref": "#/definitions/modules/qc_seq/all_readgroups" },
+          "per_read_group": { "$ref": "#/definitions/modules/qc_seq/per_readgroup" }
+        },
+        "all_readgroups": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 2,
+          "properties": {
+            "proc": { "$ref": "#/definitions/modules/qc_seq/read_stats" },
+            "raw": { "$ref": "#/definitions/modules/qc_seq/read_stats" }
+          }
+        },
+        "per_readgroup": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 3,
+            "properties": {
+              "name": { "type": "string" },
+              "proc": { "$ref": "#/definitions/modules/qc_seq/read_stats" },
+              "raw": { "$ref": "#/definitions/modules/qc_seq/read_stats" }
+            }
+          }
+        },
+        "read_stats": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["num_reads_r1", "num_reads_r2"],
+          "properties": {
+            "num_reads_r1": { "type": "integer" },
+            "num_reads_r2": { "type": "integer" },
+            "pct_gc_r1": { "type": "number" },
+            "pct_gc_r2": { "type": "number" }
           }
         }
       }

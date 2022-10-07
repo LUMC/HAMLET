@@ -227,35 +227,6 @@
           "pct_ribosomal_bases": 0.07785563341118897,
           "pct_utr_bases": 0.106922
         },
-        "seq": {
-          "all_read_groups": {
-            "proc": {
-              "num_reads_r1": 2727,
-              "num_reads_r2": 2727
-            },
-            "raw": {
-              "num_reads_r1": 2727,
-              "num_reads_r2": 2727
-            }
-          },
-          "per_read_group": [
-            {
-              "name": "rg_1",
-              "proc": {
-                "num_reads_r1": 2727,
-                "num_reads_r2": 2727,
-                "pct_gc_r1": 45,
-                "pct_gc_r2": 45
-              },
-              "raw": {
-                "num_reads_r1": 2727,
-                "num_reads_r2": 2727,
-                "pct_gc_r1": 45,
-                "pct_gc_r2": 45
-              }
-            }
-          ]
-        },
         "var": {
           "coding_consequences": {
             "missense_variant": 11,
@@ -279,7 +250,35 @@
           }
         }
       }
+    },
+    "qc_seq": {
+      "all_read_groups": {
+        "proc": {
+          "num_reads_r1": 2727,
+          "num_reads_r2": 2727
+        },
+        "raw": {
+          "num_reads_r1": 2727,
+          "num_reads_r2": 2727
+        }
+      },
+      "per_read_group": [
+        {
+          "name": "rg_1",
+          "proc": {
+            "num_reads_r1": 2727,
+            "num_reads_r2": 2727,
+            "pct_gc_r1": 45,
+            "pct_gc_r2": 45
+          },
+          "raw": {
+            "num_reads_r1": 2727,
+            "num_reads_r2": 2727,
+            "pct_gc_r1": 45,
+            "pct_gc_r2": 45
+          }
+        }
+      ]
     }
   }
 }
-

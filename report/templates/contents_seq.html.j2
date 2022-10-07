@@ -1,6 +1,8 @@
 {% set stats = modules.snv_indels.stats %}
-{% set num_raw_reads = stats.seq.all_read_groups.raw.num_reads_r1 + stats.seq.all_read_groups.raw.num_reads_r2 %}
-{% set num_proc_reads = stats.seq.all_read_groups.proc.num_reads_r1 + stats.seq.all_read_groups.proc.num_reads_r2 %}
+{% set qc_seq = modules.qc_seq %}
+
+{% set num_raw_reads = qc_seq.all_read_groups.raw.num_reads_r1 + qc_seq.all_read_groups.raw.num_reads_r2 %}
+{% set num_proc_reads = qc_seq.all_read_groups.proc.num_reads_r1 + qc_seq.all_read_groups.proc.num_reads_r2 %}
 
 <h1>Sequencing Results</h1>
 
@@ -19,14 +21,14 @@
   <tbody>
     <tr>
       <td class="text-left"># Raw reads</td>
-      <td class="text-right">{{ stats.seq.all_read_groups.raw.num_reads_r1|show_int }}</td>
-      <td class="text-right">{{ stats.seq.all_read_groups.raw.num_reads_r2|show_int }}</td>
+      <td class="text-right">{{ qc_seq.all_read_groups.raw.num_reads_r1|show_int }}</td>
+      <td class="text-right">{{ qc_seq.all_read_groups.raw.num_reads_r2|show_int }}</td>
       <td class="text-right">{{ num_raw_reads|show_int }}</td>
     </tr>
     <tr>
       <td class="text-left"># Processed reads</td>
-      <td class="text-right">{{ stats.seq.all_read_groups.proc.num_reads_r1|show_int }}</td>
-      <td class="text-right">{{ stats.seq.all_read_groups.proc.num_reads_r2|show_int }}</td>
+      <td class="text-right">{{ qc_seq.all_read_groups.proc.num_reads_r1|show_int }}</td>
+      <td class="text-right">{{ qc_seq.all_read_groups.proc.num_reads_r2|show_int }}</td>
       <td class="text-right">{{ num_proc_reads|show_int }}</td>
     </tr>
     <tr>
@@ -66,7 +68,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for rgs in stats.seq.per_read_group %}
+    {% for rgs in qc_seq.per_read_group %}
     <tr>
       <td>{{ rgs.name }}</td>
       <td class="text-right">{{ rgs.raw.num_reads_r1|show_int }}</td>

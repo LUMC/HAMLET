@@ -409,7 +409,6 @@ def main(id_mappings_path, var_plot_dir, var_csv, fusion_results_dir,
                 "plots": [],
                 "genes": {},
                 "stats": {
-                    "seq": process_seq_stats(seq_stats_path),
                     "aln": process_aln_stats(aln_stats_path),
                     "rna": process_rna_stats(rna_stats_path),
                     "cov": process_exon_cov_stats(exon_cov_stats_path, idm),
@@ -418,6 +417,7 @@ def main(id_mappings_path, var_plot_dir, var_csv, fusion_results_dir,
                 }
             },
             "fusion": {},
+            "qc_seq": process_seq_stats(seq_stats_path),
         },
     }
     combined["modules"]["snv_indels"]["plots"].extend(
