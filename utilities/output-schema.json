@@ -29,18 +29,18 @@
         }
       }
     },
-    "results": {
+    "modules": {
       "type": "object",
       "additionalProperties": false,
       "minProperties": 4,
       "properties": {
         "expr": {
           "type": "array",
-          "items": { "$ref": "#/definitions/results/expression" }
+          "items": { "$ref": "#/definitions/modules/expression" }
         },
-        "fusion": { "$ref": "#/definitions/results/fusion" },
-        "itd": { "$ref": "#/definitions/results/itd" },
-        "var": { "$ref": "#/definitions/results/var" }
+        "fusion": { "$ref": "#/definitions/modules/fusion" },
+        "itd": { "$ref": "#/definitions/modules/itd" },
+        "var": { "$ref": "#/definitions/modules/var" }
       },
       "expression": {
         "type": "object",
@@ -61,8 +61,8 @@
         "minProperties": 3,
         "properties": {
           "intersected": { "type": "boolean" },
-          "plots": { "$ref": "#/definitions/results/fusion/plot" },
-          "tables": { "$ref": "#/definitions/results/fusion/tables" }
+          "plots": { "$ref": "#/definitions/modules/fusion/plot" },
+          "tables": { "$ref": "#/definitions/modules/fusion/tables" }
         },
         "plot": {
           "type": "object",
@@ -77,9 +77,9 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "fusioncatcher": { "$ref": "#/definitions/results/fusion/table" },
-            "intersection": { "$ref": "#/definitions/results/fusion/table" },
-            "star-fusion": { "$ref": "#/definitions/results/fusion/table" }
+            "fusioncatcher": { "$ref": "#/definitions/modules/fusion/table" },
+            "intersection": { "$ref": "#/definitions/modules/fusion/table" },
+            "star-fusion": { "$ref": "#/definitions/modules/fusion/table" }
           }
         },
         "table": {
@@ -90,7 +90,7 @@
             "path": { "type": "string" },
             "top20": {
               "type": "array",
-              "items": { "$ref": "#/definitions/results/fusion/event" }
+              "items": { "$ref": "#/definitions/modules/fusion/event" }
             }
           }
         },
@@ -114,8 +114,8 @@
         "additionalProperties": false,
         "minProperties": 2,
         "properties": {
-          "flt3": { "$ref": "#/definitions/results/itd/result" },
-          "kmt2a": { "$ref": "#/definitions/results/itd/result" }
+          "flt3": { "$ref": "#/definitions/modules/itd/result" },
+          "kmt2a": { "$ref": "#/definitions/modules/itd/result" }
         },
         "result": {
           "type": "object",
@@ -125,7 +125,7 @@
             "path": { "type": "string" },
             "table": {
               "type": "array",
-              "items": { "$ref": "#/definitions/results/itd/event" }
+              "items": { "$ref": "#/definitions/modules/itd/event" }
             }
           }
         },
@@ -155,20 +155,20 @@
         "additionalProperties": false,
         "minProperties": 2,
         "properties": {
-          "overview": { "$ref": "#/definitions/results/overview" },
+          "overview": { "$ref": "#/definitions/modules/overview" },
           "plots": {
             "type": "array",
-            "items": { "$ref": "#/definitions/results/geneplot" }
+            "items": { "$ref": "#/definitions/modules/geneplot" }
           }
         }
       },
       "overview": {
         "type": "object",
-        "additionalProperties": { "$ref": "#/definitions/results/gene" }
+        "additionalProperties": { "$ref": "#/definitions/modules/gene" }
       },
       "gene": {
         "type": "array",
-        "items": { "$ref": "#/definitions/results/variant" }
+        "items": { "$ref": "#/definitions/modules/variant" }
       },
       "variant": {
         "type": "object",
@@ -405,7 +405,7 @@
   "type": "object",
   "properties": {
     "metadata": { "$ref": "#/definitions/metadata" },
-    "results": { "$ref": "#/definitions/results" },
+    "modules": { "$ref": "#/definitions/modules" },
     "stats": { "$ref": "#/definitions/stats" }
   }
 }

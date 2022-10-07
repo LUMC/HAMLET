@@ -4,14 +4,14 @@
 {% set table_idx = metadata.genes_of_interest|num_tids + 14 %}
 
 <div class="keep-together">
-  {% if results.fusion.intersected %}
+  {% if modules.fusion.intersected %}
   <figure>
-    <img class="half" src="{{ results.fusion.plots.intersection }}"></img>
+    <img class="half" src="{{ modules.fusion.plots.intersection }}"></img>
     <figcaption>Figure {{ figure_idx }} | Intersected fusion candidates</figcaption>
   </figure>
   <div id="fusion-imgs">
-    <img class="fusion" src="{{ results.fusion.plots["star-fusion"] }}"></img>
-    <img class="fusion" src="{{ results.fusion.plots.fusioncatcher }}"></img>
+    <img class="fusion" src="{{ modules.fusion.plots["star-fusion"] }}"></img>
+    <img class="fusion" src="{{ modules.fusion.plots.fusioncatcher }}"></img>
   </div>
   <figure>
     <figcaption style="margin-top: -1em;">Figure {{ figure_idx + 1}} | STAR-Fusion (left) and FusionCatcher (right) fusion candidates</figcaption>
@@ -30,7 +30,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for item in results.fusion.tables.intersection.top20 %}
+        {% for item in modules.fusion.tables.intersection.top20 %}
         <tr>
           <td>{{ item.name }}</td>
           <td>{{ item.type }}</td>
@@ -45,7 +45,7 @@
   </div>
   {% else %}
   <figure>
-    <img class="half" src="{{ results.fusion.plots["star-fusion"]}}"></img>
+    <img class="half" src="{{ modules.fusion.plots["star-fusion"]}}"></img>
     <figcaption>Figure {{ figure_idx }} | STAR-Fusion fusion candidates</figcaption>
   </figure>
   <div class="keep-together">
@@ -62,7 +62,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for item in results.fusion.tables["star-fusion"].top20 %}
+        {% for item in modules.fusion.tables["star-fusion"].top20 %}
         <tr>
           <td>{{ item.name }}</td>
           <td>{{ item.type }}</td>

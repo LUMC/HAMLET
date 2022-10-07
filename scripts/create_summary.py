@@ -412,23 +412,23 @@ def main(id_mappings_path, var_plot_dir, var_csv, fusion_results_dir,
             "ins": process_insert_stats(insert_stats_path),
             "var": process_var_stats(vep_stats_path),
         },
-        "results": {
+        "modules": {
             "var": {"plots": [], "overview": {}},
             "fusion": {},
         },
     }
-    combined["results"]["var"]["plots"].extend(
+    combined["modules"]["var"]["plots"].extend(
         add_variant_plots(idm, var_plot_dir))
-    combined["results"]["var"]["overview"] = add_variant_overview(
+    combined["modules"]["var"]["overview"] = add_variant_overview(
         idm, var_csv)
-    combined["results"]["fusion"] = add_fusion_results(fusion_results_dir)
-    combined["results"]["itd"] = {
+    combined["modules"]["fusion"] = add_fusion_results(fusion_results_dir)
+    combined["modules"]["itd"] = {
         "flt3": {"path": str(Path(flt3_plot).resolve()),
                  "table": add_itd_table(flt3_csv)},
         "kmt2a": {"path": str(Path(kmt2a_plot).resolve()),
                   "table": add_itd_table(kmt2a_csv)},
     }
-    combined["results"]["expr"] = add_expr_results(exon_ratios_path)
+    combined["modules"]["expr"] = add_expr_results(exon_ratios_path)
     combined["stats"] = post_process(combined["stats"])
     print(json.dumps(combined, separators=(",", ":"), sort_keys=True))
 

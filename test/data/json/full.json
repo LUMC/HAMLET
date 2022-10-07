@@ -20,7 +20,7 @@
     "run_name": "hamlet-46fe6258",
     "sample_name": "SRR8615409"
   },
-  "results": {
+  "modules": {
     "expr": [
       {
         "above_threshold": true,
