@@ -1,3 +1,4 @@
+{% set stats = modules.snv_indels.stats %}
 {% set num_raw_reads = stats.seq.all_read_groups.raw.num_reads_r1 + stats.seq.all_read_groups.raw.num_reads_r2 %}
 {% set num_proc_reads = stats.seq.all_read_groups.proc.num_reads_r1 + stats.seq.all_read_groups.proc.num_reads_r2 %}
 

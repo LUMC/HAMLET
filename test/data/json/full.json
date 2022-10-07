@@ -135,150 +135,151 @@
           }
         ]
       },
-      "plots": []
-    }
-  },
-  "stats": {
-    "aln": {
-      "num_aligned_bases": 511716,
-      "num_aligned_reads": 5426,
-      "num_aligned_reads_proper_pairs": 5370,
-      "num_total_bases": 515611,
-      "num_total_reads": 5454,
-      "pct_adapter": 0.0011,
-      "pct_aligned_bases_from_total": 99.24458554995917,
-      "pct_aligned_reads_from_total": 99.48661532819949,
-      "pct_aligned_reads_proper_pairs": 98.96793217840029,
-      "pct_chimeras": 0.00387,
-      "rate_indel": 7.2e-05,
-      "rate_mismatch": 0.005409,
-      "strand_balance": 0.499079
-    },
-    "cov": {
-      "MT-ATP6": {
-        "ENST00000361899": [
-          {
-            "chrom": "chrM",
-            "end": 9207,
-            "exon_num": 1,
-            "metrics": {
-              "avg": 46.04405286343612,
-              "count": 681,
-              "frac_cov_at_least": {
-                "10x": 1,
-                "20x": 0.9412628487518355
-              },
-              "max": 78,
-              "median": 48,
-              "min": 13,
-              "stdev": 15.510559894988475
-            },
-            "start": 8526
-          }
-        ]
-      },
-      "MT-ATP8": {
-        "ENST00000361851": [
-          {
-            "chrom": "chrM",
-            "end": 8572,
-            "exon_num": 1,
-            "metrics": {
-              "avg": 77.89371980676329,
-              "count": 207,
-              "frac_cov_at_least": {
-                "10x": 0.9420289855072463,
-                "20x": 0.8985507246376812
-              },
-              "max": 148,
-              "median": 71,
-              "min": 1,
-              "stdev": 45.5685582837227
-            },
-            "start": 8365
-          }
-        ]
-      }
-    },
-    "ins": {
-      "max_insert_size": 912,
-      "median_absolute_deviation": 49.5,
-      "median_insert_size": 176.5,
-      "min_insert_size": 41
-    },
-    "rna": {
-      "median_3prime_bias": 0.427261,
-      "median_5prime_bias": 0.902478,
-      "median_5prime_to_3prime_bias": 1.742359,
-      "median_cv_coverage": 0.435617,
-      "normalized_cov": [
-        0.315171,
-        0.704388,
-        0.263097
-      ],
-      "num_coding_bases": 453664,
-      "num_intergenic_bases": 3628,
-      "num_intronic_bases": 0,
-      "num_mrna_bases": 508460,
-      "num_ribosomal_bases": 399,
-      "num_utr_bases": 54796,
-      "pct_coding_bases": 0.885221,
-      "pct_intergenic_bases": 0.007079,
-      "pct_intronic_bases": 0,
-      "pct_mrna_bases": 0.992142,
-      "pct_ribosomal_bases": 0.07785563341118897,
-      "pct_utr_bases": 0.106922
-    },
-    "seq": {
-      "all_read_groups": {
-        "proc": {
-          "num_reads_r1": 2727,
-          "num_reads_r2": 2727
+      "plots": [],
+      "stats": {
+        "aln": {
+          "num_aligned_bases": 511716,
+          "num_aligned_reads": 5426,
+          "num_aligned_reads_proper_pairs": 5370,
+          "num_total_bases": 515611,
+          "num_total_reads": 5454,
+          "pct_adapter": 0.0011,
+          "pct_aligned_bases_from_total": 99.24458554995917,
+          "pct_aligned_reads_from_total": 99.48661532819949,
+          "pct_aligned_reads_proper_pairs": 98.96793217840029,
+          "pct_chimeras": 0.00387,
+          "rate_indel": 7.2e-05,
+          "rate_mismatch": 0.005409,
+          "strand_balance": 0.499079
         },
-        "raw": {
-          "num_reads_r1": 2727,
-          "num_reads_r2": 2727
-        }
-      },
-      "per_read_group": [
-        {
-          "name": "rg_1",
-          "proc": {
-            "num_reads_r1": 2727,
-            "num_reads_r2": 2727,
-            "pct_gc_r1": 45,
-            "pct_gc_r2": 45
+        "cov": {
+          "MT-ATP6": {
+            "ENST00000361899": [
+              {
+                "chrom": "chrM",
+                "end": 9207,
+                "exon_num": 1,
+                "metrics": {
+                  "avg": 46.04405286343612,
+                  "count": 681,
+                  "frac_cov_at_least": {
+                    "10x": 1,
+                    "20x": 0.9412628487518355
+                  },
+                  "max": 78,
+                  "median": 48,
+                  "min": 13,
+                  "stdev": 15.510559894988475
+                },
+                "start": 8526
+              }
+            ]
           },
-          "raw": {
-            "num_reads_r1": 2727,
-            "num_reads_r2": 2727,
-            "pct_gc_r1": 45,
-            "pct_gc_r2": 45
+          "MT-ATP8": {
+            "ENST00000361851": [
+              {
+                "chrom": "chrM",
+                "end": 8572,
+                "exon_num": 1,
+                "metrics": {
+                  "avg": 77.89371980676329,
+                  "count": 207,
+                  "frac_cov_at_least": {
+                    "10x": 0.9420289855072463,
+                    "20x": 0.8985507246376812
+                  },
+                  "max": 148,
+                  "median": 71,
+                  "min": 1,
+                  "stdev": 45.5685582837227
+                },
+                "start": 8365
+              }
+            ]
+          }
+        },
+        "ins": {
+          "max_insert_size": 912,
+          "median_absolute_deviation": 49.5,
+          "median_insert_size": 176.5,
+          "min_insert_size": 41
+        },
+        "rna": {
+          "median_3prime_bias": 0.427261,
+          "median_5prime_bias": 0.902478,
+          "median_5prime_to_3prime_bias": 1.742359,
+          "median_cv_coverage": 0.435617,
+          "normalized_cov": [
+            0.315171,
+            0.704388,
+            0.263097
+          ],
+          "num_coding_bases": 453664,
+          "num_intergenic_bases": 3628,
+          "num_intronic_bases": 0,
+          "num_mrna_bases": 508460,
+          "num_ribosomal_bases": 399,
+          "num_utr_bases": 54796,
+          "pct_coding_bases": 0.885221,
+          "pct_intergenic_bases": 0.007079,
+          "pct_intronic_bases": 0,
+          "pct_mrna_bases": 0.992142,
+          "pct_ribosomal_bases": 0.07785563341118897,
+          "pct_utr_bases": 0.106922
+        },
+        "seq": {
+          "all_read_groups": {
+            "proc": {
+              "num_reads_r1": 2727,
+              "num_reads_r2": 2727
+            },
+            "raw": {
+              "num_reads_r1": 2727,
+              "num_reads_r2": 2727
+            }
+          },
+          "per_read_group": [
+            {
+              "name": "rg_1",
+              "proc": {
+                "num_reads_r1": 2727,
+                "num_reads_r2": 2727,
+                "pct_gc_r1": 45,
+                "pct_gc_r2": 45
+              },
+              "raw": {
+                "num_reads_r1": 2727,
+                "num_reads_r2": 2727,
+                "pct_gc_r1": 45,
+                "pct_gc_r2": 45
+              }
+            }
+          ]
+        },
+        "var": {
+          "coding_consequences": {
+            "missense_variant": 11,
+            "synonymous_variant": 36
+          },
+          "num_deletions": 1,
+          "num_insertions": 0,
+          "num_snvs": 52,
+          "per_chromosome": {
+            "MT": 53
+          },
+          "polyphen": {
+            "num_benign_variants": 11,
+            "num_possibly_damaging_variants": 0,
+            "num_probably_damaging_variants": 0,
+            "num_unknown_variants": 0
+          },
+          "sift": {
+            "num_deleterious_variants": 0,
+            "num_tolerated_variants": 4
           }
         }
-      ]
-    },
-    "var": {
-      "coding_consequences": {
-        "missense_variant": 11,
-        "synonymous_variant": 36
-      },
-      "num_deletions": 1,
-      "num_insertions": 0,
-      "num_snvs": 52,
-      "per_chromosome": {
-        "MT": 53
-      },
-      "polyphen": {
-        "num_benign_variants": 11,
-        "num_possibly_damaging_variants": 0,
-        "num_probably_damaging_variants": 0,
-        "num_unknown_variants": 0
-      },
-      "sift": {
-        "num_deleterious_variants": 0,
-        "num_tolerated_variants": 4
       }
     }
   }
 }
+

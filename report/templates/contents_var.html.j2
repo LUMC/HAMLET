@@ -1,3 +1,4 @@
+{% set stats = modules.snv_indels.stats %}
 {% set total_vars = stats.var.num_snvs + stats.var.num_insertions + stats.var.num_deletions %}
 
 <h1>Variant Calling Results</h1>

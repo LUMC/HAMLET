@@ -404,16 +404,19 @@ def main(id_mappings_path, var_plot_dir, var_csv, fusion_results_dir,
             "sample_name": sample_name,
             "genes_of_interest": idm,
         },
-        "stats": {
-            "seq": process_seq_stats(seq_stats_path),
-            "aln": process_aln_stats(aln_stats_path),
-            "rna": process_rna_stats(rna_stats_path),
-            "cov": process_exon_cov_stats(exon_cov_stats_path, idm),
-            "ins": process_insert_stats(insert_stats_path),
-            "var": process_var_stats(vep_stats_path),
-        },
         "modules": {
-            "snv_indels": {"plots": [], "genes": {}},
+            "snv_indels": {
+                "plots": [],
+                "genes": {},
+                "stats": {
+                    "seq": process_seq_stats(seq_stats_path),
+                    "aln": process_aln_stats(aln_stats_path),
+                    "rna": process_rna_stats(rna_stats_path),
+                    "cov": process_exon_cov_stats(exon_cov_stats_path, idm),
+                    "ins": process_insert_stats(insert_stats_path),
+                    "var": process_var_stats(vep_stats_path)
+                }
+            },
             "fusion": {},
         },
     }
@@ -429,7 +432,7 @@ def main(id_mappings_path, var_plot_dir, var_csv, fusion_results_dir,
                   "table": add_itd_table(kmt2a_csv)},
     }
     combined["modules"]["expr"] = add_expr_results(exon_ratios_path)
-    combined["stats"] = post_process(combined["stats"])
+    combined["modules"]["snv_indels"]["stats"] = post_process(combined["modules"]["snv_indels"]["stats"])
     print(json.dumps(combined, separators=(",", ":"), sort_keys=True))
 
 
