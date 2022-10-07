@@ -1,3 +1,6 @@
+from types import SimpleNamespace
+
+
 pepfile: config["pepfile"]
 
 
@@ -36,3 +39,11 @@ def get_forward(wildcards):
 
 def get_reverse(wildcards):
     return pep.sample_table.loc[wildcards.sample, "R1"]
+
+
+## Functions for module outputs ##
+def get_bam_output(wildcards):
+    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.snv-indel.bam"
+
+
+module_output = SimpleNamespace(bam=get_bam_output)
