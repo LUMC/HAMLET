@@ -45,7 +45,7 @@ jobs:
         uses: actions/cache@v2
         env:
           # Increase this value to manually invalidate the cache
-          CACHE_NUMBER: 0
+          CACHE_NUMBER: 1
         with:
           path: ${{ env.CONDA }}/envs
           key: conda-${{ hashFiles('environment.yml') }}-${{ steps.get-date.outputs.week }}-${{ env.CACHE_NUMBER }}
@@ -109,7 +109,7 @@ jobs:
         uses: actions/cache@v2
         env:
           # Increase this value to manually invalidate the cache
-          CACHE_NUMBER: 0
+          CACHE_NUMBER: 1
         with:
           path: ${{ env.CONDA }}/envs
           key: conda-${{ hashFiles('environment.yml') }}-${{ steps.get-date.outputs.week }}-${{ env.CACHE_NUMBER }}
