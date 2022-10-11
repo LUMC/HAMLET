@@ -1,7 +1,4 @@
-pepfile: config["pepfile"]
-
-
-samples = pep.sample_table["sample_name"]
+from types import SimpleNamespace
 
 containers = {
     "bedtools-2.17-python-2.7": "docker://quay.io/biocontainers/mulled-v2-a9ddcbd438a66450297b5e0b61ac390ee9bfdb61:e60f3cfda0dfcf4a72f2091c6fa1ebe5a5400220-0",
@@ -28,3 +25,25 @@ if "exon_names" not in config:
 
 def get_bamfile(wildcards):
     return pep.sample_table.loc[wildcards.sample, "bam"]
+
+
+## Functions for module outputs ##
+
+
+def output_file(wildcards, extension):
+    return f"{wildcards.sample}/expression/{wildcards.sample}.{extension}"
+
+
+output_files = [
+    "bases_per_exon",
+    "bases_per_gene",
+    "exon_ratios",
+    "fragments_per_gene",
+    "raw_base",
+]
+
+output_functions = {
+    out_file: partial(output_file, extension=out_file) for out_file in output_files
+}
+
+module_output = SimpleNamespace(**output_functions)

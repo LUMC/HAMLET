@@ -1,6 +1,14 @@
 include: "common.smk"
 
 
+pepfile: config["pepfile"]
+
+
+# Put each sample name in a SimpleNamespace to mimic Snakemake wildcard usage
+# (e.g {wildcards.sample}). This is only used in the 'all' rule.
+samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample_name"]]
+
+
 localrules:
     calc_exon_ratios,
     count_bases_exon,
@@ -9,17 +17,13 @@ localrules:
 
 rule all:
     input:
-        base_per_exon=expand(
-            "{sample}/expression/{sample}.bases_per_exon", sample=samples
-        ),
-        base_per_gene=expand(
-            "{sample}/expression/{sample}.bases_per_gene", sample=samples
-        ),
-        exon_ratio=expand("{sample}/expression/{sample}.exon_ratios", sample=samples),
-        fragment_per_gene=expand(
-            "{sample}/expression/{sample}.fragments_per_gene", sample=samples
-        ),
-        raw_base=expand("{sample}/expression/{sample}.raw_base", sample=samples),
+        base_per_exon=[module_output.bases_per_exon(sample) for sample in samples],
+        base_per_gene=[module_output.bases_per_gene(sample) for sample in samples],
+        exon_ratios=[module_output.exon_ratios(sample) for sample in samples],
+        fragment_per_gene=[
+            module_output.fragments_per_gene(sample) for sample in samples
+        ],
+        raw_base=[module_output.raw_base(sample) for sample in samples],
 
 
 rule idsort_aln:
