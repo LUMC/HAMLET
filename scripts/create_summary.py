@@ -66,44 +66,6 @@ def process_rna_stats(path):
     }
 
 
-def process_seq_stats(path):
-    with open(path) as src:
-        raw = json.load(src)
-
-    def f(rgi):
-        return {
-            "raw": {
-                "num_reads_r1": rgi["raw"]["R1"]["num_seq"],
-                "num_reads_r2": rgi["raw"]["R2"]["num_seq"],
-                "pct_gc_r1": rgi["raw"]["R1"]["pct_gc"],
-                "pct_gc_r2": rgi["raw"]["R2"]["pct_gc"],
-            },
-            "proc": {
-                "num_reads_r1": rgi["proc"]["R1"]["num_seq"],
-                "num_reads_r2": rgi["proc"]["R2"]["num_seq"],
-                "pct_gc_r1": rgi["proc"]["R1"]["pct_gc"],
-                "pct_gc_r2": rgi["proc"]["R2"]["pct_gc"],
-            },
-            "name": rgi["name"],
-        }
-
-    rv = {
-        "all_read_groups": {
-            "raw": {
-                "num_reads_r1": raw["raw"]["R1"]["num_seq"],
-                "num_reads_r2": raw["raw"]["R2"]["num_seq"],
-            },
-            "proc": {
-                "num_reads_r1": raw["proc"]["R1"]["num_seq"],
-                "num_reads_r2": raw["proc"]["R2"]["num_seq"],
-            },
-        },
-        "per_read_group": [f(item) for item in raw["read_groups"]],
-
-    }
-    return rv
-
-
 def process_insert_stats(path):
     pd = picard.parse(path)
     raw = pd["metrics"]["contents"]
@@ -372,8 +334,6 @@ def add_itd_table(csv_fname):
                 type=click.Path(exists=True, dir_okay=False))
 @click.argument("exon_ratios_path",
                 type=click.Path(exists=True, dir_okay=False))
-@click.argument("seq_stats_path",
-                type=click.Path(exists=True, dir_okay=False))
 @click.argument("aln_stats_path",
                 type=click.Path(exists=True, dir_okay=False))
 @click.argument("rna_stats_path",
@@ -390,11 +350,13 @@ def add_itd_table(csv_fname):
               help="Name of the sample from which the stats were generated.")
 @click.option("--pipeline-version", type=str,
               help="Version string of the pipeline.")
+@click.option("--module", type=str, multiple=True,
+              help="JSON outputs from various modules")
 def main(id_mappings_path, var_plot_dir, var_csv, fusion_results_dir,
          flt3_csv, flt3_plot, kmt2a_csv, kmt2a_plot, exon_ratios_path,
-         seq_stats_path, aln_stats_path, rna_stats_path,
+         aln_stats_path, rna_stats_path,
          insert_stats_path, exon_cov_stats_path, vep_stats_path,
-         run_name, sample_name, pipeline_version):
+         run_name, sample_name, pipeline_version, module):
     """Helper script for combining multiple stats files into one JSON."""
     idm = parse_idm(id_mappings_path)
     combined = {
@@ -417,9 +379,16 @@ def main(id_mappings_path, var_plot_dir, var_csv, fusion_results_dir,
                 }
             },
             "fusion": {},
-            "qc_seq": process_seq_stats(seq_stats_path),
         },
     }
+
+    # Read and add module json files
+    for m in module:
+        with open(m) as fin:
+            module = json.load(fin)
+        for key, data in module.items():
+            combined["modules"][key] = data
+
     combined["modules"]["snv_indels"]["plots"].extend(
         add_variant_plots(idm, var_plot_dir))
     combined["modules"]["snv_indels"]["genes"] = add_variant_overview(
@@ -433,7 +402,7 @@ def main(id_mappings_path, var_plot_dir, var_csv, fusion_results_dir,
     }
     combined["modules"]["expr"] = add_expr_results(exon_ratios_path)
     combined["modules"]["snv_indels"]["stats"] = post_process(combined["modules"]["snv_indels"]["stats"])
-    print(json.dumps(combined, separators=(",", ":"), sort_keys=True))
+    print(json.dumps(combined, sort_keys=True, indent=2))
 
 
 if __name__ == "__main__":

@@ -28,7 +28,6 @@ OUTPUTS = dict(
     count_bases_per_exon=expr_output(".bases_per_exon"),
     ratio_exons=expr_output(".exon_ratios"),
     # Stats
-    seq_stats=seqqc_output(".seq_stats.json"),
     aln_stats=var_output(".aln_stats"),
     rna_stats=var_output(".rna_stats"),
     insert_stats=var_output(".insert_stats"),
@@ -175,7 +174,6 @@ use rule fusioncatcher from fusion as fusion_fusioncatcher with:
 rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""
     input:
-        seq_stats=OUTPUTS["seq_stats"],
         aln_stats=OUTPUTS["aln_stats"],
         rna_stats=OUTPUTS["rna_stats"],
         insert_stats=OUTPUTS["insert_stats"],
@@ -190,6 +188,7 @@ rule create_summary:
         flt3_csv=OUTPUTS["flt3_csv"],
         kmt2a_csv=OUTPUTS["kmt2a_csv"],
         exon_ratios=OUTPUTS["ratio_exons"],
+        qc_seq_json=qc_seq.module_output.json,
         scr=srcdir("scripts/create_summary.py"),
     params:
         pipeline_ver=PIPELINE_VERSION,
@@ -210,11 +209,12 @@ rule create_summary:
             {input.flt3_csv} {input.flt3_plot} \
             {input.kmt2a_csv} {input.kmt2a_plot} \
             {input.exon_ratios} \
-            {input.seq_stats} {input.aln_stats} {input.rna_stats} {input.insert_stats} \
+            {input.aln_stats} {input.rna_stats} {input.insert_stats} \
             {input.exon_cov_stats} {input.vep_stats} \
             --pipeline-version {params.pipeline_ver} \
             --run-name {params.run_name} \
-            --sample-name {wildcards.sample} > {output.js} 2>{log}
+            --sample-name {wildcards.sample} \
+            --module {input.qc_seq_json} > {output.js} 2>{log}
         """
 
 
