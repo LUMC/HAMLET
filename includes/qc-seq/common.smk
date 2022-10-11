@@ -104,4 +104,21 @@ def get_output(wildcards, pair):
     return f"{wildcards.sample}/{wildcards.sample}-{pair}.fq.gz"
 
 
-module_output = SimpleNamespace(forward=get_forward_output, reverse=get_reverse_output)
+def get_raw_forward_output(wildcards):
+    return get_raw_output(wildcards, "R1")
+
+
+def get_raw_reverse_output(wildcards):
+    return get_raw_output(wildcards, "R2")
+
+
+def get_raw_output(wildcards, pair):
+    return f"{wildcards.sample}/{wildcards.sample}-{pair}.raw.fq.gz"
+
+
+module_output = SimpleNamespace(
+    forward=get_forward_output,
+    reverse=get_reverse_output,
+    forward_raw=get_raw_forward_output,
+    reverse_raw=get_raw_reverse_output,
+)
