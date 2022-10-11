@@ -9,34 +9,26 @@ import click
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("rg_stats", nargs=-1,
                 type=click.Path(exists=True, dir_okay=False))
-@click.option("--name", type=str)
-def main(rg_stats, name):
+def main(rg_stats):
     rgs = []
     for rg in rg_stats:
         with open(rg, "r") as src:
             rgs.append(json.load(src))
 
     stats = {
-        "name": name,
-        "raw": {
-            "R1": {
-                "num_seq": sum([x["raw"]["R1"]["num_seq"] for x in rgs]),
+        "all_read_groups": {
+            "raw": {
+                "num_reads_r1": sum([x["raw"]["num_reads_r1"] for x in rgs]),
+                "num_reads_r2": sum([x["raw"]["num_reads_r2"] for x in rgs])
             },
-            "R2": {
-                "num_seq": sum([x["raw"]["R2"]["num_seq"] for x in rgs]),
-            },
-        },
-        "proc": {
-            "R1": {
-                "num_seq": sum([x["proc"]["R1"]["num_seq"] for x in rgs]),
-            },
-            "R2": {
-                "num_seq": sum([x["proc"]["R2"]["num_seq"] for x in rgs]),
+            "proc": {
+                "num_reads_r1": sum([x["proc"]["num_reads_r1"] for x in rgs]),
+                "num_reads_r2": sum([x["proc"]["num_reads_r2"] for x in rgs])
             },
         },
-        "read_groups": rgs,
+        "per_read_group": rgs,
     }
-    json.dump(stats, sys.stdout, separators=(",", ":"))
+    json.dump({ "qc_seq": stats}, sys.stdout, indent=2)
 
 
 if __name__ == "__main__":

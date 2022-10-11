@@ -27,3 +27,10 @@ def test_output_targetted_seq_against_schema(workflow_dir):
     output_file = pathlib.Path(workflow_dir, f"{sample}/{sample}.summary.json")
     schema_file = pathlib.Path(workflow_dir, "utilities/output-schema.json")
     validate_files(output_file, schema_file)
+
+@pytest.mark.workflow('test-qc-trio')
+def test_qc_seq_schema(workflow_dir):
+    sample = "TestSample3"
+    output_file = pathlib.Path(workflow_dir, f"{sample}/qc-seq/{sample}.seq_stats.json")
+    schema_file = pathlib.Path(workflow_dir, "includes/qc-seq/output-schema.json")
+    validate_files(output_file, schema_file)

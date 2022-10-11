@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Schema of the output from the qc-seq module for HAMLET",
+  "definitions": {
+    "qc_seq": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 2,
+      "properties": {
+        "all_read_groups": { "$ref": "#/definitions/qc_seq/all_readgroups" },
+        "per_read_group": { "$ref": "#/definitions/qc_seq/per_readgroup" }
+      },
+      "all_readgroups": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 2,
+        "properties": {
+          "proc": { "$ref": "#/definitions/qc_seq/read_stats" },
+          "raw": { "$ref": "#/definitions/qc_seq/read_stats" }
+        }
+      },
+      "per_readgroup": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 3,
+          "properties": {
+            "name": { "type": "string" },
+            "proc": { "$ref": "#/definitions/qc_seq/read_stats" },
+            "raw": { "$ref": "#/definitions/qc_seq/read_stats" }
+          }
+        }
+      },
+      "read_stats": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["num_reads_r1", "num_reads_r2"],
+        "properties": {
+          "num_reads_r1": { "type": "integer" },
+          "num_reads_r2": { "type": "integer" },
+          "pct_gc_r1": { "type": "number" },
+          "pct_gc_r2": { "type": "number" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "minProperties": 1,
+  "type": "object",
+  "properties": {
+    "qc_seq": { "$ref": "#/definitions/qc_seq" }
+  }
+}

@@ -179,7 +179,6 @@ rule sample_stats:
     shell:
         """
         python {input.sample_stats_script} \
-            --name {wildcards.sample} \
             {input.rg_stats} > {output.stats} 2> {log}
         """
 
