@@ -56,11 +56,13 @@ rule all:
             module_output.reverse(SimpleNamespace(sample=sample)) for sample in samples
         ],
         merged_raw_forward=[
-            module_output.forward_raw(SimpleNamespace(sample=sample)) for sample in samples
+            module_output.forward_raw(SimpleNamespace(sample=sample))
+            for sample in samples
         ],
         merged_raw_reverse=[
-            module_output.reverse_raw(SimpleNamespace(sample=sample)) for sample in samples
-        ]
+            module_output.reverse_raw(SimpleNamespace(sample=sample))
+            for sample in samples
+        ],
 
 
 rule fastqc_raw:

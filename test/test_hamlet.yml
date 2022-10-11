@@ -47,10 +47,10 @@
       - 'STAR-Fusion .* --left_fq TestSample1/TestSample1.R1.fq.gz'
       - 'STAR-Fusion .* --left_fq TestSample2/TestSample2.R1.fq.gz'
       - 'STAR-Fusion .* --left_fq TestSample3/TestSample3.R1.fq.gz'
-      # The fusioncather rule should use the output of the qc-seq module
-      - 'fusioncatcher.py .* -i TestSample1/TestSample1.R1.fq.gz'
-      - 'fusioncatcher.py .* -i TestSample2/TestSample2.R1.fq.gz'
-      - 'fusioncatcher.py .* -i TestSample3/TestSample3.R1.fq.gz'
+      # The fusioncather rule should use the raw output of the qc-seq module
+      - 'fusioncatcher.py .* -i TestSample1/TestSample1-R1.raw.fq.gz,TestSample1/TestSample1-R2.raw.fq.gz'
+      - 'fusioncatcher.py .* -i TestSample2/TestSample2-R1.raw.fq.gz,TestSample2/TestSample2-R2.raw.fq.gz'
+      - 'fusioncatcher.py .* -i TestSample3/TestSample3-R1.raw.fq.gz,TestSample3/TestSample3-R2.raw.fq.gz'
       # The align_kmt2a rule should use the output of the qc-seq module
       - 'bwa mem .*kmt2a-213.fa *TestSample1/TestSample1.R1.fq.gz'
       - 'bwa mem .*kmt2a-213.fa *TestSample2/TestSample2.R1.fq.gz'

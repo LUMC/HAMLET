@@ -162,11 +162,12 @@ use rule star_fusion from fusion as fusion_star_fusion with:
         "docker://quay.io/biocontainers/star-fusion:1.10.0--hdfd78af_1"
 
 
-# Connect the fusioncather rule to the output of qc-seq
+# Connect the fusioncather rule to the output of qc-seq. Fusioncatcher should
+# use the raw (untrimmed) output files, according to the manual.
 use rule fusioncatcher from fusion as fusion_fusioncatcher with:
     input:
-        fq1=qc_seq.module_output.forward,
-        fq2=qc_seq.module_output.reverse,
+        fq1=qc_seq.module_output.forward_raw,
+        fq2=qc_seq.module_output.reverse_raw,
     container:
         "docker://quay.io/biocontainers/fusioncatcher:1.20--2"
 
