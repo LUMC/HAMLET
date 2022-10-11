@@ -4,7 +4,9 @@ include: "common.smk"
 pepfile: config["pepfile"]
 
 
-samples = pep.sample_table["sample_name"]
+# Put each sample name in a SimpleNamespace to mimic Snakemake wildcard usage
+# (e.g {wildcards.sample}). This is only used in the 'all' rule.
+samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample_name"]]
 
 
 localrules:
@@ -14,55 +16,11 @@ localrules:
 
 rule all:
     input:
-        fastqc_raw=expand(
-            (
-                "{sample}/qc-seq/{read_group}/fastqc-{{pair}}-raw".format(
-                    sample=s, read_group=rg
-                )
-                for rg, s in get_readgroup_per_sample()
-            ),
-            pair=("R1", "R2"),
-        ),
-        cutadapt=expand(
-            (
-                "{sample}/qc-seq/{read_group}/{sample}-{read_group}-{{pair}}.fq.gz".format(
-                    sample=s, read_group=rg
-                )
-                for rg, s in get_readgroup_per_sample()
-            ),
-            pair=("R1", "R2"),
-        ),
-        fastqc_processed=expand(
-            (
-                "{sample}/qc-seq/{read_group}/fastqc-{{pair}}-processed".format(
-                    sample=s, read_group=rg
-                )
-                for rg, s in get_readgroup_per_sample()
-            ),
-            pair=("R1", "R2"),
-        ),
-        rg_stats_json=[
-            "{sample}/qc-seq/{read_group}/stats.json".format(sample=s, read_group=rg)
-            for rg, s in get_readgroup_per_sample()
-        ],
-        sample_stats_json=expand(
-            "{sample}/qc-seq/{sample}.seq_stats.json",
-            sample=samples,
-        ),
-        merged_forward=[
-            module_output.forward(SimpleNamespace(sample=sample)) for sample in samples
-        ],
-        merged_reverse=[
-            module_output.reverse(SimpleNamespace(sample=sample)) for sample in samples
-        ],
-        merged_raw_forward=[
-            module_output.forward_raw(SimpleNamespace(sample=sample))
-            for sample in samples
-        ],
-        merged_raw_reverse=[
-            module_output.reverse_raw(SimpleNamespace(sample=sample))
-            for sample in samples
-        ],
+        merged_forward=[module_output.forward(sample) for sample in samples],
+        merged_reverse=[module_output.reverse(sample) for sample in samples],
+        merged_raw_forward=[module_output.forward_raw(sample) for sample in samples],
+        merged_raw_reverse=[module_output.reverse_raw(sample) for sample in samples],
+        sample_json=[module_output.json(sample) for sample in samples],
 
 
 rule fastqc_raw:

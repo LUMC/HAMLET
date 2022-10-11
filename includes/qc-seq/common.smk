@@ -116,9 +116,14 @@ def get_raw_output(wildcards, pair):
     return f"{wildcards.sample}/{wildcards.sample}-{pair}.raw.fq.gz"
 
 
+def get_sample_json(wildcards):
+    return f"{wildcards.sample}/qc-seq/{wildcards.sample}.seq_stats.json"
+
+
 module_output = SimpleNamespace(
     forward=get_forward_output,
     reverse=get_reverse_output,
     forward_raw=get_raw_forward_output,
     reverse_raw=get_raw_reverse_output,
+    json=get_sample_json,
 )
