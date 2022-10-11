@@ -22,11 +22,6 @@ OUTPUTS = dict(
     # Fusion
     star_fusion_txt=fusion_output(".star-fusion"),
     star_fusion_svg=fusion_output(".star-fusion.svg"),
-    # Expression
-    count_fragments_per_gene=expr_output(".fragments_per_gene"),
-    count_bases_per_gene=expr_output(".bases_per_gene"),
-    count_bases_per_exon=expr_output(".bases_per_exon"),
-    ratio_exons=expr_output(".exon_ratios"),
     # Stats
     aln_stats=var_output(".aln_stats"),
     rna_stats=var_output(".rna_stats"),
@@ -187,7 +182,7 @@ rule create_summary:
         kmt2a_plot=OUTPUTS["kmt2a_png"],
         flt3_csv=OUTPUTS["flt3_csv"],
         kmt2a_csv=OUTPUTS["kmt2a_csv"],
-        exon_ratios=OUTPUTS["ratio_exons"],
+        exon_ratios=expression.module_output.json,
         qc_seq_json=qc_seq.module_output.json,
         scr=srcdir("scripts/create_summary.py"),
     params:
@@ -208,12 +203,12 @@ rule create_summary:
             `dirname {input.fusions_svg}` \
             {input.flt3_csv} {input.flt3_plot} \
             {input.kmt2a_csv} {input.kmt2a_plot} \
-            {input.exon_ratios} \
             {input.aln_stats} {input.rna_stats} {input.insert_stats} \
             {input.exon_cov_stats} {input.vep_stats} \
             --pipeline-version {params.pipeline_ver} \
             --run-name {params.run_name} \
             --sample-name {wildcards.sample} \
+            --module {input.exon_ratios} \
             --module {input.qc_seq_json} > {output.js} 2>{log}
         """
 
@@ -253,10 +248,10 @@ rule package_results:
         smallvars_csv_hi=OUTPUTS["smallvars_csv_hi"],
         smallvars_plots=OUTPUTS["smallvars_plots"],
         fusions_svg=OUTPUTS.get("fusions_svg", []),
-        count_fragments_per_gene=OUTPUTS["count_fragments_per_gene"],
-        count_bases_per_gene=OUTPUTS["count_bases_per_gene"],
-        count_bases_per_exon=OUTPUTS["count_bases_per_exon"],
-        ratio_exons=OUTPUTS["ratio_exons"],
+        count_fragments_per_gene=expression.module_output.fragments_per_gene,
+        count_bases_per_gene=expression.module_output.bases_per_gene,
+        count_bases_per_exon=expression.module_output.bases_per_exon,
+        ratio_exons=expression.module_output.json,
         flt_csv=OUTPUTS["flt3_csv"],
         flt_bg_csv=OUTPUTS["flt3_bg_csv"],
         flt_png=OUTPUTS["flt3_png"],

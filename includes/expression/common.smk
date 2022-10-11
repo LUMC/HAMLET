@@ -37,7 +37,6 @@ def output_file(wildcards, extension):
 output_files = [
     "bases_per_exon",
     "bases_per_gene",
-    "exon_ratios",
     "fragments_per_gene",
     "raw_base",
 ]
@@ -45,5 +44,6 @@ output_files = [
 output_functions = {
     out_file: partial(output_file, extension=out_file) for out_file in output_files
 }
+output_functions["json"] = partial(output_file, extension="exon_ratios.json")
 
 module_output = SimpleNamespace(**output_functions)

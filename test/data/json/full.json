@@ -21,7 +21,7 @@
     "sample_name": "SRR8615409"
   },
   "modules": {
-    "expr": [
+    "expression": [
       {
         "above_threshold": true,
         "count": 219,

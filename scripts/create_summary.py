@@ -332,8 +332,6 @@ def add_itd_table(csv_fname):
                 type=click.Path(exists=True, dir_okay=False))
 @click.argument("kmt2a_plot",
                 type=click.Path(exists=True, dir_okay=False))
-@click.argument("exon_ratios_path",
-                type=click.Path(exists=True, dir_okay=False))
 @click.argument("aln_stats_path",
                 type=click.Path(exists=True, dir_okay=False))
 @click.argument("rna_stats_path",
@@ -353,7 +351,7 @@ def add_itd_table(csv_fname):
 @click.option("--module", type=str, multiple=True,
               help="JSON outputs from various modules")
 def main(id_mappings_path, var_plot_dir, var_csv, fusion_results_dir,
-         flt3_csv, flt3_plot, kmt2a_csv, kmt2a_plot, exon_ratios_path,
+         flt3_csv, flt3_plot, kmt2a_csv, kmt2a_plot,
          aln_stats_path, rna_stats_path,
          insert_stats_path, exon_cov_stats_path, vep_stats_path,
          run_name, sample_name, pipeline_version, module):
@@ -400,7 +398,6 @@ def main(id_mappings_path, var_plot_dir, var_csv, fusion_results_dir,
         "kmt2a": {"path": str(Path(kmt2a_plot).resolve()),
                   "table": add_itd_table(kmt2a_csv)},
     }
-    combined["modules"]["expr"] = add_expr_results(exon_ratios_path)
     combined["modules"]["snv_indels"]["stats"] = post_process(combined["modules"]["snv_indels"]["stats"])
     print(json.dumps(combined, sort_keys=True, indent=2))
 

@@ -24,7 +24,7 @@ def process_table(relative_gene, exons, df, min_threshold):
     exons_df = exons_df.assign(above_threshold=exons_df["ratio"] >= min_threshold)
     exons_df = exons_df.assign(divisor_gene=relative_gene)
     exons_df = exons_df.assign(divisor_exp=gene_total_bases)
-    exons_df["above_threshold"] = exons_df["above_threshold"].map({False: "no", True: "yes"})
+    #exons_df["above_threshold"] = exons_df["above_threshold"].map({False: "no", True: "yes"})
     exons_df.reset_index(inplace=True)
     exons_df.drop("index", axis=1, inplace=True)
 
@@ -47,8 +47,21 @@ def main(table, relative_gene, exons, min_ratio, sample_id):
 
     df = pd.read_table(fh)
     edf = process_table(relative_gene, exons, df, min_ratio)
-    edf.to_csv(sys.stdout, sep="\t", index=False)
+    result = edf.to_json(index=False, orient="table")
 
+    # Get the data
+    ratios = json.loads(result)["data"]
+
+    # Clean up the data
+    for r in ratios:
+        # Remove sample name
+        r.pop("sample_name")
+        # If there is no ratio, set it to zero
+        if r["ratio"] is None:
+            r["ratio"] = 0
+
+    # Write to stdout
+    json.dump({"expression": ratios}, sys.stdout, indent=2)
 
 if __name__ == "__main__":
     main()

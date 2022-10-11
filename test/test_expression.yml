@@ -12,17 +12,17 @@
     contains:
       - "TestSample1/expression/TestSample1.bases_per_exon"
       - "TestSample1/expression/TestSample1.bases_per_gene"
-      - "TestSample1/expression/TestSample1.exon_ratios"
+      - "TestSample1/expression/TestSample1.exon_ratios.json"
       - "TestSample1/expression/TestSample1.fragments_per_gene"
       - "TestSample1/expression/TestSample1.raw_base"
       - "TestSample2/expression/TestSample2.bases_per_exon"
       - "TestSample2/expression/TestSample2.bases_per_gene"
-      - "TestSample2/expression/TestSample2.exon_ratios"
+      - "TestSample2/expression/TestSample2.exon_ratios.json"
       - "TestSample2/expression/TestSample2.fragments_per_gene"
       - "TestSample2/expression/TestSample2.raw_base"
       - "TestSample3/expression/TestSample3.bases_per_exon"
       - "TestSample3/expression/TestSample3.bases_per_gene"
-      - "TestSample3/expression/TestSample3.exon_ratios"
+      - "TestSample3/expression/TestSample3.exon_ratios.json"
       - "TestSample3/expression/TestSample3.fragments_per_gene"
       - "TestSample3/expression/TestSample3.raw_base"
 
@@ -54,11 +54,8 @@
     --singularity-args '--cleanenv --bind /tmp'
     --singularity-prefix '~/.singularity/cache/snakemake'
   files:
-    # Should calculate the exon ratio's vs HMBS (which has 0 expression in our test sample)
-    - path: "SRR8615409/expression/SRR8615409.exon_ratios"
-      contains:
-        - "sample_name\texon\tcount\tratio\tabove_threshold\tdivisor_gene\tdivisor_exp"
-        - "SRR8615409\tMT-TA:5586-5655\t219\tinf\tyes\tHMBS\t0"
+    # Should create exon ratio json file
+    - path: "SRR8615409/expression/SRR8615409.exon_ratios.json"
 
     # Should contain all transcripts specified in the expression bedfile
     - path: "SRR8615409/expression/SRR8615409.bases_per_exon"

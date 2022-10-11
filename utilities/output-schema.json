@@ -34,7 +34,7 @@
       "additionalProperties": false,
       "minProperties": 5,
       "properties": {
-        "expr": {
+        "expression": {
           "type": "array",
           "items": { "$ref": "#/definitions/modules/expression" }
         },

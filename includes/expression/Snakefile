@@ -17,10 +17,10 @@ localrules:
 
 rule all:
     input:
-        base_per_exon=[module_output.bases_per_exon(sample) for sample in samples],
-        base_per_gene=[module_output.bases_per_gene(sample) for sample in samples],
-        exon_ratios=[module_output.exon_ratios(sample) for sample in samples],
-        fragment_per_gene=[
+        bases_per_exon=[module_output.bases_per_exon(sample) for sample in samples],
+        bases_per_gene=[module_output.bases_per_gene(sample) for sample in samples],
+        json=[module_output.json(sample) for sample in samples],
+        fragments_per_gene=[
             module_output.fragments_per_gene(sample) for sample in samples
         ],
         raw_base=[module_output.raw_base(sample) for sample in samples],
@@ -145,7 +145,7 @@ rule calc_exon_ratios:
         table="{sample}/expression/{sample}.bases_per_exon",
         calc_script=config["calc_ratio_script"],
     output:
-        table="{sample}/expression/{sample}.exon_ratios",
+        json="{sample}/expression/{sample}.exon_ratios.json",
     params:
         exon_ratio_names=" ".join(
             [config["relative_gene_name"]] + config.get("exon_names")
@@ -161,5 +161,5 @@ rule calc_exon_ratios:
         python3 {input.calc_script} \
             -r {params.exon_min_ratio} \
             {input.table} \
-            {params.exon_ratio_names} > {output.table} 2> {log}
+            {params.exon_ratio_names} > {output.json} 2> {log}
         """
