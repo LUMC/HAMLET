@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Schema of the output from the expression module for HAMLET",
+  "definitions": {
+    "expression": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 6,
+      "properties": {
+        "above_threshold": { "type": "boolean" },
+        "count": { "type": "integer" },
+        "divisor_exp": { "type": "integer" },
+        "divisor_gene": { "type": "string" },
+        "exon": { "type": "string"},
+        "ratio": { "type": "number"}
+      }
+    }
+  },
+  "additionalProperties": false,
+  "minProperties": 1,
+  "type": "object",
+  "properties": {
+    "expression": { 
+      "type": "array",
+      "items": { "$ref": "#/definitions/expression" }
+    }
+  }
+}
