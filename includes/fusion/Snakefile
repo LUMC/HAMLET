@@ -25,6 +25,7 @@ rule all:
             "{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png", sample=samples
         ),
         fusion_catcher_outputs=get_fusioncatcher_outputs(),
+        json=expand("{sample}/fusion/fusion-output.json", sample=samples),
 
 
 rule star_fusion:
@@ -246,4 +247,21 @@ rule combine_plots:
              STAR-Fusion:{input.sf} \
              FusionCatcher:{input.fc} \
              Intersection:{input.isect} {output.svg} 2> {log}
+        """
+
+
+rule json_output:
+    input:
+        sf="{sample}/fusion/{sample}.star-fusion.svg",
+        sf_png="{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png",
+        src=srcdir("scripts/json-output.py"),
+    output:
+        "{sample}/fusion/fusion-output.json",
+    log:
+        "log/fusion_json_output.{sample}.txt",
+    container:
+        containers["hamlet-scripts"]
+    shell:
+        """
+        python3 {input.src} `dirname {input.sf}` > {output} 2> {log}
         """

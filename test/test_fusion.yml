@@ -34,6 +34,8 @@
       - "TestSample2/fusion/TestSample2.sf-isect"
       - "TestSample2/fusion/TestSample2.sf-isect-circos/fsnviz.svg"
       - "TestSample2/fusion/TestSample2.fusions-combined.svg"
+      # fusion pipeline should create a final json file
+      - "TestSample2/fusion/fusion-output.json"
 
 # Singularity should be available
 - name: test-fusion-sanity-singularity
@@ -64,6 +66,7 @@
     --singularity-prefix '~/.singularity/cache/snakemake'
     SRR8615409/fusion/star-fusion/star-fusion.fusion_predictions.tsv
     SRR8615409/fusion/SRR8615409.star-fusion
+    SRR8615409/fusion/fusion-output.json
   files:
     # Should create the star-fusion output file
     - path: SRR8615409/fusion/star-fusion/star-fusion.fusion_predictions.tsv
@@ -74,6 +77,8 @@
       contains:
         - "Running CMD: /usr/local/bin/STAR"
     - path: "log/star_fusion_cp.SRR8615409.txt"
+    # Test for module output file
+    - path: "SRR8615409/fusion/fusion-output.json"
 
 - name: lint-fusion
   tags:
