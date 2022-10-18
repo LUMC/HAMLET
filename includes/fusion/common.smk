@@ -1,7 +1,8 @@
+from types import SimpleNamespace
+
+
 pepfile: config["pepfile"]
 
-
-samples = pep.sample_table["sample_name"]
 
 containers = {
     "debian": "docker://debian:buster-slim",
@@ -31,6 +32,9 @@ def get_fusioncatcher_outputs():
     if not config["fusioncatcher_data"]:
         return list()
 
+    # cache sample names locally
+    samples = [sample for sample in pep.sample_table["sample_name"]]
+
     fs = expand("{sample}/fusion/{sample}.fusioncatcher", sample=samples)
     fuma = expand("{sample}/fusion/{sample}.fuma", sample=samples)
     is_svg = expand(
@@ -58,3 +62,23 @@ def get_forward(wildcards):
 
 def get_reverse(wildcards):
     return pep.sample_table.loc[wildcards.sample, "R1"]
+
+
+## Functions for module outputs ##
+def star_fusion(wildcards):
+    return f"{wildcards.sample}/fusion/{wildcards.sample}.star-fusion"
+
+
+def star_fusion_fig(wildcards, ext):
+    return (
+        f"{wildcards.sample}/fusion/{wildcards.sample}.star-fusion-circos/fsnviz.{ext}"
+    )
+
+
+def json(wildcards):
+    return f"{wildcards.sample}/fusion/fusion-output.json"
+
+
+module_output = SimpleNamespace(
+    star_fusion=star_fusion, star_fusion_fig=star_fusion_fig, json=json
+)

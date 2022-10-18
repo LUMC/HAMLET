@@ -1,5 +1,9 @@
 from types import SimpleNamespace
 
+
+pepfile: config["pepfile"]
+
+
 containers = {
     "bedtools-2.17-python-2.7": "docker://quay.io/biocontainers/mulled-v2-a9ddcbd438a66450297b5e0b61ac390ee9bfdb61:e60f3cfda0dfcf4a72f2091c6fa1ebe5a5400220-0",
     "htseq": "docker://quay.io/biocontainers/htseq:0.11.2--py27h637b7d7_1",
