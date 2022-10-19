@@ -220,55 +220,6 @@ def add_variant_overview(idm, fn_csv):
     return rv
 
 
-def add_fusion_results(fusion_results_dir):
-    frd = Path(fusion_results_dir)
-    sf_plot = next(frd.rglob("*star-fusion-circos/*.png"))
-    sf_table = next(frd.glob("*.star-fusion"))
-    intersected = any(True for _ in frd.glob("*.fusions-combined.svg"))
-    rv = {
-        "intersected": intersected,
-        "plots": {
-            "star-fusion": str(sf_plot.resolve())
-        },
-        "tables": {
-            "star-fusion": {"path": str(sf_table.resolve())},
-        }
-    }
-
-    def parse_top20(tp):
-        with open(tp, "r") as src:
-            sft = []
-            for lineno, line in enumerate(src):
-                if lineno == 0:
-                    continue
-                name, jr_count, sf_count, fusion_type, *_ = line.split("\t")
-                sft.append({"name": name, "jr_count": int(jr_count),
-                            "sf_count": int(sf_count), "type": fusion_type,})
-                if lineno > 20:
-                    break
-        return sft
-
-    rv["tables"]["star-fusion"]["top20"] = \
-        parse_top20(rv["tables"]["star-fusion"]["path"])
-
-    if intersected:
-        fc_plot = next(frd.rglob("*fusioncatcher-circos/*.png"))
-        fc_table = next(frd.glob("*.fusioncatcher"))
-        rv["plots"]["fusioncatcher"] = str(fc_plot.resolve())
-        rv["tables"]["fusioncatcher"] = {"path": str(fc_table.resolve())}
-        rv["tables"]["fusioncatcher"]["top20"] = \
-            parse_top20(rv["tables"]["fusioncatcher"]["path"])
-
-        isect_plot = next(frd.rglob("*sf-isect-circos/*.png"))
-        isect_table = next(frd.glob("*.sf-isect"))
-        rv["plots"]["intersection"] = str(isect_plot.resolve())
-        rv["tables"]["intersection"] = {"path": str(isect_table.resolve())}
-        rv["tables"]["intersection"]["top20"] = \
-            parse_top20(rv["tables"]["intersection"]["path"])
-
-    return rv
-
-
 def add_expr_results(exon_ratios_path):
     rv = []
     with open(exon_ratios_path, "r") as src:
@@ -322,8 +273,6 @@ def add_itd_table(csv_fname):
                 type=click.Path(exists=True, file_okay=False))
 @click.argument("var_csv",
                 type=click.Path(exists=True, dir_okay=False))
-@click.argument("fusion_results_dir",
-                type=click.Path(exists=True, file_okay=False))
 @click.argument("flt3_csv",
                 type=click.Path(exists=True, dir_okay=False))
 @click.argument("flt3_plot",
@@ -350,7 +299,7 @@ def add_itd_table(csv_fname):
               help="Version string of the pipeline.")
 @click.option("--module", type=str, multiple=True,
               help="JSON outputs from various modules")
-def main(id_mappings_path, var_plot_dir, var_csv, fusion_results_dir,
+def main(id_mappings_path, var_plot_dir, var_csv,
          flt3_csv, flt3_plot, kmt2a_csv, kmt2a_plot,
          aln_stats_path, rna_stats_path,
          insert_stats_path, exon_cov_stats_path, vep_stats_path,
@@ -376,7 +325,6 @@ def main(id_mappings_path, var_plot_dir, var_csv, fusion_results_dir,
                     "var": process_var_stats(vep_stats_path)
                 }
             },
-            "fusion": {},
         },
     }
 
@@ -391,7 +339,6 @@ def main(id_mappings_path, var_plot_dir, var_csv, fusion_results_dir,
         add_variant_plots(idm, var_plot_dir))
     combined["modules"]["snv_indels"]["genes"] = add_variant_overview(
         idm, var_csv)
-    combined["modules"]["fusion"] = add_fusion_results(fusion_results_dir)
     combined["modules"]["itd"] = {
         "flt3": {"path": str(Path(flt3_plot).resolve()),
                  "table": add_itd_table(flt3_csv)},
