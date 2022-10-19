@@ -36,14 +36,6 @@ OUTPUTS = dict(
     kmt2a_png=itd_output(".kmt2a.png"),
 )
 
-# Fusioncatcher outputs
-if config.get("fusioncatcher_data"):
-    OUTPUTS["fusioncatcher_txt"] = fusion_output(".fusioncatcher")
-    OUTPUTS["fusioncatcher_svg"] = fusion_output(".fusioncatcher.svg")
-    OUTPUTS["fusions_txt"] = fusion_output(".fuma")
-    OUTPUTS["isect_svg"] = fusion_output(".sf-isect.svg")
-    OUTPUTS["isect_txt"] = fusion_output(".sf-isect")
-
 
 rule all:
     input:
@@ -161,6 +153,15 @@ use rule fusioncatcher from fusion as fusion_fusioncatcher with:
         fq2=qc_seq.module_output.reverse_raw,
     container:
         "docker://quay.io/biocontainers/fusioncatcher:1.20--2"
+
+
+# Fusioncatcher outputs
+if config.get("fusioncatcher_data"):
+    OUTPUTS["fusioncatcher_txt"] = fusion.module_output.fusion_catcher
+    OUTPUTS["fusioncatcher_svg"] = fusion.module_output.fusion_catcher_svg
+    OUTPUTS["fusions_txt"] = fusion.module_output.intersect
+    OUTPUTS["isect_svg"] = fusion.module_output.intersect_svg
+    OUTPUTS["isect_txt"] = fusion.module_output.subset_predictions
 
 
 rule create_summary:

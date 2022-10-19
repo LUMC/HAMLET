@@ -21,7 +21,16 @@ rule all:
         star_predictions=[module_output.star_fusion(sample) for sample in samples],
         sf_svg=[module_output.star_fusion_fig(sample, "svg") for sample in samples],
         sf_png=[module_output.star_fusion_fig(sample, "png") for sample in samples],
-        fusion_catcher_outputs=get_fusioncatcher_outputs(),
+        fusioncatcher_predictions=[
+            module_output.fusion_catcher(sample) for sample in samples
+        ],
+        intersect_predictions=[module_output.intersect(sample) for sample in samples],
+        fusioncatcher_svg=[
+            module_output.fusion_catcher_fig(sample, "svg") for sample in samples
+        ],
+        #intersect_svg=[module_output.intersect_fig(sample, "svg") for sample in samples],
+        #intersect_png=[module_output.intersect_fig(sample, "png") for sample in samples],
+        combined_svg=[module_output.combined_fig(sample, "svg") for sample in samples],
         json=[module_output.json(sample) for sample in samples],
 
 
@@ -170,7 +179,7 @@ rule intersect_fusions:
         fc="{sample}/fusion/{sample}.fusioncatcher",
         bed=config["transcripts_bed"],
     output:
-        txt="{sample}/fusion/{sample}.fuma",
+        txt="{sample}/fusion/{sample}.intersect",
     log:
         "log/intersect_fusions.{sample}.txt",
     container:
@@ -192,7 +201,7 @@ rule intersect_fusions:
 rule subset_sf:
     input:
         sf="{sample}/fusion/{sample}.star-fusion",
-        isect="{sample}/fusion/{sample}.fuma",
+        isect="{sample}/fusion/{sample}.intersect",
         subset_script=config["sf_subset_script"],
     output:
         sf="{sample}/fusion/{sample}.sf-isect",
@@ -251,6 +260,7 @@ rule json_output:
     input:
         sf="{sample}/fusion/{sample}.star-fusion.svg",
         sf_png="{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png",
+        fc=module_output.intersect_svg,
         src=srcdir("scripts/json-output.py"),
     output:
         "{sample}/fusion/fusion-output.json",

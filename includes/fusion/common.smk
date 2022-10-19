@@ -26,36 +26,6 @@ set_default("sf_rewrite_script", srcdir("scripts/rewrite_star_fusion_header.py")
 set_default("fusioncatcher_data", False)
 
 
-def get_fusioncatcher_outputs():
-    # If no fusioncatcher data is specified, we do not run it and there are no
-    # outputs
-    if not config["fusioncatcher_data"]:
-        return list()
-
-    # cache sample names locally
-    samples = [sample for sample in pep.sample_table["sample_name"]]
-
-    fs = expand("{sample}/fusion/{sample}.fusioncatcher", sample=samples)
-    fuma = expand("{sample}/fusion/{sample}.fuma", sample=samples)
-    is_svg = expand(
-        "{sample}/fusion/{sample}.sf-isect-circos/fsnviz.svg", sample=samples
-    )
-    is_png = expand(
-        "{sample}/fusion/{sample}.sf-isect-circos/fsnviz.png", sample=samples
-    )
-    fc_svg = expand(
-        "{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg", sample=samples
-    )
-    fc_png = expand(
-        "{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png", sample=samples
-    )
-    combined_svg = expand(
-        "{sample}/fusion/{sample}.fusions-combined.svg", sample=samples
-    )
-    subset = expand("{sample}/fusion/{sample}.sf-isect", sample=samples)
-    return fs + fuma + is_svg + is_png + fc_svg + fc_png + combined_svg + subset
-
-
 def get_forward(wildcards):
     return pep.sample_table.loc[wildcards.sample, "R1"]
 
@@ -79,6 +49,68 @@ def json(wildcards):
     return f"{wildcards.sample}/fusion/fusion-output.json"
 
 
+def fusion_catcher(wildcards):
+    if config["fusioncatcher_data"]:
+        return f"{wildcards.sample}/fusion/{wildcards.sample}.fusioncatcher"
+    else:
+        return list()
+
+
+def fusion_catcher_fig(wildcards, ext):
+    if config["fusioncatcher_data"]:
+        return f"{wildcards.sample}/fusion/{wildcards.sample}.fusioncatcher.{ext}"
+    else:
+        return list()
+
+
+def fusion_catcher_svg(wildcards):
+    return fusion_catcher_fig(wildcards, "svg")
+
+
+def intersect(wildcards):
+    if config["fusioncatcher_data"]:
+        return f"{wildcards.sample}/fusion/{wildcards.sample}.intersect"
+    else:
+        return list()
+
+
+def intersect_fig(wildcards, ext):
+    if config["fusioncatcher_data"]:
+        return (
+            f"{wildcards.sample}/fusion/{wildcards.sample}.sf-isect-circos/fsnviz.{ext}"
+        )
+    else:
+        return list()
+
+
+def intersect_svg(wildcards):
+    return intersect_fig(wildcards, "svg")
+
+
+def combined_fig(wildcards, ext):
+    if config["fusioncatcher_data"]:
+        return f"{wildcards.sample}/fusion/{wildcards.sample}.fusions-combined.{ext}"
+    else:
+        return list()
+
+
+def subset_predictions(wildcards):
+    if config["fusioncatcher_data"]:
+        return f"{wildcards.sample}/fusion/{wildcards.sample}.sf-isect"
+    else:
+        return list()
+
+
 module_output = SimpleNamespace(
-    star_fusion=star_fusion, star_fusion_fig=star_fusion_fig, json=json
+    star_fusion=star_fusion,
+    star_fusion_fig=star_fusion_fig,
+    json=json,
+    fusion_catcher=fusion_catcher,
+    intersect=intersect,
+    intersect_fig=intersect_fig,
+    combined_fig=combined_fig,
+    fusion_catcher_fig=fusion_catcher_fig,
+    fusion_catcher_svg=fusion_catcher_svg,
+    intersect_svg=intersect_svg,
+    subset_predictions=subset_predictions,
 )
