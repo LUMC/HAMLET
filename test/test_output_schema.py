@@ -54,3 +54,28 @@ def test_example_fusion_output_schema(workflow_dir):
     output_file = pathlib.Path(workflow_dir, "fusion-output.json")
     schema_file = pathlib.Path(workflow_dir, "includes/fusion/output-schema.json")
     validate_files(output_file, schema_file)
+
+@pytest.mark.workflow('test-fusion-output')
+def test_example_fusion_output_content(workflow_dir):
+    output_file = pathlib.Path(workflow_dir, "fusion-output.json")
+    with open(output_file) as fin:
+        js = json.load(fin)
+
+    # Test if we recognised the data is intersected
+    assert js["fusion"]["intersected"]
+
+    # Test if we have a png file for each tool
+    tools = ["fusioncatcher", "star-fusion", "intersection"]
+    for tool in tools:
+        assert tool in js["fusion"]["plots"]
+
+    # Test first and last result for intersection
+    results = js["fusion"]["tables"]["intersection"]["top20"]
+    first = results[0]
+    last = results[-1]
+
+    assert first["name"] == "PLAA--MIR31HG"
+    assert first["sf_count"] == 101
+
+    assert last["type"] == "INCL_NON_REF_SPLICE"
+    assert last["jr_count"] == 3
