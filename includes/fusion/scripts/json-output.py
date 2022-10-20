@@ -38,7 +38,7 @@ def fusion_results(fusion_results_dir):
 
     if intersected:
         fc_plot = next(frd.rglob("*fusioncatcher-circos/*.png"))
-        fc_table = next(frd.glob("*.fusioncatcher"))
+        fc_table = next(frd.glob("*.star-fusion"))
         rv["plots"]["fusioncatcher"] = str(fc_plot.resolve())
         rv["tables"]["fusioncatcher"] = {"path": str(fc_table.resolve())}
         rv["tables"]["fusioncatcher"]["top20"] = \
