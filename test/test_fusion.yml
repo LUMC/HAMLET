@@ -81,6 +81,18 @@
     # Test for module output file
     - path: "SRR8615409/fusion/fusion-output.json"
 
+- name: test-fusion-output
+  tags:
+    - functional
+    - fusion
+  command: >
+    bash -c "
+    python3 includes/fusion/scripts/json-output.py test/data/fusion > fusion-output.json
+    "
+  files:
+    - path: fusion-output.json
+
+
 - name: lint-fusion
   tags:
     - sanity
