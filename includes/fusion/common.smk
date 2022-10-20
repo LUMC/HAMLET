@@ -69,7 +69,7 @@ def fusion_catcher_svg(wildcards):
 
 def intersect(wildcards):
     if config["fusioncatcher_data"]:
-        return f"{wildcards.sample}/fusion/{wildcards.sample}.intersect"
+        return f"{wildcards.sample}/fusion/{wildcards.sample}.fuma"
     else:
         return list()
 
