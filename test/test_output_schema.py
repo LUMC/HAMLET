@@ -64,12 +64,8 @@ def test_example_fusion_output_content(workflow_dir):
     # Test if we recognised the data is intersected
     assert js["fusion"]["intersected"]
 
-    # Test if we have a png file for each tool
-    tools = ["fusioncatcher", "star-fusion", "intersection"]
-    for tool in tools:
-        assert tool in js["fusion"]["plots"]
-
     # Test if we have a table for each tool
+    tools = ["fusioncatcher", "star-fusion", "intersection"]
     for tool in tools:
         assert tool in js["fusion"]["tables"]
 
@@ -91,3 +87,21 @@ def test_example_fusion_output_content(workflow_dir):
 
     assert first["name"] == "PLAA--MIR31HG"
     assert first["sf_count"] == 101
+
+@pytest.mark.workflow('test-fusion-output')
+def test_example_fusion_output_pngs(workflow_dir):
+    """ Test if we have a png plot for each tool """
+    output_file = pathlib.Path(workflow_dir, "fusion-output.json")
+    with open(output_file) as fin:
+        js = json.load(fin)
+
+    # Get the plots for each tool
+    fc = js["fusion"]["plots"]["fusioncatcher"]
+    isect = js["fusion"]["plots"]["intersection"]
+    star = js["fusion"]["plots"]["star-fusion"]
+
+    # Check the content
+    assert fc.endswith("sample.fusioncatcher-circos/fsnviz.png")
+    assert isect.endswith("sample.sf-isect-circos/fsnviz.png")
+    assert star.endswith("sample.star-fusion-circos/fsnviz.png")
+    #assert tool in js["fusion"]["plots"]
