@@ -3,18 +3,26 @@
 import json
 import argparse
 
-def parse_top20(tp):
-    with open(tp, "r") as src:
-        sft = []
-        for lineno, line in enumerate(src):
-            if lineno == 0:
-                continue
-            name, jr_count, sf_count, fusion_type, *_ = line.split("\t")
-            sft.append({"name": name, "jr_count": int(jr_count),
-                        "sf_count": int(sf_count), "type": fusion_type,})
-            if lineno > 20:
-                break
-    return sft
+from crimson import star_fusion
+from crimson import fusioncatcher
+
+def transform_star_fusion(event):
+    """ Transform a star_fusion event to a simplified form """
+    return {
+        "jr_count": event["nJunctionReads"],
+        "name": event["fusionName"],
+        "sf_count": event["nSpanningFrags"],
+        "type": event["spliceType"]
+    }
+
+def transform_fusioncatcher(event):
+    """ Transform a fusioncatcher event to a simplified form """
+    return {
+        "jr_count": None,
+        "name": f"{event['5end']['geneSymbol']}--{event['3end']['geneSymbol']}",
+        "sf_count": event["nSpanningPairs"],
+        "type": None
+    }
 
 def fusion_results(args):
     # Initialise the results dictionary
@@ -27,10 +35,19 @@ def fusion_results(args):
     # Add the results for each tool
     for tool, plot, table in zip(args.tools, args.plots, args.tables):
         results["plots"][tool] = plot
-        results["tables"][tool] = {
-            "path": table,
-            "top20": parse_top20(table)
-        }
+
+        if tool == "fusioncatcher":
+            events = fusioncatcher.parse(table)
+            results["tables"][tool] = {
+                "path": table,
+                "top20": [transform_fusioncatcher(event) for event in events[:20]]
+            }
+        else:
+            events = star_fusion.parse(table)
+            results["tables"][tool] = {
+                "path": table,
+                "top20": [transform_star_fusion(event) for event in events[:20]]
+            }
 
     return results
 

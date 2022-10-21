@@ -78,7 +78,8 @@ def test_example_fusion_output_content(workflow_dir):
     assert first["sf_count"] == 101
 
     assert last["type"] == "INCL_NON_REF_SPLICE"
-    assert last["jr_count"] == 3
+    assert last["name"] == "PTMA--NPM1"
+    assert last["jr_count"] == 5
 
     # Test first result for star-fusion
     results = js["fusion"]["tables"]["intersection"]["top20"]
