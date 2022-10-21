@@ -87,7 +87,9 @@
     - fusion
   command: >
     bash -c "
-    python3 includes/fusion/scripts/json-output.py test/data/fusion > fusion-output.json
+    python3 includes/fusion/scripts/json-output.py \
+      --intersected \
+      test/data/fusion > fusion-output.json
     "
   files:
     - path: fusion-output.json

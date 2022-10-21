@@ -2,14 +2,14 @@
 
 import json
 import sys
+import argparse
 
 from pathlib import Path
 
-def fusion_results(fusion_results_dir):
+def fusion_results(fusion_results_dir, intersected):
     frd = Path(fusion_results_dir)
     sf_plot = next(frd.rglob("*star-fusion-circos/*.png"))
     sf_table = next(frd.glob("*.star-fusion"))
-    intersected = any(True for _ in frd.glob("*.fusions-combined.svg"))
     rv = {
         "intersected": intersected,
         "plots": {
@@ -54,12 +54,17 @@ def fusion_results(fusion_results_dir):
     return rv
 
 
-def main(fusion_results_dir):
+def main(args):
     """ Create json output of fusion results """
-    results = fusion_results(fusion_results_dir)
+    results = fusion_results(args.fusion_results_dir, args.intersected)
     json.dump({"fusion": results}, sys.stdout, sort_keys=True, indent=2)
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--intersected', default=False, action='store_true')
+    parser.add_argument('fusion_results_dir')
+
+    args = parser.parse_args()
+    main(args)
 
