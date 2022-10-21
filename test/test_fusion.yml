@@ -89,7 +89,16 @@
     bash -c "
     python3 includes/fusion/scripts/json-output.py \
       --intersected \
-      test/data/fusion > fusion-output.json
+      --tools fusioncatcher intersection star-fusion \
+      --plots \
+        test/data/fusion/sample.fusioncatcher-circos/fsnviz.png \
+        test/data/fusion/sample.sf-isect-circos/fsnviz.png \
+        test/data/fusion/sample.star-fusion-circos/fsnviz.png \
+      --tables \
+        test/data/fusion/sample.star-fusion \
+        test/data/fusion/sample.sf-isect \
+        test/data/fusion/sample.star-fusion \
+      > fusion-output.json
     "
   files:
     - path: fusion-output.json

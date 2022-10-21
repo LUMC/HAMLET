@@ -104,4 +104,3 @@ def test_example_fusion_output_pngs(workflow_dir):
     assert fc.endswith("sample.fusioncatcher-circos/fsnviz.png")
     assert isect.endswith("sample.sf-isect-circos/fsnviz.png")
     assert star.endswith("sample.star-fusion-circos/fsnviz.png")
-    #assert tool in js["fusion"]["plots"]
