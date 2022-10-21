@@ -69,6 +69,10 @@ def test_example_fusion_output_content(workflow_dir):
     for tool in tools:
         assert tool in js["fusion"]["plots"]
 
+    # Test if we have a table for each tool
+    for tool in tools:
+        assert tool in js["fusion"]["tables"]
+
     # Test first and last result for intersection
     results = js["fusion"]["tables"]["intersection"]["top20"]
     first = results[0]
@@ -79,3 +83,11 @@ def test_example_fusion_output_content(workflow_dir):
 
     assert last["type"] == "INCL_NON_REF_SPLICE"
     assert last["jr_count"] == 3
+
+    # Test first result for star-fusion
+    results = js["fusion"]["tables"]["intersection"]["top20"]
+    first = results[0]
+    last = results[-1]
+
+    assert first["name"] == "PLAA--MIR31HG"
+    assert first["sf_count"] == 101
