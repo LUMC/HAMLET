@@ -105,3 +105,17 @@ def test_example_fusion_output_pngs(workflow_dir):
     assert fc.endswith("sample.fusioncatcher-circos/fsnviz.png")
     assert isect.endswith("sample.sf-isect-circos/fsnviz.png")
     assert star.endswith("sample.star-fusion-circos/fsnviz.png")
+
+@pytest.mark.workflow('test-star-fusion-output')
+def test_star_fusion_output(workflow_dir):
+    """ Test if we have a png plot for each tool """
+    output_file = pathlib.Path(workflow_dir, "fusion-output.json")
+    with open(output_file) as fin:
+        js = json.load(fin)
+
+    # Get the plots for each tool
+    star = js["fusion"]["plots"]["star-fusion"]
+
+    # Check the content
+    assert star.endswith("sample.star-fusion-circos/fsnviz.png")
+    assert not js["fusion"]["intersected"]

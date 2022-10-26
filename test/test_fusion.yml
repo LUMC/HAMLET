@@ -103,6 +103,22 @@
   files:
     - path: fusion-output.json
 
+- name: test-star-fusion-output
+  tags:
+    - functional
+    - fusion
+  command: >
+    bash -c "
+    python3 includes/fusion/scripts/json-output.py \
+      --tools star-fusion \
+      --plots \
+        test/data/fusion/sample.star-fusion-circos/fsnviz.png \
+      --tables \
+        test/data/fusion/sample.star-fusion \
+      > fusion-output.json
+    "
+  files:
+    - path: fusion-output.json
 
 - name: lint-fusion
   tags:
