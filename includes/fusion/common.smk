@@ -52,8 +52,6 @@ def json(wildcards):
 def fusion_catcher(wildcards):
     if config["fusioncatcher_data"]:
         return f"{wildcards.sample}/fusion/{wildcards.sample}.fusioncatcher"
-    else:
-        return list()
 
 
 def fusion_catcher_fig(wildcards, ext):
@@ -66,8 +64,6 @@ def fusion_catcher_fig(wildcards, ext):
 def intersect(wildcards):
     if config["fusioncatcher_data"]:
         return f"{wildcards.sample}/fusion/{wildcards.sample}.fuma"
-    else:
-        return list()
 
 
 def intersect_fig(wildcards):
@@ -75,24 +71,26 @@ def intersect_fig(wildcards):
         return (
             f"{wildcards.sample}/fusion/{wildcards.sample}.sf-isect-circos/fsnviz.png"
         )
-    else:
-        return list()
 
 
 def subset_predictions(wildcards):
     if config["fusioncatcher_data"]:
         return f"{wildcards.sample}/fusion/{wildcards.sample}.sf-isect"
-    else:
-        return list()
 
 
+# Optional module outputs
+optional = SimpleNamespace(
+    fusion_catcher=fusion_catcher if config["fusioncatcher_data"] else lambda x: [],
+    intersect=intersect if config["fusioncatcher_data"] else lambda x: [],
+    intersect_fig=intersect_fig if config["fusioncatcher_data"] else lambda x: [],
+    subset_predictions=subset_predictions
+    if config["fusioncatcher_data"]
+    else lambda x: [],
+)
 module_output = SimpleNamespace(
     star_fusion=star_fusion,
     star_fusion_fig=star_fusion_fig,
     json=json,
-    fusion_catcher=fusion_catcher,
-    intersect=intersect,
-    intersect_fig=intersect_fig,
     fusion_catcher_fig=fusion_catcher_fig,
-    subset_predictions=subset_predictions,
+    optional=optional,
 )
