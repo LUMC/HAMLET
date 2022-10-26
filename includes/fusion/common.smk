@@ -10,7 +10,7 @@ containers = {
     "fuma": "docker://quay.io/biocontainers/fuma:4.0.0--pyhb7b1952_0",
     "fusioncatcher": "docker://quay.io/biocontainers/fusioncatcher:1.20--2",
     "star-fusion": "docker://quay.io/biocontainers/star-fusion:1.10.0--hdfd78af_1",
-    "hamlet-scripts": "docker://quay.io/redmar_van_den_berg/hamlet-scripts:0.2",
+    "crimson": "docker://quay.io/biocontainers/crimson:1.1.0--pyh5e36f6f_0",
 }
 
 
