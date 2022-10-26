@@ -18,11 +18,12 @@ localrules:
 rule all:
     input:
         star_predictions=[module_output.star_fusion(sample) for sample in samples],
-        sf_png=[module_output.star_fusion_fig(sample, "png") for sample in samples],
         fusioncatcher_predictions=[
-            module_output.fusion_catcher(sample) for sample in samples
+            module_output.optional.fusion_catcher(sample) for sample in samples
         ],
-        intersect_predictions=[module_output.intersect(sample) for sample in samples],
+        intersect_predictions=[
+            module_output.optional.intersect(sample) for sample in samples
+        ],
         json=[module_output.json(sample) for sample in samples],
 
 

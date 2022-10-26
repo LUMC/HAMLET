@@ -157,9 +157,9 @@ use rule fusioncatcher from fusion as fusion_fusioncatcher with:
 
 # Fusioncatcher outputs
 if config.get("fusioncatcher_data"):
-    OUTPUTS["fusioncatcher_txt"] = fusion.module_output.fusion_catcher
-    OUTPUTS["fusions_txt"] = fusion.module_output.intersect
-    OUTPUTS["isect_txt"] = fusion.module_output.subset_predictions
+    OUTPUTS["fusioncatcher_txt"] = fusion.module_output.optional.fusion_catcher
+    OUTPUTS["fusions_txt"] = fusion.module_output.optional.intersect
+    OUTPUTS["isect_txt"] = fusion.module_output.optional.subset_predictions
 
 
 rule create_summary:
