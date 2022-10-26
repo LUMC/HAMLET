@@ -208,7 +208,7 @@ rule subset_sf:
     log:
         "log/subset_sf.{sample}.txt",
     container:
-        containers["hamlet-scripts"]
+        containers["crimson"]
     shell:
         """
         python3 {input.subset_script} {input.isect} {input.sf} > {output.sf} 2> {log}
@@ -246,7 +246,7 @@ rule combine_plots:
     log:
         "log/combine_plots.{sample}.txt",
     container:
-        containers["hamlet-scripts"]
+        containers["crimson"]
     shell:
         """
         python3 {input.combine_script} \"
@@ -258,17 +258,38 @@ rule combine_plots:
 
 rule json_output:
     input:
-        sf="{sample}/fusion/{sample}.star-fusion.svg",
+        fusioncatcher="{sample}/fusion/{sample}.fusioncatcher"
+        if config["fusioncatcher_data"]
+        else [],
+        star_fusion="{sample}/fusion/{sample}.star-fusion",
+        intersect="{sample}/fusion/{sample}.sf-isect"
+        if config["fusioncatcher_data"]
+        else [],
+        fc_png="{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png"
+        if config["fusioncatcher_data"]
+        else [],
         sf_png="{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png",
-        fc=module_output.intersect_svg,
+        is_png="{sample}/fusion/{sample}.sf-isect-circos/fsnviz.png"
+        if config["fusioncatcher_data"]
+        else [],
         src=srcdir("scripts/json-output.py"),
+    params:
+        intersected="--intersected" if config["fusioncatcher_data"] else "",
+        tools="fusioncatcher intersection star-fusion"
+        if config["fusioncatcher_data"]
+        else "star-fusion",
     output:
         "{sample}/fusion/fusion-output.json",
     log:
         "log/fusion_json_output.{sample}.txt",
     container:
-        containers["hamlet-scripts"]
+        containers["crimson"]
     shell:
         """
-        python3 {input.src} `dirname {input.sf}` > {output} 2> {log}
+        python3 {input.src} \
+            {params.intersected} \
+            --tools {params.tools} \
+            --plots {input.fc_png} {input.sf_png} {input.is_png} \
+            --tables {input.fusioncatcher} {input.star_fusion} {input.intersect} \
+            > {output} 2> {log}
         """
