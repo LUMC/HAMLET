@@ -158,9 +158,7 @@ use rule fusioncatcher from fusion as fusion_fusioncatcher with:
 # Fusioncatcher outputs
 if config.get("fusioncatcher_data"):
     OUTPUTS["fusioncatcher_txt"] = fusion.module_output.fusion_catcher
-    OUTPUTS["fusioncatcher_svg"] = fusion.module_output.fusion_catcher_svg
     OUTPUTS["fusions_txt"] = fusion.module_output.intersect
-    OUTPUTS["isect_svg"] = fusion.module_output.intersect_svg
     OUTPUTS["isect_txt"] = fusion.module_output.subset_predictions
 
 
@@ -245,7 +243,6 @@ rule package_results:
         smallvars_csv_all=OUTPUTS["smallvars_csv_all"],
         smallvars_csv_hi=OUTPUTS["smallvars_csv_hi"],
         smallvars_plots=OUTPUTS["smallvars_plots"],
-        fusions_svg=OUTPUTS.get("fusions_svg", []),
         count_fragments_per_gene=expression.module_output.fragments_per_gene,
         count_bases_per_gene=expression.module_output.bases_per_gene,
         count_bases_per_exon=expression.module_output.bases_per_exon,

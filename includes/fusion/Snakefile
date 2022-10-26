@@ -7,7 +7,6 @@ samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample
 
 
 localrules:
-    combine_plots,
     intersect_fusions,
     plot_cp,
     plot_isect,
@@ -19,18 +18,11 @@ localrules:
 rule all:
     input:
         star_predictions=[module_output.star_fusion(sample) for sample in samples],
-        sf_svg=[module_output.star_fusion_fig(sample, "svg") for sample in samples],
         sf_png=[module_output.star_fusion_fig(sample, "png") for sample in samples],
         fusioncatcher_predictions=[
             module_output.fusion_catcher(sample) for sample in samples
         ],
         intersect_predictions=[module_output.intersect(sample) for sample in samples],
-        fusioncatcher_svg=[
-            module_output.fusion_catcher_fig(sample, "svg") for sample in samples
-        ],
-        #intersect_svg=[module_output.intersect_fig(sample, "svg") for sample in samples],
-        #intersect_png=[module_output.intersect_fig(sample, "png") for sample in samples],
-        combined_svg=[module_output.combined_fig(sample, "svg") for sample in samples],
         json=[module_output.json(sample) for sample in samples],
 
 
@@ -78,7 +70,6 @@ rule plot_sf:
     input:
         txt="{sample}/fusion/{sample}.star-fusion",
     output:
-        svg="{sample}/fusion/{sample}.star-fusion-circos/fsnviz.svg",
         png="{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png",
     log:
         "log/plot_sf.{sample}.txt",
@@ -87,28 +78,11 @@ rule plot_sf:
     shell:
         """
         PERL5LIB="" fsnviz \
-            --out-dir `dirname {output.svg}` \
+            --out-dir `dirname {output.png}` \
             --png \
             -k human.hg38 \
             star-fusion \
             {input.txt} 2> {log}
-        """
-
-
-rule plot_cp:
-    input:
-        svg="{sample}/fusion/{sample}.{ext}-circos/fsnviz.svg",
-    output:
-        svg="{sample}/fusion/{sample}.{ext}.svg",
-    log:
-        "log/plot_cp.{sample}.{ext}.txt",
-    wildcard_constraints:
-        ext="star-fusion|sf-isect|fusioncatcher",
-    container:
-        containers["debian"]
-    shell:
-        """
-        cp {input.svg} {output.svg}
         """
 
 
@@ -157,7 +131,6 @@ rule plot_fc:
     input:
         txt="{sample}/fusion/{sample}.fusioncatcher",
     output:
-        svg="{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.svg",
         png="{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png",
     log:
         "log/plot_fc.{sample}.txt",
@@ -166,7 +139,7 @@ rule plot_fc:
     shell:
         """
         PERL5LIB="" fsnviz \
-            --out-dir `dirname {output.svg}` \
+            --out-dir `dirname {output.png}` \
             --png \
             -k human.hg38 \
             fusioncatcher {input.txt} 2> {log}
@@ -219,7 +192,6 @@ rule plot_isect:
     input:
         txt="{sample}/fusion/{sample}.sf-isect",
     output:
-        svg="{sample}/fusion/{sample}.sf-isect-circos/fsnviz.svg",
         png="{sample}/fusion/{sample}.sf-isect-circos/fsnviz.png",
     log:
         "log/plot_isect.{sample}.txt",
@@ -228,31 +200,10 @@ rule plot_isect:
     shell:
         """
         PERL5LIB="" fsnviz \
-            --out-dir `dirname {output.svg}` \
+            --out-dir `dirname {output.png}` \
             --png \
             -k human.hg38 \
             star-fusion {input.txt} 2> {log}
-        """
-
-
-rule combine_plots:
-    input:
-        sf="{sample}/fusion/{sample}.star-fusion.svg",
-        fc="{sample}/fusion/{sample}.fusioncatcher.svg",
-        isect="{sample}/fusion/{sample}.sf-isect.svg",
-        combine_script=config["plot_combined_script"],
-    output:
-        svg="{sample}/fusion/{sample}.fusions-combined.svg",
-    log:
-        "log/combine_plots.{sample}.txt",
-    container:
-        containers["crimson"]
-    shell:
-        """
-        python3 {input.combine_script} \"
-             STAR-Fusion:{input.sf} \
-             FusionCatcher:{input.fc} \
-             Intersection:{input.isect} {output.svg} 2> {log}
         """
 
 

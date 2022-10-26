@@ -63,10 +63,6 @@ def fusion_catcher_fig(wildcards, ext):
         return list()
 
 
-def fusion_catcher_svg(wildcards):
-    return fusion_catcher_fig(wildcards, "svg")
-
-
 def intersect(wildcards):
     if config["fusioncatcher_data"]:
         return f"{wildcards.sample}/fusion/{wildcards.sample}.fuma"
@@ -74,22 +70,11 @@ def intersect(wildcards):
         return list()
 
 
-def intersect_fig(wildcards, ext):
+def intersect_fig(wildcards):
     if config["fusioncatcher_data"]:
         return (
-            f"{wildcards.sample}/fusion/{wildcards.sample}.sf-isect-circos/fsnviz.{ext}"
+            f"{wildcards.sample}/fusion/{wildcards.sample}.sf-isect-circos/fsnviz.png"
         )
-    else:
-        return list()
-
-
-def intersect_svg(wildcards):
-    return intersect_fig(wildcards, "svg")
-
-
-def combined_fig(wildcards, ext):
-    if config["fusioncatcher_data"]:
-        return f"{wildcards.sample}/fusion/{wildcards.sample}.fusions-combined.{ext}"
     else:
         return list()
 
@@ -108,9 +93,6 @@ module_output = SimpleNamespace(
     fusion_catcher=fusion_catcher,
     intersect=intersect,
     intersect_fig=intersect_fig,
-    combined_fig=combined_fig,
     fusion_catcher_fig=fusion_catcher_fig,
-    fusion_catcher_svg=fusion_catcher_svg,
-    intersect_svg=intersect_svg,
     subset_predictions=subset_predictions,
 )
