@@ -18,10 +18,8 @@ def transform_star_fusion(event):
 def transform_fusioncatcher(event):
     """ Transform a fusioncatcher event to a simplified form """
     return {
-        "jr_count": None,
         "name": f"{event['5end']['geneSymbol']}--{event['3end']['geneSymbol']}",
         "sf_count": event["nSpanningPairs"],
-        "type": None
     }
 
 def fusion_results(args):

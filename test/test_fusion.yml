@@ -95,7 +95,7 @@
         test/data/fusion/sample.sf-isect-circos/fsnviz.png \
         test/data/fusion/sample.star-fusion-circos/fsnviz.png \
       --tables \
-        test/data/fusion/sample.star-fusion \
+        test/data/fusion/sample.fusioncatcher \
         test/data/fusion/sample.sf-isect \
         test/data/fusion/sample.star-fusion \
       > fusion-output.json
