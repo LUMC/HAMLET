@@ -210,20 +210,12 @@ rule plot_isect:
 
 rule json_output:
     input:
-        fusioncatcher="{sample}/fusion/{sample}.fusioncatcher"
-        if config["fusioncatcher_data"]
-        else [],
-        star_fusion="{sample}/fusion/{sample}.star-fusion",
-        intersect="{sample}/fusion/{sample}.sf-isect"
-        if config["fusioncatcher_data"]
-        else [],
-        fc_png="{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png"
-        if config["fusioncatcher_data"]
-        else [],
-        sf_png="{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png",
-        is_png="{sample}/fusion/{sample}.sf-isect-circos/fsnviz.png"
-        if config["fusioncatcher_data"]
-        else [],
+        fusioncatcher=module_output.optional.fusion_catcher,
+        star_fusion=module_output.star_fusion,
+        intersect=module_output.optional.intersect,
+        fc_png=module_output.optional.fusioncatcher_fig,
+        sf_png=module_output.star_fusion_fig,
+        is_png=module_output.optional.intersect_fig,
         src=srcdir("scripts/json-output.py"),
     params:
         intersected="--intersected" if config["fusioncatcher_data"] else "",
