@@ -16,6 +16,7 @@ containers = {
     "samtools": "docker://quay.io/biocontainers/samtools:1.6--h244ad75_4",
     "varscan-2.4.2-samtools-1.3.1-tabix-0.2.6-grep-2.14": "docker://quay.io/biocontainers/mulled-v2-58936b48a08c4e06505165c6f560ec9460b431ea:ef260d10ee671f4c7bd8e783939839bb2e0b684e-0",
     "vep": "docker://quay.io/biocontainers/ensembl-vep:101.0--pl526hecda079_1",
+    "crimson": "docker://quay.io/biocontainers/crimson:1.1.0--pyh5e36f6f_0",
 }
 
 
