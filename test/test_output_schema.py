@@ -119,3 +119,10 @@ def test_star_fusion_output(workflow_dir):
     # Check the content
     assert star.endswith("sample.star-fusion-circos/fsnviz.png")
     assert not js["fusion"]["intersected"]
+
+@pytest.mark.workflow('test-snv-indels-chrM')
+def test_fusion_schema(workflow_dir):
+    sample = "SRR8615409"
+    output_file = pathlib.Path(workflow_dir, f"{sample}/snv-indels/snv-indels-output.json")
+    schema_file = pathlib.Path(workflow_dir, "includes/snv-indels/output-schema.json")
+    validate_files(output_file, schema_file)

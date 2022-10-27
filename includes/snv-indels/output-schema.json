@@ -1,0 +1,218 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Schema of the output from the snv-indels module for HAMLET",
+  "definitions": {
+    "snv_indels": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 3,
+      "properties": {
+        "genes": { "$ref": "#/definitions/snv_indels/genes" },
+        "plots": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/snv_indels/geneplot" }
+        },
+        "stats": { "$ref": "#/definitions/snv_indels/stats" }
+      },
+      "genes": {
+        "type": "object",
+        "additionalProperties": { "$ref": "#/definitions/snv_indels/gene" }
+      },
+      "gene": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/snv_indels/variant" }
+      },
+      "variant": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 6,
+        "properties": {
+          "HGVSc": { "type": "string" },
+          "HGVSp": { "type": "string" },
+          "Existing_variation": { "type": "array", "items": { "type": "string" }},
+          "FREQ": { "type": "number" },
+          "is_in_hotspot": { "type": "boolean" },
+          "PVAL": { "type": "number" }
+        }
+      },
+      "geneplot": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 2,
+        "properties": {
+          "gene": { "type": "string" },
+          "path": { "type": "string" }
+        }
+      },
+      "stats": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 5,
+        "properties": {
+          "aln": { "$ref": "#/definitions/snv_indels/stats/aln" },
+          "cov": { "$ref": "#/definitions/snv_indels/stats/cov" },
+          "ins": { "$ref": "#/definitions/snv_indels/stats/ins" },
+          "rna": { "$ref": "#/definitions/snv_indels/stats/rna" },
+          "var": { "$ref": "#/definitions/snv_indels/stats/var" }
+        },
+        "aln": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 13,
+          "properties": {
+            "num_aligned_bases": { "type": "integer" },
+            "num_aligned_reads": { "type": "integer" },
+            "num_aligned_reads_proper_pairs": { "type": "integer" },
+            "num_total_bases": { "type": "integer" },
+            "num_total_reads": { "type": "integer" },
+            "pct_adapter": { "type": "number" },
+            "pct_aligned_bases_from_total": { "type": "number" },
+            "pct_aligned_reads_from_total": { "type": "number" },
+            "pct_aligned_reads_proper_pairs": { "type": "number" },
+            "pct_chimeras": { "type": "number" },
+            "rate_indel": { "type": "number" },
+            "rate_mismatch": { "type": "number" },
+            "strand_balance": { "type": "number" }
+          }
+        },
+        "cov": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/snv_indels/stats/cov/gene" },
+          "gene": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/definitions/snv_indels/stats/cov/transcript" },
+            "minProperties" : 1
+          },
+          "transcript": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/snv_indels/stats/cov/exon" },
+            "minItems": 1
+          },
+          "exon": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 4,
+            "properties": {
+              "chrom": { "type": "string" },
+              "end": { "type": "integer" },
+              "exon_num": { "type": "integer" },
+              "metrics": { "$ref": "#/definitions/snv_indels/stats/cov/exon_metrics" },
+              "start": { "type": "integer" }
+            }
+          },
+          "exon_metrics": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 7,
+            "properties": {
+              "avg": { "type": "number" },
+              "count": { "type": "integer" },
+              "frac_cov_at_least": {
+                "type": "object",
+                "additionalProperties": { "type": "number" }
+              },
+              "max": { "type": "integer" },
+              "median": { "type": "number" },
+              "min": { "type": "integer" },
+              "stdev": { "type": "number" }
+            }
+          }
+        },
+        "ins": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 4,
+          "properties": {
+            "max_insert_size": { "type": "integer"},
+            "median_absolute_deviation": { "type": "number"},
+            "median_insert_size": { "type": "number"},
+            "min_insert_size": { "type": "integer"}
+          }
+        },
+        "rna": {
+          "type" : "object",
+          "additionalProperties": false,
+          "minProperties": 17,
+          "properties": {
+            "median_3prime_bias": { "type": "number" },
+            "median_5prime_bias": { "type": "number" },
+            "median_5prime_to_3prime_bias": { "type": "number" },
+            "median_cv_coverage": { "type": "number" },
+            "normalized_cov": { "type": "array", "items": { "type": "number" }},
+            "num_coding_bases": { "type": "integer" },
+            "num_intergenic_bases": { "type": "integer" },
+            "num_intronic_bases": { "type": "integer" },
+            "num_mrna_bases": { "type": "integer" },
+            "num_ribosomal_bases": { "type": "integer" },
+            "num_utr_bases": { "type": "integer" },
+            "pct_coding_bases": { "type": "number" },
+            "pct_intergenic_bases": { "type": "number" },
+            "pct_intronic_bases": { "type": "number" },
+            "pct_mrna_bases": { "type": "number" },
+            "pct_ribosomal_bases": { "type": "number" },
+            "pct_utr_bases": { "type": "number" }
+          }
+        },
+        "var": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 7,
+          "properties": {
+            "coding_consequences": { "$ref": "#/definitions/snv_indels/stats/var/consequences" },
+            "num_deletions": { "type": "integer" },
+            "num_insertions":{ "type": "integer" },
+            "num_snvs": { "type": "integer" },
+            "per_chromosome": { "type": "object" },
+            "polyphen": { "$ref": "#/definitions/snv_indels/stats/var/polyphen" },
+            "sift": { "$ref": "#/definitions/snv_indels/stats/var/sift" }
+          },
+          "consequences": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "coding_sequence_variant": { "type": "integer" },
+              "frameshift_variant": { "type": "integer" },
+              "incomplete_terminal_codon_variant": { "type": "integer" },
+              "inframe_deletion": { "type": "integer" },
+              "inframe_insertion": { "type": "integer" },
+              "missense_variant": { "type": "integer" },
+              "protein_altering_variant": { "type": "integer" },
+              "start_lost": { "type": "integer" },
+              "stop_gained": { "type": "integer" },
+              "stop_lost": { "type": "integer" },
+              "stop_retained_variant": { "type": "integer" },
+              "start_retained_variant": { "type": "integer" },
+              "synonymous_variant": { "type": "integer" }
+            }
+          },
+          "polyphen": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 4,
+            "properties": {
+              "num_benign_variants": { "type": "integer" },
+              "num_possibly_damaging_variants": { "type": "integer" },
+              "num_probably_damaging_variants": { "type": "integer" },
+              "num_unknown_variants": { "type": "integer" }
+            }
+          },
+          "sift": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 2,
+            "properties": {
+              "num_deleterious_variants": { "type": "integer" },
+              "num_tolerated_variants": { "type": "integer" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "minProperties": 1,
+  "type": "object",
+  "properties": {
+    "snv_indels": { "$ref": "#/definitions/snv_indels" }
+  }
+}
