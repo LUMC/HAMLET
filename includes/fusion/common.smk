@@ -39,10 +39,8 @@ def star_fusion(wildcards):
     return f"{wildcards.sample}/fusion/{wildcards.sample}.star-fusion"
 
 
-def star_fusion_fig(wildcards, ext):
-    return (
-        f"{wildcards.sample}/fusion/{wildcards.sample}.star-fusion-circos/fsnviz.{ext}"
-    )
+def star_fusion_fig(wildcards):
+    return f"{wildcards.sample}/fusion/{wildcards.sample}.star-fusion-circos/fsnviz.png"
 
 
 def json(wildcards):
@@ -54,11 +52,10 @@ def fusion_catcher(wildcards):
         return f"{wildcards.sample}/fusion/{wildcards.sample}.fusioncatcher"
 
 
-def fusion_catcher_fig(wildcards, ext):
+def fusioncatcher_fig(wildcards):
     if config["fusioncatcher_data"]:
-        return f"{wildcards.sample}/fusion/{wildcards.sample}.fusioncatcher.{ext}"
-    else:
-        return list()
+        sample = wildcards.sample
+        return f"{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png"
 
 
 def intersect(wildcards):
@@ -78,19 +75,28 @@ def subset_predictions(wildcards):
         return f"{wildcards.sample}/fusion/{wildcards.sample}.sf-isect"
 
 
-# Optional module outputs
-optional = SimpleNamespace(
-    fusion_catcher=fusion_catcher if config["fusioncatcher_data"] else lambda x: [],
-    intersect=intersect if config["fusioncatcher_data"] else lambda x: [],
-    intersect_fig=intersect_fig if config["fusioncatcher_data"] else lambda x: [],
-    subset_predictions=subset_predictions
-    if config["fusioncatcher_data"]
-    else lambda x: [],
-)
+# Optional module outputs if they exist
+if config["fusioncatcher_data"]:
+    optional = SimpleNamespace(
+        fusion_catcher=fusion_catcher,
+        intersect=intersect,
+        intersect_fig=intersect_fig,
+        fusioncatcher_fig=fusioncatcher_fig,
+        subset_predictions=subset_predictions,
+    )
+# If the optional outputs do not exist, they should be a function that returns
+# an empty list. This is needed for compatibility with Snakemake
+else:
+    optional = SimpleNamespace(
+        fusion_catcher=lambda x: list(),
+        intersect=lambda x: list(),
+        intersect_fig=lambda x: list(),
+        fusioncatcher_fig=lambda x: list(),
+        subset_predictions=lambda x: list(),
+    )
 module_output = SimpleNamespace(
     star_fusion=star_fusion,
     star_fusion_fig=star_fusion_fig,
     json=json,
-    fusion_catcher_fig=fusion_catcher_fig,
     optional=optional,
 )
