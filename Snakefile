@@ -13,18 +13,7 @@ OUTPUTS = dict(
     summary="{sample}/{sample}.summary.json",
     reportje="{sample}/hamlet_report.{sample}.pdf",
     package="{sample}/hamlet_results.{sample}.zip",
-    # Small variants
-    smallvars_bam=var_output(".snv-indel.bam"),
-    smallvars_vcf=var_output(".annotated.vcf.gz"),
-    smallvars_csv_all=var_output(".variants_all.csv"),
-    smallvars_csv_hi=var_output(".variants_hi.csv"),
-    smallvars_plots="{sample}/snv-indels/variant_plots",
     # Stats
-    aln_stats=var_output(".aln_stats"),
-    rna_stats=var_output(".rna_stats"),
-    insert_stats=var_output(".insert_stats"),
-    vep_stats=var_output(".vep_stats.txt"),
-    exon_cov_stats=var_output(".exon_cov_stats.json"),
     # ITD module
     flt3_bam=itd_output(".flt3.bam"),
     flt3_csv=itd_output(".flt3.csv"),
@@ -173,7 +162,7 @@ rule create_summary:
         exon_ratios=expression.module_output.json,
         qc_seq_json=qc_seq.module_output.json,
         fusion_json=fusion.module_output.json,
-        snv_indels_json="{sample}/snv-indels/snv-indels-output.json",
+        snv_indels_json=align.module_output.json,
         scr=srcdir("scripts/create_summary.py"),
     params:
         pipeline_ver=PIPELINE_VERSION,
@@ -231,9 +220,9 @@ rule package_results:
     """Copies essential result files into one directory and zips it."""
     input:
         summary=OUTPUTS["summary"],
-        smallvars_csv_all=OUTPUTS["smallvars_csv_all"],
-        smallvars_csv_hi=OUTPUTS["smallvars_csv_hi"],
-        smallvars_plots=OUTPUTS["smallvars_plots"],
+        smallvars_csv_all=align.module_output.var_all,
+        smallvars_csv_hi=align.module_output.var_hi,
+        smallvars_plots=align.module_output.variant_plot_dir,
         count_fragments_per_gene=expression.module_output.fragments_per_gene,
         count_bases_per_gene=expression.module_output.bases_per_gene,
         count_bases_per_exon=expression.module_output.bases_per_exon,

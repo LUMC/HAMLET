@@ -1,6 +1,11 @@
 include: "common.smk"
 
 
+# Put each sample name in a SimpleNamespace to mimic Snakemake wildcard usage
+# (e.g {wildcards.sample}). This is only used in the 'all' rule.
+samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample_name"]]
+
+
 localrules:
     table_vars_all,
     table_vars_hi,
@@ -8,21 +13,11 @@ localrules:
 
 rule all:
     input:
-        variant_plots=expand("{sample}/snv-indels/variant_plots", sample=samples),
-        stats=expand("{sample}/snv-indels/{sample}.aln_stats", sample=samples),
-        var_json=expand("{sample}/snv-indels/{sample}.variants.json", sample=samples),
-        cov_json=expand(
-            "{sample}/snv-indels/{sample}.exon_cov_stats.json", sample=samples
-        ),
-        insert_stats=expand("{sample}/snv-indels/{sample}.insert_stats", sample=samples),
-        insert_histo=expand(
-            "{sample}/snv-indels/{sample}.insert_stats.pdf", sample=samples
-        ),
-        rna_stats=expand("{sample}/snv-indels/{sample}.rna_stats", sample=samples),
-        rna_histo=expand("{sample}/snv-indels/{sample}.rna_stats.pdf", sample=samples),
-        all_csv=expand("{sample}/snv-indels/{sample}.variants_all.csv", sample=samples),
-        high_csv=expand("{sample}/snv-indels/{sample}.variants_hi.csv", sample=samples),
-        json=expand("{sample}/snv-indels/snv-indels-output.json", sample=samples),
+        bam=[module_output.bam(sample) for sample in samples],
+        variant_plot_dir=[module_output.variant_plot_dir(sample) for sample in samples],
+        all_csv=[module_output.var_all(sample) for sample in samples],
+        high_csv=[module_output.var_hi(sample) for sample in samples],
+        json=[module_output.json(sample) for sample in samples],
 
 
 rule index_reference:
