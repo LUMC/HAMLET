@@ -165,14 +165,7 @@ if config.get("fusioncatcher_data"):
 rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""
     input:
-        aln_stats=OUTPUTS["aln_stats"],
-        rna_stats=OUTPUTS["rna_stats"],
-        insert_stats=OUTPUTS["insert_stats"],
-        vep_stats=OUTPUTS["vep_stats"],
-        exon_cov_stats=OUTPUTS["exon_cov_stats"],
         idm=config["ref_id_mapping"],
-        var_plots=OUTPUTS["smallvars_plots"],
-        var_csv=OUTPUTS["smallvars_csv_hi"],
         flt3_plot=OUTPUTS["flt3_png"],
         kmt2a_plot=OUTPUTS["kmt2a_png"],
         flt3_csv=OUTPUTS["flt3_csv"],
@@ -180,6 +173,7 @@ rule create_summary:
         exon_ratios=expression.module_output.json,
         qc_seq_json=qc_seq.module_output.json,
         fusion_json=fusion.module_output.json,
+        snv_indels_json="{sample}/snv-indels/snv-indels-output.json",
         scr=srcdir("scripts/create_summary.py"),
     params:
         pipeline_ver=PIPELINE_VERSION,
@@ -194,17 +188,14 @@ rule create_summary:
         """
         python {input.scr} \
             {input.idm} \
-            `dirname {input.var_plots}` \
-            {input.var_csv} \
             {input.flt3_csv} {input.flt3_plot} \
             {input.kmt2a_csv} {input.kmt2a_plot} \
-            {input.aln_stats} {input.rna_stats} {input.insert_stats} \
-            {input.exon_cov_stats} {input.vep_stats} \
             --pipeline-version {params.pipeline_ver} \
             --run-name {params.run_name} \
             --sample-name {wildcards.sample} \
             --module {input.exon_ratios} \
             --module {input.fusion_json} \
+            --module {input.snv_indels_json} \
             --module {input.qc_seq_json} > {output.js} 2>{log}
         """
 

@@ -426,6 +426,7 @@ rule plot_vars:
             -o {output.plotd} 2> {log}
         """
 
+
 rule json_output:
     input:
         id_mappings_path=config["ref_id_mapping"],

@@ -269,10 +269,6 @@ def add_itd_table(csv_fname):
 
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("id_mappings_path", type=click.File("r"))
-@click.argument("var_plot_dir",
-                type=click.Path(exists=True, file_okay=False))
-@click.argument("var_csv",
-                type=click.Path(exists=True, dir_okay=False))
 @click.argument("flt3_csv",
                 type=click.Path(exists=True, dir_okay=False))
 @click.argument("flt3_plot",
@@ -280,16 +276,6 @@ def add_itd_table(csv_fname):
 @click.argument("kmt2a_csv",
                 type=click.Path(exists=True, dir_okay=False))
 @click.argument("kmt2a_plot",
-                type=click.Path(exists=True, dir_okay=False))
-@click.argument("aln_stats_path",
-                type=click.Path(exists=True, dir_okay=False))
-@click.argument("rna_stats_path",
-                type=click.Path(exists=True, dir_okay=False))
-@click.argument("insert_stats_path",
-                type=click.Path(exists=True, dir_okay=False))
-@click.argument("exon_cov_stats_path",
-                type=click.Path(exists=True, dir_okay=False))
-@click.argument("vep_stats_path",
                 type=click.Path(exists=True, dir_okay=False))
 @click.option("-r", "--run-name", type=str,
               help="Name of the run in which the stats were generated.")
@@ -299,10 +285,7 @@ def add_itd_table(csv_fname):
               help="Version string of the pipeline.")
 @click.option("--module", type=str, multiple=True,
               help="JSON outputs from various modules")
-def main(id_mappings_path, var_plot_dir, var_csv,
-         flt3_csv, flt3_plot, kmt2a_csv, kmt2a_plot,
-         aln_stats_path, rna_stats_path,
-         insert_stats_path, exon_cov_stats_path, vep_stats_path,
+def main(id_mappings_path, flt3_csv, flt3_plot, kmt2a_csv, kmt2a_plot,
          run_name, sample_name, pipeline_version, module):
     """Helper script for combining multiple stats files into one JSON."""
     idm = parse_idm(id_mappings_path)
@@ -313,19 +296,7 @@ def main(id_mappings_path, var_plot_dir, var_csv,
             "sample_name": sample_name,
             "genes_of_interest": idm,
         },
-        "modules": {
-            "snv_indels": {
-                "plots": [],
-                "genes": {},
-                "stats": {
-                    "aln": process_aln_stats(aln_stats_path),
-                    "rna": process_rna_stats(rna_stats_path),
-                    "cov": process_exon_cov_stats(exon_cov_stats_path, idm),
-                    "ins": process_insert_stats(insert_stats_path),
-                    "var": process_var_stats(vep_stats_path)
-                }
-            },
-        },
+        "modules": dict()
     }
 
     # Read and add module json files
@@ -335,17 +306,12 @@ def main(id_mappings_path, var_plot_dir, var_csv,
         for key, data in module.items():
             combined["modules"][key] = data
 
-    combined["modules"]["snv_indels"]["plots"].extend(
-        add_variant_plots(idm, var_plot_dir))
-    combined["modules"]["snv_indels"]["genes"] = add_variant_overview(
-        idm, var_csv)
     combined["modules"]["itd"] = {
         "flt3": {"path": str(Path(flt3_plot).resolve()),
                  "table": add_itd_table(flt3_csv)},
         "kmt2a": {"path": str(Path(kmt2a_plot).resolve()),
                   "table": add_itd_table(kmt2a_csv)},
     }
-    combined["modules"]["snv_indels"]["stats"] = post_process(combined["modules"]["snv_indels"]["stats"])
     print(json.dumps(combined, sort_keys=True, indent=2))
 
 
