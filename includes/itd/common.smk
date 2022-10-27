@@ -40,25 +40,35 @@ def get_reverse(wildcards):
 def get_csv(wildcards, gene):
     return f"{wildcards.sample}/itd/{wildcards.sample}.{gene}.csv"
 
+
 def get_plot(wildcards, gene):
     return f"{wildcards.sample}/itd/{wildcards.sample}.{gene}.png"
+
 
 def get_kmt2a(wildcards):
     return get_csv(wildcards, "kmt2a")
 
+
 def get_kmt2a_plot(wildcards):
     return get_plot(wildcards, "kmt2a")
+
 
 def get_flt3(wildcards):
     return get_csv(wildcards, "flt3")
 
+
 def get_flt3_plot(wildcards):
     return get_plot(wildcards, "flt3")
+
 
 def get_json(wildcards):
     return f"{wildcards.sample}/itd/itd-output.json"
 
+
 module_output = SimpleNamespace(
-    kmt2a_csv=get_kmt2a, kmt2a_plot=get_kmt2a_plot,
-    flt3_csv=get_flt3, flt3_plot=get_flt3_plot,
-    json=get_json)
+    kmt2a_csv=get_kmt2a,
+    kmt2a_plot=get_kmt2a_plot,
+    flt3_csv=get_flt3,
+    flt3_plot=get_flt3_plot,
+    json=get_json,
+)
