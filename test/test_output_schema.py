@@ -121,8 +121,15 @@ def test_star_fusion_output(workflow_dir):
     assert not js["fusion"]["intersected"]
 
 @pytest.mark.workflow('test-snv-indels-chrM')
-def test_fusion_schema(workflow_dir):
+def test_snv_indel_schema(workflow_dir):
     sample = "SRR8615409"
     output_file = pathlib.Path(workflow_dir, f"{sample}/snv-indels/snv-indels-output.json")
     schema_file = pathlib.Path(workflow_dir, "includes/snv-indels/output-schema.json")
+    validate_files(output_file, schema_file)
+
+@pytest.mark.workflow('test-itd')
+def test_itd_schema(workflow_dir):
+    sample = "SRR8616218"
+    output_file = pathlib.Path(workflow_dir, f"{sample}/itd//itd-output.json")
+    schema_file = pathlib.Path(workflow_dir, "includes/itd/output-schema.json")
     validate_files(output_file, schema_file)

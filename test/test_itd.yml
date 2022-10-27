@@ -58,8 +58,6 @@
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
     --singularity-prefix '~/.singularity/cache/snakemake'
-    SRR8615687/itd/SRR8615687.flt3.png
-    SRR8616218/itd/SRR8616218.kmt2a.png
   files:
     # ITD pipeline should create a png of the detected repeat events for flt3
     - path: "SRR8615687/itd/SRR8615687.flt3.png"
@@ -99,6 +97,8 @@
       contains:
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
         - "453,457\t4106,4110\t40\t26\t452\t4106\t4111\t457\tfuzzy\t4"
+    # Test if the json output file for the module is created
+    - path: "SRR8616218/itd/itd-output.json"
     # Test the log files
     - path: "log/align_kmt2a.SRR8616218.txt"
       contains:

@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Schema of the output from the itd module for HAMLET",
+  "definitions": {
+    "itd": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 2,
+      "properties": {
+        "flt3": { "$ref": "#/definitions/itd/result" },
+        "kmt2a": { "$ref": "#/definitions/itd/result" }
+      },
+      "result": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 2,
+        "properties": {
+          "path": { "type": "string" },
+          "table": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/itd/event" }
+          }
+        }
+      },
+      "event": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 10,
+        "properties": {
+          "boundary_type": {
+            "type": "string",
+            "enum": ["exact", "fuzzy", "fuzzy-start", "fuzzy-end"]
+          },
+          "fuzziness": { "type": "integer" },
+          "rose_end_anchor_pos": { "type": "integer" },
+          "rose_end_count": { "type": "integer" },
+          "rose_end_pos": { "type": "integer" },
+          "rose_start_anchor_pos": { "type": "integer" },
+          "rose_start_count": { "type": "integer" },
+          "rose_start_pos": { "type": "integer" },
+          "td_ends": { "type": "array", "items": { "type": "integer" } },
+          "td_starts": { "type": "array", "items": { "type": "integer" } }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "minProperties": 1,
+  "type": "object",
+  "properties": {
+    "itd": { "$ref": "#/definitions/itd" }
+  }
+}
