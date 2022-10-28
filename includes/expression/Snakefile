@@ -159,7 +159,7 @@ rule calc_exon_ratios:
     shell:
         """
         python3 {input.calc_script} \
-            -r {params.exon_min_ratio} \
+            --min-ratio {params.exon_min_ratio} \
             {input.table} \
             {params.exon_ratio_names} > {output.json} 2> {log}
         """

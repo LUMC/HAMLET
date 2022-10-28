@@ -9,12 +9,11 @@ All rights reserved.
 
 """
 
+import argparse
 import json
 import os
 import sys
 from os import path
-
-import click
 
 __author__ = "Wibowo Arindrarto"
 __contact__ = "w.arindrarto@lumc.nl"
@@ -83,18 +82,9 @@ def make_csv(grouped, meta, fallback="NA", csq_info_name="CSQ",
                     yield row
 
 
-@click.command()
-@click.argument("input_json",
-                type=click.Path(dir_okay=False))
-@click.option("--hi", default=False, is_flag=True,
-              help="Whether to print high-impact variants only or not.")
 def main(input_json, hi):
     if input_json == "-":
         payload = json.load(sys.stdin)
-    elif not path.exists(input_json):
-        raise click.BadParameter("Input file not found.")
-    elif not os.access(input_json, os.R_OK):
-        raise click.BadParameter("Input file can not be read.")
     else:
         with open(input_json, "r") as src:
             payload = json.load(src)
@@ -103,10 +93,10 @@ def main(input_json, hi):
     payload_samples = payload["samples"]
 
     if not payload_samples:
-        raise click.BadParameter("Can not process JSON file without samples.")
+        raise RuntimeError("Can not process JSON file without samples.")
     elif len(payload_samples) > 1:
         msg = "Can not process JSON with more than one samples."
-        raise click.BadParameter(msg)
+        raise RuntimeError(msg)
 
     sample_id, sampled = next(iter(payload_samples.items()))
     items = (x for x in sorted(sampled.items(), key=lambda x: x[0]) if x[1])
@@ -120,6 +110,10 @@ def main(input_json, hi):
 
 
 if __name__ == "__main__":
-
     main.__doc__ = __doc__
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input_json")
+    parser.add_argument("--hi", default=False, action='store_true')
+
+    args = parser.parse_args()
+    main(args.input_json, args.hi)

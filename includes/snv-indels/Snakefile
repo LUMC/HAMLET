@@ -153,7 +153,7 @@ rule exon_cov_ref:
     log:
         "log/exon_cov_ref.txt",
     container:
-        containers["bedtools-2.27-grep-2.14-gawk-5.0-click-7-python-3.7"]
+        containers["bedtools-2.27-grep-2.14-gawk-5.0-python-3.7"]
     shell:
         """
         cat {input.ref_refflat} \
@@ -176,7 +176,7 @@ rule exon_cov:
     log:
         "log/exon_cov.{sample}.txt",
     container:
-        containers["bedtools-2.27-grep-2.14-gawk-5.0-click-7-python-3.7"]
+        containers["bedtools-2.27-grep-2.14-gawk-5.0-python-3.7"]
     shell:
         """
         bedtools coverage \
@@ -187,7 +187,7 @@ rule exon_cov:
             -b {input.bam} 2> {log} \
         | cut -f1,2,3,4,5,8,7 \
         | python {input.scr} \
-            --id-mapping {input.idm} - {output.json}
+            --id-mapping {input.idm} - {output.json} 2> {log}
         """
 
 

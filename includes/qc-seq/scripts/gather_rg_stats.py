@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 
+import argparse
 import json
-import sys
 
-import click
 from crimson import fastqc
 
 
@@ -16,16 +15,6 @@ def parse_fastqc_stats(fastqc_dir):
     return stats
 
 
-@click.command(context_settings={"help_option_names": ["-h", "--help"]})
-@click.argument("raw_fastqc_r1_dir",
-                type=click.Path(exists=True, file_okay=False))
-@click.argument("raw_fastqc_r2_dir",
-                type=click.Path(exists=True, file_okay=False))
-@click.argument("proc_fastqc_r1_dir",
-                type=click.Path(exists=True, file_okay=False))
-@click.argument("proc_fastqc_r2_dir",
-                type=click.Path(exists=True, file_okay=False))
-@click.option("--name", type=str)
 def main(raw_fastqc_r1_dir, raw_fastqc_r2_dir,
          proc_fastqc_r1_dir, proc_fastqc_r2_dir, name):
 
@@ -51,8 +40,21 @@ def main(raw_fastqc_r1_dir, raw_fastqc_r2_dir,
         },
         "name": name
     }
-    json.dump(stats, sys.stdout, indent=2)
+    print(json.dumps(stats, indent=2))
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--name")
+    parser.add_argument("raw_fastqc_r1_dir")
+    parser.add_argument("raw_fastqc_r2_dir")
+    parser.add_argument("proc_fastqc_r1_dir")
+    parser.add_argument("proc_fastqc_r2_dir")
+
+    args = parser.parse_args()
+
+    main(
+        args.raw_fastqc_r1_dir, args.raw_fastqc_r2_dir,
+        args.proc_fastqc_r1_dir, args.proc_fastqc_r2_dir,
+        args.name
+    )

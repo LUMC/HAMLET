@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 
+import argparse
 import json
 from pathlib import Path
-
-import click
 
 
 def add_itd_table(csv_fname):
@@ -32,15 +31,6 @@ def add_itd_table(csv_fname):
     return rv
 
 
-@click.command(context_settings={"help_option_names": ["-h", "--help"]})
-@click.argument("flt3_csv",
-                type=click.Path(exists=True, dir_okay=False))
-@click.argument("flt3_plot",
-                type=click.Path(exists=True, dir_okay=False))
-@click.argument("kmt2a_csv",
-                type=click.Path(exists=True, dir_okay=False))
-@click.argument("kmt2a_plot",
-                type=click.Path(exists=True, dir_okay=False))
 def main(flt3_csv, flt3_plot, kmt2a_csv, kmt2a_plot):
     """Helper script for combining multiple stats files into one JSON."""
     combined = dict()
@@ -54,5 +44,12 @@ def main(flt3_csv, flt3_plot, kmt2a_csv, kmt2a_plot):
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("flt3_csv")
+    parser.add_argument("flt3_plot")
+    parser.add_argument("kmt2a_csv")
+    parser.add_argument("kmt2a_plot")
+
+    args = parser.parse_args()
+    main(args.flt3_csv, args.flt3_plot, args.kmt2a_csv, args.kmt2a_plot)
 

@@ -7,7 +7,6 @@ RUN apt update && apt install -y \
     libqt5core5a \
     python3 \
     python3-biopython \
-    python3-click \
     python3-jinja2 \
     python3-matplotlib \
     python3-pandas \

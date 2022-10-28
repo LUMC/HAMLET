@@ -12,7 +12,6 @@ associated with the IDs are returned.
 Requirements:
     * Python 3.x
     * PyVCF 0.6.7 <https://pyvcf.readthedocs.org>
-    * Click 5.1 <http://click.pocoo.org/>
 
 Input requirements:
     * VCF output from VarScan (may contain more than one samples).
@@ -29,6 +28,7 @@ All rights reserved.
 
 """
 
+import argparse
 import json
 import os
 import re
@@ -36,7 +36,6 @@ import sys
 from functools import partial
 from os import path
 
-import click
 import vcf
 from pybedtools import BedTool, Interval
 
@@ -217,7 +216,7 @@ def make_record_extractor(reader, csq_info_name=CSQ_NAME):
                 for attr in split_attrs:
                     res = split_if_exists(res, attr)
             return res
-        raise click.ClickException("Unexpected VEP values in string '{0}'"
+        raise RuntimeError("Unexpected VEP values in string '{0}'"
                                    "".format(raw_str))
 
     def extract_sample_data(record, sample, vep_data, hotspot_ivals):
@@ -361,29 +360,9 @@ def parse_id_file(fh):
     return id_mapping
 
 
-@click.command()
-@click.argument("id_file",
-                type=click.File())
-@click.argument("input_vcf",
-                type=click.Path(dir_okay=False))
-@click.option("--keep-amp", default=False, is_flag=True,
-              help="Whether to keep ampersand-separated VEP values as strings"
-                   "or split them into a list.")
-@click.option("--hotspots", default=None,
-              type=click.Path(exists=True, file_okay=True, dir_okay=False),
-              help="Path to a BED file containing hotspots region. The "
-                   "regions will be annotated in the output JSON file.")
-@click.option("--sample-id", type=str,
-              help="Set VCF sample name to the given value. If there are "
-                   "more than one samples in the VCF, this flag is ignored.")
-# TODO: add option for pretty output (default now is compact)
 def main(id_file, input_vcf, keep_amp, hotspots, sample_id):
     if input_vcf == "-":
         reader = vcf.Reader(sys.stdin)
-    elif not path.exists(input_vcf):
-        raise click.BadParameter("Input file not found.")
-    elif not os.access(input_vcf, os.R_OK):
-        raise click.BadParameter("Input file can not be read.")
     else:
         reader = vcf.Reader(filename=input_vcf)
 
@@ -397,7 +376,8 @@ def main(id_file, input_vcf, keep_amp, hotspots, sample_id):
             print(msg, file=sys.stderr)
 
     filter_goi = True
-    gene_ids = parse_id_file(id_file)
+    with open(id_file) as fin:
+        gene_ids = parse_id_file(fin)
     hotspot_intervals = BedTool(hotspots).as_intervalfile() if hotspots \
         is not None else None
 
@@ -419,10 +399,25 @@ def main(id_file, input_vcf, keep_amp, hotspots, sample_id):
         ]
     }
     json.dump({"_meta": meta, "samples": samples}, sys.stdout, sort_keys=True,
-              separators=(",", ":"))
+              indent=2,)
 
 
 if __name__ == "__main__":
-
     main.__doc__ = __doc__
-    main()
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("id_file")
+    parser.add_argument("input_vcf")
+    parser.add_argument("--keep-amp", default=False, action="store_true",
+        help=("Whether to keep ampersand-separated VEP values as strings"
+                "or split them into a list."))
+    parser.add_argument("--hotspots",
+              help="Path to a BED file containing hotspots region. The "
+                   "regions will be annotated in the output JSON file.")
+    parser.add_argument("--sample-id", 
+              help="Set VCF sample name to the given value. If there are "
+                   "more than one samples in the VCF, this flag is ignored.")
+
+    args = parser.parse_args()
+    main(args.id_file, args.input_vcf, args.keep_amp, args.hotspots,
+            args.sample_id)

@@ -1,14 +1,8 @@
 #!/usr/bin/env python
 
+import argparse
 import json
-import sys
 
-import click
-
-
-@click.command(context_settings={"help_option_names": ["-h", "--help"]})
-@click.argument("rg_stats", nargs=-1,
-                type=click.Path(exists=True, dir_okay=False))
 def main(rg_stats):
     rgs = []
     for rg in rg_stats:
@@ -28,8 +22,11 @@ def main(rg_stats):
         },
         "per_read_group": rgs,
     }
-    json.dump({ "qc_seq": stats}, sys.stdout, indent=2)
+    print(json.dumps({ "qc_seq": stats}, indent=2))
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("rg_stats", nargs="+")
+    args = parser.parse_args()
+    main(args.rg_stats)

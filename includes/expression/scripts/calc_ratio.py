@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 
+import argparse
 import json
 import sys
 
-import click
 import pandas as pd
 
 
 GENE_SEP = ":"
-COORD_SEP = "-"
 
 
 def process_table(relative_gene, exons, df, min_threshold):
@@ -24,22 +23,13 @@ def process_table(relative_gene, exons, df, min_threshold):
     exons_df = exons_df.assign(above_threshold=exons_df["ratio"] >= min_threshold)
     exons_df = exons_df.assign(divisor_gene=relative_gene)
     exons_df = exons_df.assign(divisor_exp=gene_total_bases)
-    #exons_df["above_threshold"] = exons_df["above_threshold"].map({False: "no", True: "yes"})
     exons_df.reset_index(inplace=True)
     exons_df.drop("index", axis=1, inplace=True)
 
     return exons_df
 
 
-@click.command(context_settings={"help_option_names": ["-h", "--help"]})
-@click.argument("table", type=str)
-@click.argument("relative_gene", type=str)
-@click.argument("exons", type=str, nargs=-1)
-@click.option("-r", "--min-ratio", type=float,
-              default=0.1)
-@click.option("--sample-id", type=str,
-              help="Sample ID.")
-def main(table, relative_gene, exons, min_ratio, sample_id):
+def main(table, relative_gene, exons, min_ratio):
     if table == "-":
         fh = sys.stdin
     else:
@@ -64,4 +54,11 @@ def main(table, relative_gene, exons, min_ratio, sample_id):
     json.dump({"expression": ratios}, sys.stdout, indent=2)
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--min-ratio", type=float, default=0.1)
+    parser.add_argument("table", type=str)
+    parser.add_argument("relative_gene", type=str)
+    parser.add_argument("exons", type=str, nargs='+')
+
+    args = parser.parse_args()
+    main(args.table, args.relative_gene, args.exons, args.min_ratio)

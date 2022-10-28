@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
+import argparse
 import json
 import csv
 from pathlib import Path
 from collections import defaultdict
 
-import click
 from crimson import picard, vep
 
 
@@ -220,27 +220,12 @@ def add_variant_overview(idm, fn_csv):
     return rv
 
 
-@click.command(context_settings={"help_option_names": ["-h", "--help"]})
-@click.argument("id_mappings_path", type=click.File("r"))
-@click.argument("var_plot_dir",
-                type=click.Path(exists=True, file_okay=False))
-@click.argument("var_csv",
-                type=click.Path(exists=True, dir_okay=False))
-@click.argument("aln_stats_path",
-                type=click.Path(exists=True, dir_okay=False))
-@click.argument("rna_stats_path",
-                type=click.Path(exists=True, dir_okay=False))
-@click.argument("insert_stats_path",
-                type=click.Path(exists=True, dir_okay=False))
-@click.argument("exon_cov_stats_path",
-                type=click.Path(exists=True, dir_okay=False))
-@click.argument("vep_stats_path",
-                type=click.Path(exists=True, dir_okay=False))
 def main(id_mappings_path, var_plot_dir, var_csv,
          aln_stats_path, rna_stats_path,
          insert_stats_path, exon_cov_stats_path, vep_stats_path):
     """Helper script for combining multiple stats files into one JSON."""
-    idm = parse_idm(id_mappings_path)
+    with open(id_mappings_path) as fin:
+        idm = parse_idm(fin)
     combined = {
         "snv_indels": {
             "plots": [],
@@ -264,5 +249,24 @@ def main(id_mappings_path, var_plot_dir, var_csv,
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("id_mappings_path")
+    parser.add_argument("var_plot_dir")
+    parser.add_argument("var_csv")
+    parser.add_argument("aln_stats_path")
+    parser.add_argument("rna_stats_path")
+    parser.add_argument("insert_stats_path")
+    parser.add_argument("exon_cov_stats_path")
+    parser.add_argument("vep_stats_path")
+
+    args = parser.parse_args()
+    main(
+        args.id_mappings_path,
+        args.var_plot_dir,
+        args.var_csv,
+        args.aln_stats_path,
+        args.rna_stats_path,
+        args.insert_stats_path,
+        args.exon_cov_stats_path,args.vep_stats_path
+    )
 

@@ -1,10 +1,10 @@
+import argparse
 import json
 from datetime import datetime as dt
 from pathlib import Path
 from tempfile import NamedTemporaryFile as NTF
 from typing import Optional
 
-import click
 import pdfkit
 from jinja2 import Environment, FileSystemLoader
 
@@ -135,18 +135,6 @@ class Report(object):
                                toc=toc, cover=cov_fh.name, cover_first=True)
 
 
-@click.command(context_settings={"help_option_names": ["-h", "--help"]})
-@click.argument("input_summary_path",
-                type=click.Path(exists=True, dir_okay=False))
-@click.argument("output_report_path", type=str)
-@click.option("--css-path", default="assets/style.css",
-              type=click.Path(exists=True, dir_okay=False))
-@click.option("--templates-dir", default="templates",
-              type=click.Path(exists=True, file_okay=False))
-@click.option("--imgs-dir", default="assets/img",
-              type=click.Path(exists=True, file_okay=False))
-@click.option("--toc-path", default="assets/toc.xsl",
-              type=click.Path(exists=True, dir_okay=False))
 def main(input_summary_path, output_report_path, css_path, templates_dir,
          imgs_dir, toc_path):
     """Script for generating PDF report of a sample analyzed with the Hamlet
@@ -175,4 +163,16 @@ def main(input_summary_path, output_report_path, css_path, templates_dir,
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("input_summary_path")
+    parser.add_argument("output_report_path")
+    parser.add_argument("--css-path", default="assets/style.css")
+    parser.add_argument("--templates-dir", default="templates")
+    parser.add_argument("--imgs-dir", default="assets/img")
+    parser.add_argument("--toc-path", default="assets/toc.xsl")
+
+    args = parser.parse_args()
+
+    main(args.input_summary_path, args.output_report_path, args.css_path,
+        args.templates_dir, args.imgs_dir, args.toc_path)

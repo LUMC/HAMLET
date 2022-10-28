@@ -21,7 +21,6 @@ def set_default(key, value):
 
 
 set_default("sf_subset_script", srcdir("scripts/subset_sf.py"))
-set_default("plot_combined_script", srcdir("scripts/combine_svgs.py"))
 set_default("sf_rewrite_script", srcdir("scripts/rewrite_star_fusion_header.py"))
 set_default("fusioncatcher_data", False)
 

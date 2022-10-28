@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
+import argparse
 import json
 import sys
 import statistics as stats
 from collections import namedtuple
 from typing import Dict, Iterable, Optional, TextIO, Tuple
-
-import click
 
 
 class Row(namedtuple("Row",
@@ -112,14 +111,6 @@ def group_per_exon(input_fh: TextIO, idm_fh: Optional[TextIO]=None,
             for k, v in grouped.items()}
 
 
-@click.command(context_settings={"help_option_names": ["-h", "--help"]})
-@click.argument("input_tsv", type=click.File("r"))
-@click.argument("output", type=click.File("w"), default="-")
-@click.option("-m", "--id-mapping", type=click.File("r"),
-              help="Path to ID mapping file.")
-@click.option("-cm", "--cov-limit", type=int, multiple=True,
-              default=[8, 10, 20, 30, 40, 50],
-              help="Values at which fraction coverage will be calculated.")
 def main(input_tsv, output, id_mapping, cov_limit):
     """Calculates exon-level coverage metrics.
 
@@ -142,15 +133,28 @@ def main(input_tsv, output, id_mapping, cov_limit):
     in ascending order.
 
     """
-    grouped = group_per_exon(input_tsv, id_mapping, cov_limit)
+    with open(id_mapping) as mapping:
+        grouped = group_per_exon(input_tsv, mapping, cov_limit)
 
     def serialize_key(row_key):
         return f"{row_key[0]}|{row_key[1]}"
 
-    json.dump({serialize_key(k): v for k, v in grouped.items()},
-              output, indent=None, separators=(",", ":"))
+    with open(output, "wt") as fout:
+        json.dump({serialize_key(k): v for k, v in grouped.items()},
+              fout, indent=2)
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("input_tsv", type=argparse.FileType("r"),
+            default=sys.stdin)
+    parser.add_argument("output")
+    parser.add_argument("--id-mapping")
+    parser.add_argument("--cov-limit", type=int, nargs="+",
+        default=[8, 10, 20, 30, 40, 50],
+        help="Values at which fraction coverage will be calculated.")
+
+    args = parser.parse_args()
+    main(args.input_tsv, args.output, args.id_mapping, args.cov_limit)
 
