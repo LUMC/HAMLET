@@ -101,7 +101,7 @@ use rule idsort_aln from expression as expression_idsort_aln with:
     input:
         bam=align.module_output.bam,
     container:
-        "docker://quay.io/biocontainers/picard:2.20.5--0"
+        expression.containers["picard"]
 
 
 # Connect the count_raw_bases rule to the output of snv-indels
@@ -111,7 +111,7 @@ use rule count_raw_bases from expression as expression_count_raw_bases with:
         bed=config["expression_bed"],
         count_script=config["base_count_script"],
     container:
-        "docker://quay.io/biocontainers/mulled-v2-a9ddcbd438a66450297b5e0b61ac390ee9bfdb61:e60f3cfda0dfcf4a72f2091c6fa1ebe5a5400220-0"
+        expression.containers["bedtools-2.17-python-2.7"]
 
 
 module fusion:
@@ -131,7 +131,7 @@ use rule star_fusion from fusion as fusion_star_fusion with:
         fq2=qc_seq.module_output.reverse,
         lib=config["genome_star_fusion_lib"],
     container:
-        "docker://quay.io/biocontainers/star-fusion:1.10.0--hdfd78af_1"
+        fusion.containers["star-fusion"]
 
 
 # Connect the fusioncather rule to the output of qc-seq. Fusioncatcher should
@@ -141,7 +141,7 @@ use rule fusioncatcher from fusion as fusion_fusioncatcher with:
         fq1=qc_seq.module_output.forward_raw,
         fq2=qc_seq.module_output.reverse_raw,
     container:
-        "docker://quay.io/biocontainers/fusioncatcher:1.20--2"
+        fusion.containers["fusioncatcher"]
 
 
 # Fusioncatcher outputs
