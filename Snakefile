@@ -169,7 +169,7 @@ rule create_summary:
     log:
         "log/create_summary.{sample}.txt",
     container:
-        containers["crimson"]
+        containers["hamlet-scripts"]
     shell:
         """
         python {input.scr} \

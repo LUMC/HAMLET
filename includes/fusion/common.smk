@@ -5,7 +5,6 @@ pepfile: config["pepfile"]
 
 
 containers = {
-    "debian": "docker://debian:buster-slim",
     "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--pyhdfd78af_6",
     "fuma": "docker://quay.io/biocontainers/fuma:4.0.0--pyhb7b1952_0",
     "fusioncatcher": "docker://quay.io/biocontainers/fusioncatcher:1.20--2",

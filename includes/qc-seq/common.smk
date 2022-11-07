@@ -4,7 +4,6 @@ from types import SimpleNamespace
 containers = {
     "crimson": "docker://quay.io/biocontainers/crimson:0.3.0--py27_1",
     "cutadapt": "docker://quay.io/biocontainers/cutadapt:1.14--py36_0",
-    "debian": "docker://debian:buster-slim",
     "fastqc": "docker://quay.io/biocontainers/fastqc:0.11.8--1",
 }
 

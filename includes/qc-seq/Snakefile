@@ -150,7 +150,7 @@ rule merge_fastqs_r1:
     log:
         "log/merge_fastqs_r1.{sample}.txt",
     container:
-        containers["debian"]
+        containers["fastqc"]
     shell:
         """
         cp {input.fqs} {output.merged} 2> {log} \
@@ -168,7 +168,7 @@ rule merge_fastqs_r2:
     log:
         "log/merge_fastqs_r2.{sample}.txt",
     container:
-        containers["debian"]
+        containers["fastqc"]
     shell:
         """
         cp {input.fqs} {output.merged} 2> {log} \
@@ -186,7 +186,7 @@ rule merge_fastqs_raw_r1:
     log:
         "log/merge_fastqs_raw_r1.{sample}.txt",
     container:
-        containers["debian"]
+        containers["fastqc"]
     shell:
         """
         cp {input.fqs} {output.merged} 2> {log} \
@@ -204,7 +204,7 @@ rule merge_fastqs_raw_r2:
     log:
         "log/merge_fastqs_raw_r2.{sample}.txt",
     container:
-        containers["debian"]
+        containers["fastqc"]
     shell:
         """
         cp {input.fqs} {output.merged} 2> {log} \

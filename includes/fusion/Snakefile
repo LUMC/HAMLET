@@ -120,7 +120,7 @@ rule fusioncatcher_cp:
     log:
         "log/fusioncatcher_cp.{sample}.txt",
     container:
-        containers["debian"]
+        containers["fsnviz"]
     shell:
         """
         cp {input.txt} {output.txt} 2> {log}

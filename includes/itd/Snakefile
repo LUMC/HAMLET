@@ -192,7 +192,7 @@ rule json_output:
     log:
         "log/itd_json_output.{sample}.txt",
     container:
-        containers["crimson"]
+        containers["rose"]
     shell:
         """
         python3 {input.src} \

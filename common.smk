@@ -9,8 +9,6 @@ pepfile: config["pepfile"]
 samples = pep.sample_table["sample_name"]
 
 containers = {
-    "debian": "docker://debian:buster-slim",
-    "crimson": "docker://quay.io/biocontainers/crimson:1.0.0--pyh5e36f6f_0",
     "hamlet-scripts": "docker://quay.io/redmar_van_den_berg/hamlet-scripts:0.3",
     "zip": "docker://quay.io/redmar_van_den_berg/zip:3.0",
 }
