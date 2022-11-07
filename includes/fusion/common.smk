@@ -6,7 +6,7 @@ pepfile: config["pepfile"]
 
 containers = {
     "debian": "docker://debian:buster-slim",
-    "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--py_4",
+    "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--pyhdfd78af_6",
     "fuma": "docker://quay.io/biocontainers/fuma:4.0.0--pyhb7b1952_0",
     "fusioncatcher": "docker://quay.io/biocontainers/fusioncatcher:1.20--2",
     "star-fusion": "docker://quay.io/biocontainers/star-fusion:1.10.0--hdfd78af_1",
@@ -21,7 +21,6 @@ def set_default(key, value):
 
 
 set_default("sf_subset_script", srcdir("scripts/subset_sf.py"))
-set_default("sf_rewrite_script", srcdir("scripts/rewrite_star_fusion_header.py"))
 set_default("fusioncatcher_data", False)
 
 

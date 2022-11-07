@@ -54,7 +54,6 @@ rule star_fusion:
 rule star_fusion_cp:
     input:
         txt="{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv",
-        src=config["sf_rewrite_script"],
     output:
         txt="{sample}/fusion/{sample}.star-fusion",
     log:
@@ -63,7 +62,7 @@ rule star_fusion_cp:
         containers["fsnviz"]
     shell:
         """
-        python3 {input.src} {input.txt} > {output.txt} 2>{log}
+        cp {input.txt}  {output.txt} 2>{log}
         """
 
 
