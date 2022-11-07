@@ -8,6 +8,7 @@ channels:
 dependencies:
   - crimson=1.1.0
   - peppy=0.35
+  - python<3.11
   - pytest-workflow=1.6.0
   - snakemake-minimal=7.15
   - snakefmt=0.6.1
