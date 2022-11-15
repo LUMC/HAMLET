@@ -46,7 +46,7 @@ rule all:
         rRNA_refFlat="ucsc_rrna.refFlat",
         fuma_bedfile="transcripts.bed",
         bed_variant_hotspots="hotspots_genome.bed",
-        cache_vep="homo_sapiens_vep_101_GRCh38.tar.gz",
+        cache_vep=directory("homo_sapiens_merged"),
 
 
 rule download_reference:
@@ -253,10 +253,22 @@ rule download_vep_cache:
         ftp=settings["vep_cache"],
         fname=vep_cache_fname,
     output:
-        "homo_sapiens_vep_101_GRCh38.tar.gz",
+        "homo_sapiens_merged_vep_101_GRCh38.tar.gz",
     singularity:
         containers["hamlet-scripts"]
     shell:
         """
         wget {params.ftp}
+        """
+
+rule unpack_vep_cache:
+    input:
+        "homo_sapiens_merged_vep_101_GRCh38.tar.gz",
+    output:
+        directory("homo_sapiens_merged"),
+    singularity:
+        containers["hamlet-scripts"]
+    shell:
+        """
+        tar xzf {input}
         """
