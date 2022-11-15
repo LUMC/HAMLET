@@ -33,7 +33,7 @@ reference_dict = os.path.splitext(reference_fname)[0] + ".dict"
 gtf_file = os.path.splitext(os.path.basename(settings["gtf"]))[0]
 gtf_renamed = os.path.splitext(gtf_file)[0] + ".chr.gtf"
 
-vep_cache_fname = settings["vep_cache"].split("/")[-1][:-7]
+vep_cache_fname = settings["vep_cache"].split("/")[-1]
 
 rule all:
     input:
@@ -45,7 +45,8 @@ rule all:
         id_mapping="id_mappings.tsv",
         rRNA_refFlat="ucsc_rrna.refFlat",
         fuma_bedfile="transcripts.bed",
-        bed_variant_hotspots="hotspots_genome.bed"
+        bed_variant_hotspots="hotspots_genome.bed",
+        cache_vep="homo_sapiens_vep_101_GRCh38.tar.gz",
 
 
 rule download_reference:
@@ -247,16 +248,15 @@ chr20	32434431	32437338	ASXL1
 EOF
         """
 
-rule vep_cache:
+rule download_vep_cache:
     params:
         ftp=settings["vep_cache"],
         fname=vep_cache_fname,
     output:
-        directory("homo_sapiens_vep_101_GRCh38"),
+        "homo_sapiens_vep_101_GRCh38.tar.gz",
     singularity:
         containers["hamlet-scripts"]
     shell:
         """
-        curl -O {params.ftp}
-        tar xzf {params.vep_cache_fname}.tar.gz
+        wget {params.ftp}
         """
