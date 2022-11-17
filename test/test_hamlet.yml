@@ -161,4 +161,4 @@
   tags:
     - sanity
     - hamlet
-  command: snakefmt --check --exclude utilities .
+  command: snakefmt --check .

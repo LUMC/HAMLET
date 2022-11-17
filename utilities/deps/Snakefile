@@ -22,8 +22,7 @@ settings = {
     #'gtf': 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/genes/hg38.ensGene.gtf.gz'
     # "gtf": "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_41/gencode.v41.annotation.gtf.gz",
     "gtf": "http://ftp.ensembl.org/pub/release-104/gtf/homo_sapiens/Homo_sapiens.GRCh38.104.gtf.gz",
-    "vep_cache":
-    "https://ftp.ensembl.org/pub/release-101/variation/indexed_vep_cache/homo_sapiens_merged_vep_101_GRCh38.tar.gz",
+    "vep_cache": "https://ftp.ensembl.org/pub/release-101/variation/indexed_vep_cache/homo_sapiens_merged_vep_101_GRCh38.tar.gz",
 }
 
 reference_fname = settings["reference_url"].split("/")[-1][:-3]
@@ -34,6 +33,7 @@ gtf_file = os.path.splitext(os.path.basename(settings["gtf"]))[0]
 gtf_renamed = os.path.splitext(gtf_file)[0] + ".chr.gtf"
 
 vep_cache_fname = settings["vep_cache"].split("/")[-1]
+
 
 rule all:
     input:
@@ -47,6 +47,7 @@ rule all:
         fuma_bedfile="transcripts.bed",
         bed_variant_hotspots="hotspots_genome.bed",
         cache_vep=directory("homo_sapiens_merged"),
+        expression_gtf=gtf_renamed,
 
 
 rule download_reference:
@@ -153,29 +154,15 @@ rule download_refflat:
 
 
 rule create_id_mappings:
+    input:
+        srcdir("small-files/id_mappings.tsv"),
     output:
         "id_mappings.tsv",
     singularity:
         containers["hamlet-scripts"]
     shell:
         """
-		cat << EOF > {output}
-GOI_ID	GOI_SYMBOL	TOI_IDS
-ENSG00000171456	ASXL1	ENST00000375687
-ENSG00000245848	CEBPA	ENST00000498907
-ENSG00000119772	DNMT3A	ENST00000321117
-ENSG00000122025	FLT3	ENST00000241453
-ENSG00000138413	IDH1	ENST00000345146
-ENSG00000182054	IDH2	ENST00000330062
-ENSG00000157404	KIT	ENST00000288135
-ENSG00000181163	NPM1	ENST00000517671
-ENSG00000213281	NRAS	ENST00000369535
-ENSG00000159216	RUNX1	ENST00000300305
-ENSG00000168769	TET2	ENST00000380013
-ENSG00000141510	TP53	ENST00000269305
-ENSG00000184937	WT1	ENST00000332351
-ENSG00000085276	MECOM	ENST00000464456,ENST00000494292
-EOF
+        cp {input} {output}
         """
 
 
@@ -224,29 +211,19 @@ rule fuma_bedfile:
             {input.gtf} > {output}
         """
 
+
 rule genome_hotspots:
+    input:
+        srcdir("small-files/hotspots_genome.bed"),
     output:
-        "hotspots_genome.bed"
+        "hotspots_genome.bed",
     singularity:
         containers["hamlet-scripts"]
     shell:
         """
-		cat << EOF > {output}
-chr1	114716122	114716127	NRAS
-chr1	114713906	114713909	NRAS
-chr2	208248387	208248389	IDH1
-chr2	25234372	25234374	DNMT3A
-chr4	54723599	54723610	KIT
-chr4	54733153	54733155	KIT
-chr5	171407699	171407774	NPM1
-chr5	171410526	171410565	NPM1
-chr13	28018502	28018505	FLT3
-chr13	28033886	28033991	FLT3
-chr13	28034081	28034214	FLT3
-chr15	90088586	90088747	IDH2
-chr20	32434431	32437338	ASXL1
-EOF
+        cp {input} {output}
         """
+
 
 rule download_vep_cache:
     params:
@@ -260,6 +237,7 @@ rule download_vep_cache:
         """
         wget {params.ftp}
         """
+
 
 rule unpack_vep_cache:
     input:
