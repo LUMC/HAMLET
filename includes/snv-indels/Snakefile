@@ -304,7 +304,7 @@ rule annotate_vars:
         vcf="{sample}/snv-indels/{sample}.raw.vcf.gz",
         ref_1kg=config["vcf_1kg"],
         ref_gonl=config["vcf_gonl"],
-        fasta_vep=config["genome_fasta"],
+        genome_fasta=config["genome_fasta"],
     params:
         online="" if config.get("cache_vep") else "--database",
         offline=f" --offline --cache_version 97 --everything --merged --dir {config['cache_vep']}"
@@ -322,7 +322,7 @@ rule annotate_vars:
         """
         vep \
             -i {input.vcf} \
-            --fasta {input.fasta_vep} \
+            --fasta {input.genome_fasta} \
             {params.online} \
             {params.offline} \
             --custom {input.ref_1kg},P3,vcf,exact,0,AF,AFR_AF,AMR_AF,EAS_AF,EUR_AF,SAS_AF \

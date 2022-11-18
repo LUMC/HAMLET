@@ -82,9 +82,6 @@ settings:
   # VEP cache directory.
   #cache_vep:
 
-  # Path to the FASTA file used by VEP.
-  #fasta_vep:
-
   # 1000 Genomes Project Phase 3 VCF file.
   #vcf_1kg:
 

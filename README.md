@@ -105,7 +105,6 @@ below, just update the path to the `deps-1.0.0` folder.
   "ref_annot_goi": "deps-1.0.0/data/Homo_sapiens.GRCh38.77.goi-extended.gtf",
   "flt3_end": 2024,
   "genome_fasta": "deps-1.0.0/data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa",
-  "fasta_vep": "deps-1.0.0/vep/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz",
   "fusioncatcher_data": "deps-1.0.0/fusioncatcher/human_v98",
   "flt3_name": "FLT3-001",
   "cache_vep": "deps-1.0.0/vep/ensembl-vep/cache_dir/",
