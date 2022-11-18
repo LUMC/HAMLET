@@ -58,9 +58,11 @@
     - path: "SRR8615409/snv-indels/SRR8615409.snv-indel.bam"
     - path: "SRR8615409/snv-indels/SRR8615409.exon_cov_stats.json"
     - path: "SRR8615409/snv-indels/SRR8615409.annotated.vcf.gz"
-      # VEP output should be in VCF format
       contains:
+        # VEP output should be in VCF format
         - "##fileformat=VCFv4.1"
+        # VEP output should contain HGVS annotations
+        - "ENST00000361390.2:c.210C>A"
     - path: "SRR8615409/snv-indels/SRR8615409.aln_stats"
     - path: "SRR8615409/snv-indels/SRR8615409.variants.json"
     - path: "SRR8615409/snv-indels/SRR8615409.variants_all.csv"

@@ -332,6 +332,7 @@ rule annotate_vars:
             --format vcf \
             --polyphen b \
             --sift b \
+            --hgvs \
             --stats_file {output.stats} -o STDOUT \
             2> {log} | bgzip -c > {output.vcf}
         """
