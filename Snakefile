@@ -86,34 +86,6 @@ use rule align_vars from align as align_align_vars with:
         index=config.get("genome_gmap_index") or "gmap_index/reference",
 
 
-module expression:
-    snakefile:
-        "includes/expression/Snakefile"
-    config:
-        config
-
-
-use rule * from expression as expression_*
-
-
-# Connect the idsort rule to the output of snv-indels
-use rule idsort_aln from expression as expression_idsort_aln with:
-    input:
-        bam=align.module_output.bam,
-    container:
-        expression.containers["picard"]
-
-
-# Connect the count_raw_bases rule to the output of snv-indels
-use rule count_raw_bases from expression as expression_count_raw_bases with:
-    input:
-        bam=align.module_output.bam,
-        bed=config["expression_bed"],
-        count_script=config["base_count_script"],
-    container:
-        expression.containers["bedtools-2.17-python-2.7"]
-
-
 module fusion:
     snakefile:
         "includes/fusion/Snakefile"
@@ -155,7 +127,6 @@ rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""
     input:
         idm=config["ref_id_mapping"],
-        exon_ratios=expression.module_output.json,
         qc_seq_json=qc_seq.module_output.json,
         fusion_json=fusion.module_output.json,
         snv_indels_json=align.module_output.json,
@@ -177,7 +148,6 @@ rule create_summary:
             --pipeline-version {params.pipeline_ver} \
             --run-name {params.run_name} \
             --sample-name {wildcards.sample} \
-            --module {input.exon_ratios} \
             --module {input.fusion_json} \
             --module {input.snv_indels_json} \
             --module {input.itd_json} \
@@ -219,10 +189,6 @@ rule package_results:
         smallvars_csv_all=align.module_output.var_all,
         smallvars_csv_hi=align.module_output.var_hi,
         smallvars_plots=align.module_output.variant_plot_dir,
-        count_fragments_per_gene=expression.module_output.fragments_per_gene,
-        count_bases_per_gene=expression.module_output.bases_per_gene,
-        count_bases_per_exon=expression.module_output.bases_per_exon,
-        ratio_exons=expression.module_output.json,
         flt_csv=OUTPUTS["flt3_csv"],
         flt_bg_csv=OUTPUTS["flt3_bg_csv"],
         flt_png=OUTPUTS["flt3_png"],

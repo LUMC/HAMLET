@@ -12,7 +12,6 @@
   ],
   "exon_min_ratio": 0.1,
   "expression_gtf": "test/data/reference/ucsc_gencode_chrM.gtf",
-  "expression_bed": "test/data/reference/ucsc_gencode_chrM.flat.bed",
   "flt3_fasta": "test/data/flt3/flt3-001.fa",
   "kmt2a_fasta": "test/data/kmt2a/kmt2a-213.fa",
   "genome_star_fusion_lib": "test/data/ctat_genome_lib_build_dir_chrM",

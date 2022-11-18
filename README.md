@@ -92,7 +92,6 @@ below, just update the path to the `deps-1.0.0` folder.
   "genome_star_fusion_lib": "deps-1.0.0/data/GRCh38_gencode_v31_CTAT_lib_Aug152019.plug-n-play/ctat_genome_lib_build_dir",
   "flt3_start": 1787,
   "expression_gtf": "deps-1.0.0/data/ucsc_gencode.gtf",
-  "expression_bed": "deps-1.0.0/data/ucsc_gencode.flat.bed",
   "vcf_gonl": "deps-1.0.0/data/gonl.grch38.sorted.filtered.snps_indels.r5.vcf.gz",
   "kmt2a_start": 406,
   "annotation_refflat": "deps-1.0.0/data/ucsc_gencode.refFlat",

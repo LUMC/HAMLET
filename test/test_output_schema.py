@@ -35,13 +35,6 @@ def test_qc_seq_schema(workflow_dir):
     schema_file = pathlib.Path(workflow_dir, "includes/qc-seq/output-schema.json")
     validate_files(output_file, schema_file)
 
-@pytest.mark.workflow('test-expression-chrM')
-def test_expression_schema(workflow_dir):
-    sample = "SRR8615409"
-    output_file = pathlib.Path(workflow_dir, f"{sample}/expression/{sample}.exon_ratios.json")
-    schema_file = pathlib.Path(workflow_dir, "includes/expression/output-schema.json")
-    validate_files(output_file, schema_file)
-
 @pytest.mark.workflow('test-fusion-chrM')
 def test_fusion_schema(workflow_dir):
     sample = "SRR8615409"

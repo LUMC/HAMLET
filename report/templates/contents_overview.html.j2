@@ -101,29 +101,3 @@
     </tbody>
   </table>
 </div>
-
-<div class="keep-together">
-  <div class="table-title">
-    <p>Table 12 | Exon base count ratio over divisor gene</p>
-  </div>
-  <table class="table-wide">
-    <thead>
-      <tr>
-        <th class="text-left">Exon</th>
-        <th class="text-left">Divisor gene</th>
-        <th class="text-right">Ratio</th>
-        <th class="text-left">Above threshold</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in modules.expression %}
-      <tr>
-        <td class="text-left">{{ item.exon }}</td>
-        <td class="text-left">{{ item.divisor_gene }}</td>
-        <td class="text-right">{{ item.ratio|show_float }}</td>
-        <td class="text-left">{{ "yes" if item.above_threshold else "no" }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>

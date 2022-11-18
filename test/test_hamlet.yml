@@ -35,14 +35,6 @@
       - 'gsnap .* --gunzip TestSample1/TestSample1.R1.fq.gz'
       - 'gsnap .* --gunzip TestSample2/TestSample2.R1.fq.gz'
       - 'gsnap .* --gunzip TestSample3/TestSample3.R1.fq.gz'
-      # The idsort_aln rule should use the output of the snv-indels module
-      - 'picard .* SortSam *I=TestSample1/snv-indels/TestSample1.snv-indel.bam'
-      - 'picard .* SortSam *I=TestSample2/snv-indels/TestSample2.snv-indel.bam'
-      - 'picard .* SortSam *I=TestSample3/snv-indels/TestSample3.snv-indel.bam'
-      # The count_raw_bases rule should use the output of the snv-indels module
-      - 'bedtools coverage *-split .* -abam TestSample1/snv-indels/TestSample1.snv-indel.bam'
-      - 'bedtools coverage *-split .* -abam TestSample2/snv-indels/TestSample2.snv-indel.bam'
-      - 'bedtools coverage *-split .* -abam TestSample3/snv-indels/TestSample3.snv-indel.bam'
       # The star_fusion rule should use the output of the qc-seq module
       - 'STAR-Fusion .* --left_fq TestSample1/TestSample1.R1.fq.gz'
       - 'STAR-Fusion .* --left_fq TestSample2/TestSample2.R1.fq.gz'

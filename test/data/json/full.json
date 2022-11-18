@@ -21,16 +21,6 @@
     "sample_name": "SRR8615409"
   },
   "modules": {
-    "expression": [
-      {
-        "above_threshold": true,
-        "count": 219,
-        "divisor_exp": 0,
-        "divisor_gene": "HMBS",
-        "exon": "MT-TA:5586-5655",
-        "ratio": 1.7976931348623157e+308
-      }
-    ],
     "fusion": {
       "intersected": false,
       "plots": {
