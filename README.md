@@ -112,7 +112,6 @@ below, just update the path to the `deps-1.0.0` folder.
   "ref_id_mapping": "deps-1.0.0/data/id_mappings.tsv",
   "flt3_fasta": "deps-1.0.0/data/bwa-flt3-index/flt3-001.fa",
   "rrna_refflat": "deps-1.0.0/data/ucsc_rrna.refFlat",
-  "ref_amplicons": "deps-1.0.0/data/amplicons.bed",
   "genome_gmap_index": "deps-1.0.0/data/gmap-genome-index/GCA_000001405.15_GRCh38_no_alt_analysis_set",
   "run_name": "104372-045",
   "vcf_1kg": "deps-1.0.0/data/1KG.phase3.GRCh38.with_chr.vcf.gz",

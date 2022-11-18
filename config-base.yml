@@ -97,9 +97,6 @@ settings:
   # Tab-delimited file of mapping between three values of a given gene:
   #ref_id_mapping:
 
-  # BED file containing regions amplified for Sanger sequencing of genes of interest.
-  #ref_amplicons:
-
   # GTF file containing the genes of interest.
   #ref_annot_goi:
 
