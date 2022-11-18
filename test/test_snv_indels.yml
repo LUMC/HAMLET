@@ -99,6 +99,9 @@
     - path: "log/table_vars_hi.SRR8615409.txt"
     - path: "log/plot_vars.SRR8615409.txt"
     - path: "SRR8615409/snv-indels/snv-indels-output.json"
+    # Test the location of the variant plots
+    - path: "SRR8615409/snv-indels/variant_plots/sample_SRR8615409_gene_MT-ATP6.png"
+    - path: "SRR8615409/snv-indels/variant_plots/sample_SRR8615409_gene_MT-ATP8.png"
 
 # VEP should switch to offline mode when "cache_vep" is specified
 - name: test-chrM-vep-cache

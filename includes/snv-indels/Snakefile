@@ -418,7 +418,7 @@ rule plot_vars:
             -m {input.ref_annot_goi} \
             -a {input.ref_amplicons} \
             -t {input.ref_hotspots} \
-            -o {output.plotd} 2> {log}
+            -o `dirname {output.plotd}` 2> {log}
         """
 
 
