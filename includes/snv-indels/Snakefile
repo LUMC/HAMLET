@@ -157,7 +157,7 @@ rule exon_cov_ref:
     shell:
         """
         cat {input.ref_refflat} \
-         | grep -vP "chr.*alt\t" \
+         | grep -vP "chr.*(alt|random|fix)\t" \
          | awk \'{{ split($10, starts, ","); split($11, ends, ","); for (i=1; i < length(starts); i++) {{ print $3"\\t"starts[i]"\\t"ends[i]"\\t"gensub(/(\.[0-9]+)/,"", "g", $2)"\\t"i"\\t"$4 }} }}\' \
          | bedtools sort -faidx {input.ref_fai} \
          > {output.bed} 2> {log}
