@@ -11,7 +11,6 @@ Four distinct analysis modules comprise Hamlet, which can be run independently:
   1. `snv-indels`, for small variant detection
   2. `fusion`, for fusion gene detection
   3. `itd`, for tandem duplication detection
-  4. `expression`, for expression analysis
 
 There is also a `qc-seq` module which does quality control for input sequence files. Everything is tied together by
 a main `Snakefile` using
@@ -91,7 +90,7 @@ below, just update the path to the `deps-1.0.0` folder.
   "kmt2a_fasta": "deps-1.0.0/data/bwa-kmt2a-index/kmt2a-213.fa",
   "genome_star_fusion_lib": "deps-1.0.0/data/GRCh38_gencode_v31_CTAT_lib_Aug152019.plug-n-play/ctat_genome_lib_build_dir",
   "flt3_start": 1787,
-  "expression_gtf": "deps-1.0.0/data/ucsc_gencode.gtf",
+  "gtf": "deps-1.0.0/data/ucsc_gencode.gtf",
   "vcf_gonl": "deps-1.0.0/data/gonl.grch38.sorted.filtered.snps_indels.r5.vcf.gz",
   "kmt2a_start": 406,
   "annotation_refflat": "deps-1.0.0/data/ucsc_gencode.refFlat",
@@ -102,7 +101,6 @@ below, just update the path to the `deps-1.0.0` folder.
     "MECOM:169146722-169147734"
   ],
   "exon_min_ratio": 0.1,
-  "ref_annot_goi": "deps-1.0.0/data/Homo_sapiens.GRCh38.77.goi-extended.gtf",
   "flt3_end": 2024,
   "genome_fasta": "deps-1.0.0/data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa",
   "fusioncatcher_data": "deps-1.0.0/fusioncatcher/human_v98",

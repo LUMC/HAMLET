@@ -400,7 +400,7 @@ rule plot_vars:
         scr=config["plot_script"],
         ref_id_mapping=config["ref_id_mapping"],
         ref_hotspots=config["bed_variant_hotspots"],
-        ref_annot_goi=config["ref_annot_goi"],
+        gtf=config["gtf"],
     output:
         plotd=directory("{sample}/snv-indels/variant_plots"),
     log:
@@ -412,11 +412,11 @@ rule plot_vars:
         """
         mkdir -p {output.plotd} && \
         Rscript {input.scr} \
-            -j {input.json} \
-            -i {input.ref_id_mapping} \
-            -m {input.ref_annot_goi} \
-            -t {input.ref_hotspots} \
-            -o `dirname {output.plotd}` 2> {log}
+            --input-json {input.json} \
+            --input-gene-ids {input.ref_id_mapping} \
+            --input-gtf {input.gtf} \
+            --input-hotspot-bed {input.ref_hotspots} \
+            --out-dir `dirname {output.plotd}` 2> {log}
         """
 
 

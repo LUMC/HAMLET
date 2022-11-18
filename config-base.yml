@@ -25,7 +25,7 @@ settings:
   #rrna_refflat:
 
   # GTF file of the transcriptome.
-  #expression_gtf:
+  #gtf:
 
   # Name of the exons whose base counts will be gathered by the pipeline.
   #exon_names: []
@@ -93,9 +93,6 @@ settings:
 
   # Tab-delimited file of mapping between three values of a given gene:
   #ref_id_mapping:
-
-  # GTF file containing the genes of interest.
-  #ref_annot_goi:
 
 # The entries here must have the following structure:
 # <sample_name>:
