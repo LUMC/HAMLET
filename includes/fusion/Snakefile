@@ -42,6 +42,7 @@ rule star_fusion:
         containers["star-fusion"]
     shell:
         """
+        rm -rf {output.folder} && \
         mkdir -p {output.folder} && \
         STAR-Fusion \
             --genome_lib_dir {input.lib} \
