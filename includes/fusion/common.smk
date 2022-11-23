@@ -7,7 +7,7 @@ pepfile: config["pepfile"]
 containers = {
     "fsnviz": "docker://quay.io/biocontainers/fsnviz:0.3.0--pyhdfd78af_6",
     "fuma": "docker://quay.io/biocontainers/fuma:4.0.0--pyhb7b1952_0",
-    "fusioncatcher": "docker://quay.io/biocontainers/fusioncatcher:1.33--hdfd78af_3",
+    "fusioncatcher": "docker://quay.io/biocontainers/fusioncatcher:1.33--hdfd78af_4",
     "star-fusion": "docker://quay.io/biocontainers/star-fusion:1.10.0--hdfd78af_1",
     "crimson": "docker://quay.io/biocontainers/crimson:1.1.0--pyh5e36f6f_0",
 }
