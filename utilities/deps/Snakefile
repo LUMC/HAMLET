@@ -179,19 +179,17 @@ rule create_id_mappings:
 rule create_rRNA_refflat:
     """ Taken from https://gist.github.com/b8307038/55fb526e72141fac9f0aa2bc0e1f5997 """
     input:
-        fai=rules.download_fai.output,
+        ref_dict=rules.create_dict.output,
         gtf=rules.rewrite_gtf.output,
     output:
         refflat="ucsc_rrna.refFlat",
-        sizes=temporary("sizes.genome"),
     singularity:
         containers["hamlet-scripts"]
     shell:
         """
 
-        cut -f1,2 {input.fai} > {output.sizes}
-
-        perl -lane 'print "\@SQ\tSN:$F[0]\tLN:$F[1]\tAS:GRCh38"' {output.sizes} | grep -v _ > {output.refflat}
+        # Include SQ headers to match the reference
+        grep "^@SQ" {input.ref_dict} | cut -f 1,2,3 > {output.refflat}
 
         # Pattern to find rebozyme transcripts
         ribozyme='gene_biotype "rRNA"\|gene_biotype "Mt_rRNA"\|gene_biotype "Mt_tRNA"\|gene_biotype "ribozyme"'
