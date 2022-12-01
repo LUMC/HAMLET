@@ -163,10 +163,11 @@ rule create_refflat:
             -genePredExt {input.gtf} {output}
         """
 
+
 rule rewrite_refflat:
     input:
         gtf=rules.create_refflat.output,
-        scr=srcdir('scripts/rewrite-refflat.py'),
+        scr=srcdir("scripts/rewrite-refflat.py"),
     output:
         "ucsc_gencode.refFlat",
     singularity:
