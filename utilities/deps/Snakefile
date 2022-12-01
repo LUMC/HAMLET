@@ -164,7 +164,7 @@ rule create_refflat:
             -geneNameAsName2 \
             -genePredExt {input.gtf} > tmp.refflat
 
-        {input.src} tmp.refflat > {output}
+        {input.scr} tmp.refflat > {output}
 
         rm tmp.refflat
         """
