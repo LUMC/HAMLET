@@ -11,6 +11,7 @@ containers = {
     "fuma": "docker://quay.io/biocontainers/fuma:4.0.0--pyhb7b1952_0",
     "fusioncatcher": "docker://quay.io/biocontainers/fusioncatcher:1.33--hdfd78af_3",
     "samtools": "docker://quay.io/biocontainers/samtools:1.6--h244ad75_4",
+    "ucsc-gtftogenepred": "docker://quay.io/biocontainers/ucsc-gtftogenepred:377--ha8a8165_5",
     "star-fusion": "docker://quay.io/biocontainers/star-fusion:1.10.0--hdfd78af_1",
     "picard": "docker://quay.io/biocontainers/picard:2.20.5--0",
     "gsnap": "docker://quay.io/biocontainers/gmap:2021.02.22--pl526h2f06484_0",
@@ -148,18 +149,24 @@ rule create_gmap_index:
         """
 
 
-rule download_refflat:
+rule create_refflat:
+    input:
+        gtf=rules.rewrite_gtf.output,
+        scr=srcdir('scripts/rewrite-refflat.py'),
     output:
         "ucsc_gencode.refFlat",
-    params:
-        url=settings["refflat"],
     singularity:
-        containers["hamlet-scripts"]
+        containers["ucsc-gtftogenepred"]
     shell:
         """
-        wget {params.url} &&
-        gzip -dc refFlat.txt.gz > {output} &&
-        rm refFlat.txt.gz
+        gtfToGenePred \
+            -includeVersion \
+            -geneNameAsName2 \
+            -genePredExt {input.gtf} > tmp.refflat
+
+        {input.src} tmp.refflat > {output}
+
+        rm tmp.refflat
         """
 
 
