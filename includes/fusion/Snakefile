@@ -212,7 +212,7 @@ rule json_output:
     input:
         fusioncatcher=module_output.optional.fusion_catcher,
         star_fusion=module_output.star_fusion,
-        intersect=module_output.optional.intersect,
+        subset=module_output.optional.subset_predictions,
         fc_png=module_output.optional.fusioncatcher_fig,
         sf_png=module_output.star_fusion_fig,
         is_png=module_output.optional.intersect_fig,
@@ -234,6 +234,6 @@ rule json_output:
             {params.intersected} \
             --tools {params.tools} \
             --plots {input.fc_png} {input.sf_png} {input.is_png} \
-            --tables {input.fusioncatcher} {input.star_fusion} {input.intersect} \
+            --tables {input.fusioncatcher} {input.subset} {input.star_fusion} \
             > {output} 2> {log}
         """
