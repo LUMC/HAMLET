@@ -16,17 +16,14 @@
     contains:
       # The pipeline should create the final output files for TestSample1
       - "TestSample1/TestSample1.summary.json"
-      - "TestSample1/hamlet_results.TestSample1.zip"
       - "TestSample1/hamlet_report.TestSample1.pdf"
       - "TestSample1/TestSample1.summary.json"
       # The pipeline should create the final output files for TestSample2
       - "TestSample2/TestSample2.summary.json"
-      - "TestSample2/hamlet_results.TestSample2.zip"
       - "TestSample2/hamlet_report.TestSample2.pdf"
       - "TestSample2/TestSample2.summary.json"
       # The pipeline should create the final output files for TestSample3
       - "TestSample3/TestSample3.summary.json"
-      - "TestSample3/hamlet_results.TestSample3.zip"
       - "TestSample3/hamlet_report.TestSample3.pdf"
       - "TestSample3/TestSample3.summary.json"
 
@@ -130,13 +127,11 @@
     --singularity-prefix '~/.singularity/cache/snakemake'
   files:
     # HAMLET pipeline should generate the final output files
-    - path: SRR8615409/hamlet_results.SRR8615409.zip
     - path: SRR8615409/SRR8615409.summary.json
     - path: SRR8615409/hamlet_report.SRR8615409.pdf
     # Test log files
     - path: "log/create_summary.SRR8615409.txt"
     - path: "log/generate_report.SRR8615409.txt"
-    - path: "log/package_results.SRR8615409.txt"
 
 - name: lint-hamlet
   tags:

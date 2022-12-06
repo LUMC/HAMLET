@@ -24,28 +24,10 @@ localrules:
     package_results,
 
 
-OUTPUTS = dict(
-    # Merged FASTQs, stats, and packaged results
-    fqs="{sample}/{sample}-{pair}.fq.gz",
-    summary="{sample}/{sample}.summary.json",
-    reportje="{sample}/hamlet_report.{sample}.pdf",
-    package="{sample}/hamlet_results.{sample}.zip",
-    # Stats
-    # ITD module
-    flt3_bam=itd_output(".flt3.bam"),
-    flt3_csv=itd_output(".flt3.csv"),
-    flt3_bg_csv=itd_output(".flt3.bg.csv"),
-    flt3_png=itd_output(".flt3.png"),
-    kmt2a_bam=itd_output(".kmt2a.bam"),
-    kmt2a_csv=itd_output(".kmt2a.csv"),
-    kmt2a_bg_csv=itd_output(".kmt2a.bg.csv"),
-    kmt2a_png=itd_output(".kmt2a.png"),
-)
-
-
 rule all:
     input:
-        [expand(p, sample=samples, pair={"R1", "R2"}) for p in OUTPUTS.values()],
+        summary=expand("{sample}/{sample}.summary.json", sample=samples),
+        report=expand("{sample}/hamlet_report.{sample}.pdf", sample=samples),
 
 
 # Define HAMLET modules
@@ -133,12 +115,6 @@ use rule fusioncatcher from fusion as fusion_fusioncatcher with:
         fusion.containers["fusioncatcher"]
 
 
-# Fusioncatcher outputs
-if config.get("fusioncatcher_data"):
-    OUTPUTS["fusioncatcher_txt"] = fusion.module_output.optional.fusion_catcher
-    OUTPUTS["fusions_txt"] = fusion.module_output.optional.intersect
-    OUTPUTS["isect_txt"] = fusion.module_output.optional.subset_predictions
-
 
 rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""
@@ -153,7 +129,7 @@ rule create_summary:
         pipeline_ver=PIPELINE_VERSION,
         run_name=RUN_NAME,
     output:
-        js=OUTPUTS["summary"],
+        js="{sample}/{sample}.summary.json",
     log:
         "log/create_summary.{sample}.txt",
     container:
@@ -175,14 +151,14 @@ rule create_summary:
 rule generate_report:
     """Generates a PDF report of the essential results."""
     input:
-        summary=OUTPUTS["summary"],
+        summary=rules.create_summary.output.js,
         css=srcdir("report/assets/style.css"),
         templates=srcdir("report/templates"),
         imgs=srcdir("report/assets/img"),
         toc=srcdir("report/assets/toc.xsl"),
         scr=srcdir("scripts/generate_report.py"),
     output:
-        pdf=OUTPUTS["reportje"],
+        pdf="{sample}/hamlet_report.{sample}.pdf",
     log:
         "log/generate_report.{sample}.txt",
     container:
@@ -196,38 +172,4 @@ rule generate_report:
             --toc-path {input.toc} \
             {input.summary} \
             {output.pdf} 2> {log}
-        """
-
-
-rule package_results:
-    """Copies essential result files into one directory and zips it."""
-    input:
-        summary=OUTPUTS["summary"],
-        smallvars_csv_all=align.module_output.var_all,
-        smallvars_csv_hi=align.module_output.var_hi,
-        smallvars_plots=align.module_output.variant_plot_dir,
-        flt_csv=OUTPUTS["flt3_csv"],
-        flt_bg_csv=OUTPUTS["flt3_bg_csv"],
-        flt_png=OUTPUTS["flt3_png"],
-        kmt_csv=OUTPUTS["kmt2a_csv"],
-        kmt_bg_csv=OUTPUTS["kmt2a_bg_csv"],
-        kmt_png=OUTPUTS["kmt2a_png"],
-        reportje=OUTPUTS["reportje"],
-    params:
-        tmp=f"tmp/hamlet-pkg.{{sample}}.{uuid4()}/hamlet_results.{{sample}}",
-    output:
-        pkg=OUTPUTS["package"],
-    log:
-        "log/package_results.{sample}.txt",
-    container:
-        containers["zip"]
-    shell:
-        """
-        mkdir -p {params.tmp} && \
-        cp -r {input} {params.tmp} && \
-        cp -r $(dirname {input.smallvars_plots}) {params.tmp} && \
-        zip -9 -x *.done -r {output.pkg} {params.tmp} && \
-        rm -rf {params.tmp} 2> {log} \
-        \
-        || rm -rf {params.tmp}
         """
