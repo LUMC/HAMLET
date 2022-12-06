@@ -115,7 +115,6 @@ use rule fusioncatcher from fusion as fusion_fusioncatcher with:
         fusion.containers["fusioncatcher"]
 
 
-
 rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""
     input:
