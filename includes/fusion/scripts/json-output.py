@@ -2,6 +2,7 @@
 
 import json
 import argparse
+import os
 
 from crimson import star_fusion
 from crimson import fusioncatcher
@@ -32,18 +33,18 @@ def fusion_results(args):
 
     # Add the results for each tool
     for tool, plot, table in zip(args.tools, args.plots, args.tables):
-        results["plots"][tool] = plot
+        results["plots"][tool] = os.path.abspath(plot)
 
         if tool == "fusioncatcher":
             events = fusioncatcher.parse(table)
             results["tables"][tool] = {
-                "path": table,
+                "path": os.path.abspath(table),
                 "top20": [transform_fusioncatcher(event) for event in events[:20]]
             }
         else:
             events = star_fusion.parse(table)
             results["tables"][tool] = {
-                "path": table,
+                "path": os.path.abspath(table),
                 "top20": [transform_star_fusion(event) for event in events[:20]]
             }
 
