@@ -2,8 +2,25 @@ include: "common.smk"
 
 
 localrules:
+    align_exon_cov_ref,
+    align_genome_txt,
+    align_json_output,
+    align_table_vars_all,
+    align_table_vars_hi,
     create_summary,
+    fusion_fusioncatcher_cp,
+    fusion_intersect_fusions,
+    fusion_json_output,
+    fusion_plot_isect,
+    fusion_plot_sf,
+    fusion_star_fusion_cp,
+    fusion_subset_sf,
     generate_report,
+    itd_detect_itd_ftl3,
+    itd_detect_itd_kmt2a,
+    itd_json_output,
+    itd_plot_itd_flt3,
+    itd_plot_itd_kmt2a,
     package_results,
 
 
