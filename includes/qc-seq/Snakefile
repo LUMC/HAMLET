@@ -59,6 +59,7 @@ rule cutadapt:
         fq2="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz",
     log:
         "log/cutadapt.{sample}.{read_group}.txt",
+    threads: 8
     container:
         containers["cutadapt"]
     shell:
@@ -66,6 +67,8 @@ rule cutadapt:
         cutadapt \
             -a AGATCGGAAGAG \
             -A AGATCGGAAGAG \
+            --cores={threads} \
+            --compression-level=1 \
             --minimum-length=20 \
             --quality-cutoff=20,20 \
             --output={output.fq1} \

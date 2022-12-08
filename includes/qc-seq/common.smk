@@ -2,9 +2,9 @@ from os import path
 from types import SimpleNamespace
 
 containers = {
-    "crimson": "docker://quay.io/biocontainers/crimson:0.3.0--py27_1",
-    "cutadapt": "docker://quay.io/biocontainers/cutadapt:1.14--py36_0",
-    "fastqc": "docker://quay.io/biocontainers/fastqc:0.11.8--1",
+    "crimson": "docker://quay.io/biocontainers/crimson:1.1.0--pyh5e36f6f_0",
+    "cutadapt": "docker://quay.io/biocontainers/cutadapt:4.1--py310h1425a21_1",
+    "fastqc": "docker://quay.io/biocontainers/fastqc:0.11.9--hdfd78af_1",
 }
 
 config["rg_stats_script"] = srcdir(path.join("scripts", "gather_rg_stats.py"))
