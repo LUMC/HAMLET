@@ -10,6 +10,9 @@ that users understand how the changes affect the new version.
 ## v2.0.0-dev
 
 ### Tool updates
+- Update GSNAP to 2021.08.25
+- Update VEP to 108.2
+- Update Picard to 2.27.4
 - Update FastQC to 0.11.9
 - Update Cutadapt to 4.1
 

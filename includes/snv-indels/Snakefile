@@ -117,6 +117,7 @@ rule reorder_aln_header:
         """
         picard -Xmx4G ReorderSam \
             I={input.bam} \
+            SD={input.bam} \
             O={output.bam} \
             R={input.ref} \
             VALIDATION_STRINGENCY=SILENT \
