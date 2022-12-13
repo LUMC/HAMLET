@@ -308,7 +308,7 @@ rule annotate_vars:
         genome_fasta=config["genome_fasta"],
     params:
         online="" if config.get("cache_vep") else "--database",
-        offline=f" --offline --cache_version 101 --everything --merged --dir {config['cache_vep']}"
+        offline=f" --offline --cache_version 108 --everything --merged --dir {config['cache_vep']}"
         if config.get("cache_vep")
         else "",
     output:

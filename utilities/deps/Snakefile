@@ -13,10 +13,12 @@ containers = {
     "ucsc-gtftogenepred": "docker://quay.io/biocontainers/ucsc-gtftogenepred:377--ha8a8165_5",
     "star-fusion": "docker://quay.io/biocontainers/star-fusion:1.10.0--hdfd78af_1",
     "picard": "docker://quay.io/biocontainers/picard:2.20.5--0",
-    "gsnap": "docker://quay.io/biocontainers/gmap:2021.02.22--pl526h2f06484_0",
-    "vep": "docker://quay.io/biocontainers/ensembl-vep:101.0--pl526hecda079_1",
+    "gsnap": "docker://quay.io/biocontainers/gmap:2021.08.25--pl5321h67092d7_2",
+    "vep": "docker://quay.io/biocontainers/ensembl-vep:108.2--pl5321h4a94de4_0",
     "zip": "docker://lumc/zip:3.0",
 }
+
+VEP_RELEASE=108
 
 settings = {
     "reference_url": "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.15_GRCh38/seqs_for_alignment_pipelines.ucsc_ids/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz",
@@ -25,7 +27,7 @@ settings = {
     #'gtf': 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/genes/hg38.ensGene.gtf.gz'
     # "gtf": "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_41/gencode.v41.annotation.gtf.gz",
     "gtf": "http://ftp.ensembl.org/pub/release-104/gtf/homo_sapiens/Homo_sapiens.GRCh38.104.gtf.gz",
-    "vep_cache": "https://ftp.ensembl.org/pub/release-101/variation/indexed_vep_cache/homo_sapiens_merged_vep_101_GRCh38.tar.gz",
+    "vep_cache": f"https://ftp.ensembl.org/pub/release-{VEP_RELEASE}/variation/indexed_vep_cache/homo_sapiens_merged_vep_{VEP_RELEASE}_GRCh38.tar.gz",
     # See https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/
     "starfusion_lib": "https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/GRCh38_gencode_v37_CTAT_lib_Mar012021.plug-n-play.tar.gz",
 }
@@ -253,7 +255,7 @@ rule download_vep_cache:
         ftp=settings["vep_cache"],
         fname=vep_cache_fname,
     output:
-        "homo_sapiens_merged_vep_101_GRCh38.tar.gz",
+        vep_cache_fname,
     singularity:
         containers["hamlet-scripts"]
     shell:
@@ -264,7 +266,7 @@ rule download_vep_cache:
 
 rule unpack_vep_cache:
     input:
-        "homo_sapiens_merged_vep_101_GRCh38.tar.gz",
+        rules.download_vep_cache.output,
     output:
         directory("homo_sapiens_merged"),
     singularity:
