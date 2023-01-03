@@ -6,6 +6,7 @@
   command: >
     snakemake -n
     --snakefile includes/fusion/Snakefile
+    --printshellcmds
     --configfile test/data/config/chrM-fusioncatcher.json
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
@@ -30,6 +31,8 @@
       - "TestSample2/fusion/TestSample2.sf-isect"
       # fusion pipeline should create a final json file
       - "TestSample2/fusion/fusion-output.json"
+    contains_regex:
+      - 'STAR-Fusion .* --left_fq test/data/fastq/SRR8615409_chrM_1.fastq.gz +--right_fq test/data/fastq/SRR8615409_chrM_2.fastq.gz'
 
 # Singularity should be available
 - name: test-fusion-sanity-singularity
