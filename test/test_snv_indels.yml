@@ -6,6 +6,7 @@
   command: >
     snakemake -n
     --snakefile includes/snv-indels/Snakefile
+    --printshellcmds
     --configfile test/data/config/chrM.json
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
@@ -18,6 +19,8 @@
 
       - "TestSample3/snv-indels/TestSample3.variants_all.csv"
       - "TestSample3/snv-indels/TestSample3.variants_hi.csv"
+    contains_regex:
+      - 'gsnap .* --read-group-name=TestSample1 .* --gunzip test/data/fastq/SRR8615409_chrM_1.fastq.gz test/data/fastq/SRR8615409_chrM_2.fastq.gz'
 
 # Singularity should be available
 - name: test-snv-indels-sanity-singularity

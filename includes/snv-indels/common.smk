@@ -34,7 +34,7 @@ def get_forward(wildcards):
 
 
 def get_reverse(wildcards):
-    return pep.sample_table.loc[wildcards.sample, "R1"]
+    return pep.sample_table.loc[wildcards.sample, "R2"]
 
 
 ## Functions for module outputs ##
