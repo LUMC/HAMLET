@@ -6,6 +6,7 @@
   command: >
     snakemake -n
     --snakefile includes/qc-seq/Snakefile
+    --printshellcmds
     --config pepfile=test/pep/chrM-trio-subsamples.csv
   stdout:
     contains:
@@ -53,6 +54,12 @@
     - "TestSample2/TestSample2-R2.raw.fq.gz"
     - "TestSample3/TestSample3-R1.raw.fq.gz"
     - "TestSample3/TestSample3-R2.raw.fq.gz"
+
+    contains_regex:
+    # The forward/reverse fastq files from the PEP should be handled correctly
+    - 'fastqc + -o TestSample1.* test/data/fastq/R1.fq.gz test/data/fastq/R2.fq.gz'
+    - 'fastqc + -o TestSample2.* test/data/fastq/R1.fq.gz test/data/fastq/R2.fq.gz'
+    - 'fastqc + -o TestSample2.* test/data/fastq/SRR8615409_chrM_1.fastq.gz test/data/fastq/SRR8615409_chrM_2.fastq.gz'
 
 # Singularity should be available
 - name: test-qc-sanity-singularity
