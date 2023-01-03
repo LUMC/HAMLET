@@ -6,6 +6,7 @@
   command: >
     snakemake -n
     --snakefile includes/itd/Snakefile
+    --printshellcmds
     --configfile test/data/config/chrM.json
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
@@ -28,6 +29,9 @@
       - "TestSample3/itd/TestSample3.flt3.csv"
       - "TestSample3/itd/TestSample3.flt3.bg.csv"
       - "TestSample3/itd/TestSample3.flt3.png"
+    contains_regex:
+      - 'bwa mem .*  test/data/fastq/SRR8615409_chrM_1.fastq.gz test/data/fastq/SRR8615409_chrM_2.fastq.gz'
+
 
 # Singularity should be available
 - name: test-itd-sanity-singularity
