@@ -71,16 +71,16 @@
       # The csv file should contain the following events
       contains:
         - "position\tcoverage\tsoft_clip_count"
-        - "1852\t1686\t501"
-        - "1883\t1614\t1063"
+        - "1852\t1774\t586"
+        - "1883\t1802\t1130"
     # ITD pipeline should create a final csv file of the detected internal
     # tandem repeats
     - path: "SRR8615687/itd/SRR8615687.flt3.csv"
       # The csv file should contain the header, and two internal tandem repeats
       contains:
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
-        - "1853\t1881,1882\t495\t4\t1852\t1882\t1882\t1853\tfuzzy-end\t1"
-        - "1853\t1882\t495\t1059\t1852\t1882\t1883\t1853\texact\t0"
+        - "1853\t1881,1882\t578\t4\t1852\t1882\t1882\t1853\tfuzzy-end\t1"
+        - "1853\t1882\t578\t1126\t1852\t1882\t1883\t1853\texact\t0"
 
     # ITD pipeline should create a png of the detected repeat events for kmt2a
     - path: "SRR8616218/itd/SRR8616218.kmt2a.png"
@@ -91,8 +91,8 @@
       # positions
       contains:
         - "position\tcoverage\tsoft_clip_count"
-        - "452\t32\t46"
-        - "4111\t252\t26"
+        - "452\t39\t48"
+        - "4111\t259\t25"
     # ITD pipeline should create a final csv file of the detected internal
     # tandem repeats
     - path: "SRR8616218/itd/SRR8616218.kmt2a.csv"
@@ -100,7 +100,7 @@
       # repeat
       contains:
         - "td_starts\ttd_ends\trose_start_count\trose_end_count\trose_start_pos\trose_start_anchor_pos\trose_end_pos\trose_end_anchor_pos\tboundary_type\tfuzziness"
-        - "453,457\t4106,4110\t40\t26\t452\t4106\t4111\t457\tfuzzy\t4"
+        - "453,457\t4106,4110\t43\t25\t452\t4106\t4111\t457\tfuzzy\t4"
     # Test if the json output file for the module is created
     - path: "SRR8616218/itd/itd-output.json"
     # Test the log files
