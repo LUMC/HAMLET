@@ -20,7 +20,7 @@
       - "TestSample3/snv-indels/TestSample3.variants_all.csv"
       - "TestSample3/snv-indels/TestSample3.variants_hi.csv"
     contains_regex:
-      - 'gsnap .* --read-group-name=TestSample1 .* --gunzip test/data/fastq/SRR8615409_chrM_1.fastq.gz test/data/fastq/SRR8615409_chrM_2.fastq.gz'
+      - 'STAR .* ID:TestSample1 .* --readFilesIn test/data/fastq/SRR8615409_chrM_1.fastq.gz test/data/fastq/SRR8615409_chrM_2.fastq.gz'
 
 # Singularity should be available
 - name: test-snv-indels-sanity-singularity
@@ -53,10 +53,6 @@
     # snv-indel should not use a local VEP database, but query ensembl
     must_not_contain_regex:
       - 'vep .* --offline'
-    # snv-indel should index the reference file for GSNAP if genome_gmap_index
-    # is not specified in the configuration
-    contains:
-      - "rule index_reference"
   files:
     - path: "SRR8615409/snv-indels/SRR8615409.snv-indel.bam"
     - path: "SRR8615409/snv-indels/SRR8615409.exon_cov_stats.json"
@@ -71,12 +67,9 @@
     - path: "SRR8615409/snv-indels/SRR8615409.variants_all.csv"
     - path: "SRR8615409/snv-indels/SRR8615409.variants_hi.csv"
     # Test log files
-    - path: "log/index_reference.txt"
+    - path: "SRR8615409/snv-indels/Log.final.out"
       contains:
-        - "Opening file test/data/reference/chrM.fa"
-    - path: "log/align_vars.SRR8615409.txt"
-      contains:
-        - "GSNAP version"
+        - "Started job on"
     - path: "log/sort_bamfile.SRR8615409.txt"
       contains:
         - "SortSam"
@@ -124,23 +117,6 @@
       - 'vep .* --offline'
     must_not_contain_regex:
       - 'vep .* --database'
-
-# index_reference should not run if genome_gmap_index is specified
-- name: test-chrM-gmap-index
-  tags:
-    - dry-run
-    - snv-indels
-  command: >
-    snakemake -n
-    --snakefile includes/snv-indels/Snakefile
-    --printshellcmds
-    --configfile test/data/config/chrM-gmap-index.json
-    --config pepfile=test/pep/chrM.csv
-  stdout:
-    contains_regex:
-      - "gsnap *--dir `dirname test/data/reference`"
-    must_not_contain:
-      - "rule index_reference"
 
 - name: lint-snv-indels
   tags:

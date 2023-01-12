@@ -20,62 +20,37 @@ rule all:
         json=[module_output.json(sample) for sample in samples],
 
 
-rule index_reference:
-    """Index the reference fasta"""
-    input:
-        ref=config["genome_fasta"],
-    output:
-        directory("gmap_index/reference"),
-    params:
-        "reference",
-    log:
-        "log/index_reference.txt",
-    container:
-        containers["gsnap"]
-    shell:
-        """
-        # Clear the existing folder
-        rm -rf gmap_index
-        mkdir gmap_index
-
-        gmap_build -D gmap_index -d {params} {input.ref} 2>&1 > {log}
-        """
-
-
 rule align_vars:
     input:
         fq1=get_forward,
         fq2=get_reverse,
-        index=config.get("genome_gmap_index") or "gmap_index/reference",
+        index=config["star_index"],
     output:
-        sam=temp("{sample}/snv-indels/{sample}.snv-indel.raw.sam"),
+        sam=temp("{sample}/snv-indels/Aligned.out.sam"),
     params:
         rg_sample=lambda wildcards: wildcards.sample,
     log:
-        "log/align_vars.{sample}.txt",
+        main="{sample}/snv-indels/Log.out",
+        progress="{sample}/snv-indels/Log.progress.out",
+        final="{sample}/snv-indels/Log.final.out",
     threads: 8
     container:
-        containers["gsnap"]
+        containers["star"]
     shell:
         """
-        gsnap \
-            --dir `dirname {input.index}` \
-            --db `basename {input.index}` \
-            --batch 4 \
-            --nthreads {threads} \
-            --novelsplicing 1 \
-            --npaths 1 \
-            --quiet-if-excessive \
-            --read-group-name={params.rg_sample} \
-            --read-group-id={params.rg_sample} \
-            --format sam \
-            --gunzip {input.fq1} {input.fq2} > {output.sam} 2> {log}
+        STAR \
+            --runThreadN {threads} \
+            --genomeDir {input.index} \
+            --readFilesCommand zcat \
+            --outSAMattrRGline ID:{params.rg_sample} \
+            --outFileNamePrefix $(dirname {output.sam})/ \
+            --readFilesIn {input.fq1} {input.fq2}
         """
 
 
 rule sort_bamfile:
     input:
-        sam="{sample}/snv-indels/{sample}.snv-indel.raw.sam",
+        sam="{sample}/snv-indels/Aligned.out.sam",
     output:
         bam=temp("{sample}/snv-indels/{sample}.snv-indel.sort.bam"),
         bai=temp("{sample}/snv-indels/{sample}.snv-indel.sort.bai"),

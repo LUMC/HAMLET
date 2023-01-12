@@ -6,11 +6,11 @@ pepfile: config["pepfile"]
 
 containers = {
     "bedtools-2.27-grep-2.14-gawk-5.0-python-3.7": "docker://quay.io/biocontainers/mulled-v2-a4b89e0b16b1d7db92e5a069e5c40405b3b53aab:98c4ac2f0e27869be58f6a4d8bb7ae3bc02a3a70-0",
-    "gsnap": "docker://quay.io/biocontainers/gmap:2021.08.25--pl5321h67092d7_2",
     "hamlet-scripts": "docker://quay.io/redmar_van_den_berg/hamlet-scripts:0.2",
     "picard": "docker://quay.io/biocontainers/picard:2.27.4--hdfd78af_0",
     "varscan-2.4.2-samtools-1.3.1-tabix-0.2.6-grep-2.14": "docker://quay.io/biocontainers/mulled-v2-58936b48a08c4e06505165c6f560ec9460b431ea:ef260d10ee671f4c7bd8e783939839bb2e0b684e-0",
     "vep": "docker://quay.io/biocontainers/ensembl-vep:108.2--pl5321h4a94de4_0",
+    "star": "docker://quay.io/biocontainers/star:2.7.10b--h9ee0642_0",
     "crimson": "docker://quay.io/biocontainers/crimson:1.1.0--pyh5e36f6f_0",
 }
 

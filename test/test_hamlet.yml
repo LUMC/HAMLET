@@ -29,9 +29,9 @@
 
     contains_regex:
       # The align_vars rule should use the output of the qc-seq module
-      - 'gsnap .* --gunzip TestSample1/TestSample1.R1.fq.gz'
-      - 'gsnap .* --gunzip TestSample2/TestSample2.R1.fq.gz'
-      - 'gsnap .* --gunzip TestSample3/TestSample3.R1.fq.gz'
+      - 'STAR .* TestSample1/TestSample1.R1.fq.gz'
+      - 'STAR .* TestSample2/TestSample2.R1.fq.gz'
+      - 'STAR .* TestSample3/TestSample3.R1.fq.gz'
       # The star_fusion rule should use the output of the qc-seq module
       - 'STAR-Fusion .* --left_fq TestSample1/TestSample1.R1.fq.gz'
       - 'STAR-Fusion .* --left_fq TestSample2/TestSample2.R1.fq.gz'
