@@ -136,11 +136,11 @@ rule create_star_index:
     input:
         fasta=rules.download_reference.output.fasta,
     params:
-        overhang=149
+        overhang=149,
     output:
         directory("star-index"),
     singularity:
-        containers["gsnap"]
+        containers["star"]
     shell:
         """
         rm -rf {output}
@@ -148,7 +148,7 @@ rule create_star_index:
 
         STAR \
             --runMode genomeGenerate \
-            --genomeDir star-index \
+            --genomeDir {output} \
             --genomeFastaFile {input.fasta} \
             --sjdbGTFfile {input.gtf} \
             --sjdbOverhang {params.overhang}
