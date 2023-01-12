@@ -12,8 +12,8 @@ containers = {
     "samtools": "docker://quay.io/biocontainers/samtools:1.6--h244ad75_4",
     "ucsc-gtftogenepred": "docker://quay.io/biocontainers/ucsc-gtftogenepred:377--ha8a8165_5",
     "star-fusion": "docker://quay.io/biocontainers/star-fusion:1.10.0--hdfd78af_1",
+    "star": "docker://quay.io/biocontainers/star:2.7.10b--h9ee0642_0",
     "picard": "docker://quay.io/biocontainers/picard:2.20.5--0",
-    "gsnap": "docker://quay.io/biocontainers/gmap:2021.08.25--pl5321h67092d7_2",
     "vep": "docker://quay.io/biocontainers/ensembl-vep:108.2--pl5321h4a94de4_0",
     "zip": "docker://lumc/zip:3.0",
 }
@@ -54,7 +54,7 @@ rule all:
         kmt2a_fasta="kmt2a-213.fa",
         fusioncatcher_data="fusioncatcher",
         genome_fasta=reference_fname,
-        genome_gmap_index="gmap-genome-index",
+        star_index="star-index",
         genome_star_fusion_lib="GRCh38_gencode_v37_CTAT_lib_Mar012021.plug-n-play",
         ref_id_mapping="id_mappings.tsv",
         rrna_refflat="ucsc_rrna.refFlat",
@@ -132,21 +132,26 @@ rule create_dict:
         """
 
 
-rule create_gmap_index:
+rule create_star_index:
     input:
         fasta=rules.download_reference.output.fasta,
     params:
-        genomedb=os.path.splitext(reference_fname)[0],
+        overhang=149
     output:
-        directory("gmap-genome-index"),
+        directory("star-index"),
     singularity:
         containers["gsnap"]
     shell:
         """
-        gmap_build \
-            --dir {output} \
-            --genomedb {params.genomedb} \
-            {input.fasta}
+        rm -rf {output}
+        mkdir {output}
+
+        STAR \
+            --runMode genomeGenerate \
+            --genomeDir star-index \
+            --genomeFastaFile {input.fasta} \
+            --sjdbGTFfile {input.gtf} \
+            --sjdbOverhang {params.overhang}
         """
 
 
