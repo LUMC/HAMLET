@@ -135,6 +135,7 @@ rule create_dict:
 rule create_star_index:
     input:
         fasta=rules.download_reference.output.fasta,
+        gtf=rules.rewrite_gtf.output.gtf,
     params:
         overhang=149,
     output:
@@ -149,7 +150,7 @@ rule create_star_index:
         STAR \
             --runMode genomeGenerate \
             --genomeDir {output} \
-            --genomeFastaFile {input.fasta} \
+            --genomeFastaFiles {input.fasta} \
             --sjdbGTFfile {input.gtf} \
             --sjdbOverhang {params.overhang}
         """
@@ -301,7 +302,7 @@ rule copy_fasta:
 rule download_fusioncatcher:
     output:
         folder=directory("fusioncatcher"),
-        filename="fusioncatcher/current/1000genomes.txt",
+        filename="fusioncatcher/human_v102/1000genomes.txt",
     singularity:
         containers["fusioncatcher"]
     shell:
