@@ -47,8 +47,8 @@ rule star_fusion:
         STAR-Fusion \
             --genome_lib_dir {input.lib} \
             --output_dir {output.folder} \
-            --left_fq {input.fq1} \
-            --right_fq {input.fq2} 2> {log}
+            --left_fq {input.fq1:q} \
+            --right_fq {input.fq2:q} 2> {log}
         """
 
 
@@ -106,7 +106,7 @@ rule fusioncatcher:
         dir=`dirname {output.txt}` && \
         fusioncatcher.py \
             --threads {threads} \
-            -i {input.fq1},{input.fq2} \
+            -i {input.fq1:q},{input.fq2:q} \
             -o ${{dir}} \
             --data {params.data} \
             --limitSjdbInsertNsj {params.max_junctions} 2> {log}

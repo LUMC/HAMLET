@@ -44,7 +44,7 @@ def test_qc_seq_schema(workflow_dir):
 
 @pytest.mark.workflow('test-fusion-chrM')
 def test_fusion_schema(workflow_dir):
-    sample = "SRR8615409"
+    sample = "SRR8615687"
     output_file = pathlib.Path(workflow_dir, f"{sample}/fusion/fusion-output.json")
     schema_file = pathlib.Path(workflow_dir, "includes/fusion/output-schema.json")
     validate_files(output_file, schema_file)
@@ -52,7 +52,7 @@ def test_fusion_schema(workflow_dir):
 @pytest.mark.workflow('test-fusion-chrM')
 def test_fusion_plot_path(workflow_dir):
     """ Test that the fusion plots use an absolute path """
-    sample = "SRR8615409"
+    sample = "SRR8615687"
     output_file = pathlib.Path(workflow_dir, f"{sample}/fusion/fusion-output.json")
     with open(output_file) as fin:
         js = json.load(fin)

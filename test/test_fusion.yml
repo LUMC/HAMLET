@@ -32,7 +32,7 @@
       # fusion pipeline should create a final json file
       - "TestSample2/fusion/fusion-output.json"
     contains_regex:
-      - 'STAR-Fusion .* --left_fq test/data/fastq/SRR8615409_chrM_1.fastq.gz +--right_fq test/data/fastq/SRR8615409_chrM_2.fastq.gz'
+      - "STAR-Fusion .* --left_fq 'test/data/fastq/SRR8615409 chrM_1.fastq.gz' +--right_fq 'test/data/fastq/SRR8615409 chrM_2.fastq.gz'"
 
 # Singularity should be available
 - name: test-fusion-sanity-singularity
@@ -54,28 +54,28 @@
     snakemake -rp
     --snakefile includes/fusion/Snakefile
     --configfile test/data/config/chrM.json
-    --config pepfile=test/pep/chrM.csv
+    --config pepfile=test/pep/itd.csv
     --cores 1
     --notemp
     --verbose
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
     --singularity-prefix '~/.singularity/cache/snakemake'
-    SRR8615409/fusion/star-fusion/star-fusion.fusion_predictions.tsv
-    SRR8615409/fusion/SRR8615409.star-fusion
-    SRR8615409/fusion/fusion-output.json
+    SRR8615687/fusion/star-fusion/star-fusion.fusion_predictions.tsv
+    SRR8615687/fusion/SRR8615687.star-fusion
+    SRR8615687/fusion/fusion-output.json
   files:
     # Should create the star-fusion output file
-    - path: SRR8615409/fusion/star-fusion/star-fusion.fusion_predictions.tsv
+    - path: SRR8615687/fusion/star-fusion/star-fusion.fusion_predictions.tsv
     # Should create the star-fusion output folder
-    - path: SRR8615409/fusion/SRR8615409.star-fusion
+    - path: SRR8615687/fusion/SRR8615687.star-fusion
     # Test for log files
-    - path: "log/star_fusion.SRR8615409.txt"
+    - path: "log/star_fusion.SRR8615687.txt"
       contains:
         - "Running CMD: /usr/local/bin/STAR"
-    - path: "log/star_fusion_cp.SRR8615409.txt"
+    - path: "log/star_fusion_cp.SRR8615687.txt"
     # Test for module output file
-    - path: "SRR8615409/fusion/fusion-output.json"
+    - path: "SRR8615687/fusion/fusion-output.json"
 
 - name: test-fusion-output
   tags:
