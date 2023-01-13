@@ -37,7 +37,7 @@ rule align_kmt2a:
             -t {threads} \
             -L 2,2 \
             {input.fasta} \
-            {input.fq1} {input.fq2} 2> {log} \
+            {input.fq1:q} {input.fq2:q} 2> {log} \
         | samtools view \
             -Sbh \
             -F 0x4 \
@@ -120,7 +120,7 @@ rule align_flt3:
             -t {threads} \
             -L 2,2 \
             {input.fasta} \
-            {input.fq1} {input.fq2} 2> {log} \
+            {input.fq1:q} {input.fq2:q} 2> {log} \
         | samtools view \
             -Sbh \
             -F 0x4 \

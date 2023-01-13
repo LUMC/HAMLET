@@ -30,7 +30,7 @@
       - "TestSample3/itd/TestSample3.flt3.bg.csv"
       - "TestSample3/itd/TestSample3.flt3.png"
     contains_regex:
-      - 'bwa mem .*  test/data/fastq/SRR8615409_chrM_1.fastq.gz test/data/fastq/SRR8615409_chrM_2.fastq.gz'
+      - "bwa mem .*  'test/data/fastq/SRR8615409 chrM_1.fastq.gz' 'test/data/fastq/SRR8615409 chrM_2.fastq.gz'"
 
 
 # Singularity should be available
