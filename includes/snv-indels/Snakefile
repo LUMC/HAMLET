@@ -44,7 +44,7 @@ rule align_vars:
             --readFilesCommand zcat \
             --outSAMattrRGline ID:{params.rg_sample} \
             --outFileNamePrefix $(dirname {output.sam})/ \
-            --readFilesIn {input.fq1} {input.fq2}
+            --readFilesIn {input.fq1:q} {input.fq2:q}
         """
 
 

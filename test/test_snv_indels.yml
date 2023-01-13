@@ -20,7 +20,7 @@
       - "TestSample3/snv-indels/TestSample3.variants_all.csv"
       - "TestSample3/snv-indels/TestSample3.variants_hi.csv"
     contains_regex:
-      - 'STAR .* ID:TestSample1 .* --readFilesIn test/data/fastq/SRR8615409_chrM_1.fastq.gz test/data/fastq/SRR8615409_chrM_2.fastq.gz'
+      - "STAR .* ID:TestSample1 .* --readFilesIn 'test/data/fastq/SRR8615409 chrM_1.fastq.gz' 'test/data/fastq/SRR8615409 chrM_2.fastq.gz'"
 
 # Singularity should be available
 - name: test-snv-indels-sanity-singularity
