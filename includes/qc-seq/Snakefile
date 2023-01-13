@@ -45,7 +45,7 @@ rule fastqc_raw:
             --nogroup \
             -f fastq \
             --threads {threads} \
-            {input.fq1} {input.fq2} 2> {log}
+            {input.fq1:q} {input.fq2:q} 2> {log}
         """
 
 
@@ -73,7 +73,7 @@ rule cutadapt:
             --quality-cutoff=20,20 \
             --output={output.fq1} \
             --paired-output={output.fq2} \
-            {input.fq1} {input.fq2} > {log}
+            {input.fq1:q} {input.fq2:q} > {log}
         """
 
 
@@ -99,7 +99,7 @@ rule fastqc_processed:
             --nogroup \
             -f fastq \
             --threads {threads} \
-            {input.fq1} {input.fq2} 2> {log}
+            {input.fq1:q} {input.fq2:q} 2> {log}
         """
 
 
@@ -192,9 +192,9 @@ rule merge_fastqs_raw_r1:
         containers["fastqc"]
     shell:
         """
-        cp {input.fqs} {output.merged} 2> {log} \
+        cp {input.fqs:q} {output.merged} 2> {log} \
         || \
-        cat {input.fqs} > {output.merged} 2> {log}
+        cat {input.fqs:q} > {output.merged} 2> {log}
         """
 
 
@@ -210,7 +210,7 @@ rule merge_fastqs_raw_r2:
         containers["fastqc"]
     shell:
         """
-        cp {input.fqs} {output.merged} 2> {log} \
+        cp {input.fqs:q} {output.merged} 2> {log} \
         || \
-        cat {input.fqs} > {output.merged} 2> {log}
+        cat {input.fqs:q} > {output.merged} 2> {log}
         """
