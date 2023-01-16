@@ -32,3 +32,15 @@ def test_v1_fusion(v1):
     assert fusion["jr_count"] == 33
     assert fusion["name"] == "SFPQ--ZFP36L1"
     assert fusion["sf_count"] == 37
+
+
+def test_v1_overexpression(v1):
+    H = HAMLET_V1(v1)
+    overexpression = list(H.overexpression)
+    exp = overexpression[0]
+
+    assert exp["divisor_gene"] == "HMBS"
+    assert exp["count"] == 0
+    assert exp["ratio"] == 0.0
+    assert exp["above_threshold"] == False
+    assert exp["divisor_exp"] == 208030
