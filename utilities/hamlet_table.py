@@ -19,6 +19,12 @@ class HAMLET_V1:
             "FREQ",
             "is_in_hotspot",
         ]
+        self.fusion_fields = [
+            "jr_count",
+            "name",
+            "sf_count",
+            "type"
+        ]
 
     @property
     def variants(self):
@@ -35,6 +41,14 @@ class HAMLET_V1:
     def sample(self):
         return self.json["metadata"]["sample_name"]
 
+    
+    @property
+    def fusions(self):
+        for fusion in self.json["results"]["fusion"]["tables"]["intersection"]["top20"]:
+            fusion["jr_count"] = int(fusion["jr_count"])
+            fusion["sf_count"] = int(fusion["sf_count"])
+            yield fusion
+
 
 def main(args):
     if args.version == "v1.0":
@@ -44,6 +58,8 @@ def main(args):
 
     if args.table == "variant":
         print_variant_table(HAMLET, args.json_files)
+    elif args.table == "fusion":
+        print_fusion_table(HAMLET, args.json_files)
 
 def print_variant_table(HAMLET, json_files):
     """ Print variant tables """
@@ -65,12 +81,30 @@ def print_variant_table(HAMLET, json_files):
                 H.sample, *[variant[field] for field in H.variant_fields], sep="\t"
             )
 
+def print_variant_table(HAMLET, json_files):
+    """ Print variant tables """
+    # Did we print the header already
+    header_printed = False
+
+    for js in json_files:
+        with open(js) as fin:
+            data = json.load(fin)
+        H = HAMLET(data)
+
+        if not header_printed:
+            print("sample", *H.fusion_fields, sep="\t")
+            header_printed = True
+
+        for fusion in H.fusions:
+            print(
+                H.sample, *[fusion[field] for field in H.fusion_fields], sep="\t"
+            )
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--version", default="v1.0", help="HAMLET version")
     parser.add_argument(
-        "table", choices=["variant"], default="variant", help="Table to output"
+        "table", choices=["variant", "fusion"], default="variant", help="Table to output"
     )
     parser.add_argument("json_files", nargs="+")
 
