@@ -9,12 +9,11 @@ from hamlet_table import HAMLET_V1
 def v1():
     v1_output ='test/data/output/v1/SRR8615409.summary.json'
     with open(v1_output) as fin:
-        return json.load(fin)
+        return HAMLET_V1(json.load(fin))
 
 
 def test_v1_variants(v1):
-    H = HAMLET_V1(v1)
-    variants = list(H.variants)
+    variants = list(v1.variants)
     assert len(variants) == 1
     var = variants[0]
     assert var['CHROM'] == 'chr1'
@@ -25,8 +24,7 @@ def test_v1_variants(v1):
 
 
 def test_v1_fusion(v1):
-    H = HAMLET_V1(v1)
-    fusions = list(H.fusions)
+    fusions = list(v1.fusions)
     fusion = fusions[0]
 
     assert fusion["jr_count"] == 33
@@ -35,8 +33,7 @@ def test_v1_fusion(v1):
 
 
 def test_v1_overexpression(v1):
-    H = HAMLET_V1(v1)
-    overexpression = list(H.overexpression)
+    overexpression = list(v1.overexpression)
     exp = overexpression[0]
 
     assert exp["divisor_gene"] == "HMBS"
