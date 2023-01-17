@@ -64,7 +64,7 @@ class HAMLET_V1:
 
 
 def main(args):
-    if args.version == "v1.0":
+    if args.version == "v1":
         HAMLET = HAMLET_V1
     else:
         raise NotImplementedError
@@ -136,7 +136,7 @@ def print_overexpression_table(HAMLET, json_files):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--version", default="v1.0", help="HAMLET version")
+    parser.add_argument("--version", default="v1", help="HAMLET version")
     parser.add_argument(
         "table",
         choices=["variant", "fusion", "overexpression"],
