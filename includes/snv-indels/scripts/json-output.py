@@ -197,7 +197,7 @@ def add_variant_overview(idm, fn_csv):
 
             # Fields to include in the variant overview
             report_fields = {
-                "HGVSc", "HGVSp", "Existing_variation", "FREQ",
+                "CHROM", "POS", "HGVSc", "HGVSp", "Existing_variation", "FREQ",
                 "is_in_hotspot", "PVAL"
             }
             # Extract relevant fields
@@ -210,6 +210,7 @@ def add_variant_overview(idm, fn_csv):
             d["FREQ"] = float(d["FREQ"][:-1]) # Cut off %
             d["is_in_hotspot"] = d["is_in_hotspot"] == "yes"
             d["PVAL"] = float(d["PVAL"])
+            d["POS"] = int(d["POS"])
             if not d["Existing_variation"]:
                 d["Existing_variation"] = list()
             else:

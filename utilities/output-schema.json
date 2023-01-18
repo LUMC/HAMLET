@@ -157,8 +157,10 @@
         "variant": {
           "type": "object",
           "additionalProperties": false,
-          "minProperties": 6,
+          "minProperties": 8,
           "properties": {
+            "CHROM": { "type": "string" },
+            "POS": { "type": "integer" },
             "HGVSc": { "type": "string" },
             "HGVSp": { "type": "string" },
             "Existing_variation": { "type": "array", "items": { "type": "string" }},
