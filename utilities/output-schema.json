@@ -161,6 +161,8 @@
           "properties": {
             "CHROM": { "type": "string" },
             "POS": { "type": "integer" },
+            "REF": { "type": "string" },
+            "genotype": { "type": "string" },
             "HGVSc": { "type": "string" },
             "HGVSp": { "type": "string" },
             "Existing_variation": { "type": "array", "items": { "type": "string" }},

@@ -197,8 +197,8 @@ def add_variant_overview(idm, fn_csv):
 
             # Fields to include in the variant overview
             report_fields = {
-                "CHROM", "POS", "HGVSc", "HGVSp", "Existing_variation", "FREQ",
-                "is_in_hotspot", "PVAL"
+                "CHROM", "POS", "REF", "genotype", "HGVSc", "HGVSp",
+                "Existing_variation", "FREQ", "is_in_hotspot", "PVAL"
             }
             # Extract relevant fields
             d = {k: v for k, v in row.items() if k in report_fields }

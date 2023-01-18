@@ -105,6 +105,9 @@
             "HGVSc": "",
             "HGVSp": "",
             "PVAL": 3.101e-14,
+            "POS": 8566,
+            "REF": "A",
+            "genotype": "G/G",
             "is_in_hotspot": true
           },
           {
@@ -113,6 +116,9 @@
             "HGVSc": "",
             "HGVSp": "",
             "PVAL": 9.8874e-23,
+            "POS": 8701,
+            "REF": "A",
+            "genotype": "G/G",
             "is_in_hotspot": true
           },
           {
@@ -121,6 +127,9 @@
             "HGVSc": "",
             "HGVSp": "",
             "PVAL": 3.698e-07,
+            "POS": 8860,
+            "REF": "A",
+            "genotype": "G/G",
             "is_in_hotspot": true
           }
         ]
