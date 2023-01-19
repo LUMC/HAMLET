@@ -8,13 +8,14 @@ class HAMLET_V1:
     def __init__(self, data):
         self.json = data
         self.variant_fields = [
+            "Gene",
             "CHROM",
             "POS",
             "HGVSc",
             "HGVSp",
-            "PVAL",
-            "SYMBOL",
+            "REF",
             "genotype",
+            "PVAL",
             "Existing_variation",
             "FREQ",
             "is_in_hotspot",
@@ -32,8 +33,9 @@ class HAMLET_V1:
 
     @property
     def variants(self):
-        for variants in self.json["results"]["var"]["overview"].values():
+        for gene, variants in self.json["results"]["var"]["overview"].items():
             for var in variants:
+                var["Gene"] = gene
                 d = {f: var[f] for f in self.variant_fields}
                 d["POS"] = int(d["POS"])
                 d["Existing_variation"] = var["Existing_variation"].split(",")
