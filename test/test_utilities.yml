@@ -10,7 +10,7 @@
   stdout:
     contains:
       # The variant table headers
-      - "sample\tgene\tCHROM\tPOS"
+      - "sample\tGene\tCHROM\tPOS"
       - "SRR8615409\tNRAS\tchr1\t114716123"
 
 - name: test-fusion-table
