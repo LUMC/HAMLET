@@ -33,6 +33,7 @@ rule fastqc_raw:
     params:
         xms="1750M",
         xmx="2048M",
+        fastqc_dir="usr/local/opt/fastqc-0.11.9",
     log:
         "log/fastqc_raw.{sample}.{read_group}.{pair}.txt",
     threads: 4
@@ -42,7 +43,7 @@ rule fastqc_raw:
         """
         mkdir -p {output.folder}
 
-        FASTQC_DIR="/usr/local/opt/fastqc-0.11.9"
+        FASTQC_DIR=/{params.fastqc_dir}
         export CLASSPATH="$FASTQC_DIR:$FASTQC_DIR/sam-1.103.jar:$FASTQC_DIR/jbzip2-0.9.jar:$FASTQC_DIR/cisd-jhdf5.jar"
 
         java -Djava.awt.headless=true -Xms{params.xms} -Xmx{params.xmx} \
@@ -95,6 +96,7 @@ rule fastqc_processed:
     params:
         xms="1750M",
         xmx="2048M",
+        fastqc_dir="usr/local/opt/fastqc-0.11.9",
     log:
         "log/fastqc_processed.{sample}.{read_group}.{pair}.txt",
     threads: 4
@@ -104,7 +106,7 @@ rule fastqc_processed:
         """
         mkdir -p {output.folder} &&
 
-        FASTQC_DIR="/usr/local/opt/fastqc-0.11.9"
+        FASTQC_DIR=/{params.fastqc_dir}
         export CLASSPATH="$FASTQC_DIR:$FASTQC_DIR/sam-1.103.jar:$FASTQC_DIR/jbzip2-0.9.jar:$FASTQC_DIR/cisd-jhdf5.jar"
 
         java -Djava.awt.headless=true -Xms{params.xms} -Xmx{params.xmx} \
