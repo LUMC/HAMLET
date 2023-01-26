@@ -65,9 +65,23 @@ class HAMLET_V1:
             yield d
 
 
+class HAMLET_V2(HAMLET_V1):
+    def __init__(self, data):
+        super().__init__(data)
+
+    @property
+    def variants(self):
+        for gene, variants in self.json["modules"]["snv_indels"]["genes"].items():
+            for var in variants:
+                var["Gene"] = gene
+                d = {f: var[f] for f in self.variant_fields}
+                yield d
+
 def main(args):
     if args.version == "v1":
         HAMLET = HAMLET_V1
+    elif args.version == "v2":
+        HAMLET = HAMLET_V2
     else:
         raise NotImplementedError
 
