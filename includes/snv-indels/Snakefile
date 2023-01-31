@@ -25,8 +25,10 @@ rule align_vars:
         fq1=get_forward,
         fq2=get_reverse,
         index=config["star_index"],
+        gtf=config["gtf"],
     output:
         bam="{sample}/snv-indels/Aligned.sortedByCoord.out.bam",
+        gene_count="{sample}/snv-indels/ReadsPerGene.out.tab",
     params:
         rg_sample=lambda wildcards: wildcards.sample,
         chim_segment=20,
@@ -42,12 +44,14 @@ rule align_vars:
         STAR \
             --runThreadN {threads} \
             --genomeDir {input.index} \
+            --sjdbGTFfile {input.gtf} \
             --readFilesCommand zcat \
             --outSAMattrRGline ID:{params.rg_sample} \
             --outFileNamePrefix $(dirname {output.bam})/ \
             --outSAMtype BAM SortedByCoordinate \
             --chimOutType WithinBAM \
             --chimSegmentMin {params.chim_segment} \
+            --quantMode GeneCounts \
             --readFilesIn {input.fq1:q} {input.fq2:q}
         """
 

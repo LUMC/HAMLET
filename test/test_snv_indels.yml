@@ -102,6 +102,11 @@
     # Test the location of the variant plots
     - path: "SRR8615409/snv-indels/variant_plots/sample_SRR8615409_gene_MT-ATP6.png"
     - path: "SRR8615409/snv-indels/variant_plots/sample_SRR8615409_gene_MT-ATP8.png"
+    # Test that a STAR counts file is generated
+    - path: "SRR8615409/snv-indels/ReadsPerGene.out.tab"
+      contains:
+        - "N_unmapped"
+
 
 # VEP should switch to offline mode when "cache_vep" is specified
 - name: test-chrM-vep-cache

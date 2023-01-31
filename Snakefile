@@ -83,6 +83,7 @@ use rule align_vars from align as align_align_vars with:
         fq1=qc_seq.module_output.forward,
         fq2=qc_seq.module_output.reverse,
         index=config["star_index"],
+        gtf=config["gtf"],
 
 
 module fusion:
