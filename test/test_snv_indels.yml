@@ -55,9 +55,9 @@
       - 'vep .* --offline'
   files:
     # Check to make sure the read group is set to the sample name
-    - path: "SRR8615409/snv-indels/Aligned.out.sam"
-      contains:
-        - "RG:Z:SRR8615409"
+    - path: "SRR8615409/snv-indels/Log.out"
+      contains_regex:
+        - "outSAMattrRGline +ID:SRR8615409"
     - path: "SRR8615409/snv-indels/SRR8615409.snv-indel.bam"
     - path: "SRR8615409/snv-indels/SRR8615409.exon_cov_stats.json"
     - path: "SRR8615409/snv-indels/SRR8615409.annotated.vcf.gz"
@@ -74,9 +74,7 @@
     - path: "SRR8615409/snv-indels/Log.final.out"
       contains:
         - "Started job on"
-    - path: "log/sort_bamfile.SRR8615409.txt"
-      contains:
-        - "SortSam"
+    - path: "log/index_bamfile.SRR8615409.txt"
     - path: "log/reorder_aln_header.SRR8615409.txt"
       contains:
         - "ReorderSam"

@@ -26,7 +26,7 @@ rule align_vars:
         fq2=get_reverse,
         index=config["star_index"],
     output:
-        sam=temp("{sample}/snv-indels/Aligned.out.sam"),
+        bam="{sample}/snv-indels/Aligned.sortedByCoord.out.bam",
     params:
         rg_sample=lambda wildcards: wildcards.sample,
         chim_segment=20,
@@ -44,41 +44,35 @@ rule align_vars:
             --genomeDir {input.index} \
             --readFilesCommand zcat \
             --outSAMattrRGline ID:{params.rg_sample} \
-            --outFileNamePrefix $(dirname {output.sam})/ \
+            --outFileNamePrefix $(dirname {output.bam})/ \
+            --outSAMtype BAM SortedByCoordinate \
             --chimOutType WithinBAM \
             --chimSegmentMin {params.chim_segment} \
             --readFilesIn {input.fq1:q} {input.fq2:q}
         """
 
 
-rule sort_bamfile:
+rule index_bamfile:
     input:
-        sam="{sample}/snv-indels/Aligned.out.sam",
+        bam="{sample}/snv-indels/Aligned.sortedByCoord.out.bam",
     output:
-        bam=temp("{sample}/snv-indels/{sample}.snv-indel.sort.bam"),
-        bai=temp("{sample}/snv-indels/{sample}.snv-indel.sort.bai"),
+        bai="{sample}/snv-indels/Aligned.sortedByCoord.out.bam.bai",
     params:
         tmp=temp("tmp"),
     log:
-        "log/sort_bamfile.{sample}.txt",
+        "log/index_bamfile.{sample}.txt",
     container:
-        containers["picard"]
+        containers["varscan-2.4.2-samtools-1.3.1-tabix-0.2.6-grep-2.14"]
     shell:
         """
-        picard -Xmx4G SortSam \
-            I={input.sam} \
-            O={output.bam} \
-            SORT_ORDER=coordinate \
-            VALIDATION_STRINGENCY=SILENT \
-            CREATE_INDEX=true \
-            TMP_DIR={params.tmp} 2> {log}
+        samtools index {input.bam} 2> {log}
         """
 
 
 rule reorder_aln_header:
     input:
-        bam="{sample}/snv-indels/{sample}.snv-indel.sort.bam",
-        bai="{sample}/snv-indels/{sample}.snv-indel.sort.bai",
+        bam="{sample}/snv-indels/Aligned.sortedByCoord.out.bam",
+        bai="{sample}/snv-indels/Aligned.sortedByCoord.out.bam.bai",
         ref=config["genome_fasta"],
         refd=config["genome_dict"],
     output:
