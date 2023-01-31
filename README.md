@@ -45,9 +45,20 @@ conda activate HAMLET
 Additionally, [singularity](https://docs.sylabs.io/guides/3.0/user-guide/installation.html) version 3 or greater should be installed on the system.
 
 ## Data files
-HAMLET requires around 100GB of reference files to run. You can download the data files [here](https://barmsijs.lumc.nl/HAMLET/deps-1.0.0.tar.gz),
-the md5sum for the archive is `5541718e8bc17bcd00ec90ff23ebcfae`.
-Please contact the author or open an issue if the link is not working.
+Automatically generate the required reference files for the HAMLET pipeline
+in the `HAMLET-data` folder with
+```bash
+snakemake \
+    --snakefile utilities/deps/Snakefile \
+    --use-singularity \
+    --singularity-args '--cleanenv --bind /tmp' \
+    --directory HAMLET-data
+```
+
+For the **master** branch of HAMLET, you can download the data files
+[here](https://barmsijs.lumc.nl/HAMLET/deps-1.0.0.tar.gz), the md5sum for the
+archive is `5541718e8bc17bcd00ec90ff23ebcfae`.  Please contact the author or
+open an issue if the link is not working.
 
 ## Testing
 The following commands can be used to test different aspects of HAMLET. If any
