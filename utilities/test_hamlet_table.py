@@ -41,3 +41,8 @@ def test_v1_overexpression(v1):
     assert exp["ratio"] == 0.0
     assert exp["above_threshold"] == False
     assert exp["divisor_exp"] == 208030
+
+
+def test_v1_itd_flt3(v1):
+    events = list(v1.itd("flt3"))
+    assert len(events) == 2

@@ -241,11 +241,49 @@
     "itd": {
       "flt3": {
         "path": "/exports/hem-leukemia/jobs/job-8f103d29-27bf-483a-b808-93d949f56517/SRR8615409/itd/SRR8615409.flt3.png",
-        "table": []
+        "table": [
+          {
+            "boundary_type": "fuzzy-end",
+            "fuzziness": "1",
+            "rose_end_anchor_pos": "1836",
+            "rose_end_count": "198",
+            "rose_end_pos": "1917",
+            "rose_start_anchor_pos": "1915",
+            "rose_start_count": "4",
+            "rose_start_pos": "1835",
+            "td_ends": "1915,1916",
+            "td_starts": "1836"
+          },
+          {
+            "boundary_type": "exact",
+            "fuzziness": "0",
+            "rose_end_anchor_pos": "1836",
+            "rose_end_count": "198",
+            "rose_end_pos": "1917",
+            "rose_start_anchor_pos": "1916",
+            "rose_start_count": "278",
+            "rose_start_pos": "1835",
+            "td_ends": "1916",
+            "td_starts": "1836"
+          }
+        ]
       },
       "kmt2a": {
         "path": "/exports/hem-leukemia/jobs/job-8f103d29-27bf-483a-b808-93d949f56517/SRR8615409/itd/SRR8615409.kmt2a.png",
-        "table": []
+        "table": [
+          {
+            "boundary_type": "fuzzy",
+            "fuzziness": "4",
+            "rose_end_anchor_pos": "3657",
+            "rose_end_count": "3",
+            "rose_end_pos": "4109",
+            "rose_start_anchor_pos": "4104",
+            "rose_start_count": "3",
+            "rose_start_pos": "3652",
+            "td_ends": "4104,4108",
+            "td_starts": "3653,3657"
+          }
+        ]
       }
     },
     "var": {

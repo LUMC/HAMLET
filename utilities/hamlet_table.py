@@ -31,6 +31,11 @@ class HAMLET_V1:
             "above_threshold",
         ]
 
+        self.itd_fields = ["td_starts", "td_ends", "rose_start_count",
+                "rose_end_count", "rose_start_pos", "rose_start_anchor_pos",
+                "rose_end_pos", "rose_end_anchor_pos", "boundary_type",
+                "fuzziness"]
+
     @property
     def variants(self):
         for gene, variants in self.json["results"]["var"]["overview"].items():
@@ -64,6 +69,9 @@ class HAMLET_V1:
             d["divisor_exp"] = int(d["divisor_exp"])
             yield d
 
+    def itd(self, gene):
+        for event in self.json["results"]["itd"][gene]["table"]:
+            yield event
 
 class HAMLET_V2(HAMLET_V1):
     def __init__(self, data):
@@ -91,6 +99,8 @@ def main(args):
         print_fusion_table(HAMLET, args.json_files)
     elif args.table == "overexpression":
         print_overexpression_table(HAMLET, args.json_files)
+    elif args.table == "itd":
+        print_itd_table(HAMLET, args.json_files, args.itd_gene)
 
 
 def print_variant_table(HAMLET, json_files):
@@ -149,18 +159,39 @@ def print_overexpression_table(HAMLET, json_files):
                 H.sample, *[expr[field] for field in H.overexpression_fields], sep="\t"
             )
 
+def print_itd_table(HAMLET, json_files, itd_gene):
+    # Did we print the header already
+    header_printed = False
+
+    for js in json_files:
+        with open(js) as fin:
+            data = json.load(fin)
+        H = HAMLET(data)
+
+        if not header_printed:
+            print("sample", *H.itd_fields, sep="\t")
+            header_printed = True
+
+        for expr in H.itd(itd_gene):
+            print(
+                H.sample, *[expr[field] for field in H.itd_fields], sep="\t"
+            )
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--version", default="v1", help="HAMLET version")
     parser.add_argument(
         "table",
-        choices=["variant", "fusion", "overexpression"],
+        choices=["variant", "fusion", "overexpression", "itd"],
         default="variant",
         help="Table to output",
     )
     parser.add_argument("json_files", nargs="+")
+    parser.add_argument("--itd-gene", required=False)
 
     args = parser.parse_args()
+
+    if args.table == "itd" and not args.itd_gene:
+        raise parser.error('Please specify an itd gene with --itd-gene')
 
     main(args)
