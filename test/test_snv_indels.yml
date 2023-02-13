@@ -21,6 +21,8 @@
       - "TestSample3/snv-indels/TestSample3.variants_hi.csv"
     contains_regex:
       - "STAR .* ID:TestSample1 .* --readFilesIn 'test/data/fastq/SRR8615409 chrM_1.fastq.gz' 'test/data/fastq/SRR8615409 chrM_2.fastq.gz'"
+      # Test that params.min_intron_size is used
+      - "STAR .* --alignIntronMin 50"
 
 # Singularity should be available
 - name: test-snv-indels-sanity-singularity
