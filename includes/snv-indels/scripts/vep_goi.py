@@ -99,7 +99,7 @@ def vep_of_interest(vep, genes, transcripts):
     new_vep = vep.copy()
 
     # Extract the transcript consequences
-    cons = vep["transcript_consequences"]
+    cons = vep.get("transcript_consequences", list())
 
     # Extract only the transcripts of interest
     cons_int = consequences_of_interest(cons, genes, transcripts)
