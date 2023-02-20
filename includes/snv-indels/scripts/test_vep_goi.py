@@ -5,13 +5,18 @@ from vep_goi import (
     transcript_of_interest,
     consequence_of_interest,
     consequences_of_interest,
+    vep_of_interest,
 )
 
 import pytest
 
 
-def make_consequence(gene, transcript):
-    return {"gene_id": gene, "transcript_id": transcript}
+def make_consequence(gene, transcript, consequence_terms=["stop_lost"]):
+    return {
+            "gene_id": gene,
+            "transcript_id": transcript,
+            "consequence_terms": consequence_terms
+    }
 
 
 @pytest.fixture
@@ -28,8 +33,9 @@ def gene2():
 def vep():
     return {
         "transcript_consequences": [
-            make_consequence("gene1", "transcript1"),
-            make_consequence("gene2", "transcript2"),
+            make_consequence("gene1", "transcript1", ["transcript_ablation"]),
+            make_consequence("gene2", "transcript2", ["splice_acceptor_variant"]),
+            make_consequence("gene3", "transcript3", ["stop_gained"]),
         ]
     }
 
@@ -80,3 +86,22 @@ def test_multiple_consequences_of_interest(gene1, gene2):
     transcripts = {"transcript1", "transcript2"}
     filtered = consequences_of_interest(consequences, genes, transcripts)
     assert consequences == filtered
+
+
+def test_vep_of_interest_one_transcript(vep):
+    """Test rewriting the VEP object when there is a single transcript of
+    interest"""
+    genes = ["gene3"]
+    transcripts = ["transcript3"]
+
+    # Restrict
+    new_vep = vep_of_interest(vep, genes, transcripts)
+
+    # Get the consequences after rewriting the VEP obejct
+    cons = new_vep["transcript_consequences"]
+
+    # Test that only gene3 is left
+    assert len(cons) == 1
+    cons[0]["gene_id"] == "gene3"
+    cons[0]["transcript_id"] == "transcript"
+    cons[0]["consequence_terms"] == ["stop_gained"]

@@ -72,8 +72,25 @@ def consequences_of_interest(cons, genes, transcripts):
 
 
 def vep_of_interest(vep, genes, transcripts):
-    """Rewrite VEP object to only contain consequences of interest"""
-    pass
+    """Return a new VEP object which only contains consequences of interest
+
+    1. Restrict the transcript_consequences to only include genes/transcripts
+    of interest.
+    2. Rewrite the most_severe_consequence based on the remaining transcripts.
+    """
+    # Copy the VEP object
+    new_vep = vep.copy()
+
+    # Extract the transcript consequences
+    cons = vep["transcript_consequences"]
+
+    # Extract only the transcripts of interest
+    cons_int = consequences_of_interest(cons, genes, transcripts)
+
+    # Replace the transcripts
+    new_vep["transcript_consequences"] = cons_int
+
+    return new_vep
 
 
 def read_goi_file(fname):
