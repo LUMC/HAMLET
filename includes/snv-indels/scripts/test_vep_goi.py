@@ -6,6 +6,7 @@ from vep_goi import (
     consequence_of_interest,
     consequences_of_interest,
     vep_of_interest,
+    update_most_severe,
 )
 
 import pytest
@@ -32,10 +33,11 @@ def gene2():
 @pytest.fixture
 def vep():
     return {
+        "most_severe_consequence": None,
         "transcript_consequences": [
             make_consequence("gene1", "transcript1", ["transcript_ablation"]),
             make_consequence("gene2", "transcript2", ["splice_acceptor_variant"]),
-            make_consequence("gene3", "transcript3", ["stop_gained"]),
+            make_consequence("gene3", "transcript3", ["inframe_insertion", "stop_gained"]),
         ]
     }
 
@@ -105,3 +107,21 @@ def test_vep_of_interest_one_transcript(vep):
     cons[0]["gene_id"] == "gene3"
     cons[0]["transcript_id"] == "transcript"
     cons[0]["consequence_terms"] == ["stop_gained"]
+
+    # Test that we set the most severe consequence for transcript3
+    assert new_vep["most_severe_consequence"] == "stop_gained"
+
+
+def test_update_most_severe(vep):
+    update_most_severe(vep)
+    assert vep["most_severe_consequence"] == "transcript_ablation"
+
+    # Remove gene1
+    vep["transcript_consequences"].pop(0)
+    update_most_severe(vep)
+    assert vep["most_severe_consequence"] == "splice_acceptor_variant"
+
+    # Remove gene2
+    vep["transcript_consequences"].pop(0)
+    update_most_severe(vep)
+    assert vep["most_severe_consequence"] == "stop_gained"

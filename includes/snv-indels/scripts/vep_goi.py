@@ -71,6 +71,23 @@ def consequences_of_interest(cons, genes, transcripts):
     return [con for con in cons if consequence_of_interest(con, genes, transcripts)]
 
 
+def update_most_severe(vep):
+    """ The most severe consequence for all genes and transcript is stored at
+    the top level of the VEP object. After filtering the transcript
+    consequences, we need to update this field
+    """
+    # Gather all consequences
+    cons = set()
+    for consequence in vep["transcript_consequences"]:
+        cons.update(consequence["consequence_terms"])
+
+    # Set the first matching consequence (they are sorted based on severity)
+    for term in severity:
+        if term in cons:
+            vep["most_severe_consequence"] = term
+            break
+
+
 def vep_of_interest(vep, genes, transcripts):
     """Return a new VEP object which only contains consequences of interest
 
@@ -89,6 +106,9 @@ def vep_of_interest(vep, genes, transcripts):
 
     # Replace the transcripts
     new_vep["transcript_consequences"] = cons_int
+
+    # Set the most severe consequence
+    update_most_severe(new_vep)
 
     return new_vep
 
