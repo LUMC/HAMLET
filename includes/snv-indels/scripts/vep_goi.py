@@ -3,6 +3,8 @@
 import argparse
 import json
 
+from functools import partial
+
 
 # From most to least severe, taken from the ensembl website
 # https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html
@@ -47,6 +49,31 @@ severity = [
     "feature_truncation",
     "intergenic_variant",
 ]
+
+
+def gene_of_interest(cons, genes):
+    """Is a VEP consequence applicable to a gene of interest"""
+    return cons["gene_id"] in genes
+
+
+def transcript_of_interest(cons, transcripts):
+    """Is a VEP consequence applicable to a transcript of interest"""
+    return cons["transcript_id"] in transcripts
+
+
+def consequence_of_interest(cons, genes, transcripts):
+    """Is a VEP consequence of interest for both gene and transcript"""
+    return gene_of_interest(cons, genes) and transcript_of_interest(cons, transcripts)
+
+
+def consequences_of_interest(cons, genes, transcripts):
+    """Filter consequences to only those of interest"""
+    return [con for con in cons if consequence_of_interest(con, genes, transcripts)]
+
+
+def vep_of_interest(vep, genes, transcripts):
+    """Rewrite VEP object to only contain consequences of interest"""
+    pass
 
 
 def read_goi_file(fname):
