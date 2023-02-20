@@ -135,14 +135,15 @@ def parse_vep_json(vep_file):
 
 
 def main(vep_file, goi_file):
-    # Get genes and transripts of interest
+    # Get genes and transcripts of interest
     goi, toi = read_goi_file(goi_file)
 
     for variant in parse_vep_json(vep_file):
-        # Store the consequences of interest
-        cons = list()
-        for consequence in variant.get("transcript_consequences", list()):
-            pass
+        vep = vep_of_interest(variant, goi, toi)
+        # If there is no consequence of interest
+        if not vep["transcript_consequences"]:
+            continue
+        print(json.dumps(vep))
 
 
 if __name__ == "__main__":
