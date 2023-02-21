@@ -61,14 +61,19 @@ def transcript_of_interest(cons, transcripts):
     return cons["transcript_id"] in transcripts
 
 
-def consequence_of_interest(cons, genes, transcripts):
+def consequence_of_interest(cons, genes, transcripts, impact=None):
     """Is a VEP consequence of interest for both gene and transcript"""
-    return gene_of_interest(cons, genes) and transcript_of_interest(cons, transcripts)
+    return all([
+        gene_of_interest(cons, genes),
+        transcript_of_interest(cons, transcripts),
+        # Only filter on impact if one was specified
+        cons["impact"] == impact if impact else True
+    ])
 
 
-def consequences_of_interest(cons, genes, transcripts):
+def consequences_of_interest(cons, genes, transcripts, impact=None):
     """Filter consequences to only those of interest"""
-    return [con for con in cons if consequence_of_interest(con, genes, transcripts)]
+    return [con for con in cons if consequence_of_interest(con, genes, transcripts, impact)]
 
 
 def update_most_severe(vep):
@@ -88,11 +93,11 @@ def update_most_severe(vep):
             break
 
 
-def vep_of_interest(vep, genes, transcripts):
+def vep_of_interest(vep, genes, transcripts, impact=None):
     """Return a new VEP object which only contains consequences of interest
 
     1. Restrict the transcript_consequences to only include genes/transcripts
-    of interest.
+    of interest, and the impact, if specified.
     2. Rewrite the most_severe_consequence based on the remaining transcripts.
     """
     # Copy the VEP object
@@ -102,7 +107,7 @@ def vep_of_interest(vep, genes, transcripts):
     cons = vep.get("transcript_consequences", list())
 
     # Extract only the transcripts of interest
-    cons_int = consequences_of_interest(cons, genes, transcripts)
+    cons_int = consequences_of_interest(cons, genes, transcripts, impact)
 
     # Replace the transcripts
     new_vep["transcript_consequences"] = cons_int
@@ -134,16 +139,16 @@ def parse_vep_json(vep_file):
             yield json.loads(line)
 
 
-def main(vep_file, goi_file):
+def main(vep_file, goi_file, impact):
     # Get genes and transcripts of interest
     goi, toi = read_goi_file(goi_file)
 
     for variant in parse_vep_json(vep_file):
-        vep = vep_of_interest(variant, goi, toi)
+        vep = vep_of_interest(variant, goi, toi, impact)
         # If there is no consequence of interest
         if not vep["transcript_consequences"]:
             continue
-        print(json.dumps(vep))
+        print(json.dumps(vep, sort_keys=True))
 
 
 if __name__ == "__main__":
@@ -153,7 +158,9 @@ if __name__ == "__main__":
 
     parser.add_argument("vep", help="VEP json output file")
     parser.add_argument("goi", help="Genes of interest")
+    parser.add_argument("--impact", choices=["HIGH", "MODERATE", "MODIFIER"],
+            default=None)
 
     args = parser.parse_args()
 
-    main(args.vep, args.goi)
+    main(args.vep, args.goi, args.impact)

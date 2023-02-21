@@ -12,22 +12,23 @@ from vep_goi import (
 import pytest
 
 
-def make_consequence(gene, transcript, consequence_terms=["stop_lost"]):
+def make_consequence(gene, transcript, consequence_terms=["stop_lost"], impact='MODIFIER'):
     return {
             "gene_id": gene,
             "transcript_id": transcript,
-            "consequence_terms": consequence_terms
+            "consequence_terms": consequence_terms,
+            "impact": impact
     }
 
 
 @pytest.fixture
 def gene1():
-    return make_consequence("gene1", "transcript1")
+    return make_consequence("gene1", "transcript1", impact='HIGH')
 
 
 @pytest.fixture
 def gene2():
-    return make_consequence("gene2", "transcript2")
+    return make_consequence("gene2", "transcript2", impact='HIGH')
 
 
 @pytest.fixture
@@ -36,7 +37,7 @@ def vep():
         "most_severe_consequence": None,
         "transcript_consequences": [
             make_consequence("gene1", "transcript1", ["transcript_ablation"]),
-            make_consequence("gene2", "transcript2", ["splice_acceptor_variant"]),
+            make_consequence("gene2", "transcript2", ["splice_acceptor_variant"], "HIGH"),
             make_consequence("gene3", "transcript3", ["inframe_insertion", "stop_gained"]),
         ]
     }
@@ -81,6 +82,24 @@ def test_consequences_of_interest(gene1, gene2):
     assert con["transcript_id"] == "transcript1"
 
 
+def test_consequence_of_interest_impact():
+    genes = [f"gene{i}" for i in [1,2,3]]
+    trans = [f"transcript{i}" for i in [1,2,3]]
+
+    c1 = make_consequence('gene1', 'transcript1')
+    c2 = make_consequence('gene2', 'transcript2', impact="HIGH")
+    c3 = make_consequence('gene3', 'transcript3', impact="MODERATE")
+
+    assert consequence_of_interest(c1, genes, trans, "MODIFIER")
+    assert not consequence_of_interest(c1, genes, trans, "HIGH")
+
+    assert consequence_of_interest(c2, genes, trans, "HIGH")
+    assert not consequence_of_interest(c2, genes, trans, "MODIFIER")
+
+    # Test without an impact specified
+    assert consequence_of_interest(c3, genes, trans, "MODERATE")
+    assert consequence_of_interest(c3, genes, trans, None)
+
 def test_multiple_consequences_of_interest(gene1, gene2):
     """Test returning multiple consequences of interest"""
     consequences = [gene1, gene2]
@@ -88,6 +107,17 @@ def test_multiple_consequences_of_interest(gene1, gene2):
     transcripts = {"transcript1", "transcript2"}
     filtered = consequences_of_interest(consequences, genes, transcripts)
     assert consequences == filtered
+
+
+def test_multiple_consequences_of_interest_HIGH(vep):
+    genes = "gene1 gene2 gene3".split()
+    transcript = "transcript1 transcript2 transcript3".split()
+
+    cons = consequences_of_interest(vep["transcript_consequences"], genes, transcript, "HIGH")
+    assert len(cons) == 1
+
+    con=cons[0]
+    assert con["gene_id"] == "gene2"
 
 
 def test_vep_of_interest_one_transcript(vep):
