@@ -63,21 +63,25 @@ def transcript_of_interest(cons, transcripts):
 
 def consequence_of_interest(cons, genes, transcripts, impact=None):
     """Is a VEP consequence of interest for both gene and transcript"""
-    return all([
-        gene_of_interest(cons, genes),
-        transcript_of_interest(cons, transcripts),
-        # Only filter on impact if one was specified
-        cons["impact"] == impact if impact else True
-    ])
+    return all(
+        [
+            gene_of_interest(cons, genes),
+            transcript_of_interest(cons, transcripts),
+            # Only filter on impact if one was specified
+            cons["impact"] == impact if impact else True,
+        ]
+    )
 
 
 def consequences_of_interest(cons, genes, transcripts, impact=None):
     """Filter consequences to only those of interest"""
-    return [con for con in cons if consequence_of_interest(con, genes, transcripts, impact)]
+    return [
+        con for con in cons if consequence_of_interest(con, genes, transcripts, impact)
+    ]
 
 
 def update_most_severe(vep):
-    """ The most severe consequence for all genes and transcript is stored at
+    """The most severe consequence for all genes and transcript is stored at
     the top level of the VEP object. After filtering the transcript
     consequences, we need to update this field
     """
@@ -158,8 +162,9 @@ if __name__ == "__main__":
 
     parser.add_argument("vep", help="VEP json output file")
     parser.add_argument("goi", help="Genes of interest")
-    parser.add_argument("--impact", choices=["HIGH", "MODERATE", "MODIFIER"],
-            default=None)
+    parser.add_argument(
+        "--impact", choices=["HIGH", "MODERATE", "MODIFIER"], default=None
+    )
 
     args = parser.parse_args()
 
