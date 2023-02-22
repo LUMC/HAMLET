@@ -25,7 +25,7 @@
       "variant": {
         "type": "object",
         "additionalProperties": false,
-        "minProperties": 10,
+        "minProperties": 13,
         "properties": {
           "CHROM": { "type": "string" },
           "POS": { "type": "integer" },
@@ -36,7 +36,10 @@
           "Existing_variation": { "type": "array", "items": { "type": "string" }},
           "FREQ": { "type": "number" },
           "is_in_hotspot": { "type": "boolean" },
-          "PVAL": { "type": "number" }
+          "PVAL": { "type": "number" },
+          "RD": { "type": "integer" },
+          "AD": { "type": "integer" },
+          "DP": { "type": "integer" }
         }
       },
       "geneplot": {

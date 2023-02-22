@@ -13,6 +13,7 @@
         <th>Allele frequency</th>
         <th>Hotspot</th>
         <th>P-value</th>
+        <th>Ref | Alt | Total</th>
       </tr>
     </thead>
     <tbody>
@@ -28,6 +29,7 @@
         <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ item.FREQ }} %</td>
         <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ "yes" if item.is_in_hotspot else "no" }}</td>
         <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ item.PVAL }}</td>
+        <td{% if loop.last %} style="border-bottom: 2px solid #809ebf;"{% endif %}>{{ item.RD }} | {{ item.AD }} | {{ item.DP }}</td>
       </tr>
       {% endfor %}
       {% endfor %}
