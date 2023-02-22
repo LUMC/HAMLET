@@ -10,6 +10,7 @@ samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample
 
 
 localrules:
+    mktmp,
     rg_stats,
     sample_stats,
 
@@ -23,11 +24,26 @@ rule all:
         sample_json=[module_output.json(sample) for sample in samples],
 
 
+rule mktmp:
+    """Make a tmp folder for FastQC to use"""
+    output:
+        directory("tmp"),
+    log:
+        "log/mktmp",
+    container:
+        containers["fastqc"]
+    shell:
+        """
+        mkdir -p {output} 2> {log}
+        """
+
+
 rule fastqc_raw:
     """Runs FastQC for each pair of each read group of each sample given in the config file."""
     input:
         fq1=get_forward,
         fq2=get_reverse,
+        tmp="tmp",
     output:
         folder=directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-raw"),
     params:
@@ -48,11 +64,10 @@ rule fastqc_raw:
 
         java -Djava.awt.headless=true -Xms{params.xms} -Xmx{params.xmx} \
             -Dfastqc.output_dir={output.folder} \
-            -Dfastqc.io.tmpdir=/tmp \
+            -Dfastqc.io.tmpdir={input.tmp} \
             -Dfastqc.unzip=true \
             -Dfastqc.nogroup=true \
             -Dfastqc.threads={threads} \
-            uk.ac.babraham.FastQC.FastQCApplication \
             uk.ac.babraham.FastQC.FastQCApplication \
             {input.fq1:q} {input.fq2:q} 2> {log}
         """
@@ -91,6 +106,7 @@ rule fastqc_processed:
     input:
         fq1="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz",
         fq2="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz",
+        tmp="tmp",
     output:
         folder=directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-processed"),
     params:
@@ -104,14 +120,14 @@ rule fastqc_processed:
         containers["fastqc"]
     shell:
         """
-        mkdir -p {output.folder} &&
+        mkdir -p {output.folder}
 
         FASTQC_DIR=/{params.fastqc_dir}
         export CLASSPATH="$FASTQC_DIR:$FASTQC_DIR/sam-1.103.jar:$FASTQC_DIR/jbzip2-0.9.jar:$FASTQC_DIR/cisd-jhdf5.jar"
 
         java -Djava.awt.headless=true -Xms{params.xms} -Xmx{params.xmx} \
             -Dfastqc.output_dir={output.folder} \
-            -Dfastqc.io.tmpdir=/tmp \
+            -Dfastqc.io.tmpdir={input.tmp} \
             -Dfastqc.unzip=true \
             -Dfastqc.nogroup=true \
             -Dfastqc.threads={threads} \
