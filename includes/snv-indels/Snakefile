@@ -33,6 +33,7 @@ rule align_vars:
         rg_sample=lambda wildcards: wildcards.sample,
         chim_segment=20,
         min_intron_size=50,
+        alignInsertionFlush="Right",
     log:
         main="{sample}/snv-indels/Log.out",
         progress="{sample}/snv-indels/Log.progress.out",
@@ -51,6 +52,7 @@ rule align_vars:
             --outFileNamePrefix $(dirname {output.bam})/ \
             --outSAMtype BAM SortedByCoordinate \
             --alignIntronMin {params.min_intron_size} \
+            --alignInsertionFlush {params.alignInsertionFlush} \
             --chimOutType WithinBAM \
             --chimSegmentMin {params.chim_segment} \
             --quantMode GeneCounts \
