@@ -133,6 +133,17 @@
     - path: "log/create_summary.SRR8615409.txt"
     - path: "log/generate_report.SRR8615409.txt"
 
+# Test generating the report in html format
+- name: test-report
+  tags:
+    - hamlet
+  command: >
+    python3 scripts/generate_report.py
+    --html-output report.html
+    test/data/json/full.json
+  files:
+    - path: report.html
+
 - name: lint-hamlet
   tags:
     - sanity

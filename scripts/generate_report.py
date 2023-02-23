@@ -177,10 +177,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("input_summary_path")
-    parser.add_argument("--css-path", default="assets/style.css")
-    parser.add_argument("--templates-dir", default="templates")
-    parser.add_argument("--imgs-dir", default="assets/img")
-    parser.add_argument("--toc-path", default="assets/toc.xsl")
+    parser.add_argument("--css-path", default="report/assets/style.css")
+    parser.add_argument("--templates-dir", default="report/templates")
+    parser.add_argument("--imgs-dir", default="report/assets/img")
+    parser.add_argument("--toc-path", default="report/assets/toc.xsl")
     parser.add_argument("--html-output", dest="html")
     parser.add_argument("--pdf-output", dest="pdf")
 
