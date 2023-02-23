@@ -205,16 +205,6 @@
           }
         ]
       },
-      "plots": [
-        {
-          "gene": "MT-ATP8",
-          "path": "test-hamlet-chrM/SRR8615409/snv-indels/variant_plots/sample_SRR8615409_gene_MT-ATP8.png"
-        },
-        {
-          "gene": "MT-ATP6",
-          "path": "test-hamlet-chrM/SRR8615409/snv-indels/variant_plots/sample_SRR8615409_gene_MT-ATP6.png"
-        }
-      ],
       "stats": {
         "aln": {
           "num_aligned_bases": 508984,

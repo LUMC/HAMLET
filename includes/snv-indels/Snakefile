@@ -14,7 +14,6 @@ localrules:
 rule all:
     input:
         bam=[module_output.bam(sample) for sample in samples],
-        variant_plot_dir=[module_output.variant_plot_dir(sample) for sample in samples],
         all_csv=[module_output.var_all(sample) for sample in samples],
         high_csv=[module_output.var_hi(sample) for sample in samples],
         json=[module_output.json(sample) for sample in samples],
@@ -376,36 +375,9 @@ rule table_vars_hi:
         """
 
 
-rule plot_vars:
-    input:
-        json="{sample}/snv-indels/{sample}.variants.json",
-        scr=config["plot_script"],
-        ref_id_mapping=config["ref_id_mapping"],
-        ref_hotspots=config["bed_variant_hotspots"],
-        gtf=config["gtf"],
-    output:
-        plotd=directory("{sample}/snv-indels/variant_plots"),
-    log:
-        "log/plot_vars.{sample}.txt",
-    threads: 1
-    container:
-        containers["hamlet-scripts"]
-    shell:
-        """
-        mkdir -p {output.plotd} && \
-        Rscript {input.scr} \
-            --input-json {input.json} \
-            --input-gene-ids {input.ref_id_mapping} \
-            --input-gtf {input.gtf} \
-            --input-hotspot-bed {input.ref_hotspots} \
-            --out-dir `dirname {output.plotd}` 2> {log}
-        """
-
-
 rule json_output:
     input:
         id_mappings_path=config["ref_id_mapping"],
-        var_plot_dir="{sample}/snv-indels/variant_plots",
         var_csv="{sample}/snv-indels/{sample}.variants_hi.csv",
         aln_stats="{sample}/snv-indels/{sample}.aln_stats",
         rna_stats="{sample}/snv-indels/{sample}.rna_stats",
@@ -423,7 +395,6 @@ rule json_output:
         """
         python3 {input.src} \
             {input.id_mappings_path} \
-            {input.var_plot_dir} \
             {input.var_csv} \
             {input.aln_stats} \
             {input.rna_stats} \

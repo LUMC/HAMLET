@@ -137,13 +137,9 @@
       "snv_indels": {
         "type": "object",
         "additionalProperties": false,
-        "minProperties": 3,
+        "minProperties": 2,
         "properties": {
           "genes": { "$ref": "#/definitions/modules/snv_indels/genes" },
-          "plots": {
-            "type": "array",
-            "items": { "$ref": "#/definitions/modules/snv_indels/geneplot" }
-          },
           "stats": { "$ref": "#/definitions/modules/snv_indels/stats" }
         },
         "genes": {
@@ -172,15 +168,6 @@
             "RD": { "type": "integer" },
             "AD": { "type": "integer" },
             "DP": { "type": "integer" }
-          }
-        },
-        "geneplot": {
-          "type": "object",
-          "additionalProperties": false,
-          "minProperties": 2,
-          "properties": {
-            "gene": { "type": "string" },
-            "path": { "type": "string" }
           }
         },
         "stats": {

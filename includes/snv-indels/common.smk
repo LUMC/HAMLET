@@ -42,10 +42,6 @@ def get_bam_output(wildcards):
     return f"{wildcards.sample}/snv-indels/{wildcards.sample}.snv-indel.bam"
 
 
-def get_variant_plot_dir(wildcards):
-    return f"{wildcards.sample}/snv-indels/variant_plots"
-
-
 def get_all_csv(wildcards):
     return f"{wildcards.sample}/snv-indels/{wildcards.sample}.variants_all.csv"
 
@@ -60,7 +56,6 @@ def get_json(wildcards):
 
 module_output = SimpleNamespace(
     bam=get_bam_output,
-    variant_plot_dir=get_variant_plot_dir,
     var_all=get_all_csv,
     var_hi=get_high_csv,
     json=get_json,

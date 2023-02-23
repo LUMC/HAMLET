@@ -161,23 +161,6 @@ def parse_idm(fh):
     return idms
 
 
-def add_variant_plots(idm, var_plot_dir):
-    idms = set([])
-    for item in idm:
-        gsym = item["gene_symbol"]
-        assert gsym not in idms, item
-        idms.add(gsym)
-
-    plots = []
-    vpd = Path(var_plot_dir)
-    for png in vpd.glob("*.png"):
-        stem = png.stem
-        _, gene = png.stem.rsplit("_gene_", 1)
-        if gene in idms:
-            plots.append({"path": str(png.absolute()), "gene": gene})
-
-    return plots
-
 def add_variant_overview(idm, fn_csv):
     idms = set([])
     for item in idm:
@@ -225,7 +208,7 @@ def add_variant_overview(idm, fn_csv):
     return rv
 
 
-def main(id_mappings_path, var_plot_dir, var_csv,
+def main(id_mappings_path, var_csv,
          aln_stats_path, rna_stats_path,
          insert_stats_path, exon_cov_stats_path, vep_stats_path):
     """Helper script for combining multiple stats files into one JSON."""
@@ -233,7 +216,6 @@ def main(id_mappings_path, var_plot_dir, var_csv,
         idm = parse_idm(fin)
     combined = {
         "snv_indels": {
-            "plots": [],
             "genes": {},
             "stats": {
                 "aln": process_aln_stats(aln_stats_path),
@@ -245,8 +227,6 @@ def main(id_mappings_path, var_plot_dir, var_csv,
         },
     }
 
-    combined["snv_indels"]["plots"].extend(
-        add_variant_plots(idm, var_plot_dir))
     combined["snv_indels"]["genes"] = add_variant_overview(
         idm, var_csv)
     combined["snv_indels"]["stats"] = post_process(combined["snv_indels"]["stats"])
@@ -256,7 +236,6 @@ def main(id_mappings_path, var_plot_dir, var_csv,
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("id_mappings_path")
-    parser.add_argument("var_plot_dir")
     parser.add_argument("var_csv")
     parser.add_argument("aln_stats_path")
     parser.add_argument("rna_stats_path")
@@ -267,7 +246,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     main(
         args.id_mappings_path,
-        args.var_plot_dir,
         args.var_csv,
         args.aln_stats_path,
         args.rna_stats_path,
