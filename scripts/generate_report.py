@@ -5,7 +5,6 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile as NTF
 from typing import Optional
 
-import pdfkit
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -108,7 +107,7 @@ class Report(object):
         self.cover_tpl = env.get_template(cover_tpl_fname)
         self.contents_tpl = env.get_template(contents_tpl_fname)
 
-    def write(self, output_path: Path) -> None:
+    def write(self, html, pdf) -> None:
         """Writes the report to the given path."""
         toc = {"xsl-style-sheet": self.toc_fname}
         tmp_prefix = str(Path.cwd()) + "/"
@@ -130,13 +129,20 @@ class Report(object):
             cov_fh.seek(0)
 
             con_txt = self.contents_tpl.render(**contents_ctx)
-            pdfkit.from_string(con_txt, str(output_path),
+
+            if html:
+                with open(html, "wt") as fout:
+                    fout.write(cov_txt)
+                    fout.write(con_txt)
+            if pdf:
+                import pdfkit
+                pdfkit.from_string(con_txt, pdf,
                                options=self.pdfkit_opts, css=self.css_fname,
                                toc=toc, cover=cov_fh.name, cover_first=True)
 
 
-def main(input_summary_path, output_report_path, css_path, templates_dir,
-         imgs_dir, toc_path):
+def main(input_summary_path, css_path, templates_dir,
+         imgs_dir, toc_path, html, pdf):
     """Script for generating PDF report of a sample analyzed with the Hamlet
     pipeline."""
     with open(input_summary_path) as src:
@@ -164,20 +170,21 @@ def main(input_summary_path, output_report_path, css_path, templates_dir,
                     header_caption=header_caption,
                     footer_lcaption=footer_lcaption,
                     footer_rcaption=footer_rcaption)
-    report.write(Path(output_report_path))
+    report.write(html, pdf)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("input_summary_path")
-    parser.add_argument("output_report_path")
     parser.add_argument("--css-path", default="assets/style.css")
     parser.add_argument("--templates-dir", default="templates")
     parser.add_argument("--imgs-dir", default="assets/img")
     parser.add_argument("--toc-path", default="assets/toc.xsl")
+    parser.add_argument("--html-output", dest="html")
+    parser.add_argument("--pdf-output", dest="pdf")
 
     args = parser.parse_args()
 
-    main(args.input_summary_path, args.output_report_path, args.css_path,
-        args.templates_dir, args.imgs_dir, args.toc_path)
+    main(args.input_summary_path, args.css_path,
+        args.templates_dir, args.imgs_dir, args.toc_path, args.html, args.pdf)

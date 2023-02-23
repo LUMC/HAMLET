@@ -171,5 +171,5 @@ rule generate_report:
             --css-path {input.css} \
             --toc-path {input.toc} \
             {input.summary} \
-            {output.pdf} 2> {log}
+            --pdf-output {output.pdf} 2> {log}
         """
