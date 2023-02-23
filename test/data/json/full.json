@@ -17,257 +17,94 @@
       }
     ],
     "pipeline_version": "v1.0.2-dev-1",
-    "run_name": "hamlet-46fe6258",
+    "run_name": "hamlet-982e7173",
     "sample_name": "SRR8615409"
   },
   "modules": {
     "fusion": {
       "intersected": false,
       "plots": {
-        "star-fusion": "/path/to/SRR8615409.star-fusion-circos/fsnviz.png"
+        "star-fusion": "test-hamlet-chrM/SRR8615409/fusion/SRR8615409.star-fusion-circos/fsnviz.png"
       },
       "tables": {
         "star-fusion": {
-          "path": "/path/to/SRR8615409.star-fusion",
+          "path": "test-hamlet-chrM/SRR8615409/fusion/SRR8615409.star-fusion",
           "top20": []
         }
       }
     },
     "itd": {
       "flt3": {
-        "path": "/path/to/SRR8615409.flt3.png",
+        "path": "test-hamlet-chrM/SRR8615409/itd/SRR8615409.flt3.png",
         "table": [
           {
-            "boundary_type": "fuzzy",
+            "boundary_type": "fuzzy-end",
             "fuzziness": 1,
             "rose_end_anchor_pos": 1853,
-            "rose_end_count": 126,
-            "rose_end_pos": 1910,
-            "rose_start_anchor_pos": 1908,
-            "rose_start_count": 196,
-            "rose_start_pos": 1851,
+            "rose_end_count": 3,
+            "rose_end_pos": 1882,
+            "rose_start_anchor_pos": 1882,
+            "rose_start_count": 572,
+            "rose_start_pos": 1852,
             "td_ends": [
-              1908,
-              1909
+              1881,
+              1882
             ],
             "td_starts": [
-              1852,
               1853
             ]
           },
           {
-            "boundary_type": "fuzzy-start",
-            "fuzziness": 3,
+            "boundary_type": "exact",
+            "fuzziness": 0,
             "rose_end_anchor_pos": 1853,
-            "rose_end_count": 126,
-            "rose_end_pos": 1910,
-            "rose_start_anchor_pos": 1909,
-            "rose_start_count": 3,
-            "rose_start_pos": 1855,
+            "rose_end_count": 1112,
+            "rose_end_pos": 1883,
+            "rose_start_anchor_pos": 1882,
+            "rose_start_count": 572,
+            "rose_start_pos": 1852,
             "td_ends": [
-              1909
+              1882
             ],
             "td_starts": [
-              1853,
-              1856
-            ]
-          },
-          {
-            "boundary_type": "fuzzy-end",
-            "fuzziness": 3,
-            "rose_end_anchor_pos": 1853,
-            "rose_end_count": 126,
-            "rose_end_pos": 1910,
-            "rose_start_anchor_pos": 1909,
-            "rose_start_count": 3,
-            "rose_start_pos": 1855,
-            "td_ends": [
-              1909
-            ],
-            "td_starts": [
-              1853,
-              1856
+              1853
             ]
           }
         ]
       },
       "kmt2a": {
-        "path": "/path/to/SRR8615409.kmt2a.png",
-        "table": []
-      }
-    },
-    "snv_indels": {
-      "genes": {
-        "MT-ATP6": [
+        "path": "test-hamlet-chrM/SRR8615409/itd/SRR8615409.kmt2a.png",
+        "table": [
           {
-            "Existing_variation": [],
-            "FREQ": 100,
-            "HGVSc": "",
-            "HGVSp": "",
-            "PVAL": 3.101e-14,
-            "POS": 8566,
-            "REF": "A",
-            "genotype": "G/G",
-            "is_in_hotspot": true,
-            "RD": 10,
-            "AD": 20,
-            "DP": 40
-          },
-          {
-            "Existing_variation": [],
-            "FREQ": 97.56,
-            "HGVSc": "",
-            "HGVSp": "",
-            "PVAL": 9.8874e-23,
-            "POS": 8701,
-            "REF": "A",
-            "genotype": "G/G",
-            "is_in_hotspot": true,
-            "RD": 10,
-            "AD": 20,
-            "DP": 40
-          },
-          {
-            "Existing_variation": [],
-            "FREQ": 100,
-            "HGVSc": "",
-            "HGVSp": "",
-            "PVAL": 3.698e-07,
-            "POS": 8860,
-            "REF": "A",
-            "genotype": "G/G",
-            "is_in_hotspot": true,
-            "RD": 10,
-            "AD": 20,
-            "DP": 40
+            "boundary_type": "fuzzy",
+            "fuzziness": 4,
+            "rose_end_anchor_pos": 457,
+            "rose_end_count": 25,
+            "rose_end_pos": 4111,
+            "rose_start_anchor_pos": 4106,
+            "rose_start_count": 39,
+            "rose_start_pos": 452,
+            "td_ends": [
+              4106,
+              4110
+            ],
+            "td_starts": [
+              453,
+              457
+            ]
           }
         ]
-      },
-      "plots": [],
-      "stats": {
-        "aln": {
-          "num_aligned_bases": 511716,
-          "num_aligned_reads": 5426,
-          "num_aligned_reads_proper_pairs": 5370,
-          "num_total_bases": 515611,
-          "num_total_reads": 5454,
-          "pct_adapter": 0.0011,
-          "pct_aligned_bases_from_total": 99.24458554995917,
-          "pct_aligned_reads_from_total": 99.48661532819949,
-          "pct_aligned_reads_proper_pairs": 98.96793217840029,
-          "pct_chimeras": 0.00387,
-          "rate_indel": 7.2e-05,
-          "rate_mismatch": 0.005409,
-          "strand_balance": 0.499079
-        },
-        "cov": {
-          "MT-ATP6": {
-            "ENST00000361899": [
-              {
-                "chrom": "chrM",
-                "end": 9207,
-                "exon_num": 1,
-                "metrics": {
-                  "avg": 46.04405286343612,
-                  "count": 681,
-                  "frac_cov_at_least": {
-                    "10x": 1,
-                    "20x": 0.9412628487518355
-                  },
-                  "max": 78,
-                  "median": 48,
-                  "min": 13,
-                  "stdev": 15.510559894988475
-                },
-                "start": 8526
-              }
-            ]
-          },
-          "MT-ATP8": {
-            "ENST00000361851": [
-              {
-                "chrom": "chrM",
-                "end": 8572,
-                "exon_num": 1,
-                "metrics": {
-                  "avg": 77.89371980676329,
-                  "count": 207,
-                  "frac_cov_at_least": {
-                    "10x": 0.9420289855072463,
-                    "20x": 0.8985507246376812
-                  },
-                  "max": 148,
-                  "median": 71,
-                  "min": 1,
-                  "stdev": 45.5685582837227
-                },
-                "start": 8365
-              }
-            ]
-          }
-        },
-        "ins": {
-          "max_insert_size": 912,
-          "median_absolute_deviation": 49.5,
-          "median_insert_size": 176.5,
-          "min_insert_size": 41
-        },
-        "rna": {
-          "median_3prime_bias": 0.427261,
-          "median_5prime_bias": 0.902478,
-          "median_5prime_to_3prime_bias": 1.742359,
-          "median_cv_coverage": 0.435617,
-          "normalized_cov": [
-            0.315171,
-            0.704388,
-            0.263097
-          ],
-          "num_coding_bases": 453664,
-          "num_intergenic_bases": 3628,
-          "num_intronic_bases": 0,
-          "num_mrna_bases": 508460,
-          "num_ribosomal_bases": 399,
-          "num_utr_bases": 54796,
-          "pct_coding_bases": 0.885221,
-          "pct_intergenic_bases": 0.007079,
-          "pct_intronic_bases": 0,
-          "pct_mrna_bases": 0.992142,
-          "pct_ribosomal_bases": 0.07785563341118897,
-          "pct_utr_bases": 0.106922
-        },
-        "var": {
-          "coding_consequences": {
-            "missense_variant": 11,
-            "synonymous_variant": 36
-          },
-          "num_deletions": 1,
-          "num_insertions": 0,
-          "num_snvs": 52,
-          "per_chromosome": {
-            "MT": 53
-          },
-          "polyphen": {
-            "num_benign_variants": 11,
-            "num_possibly_damaging_variants": 0,
-            "num_probably_damaging_variants": 0,
-            "num_unknown_variants": 0
-          },
-          "sift": {
-            "num_deleterious_variants": 0,
-            "num_tolerated_variants": 4
-          }
-        }
       }
     },
     "qc_seq": {
       "all_read_groups": {
         "proc": {
-          "num_reads_r1": 2727,
-          "num_reads_r2": 2727
+          "num_reads_r1": 45707,
+          "num_reads_r2": 45707
         },
         "raw": {
-          "num_reads_r1": 2727,
-          "num_reads_r2": 2727
+          "num_reads_r1": 45717,
+          "num_reads_r2": 45717
         }
       },
       "per_read_group": [
@@ -285,8 +122,319 @@
             "pct_gc_r1": 45,
             "pct_gc_r2": 45
           }
+        },
+        {
+          "name": "rg_2",
+          "proc": {
+            "num_reads_r1": 25961,
+            "num_reads_r2": 25961,
+            "pct_gc_r1": 42,
+            "pct_gc_r2": 42
+          },
+          "raw": {
+            "num_reads_r1": 25964,
+            "num_reads_r2": 25964,
+            "pct_gc_r1": 42,
+            "pct_gc_r2": 42
+          }
+        },
+        {
+          "name": "rg_3",
+          "proc": {
+            "num_reads_r1": 17019,
+            "num_reads_r2": 17019,
+            "pct_gc_r1": 47,
+            "pct_gc_r2": 47
+          },
+          "raw": {
+            "num_reads_r1": 17026,
+            "num_reads_r2": 17026,
+            "pct_gc_r1": 47,
+            "pct_gc_r2": 47
+          }
         }
       ]
+    },
+    "snv_indels": {
+      "genes": {
+        "MT-ATP6": [
+          {
+            "AD": 24,
+            "CHROM": "chrM",
+            "DP": 37,
+            "Existing_variation": [],
+            "FREQ": 100.0,
+            "HGVSc": "ENST00000361899.2:c.40A>G",
+            "HGVSp": "ENSP00000354632.2:p.Ile14Val",
+            "POS": 8566,
+            "PVAL": 3.101e-14,
+            "RD": 0,
+            "REF": "A",
+            "genotype": "G/G",
+            "is_in_hotspot": true
+          },
+          {
+            "AD": 40,
+            "CHROM": "chrM",
+            "DP": 56,
+            "Existing_variation": [],
+            "FREQ": 95.24,
+            "HGVSc": "ENST00000361899.2:c.175A>G",
+            "HGVSp": "ENSP00000354632.2:p.Thr59Ala",
+            "POS": 8701,
+            "PVAL": 5.6346e-22,
+            "RD": 2,
+            "REF": "A",
+            "genotype": "G/G",
+            "is_in_hotspot": true
+          },
+          {
+            "AD": 12,
+            "CHROM": "chrM",
+            "DP": 26,
+            "Existing_variation": [],
+            "FREQ": 100.0,
+            "HGVSc": "ENST00000361899.2:c.334A>G",
+            "HGVSp": "ENSP00000354632.2:p.Thr112Ala",
+            "POS": 8860,
+            "PVAL": 3.698e-07,
+            "RD": 0,
+            "REF": "A",
+            "genotype": "G/G",
+            "is_in_hotspot": true
+          }
+        ]
+      },
+      "plots": [
+        {
+          "gene": "MT-ATP8",
+          "path": "test-hamlet-chrM/SRR8615409/snv-indels/variant_plots/sample_SRR8615409_gene_MT-ATP8.png"
+        },
+        {
+          "gene": "MT-ATP6",
+          "path": "test-hamlet-chrM/SRR8615409/snv-indels/variant_plots/sample_SRR8615409_gene_MT-ATP6.png"
+        }
+      ],
+      "stats": {
+        "aln": {
+          "num_aligned_bases": 508984,
+          "num_aligned_reads": 5404,
+          "num_aligned_reads_proper_pairs": 5390,
+          "num_total_bases": 511867,
+          "num_total_reads": 5404,
+          "pct_adapter": 0,
+          "pct_aligned_bases_from_total": 99.43676775412364,
+          "pct_aligned_reads_from_total": 100.0,
+          "pct_aligned_reads_proper_pairs": 99.74093264248705,
+          "pct_chimeras": 0.003701,
+          "rate_indel": 6.9e-05,
+          "rate_mismatch": 0.005322,
+          "strand_balance": 0.5
+        },
+        "cov": {
+          "MT-ATP6": {
+            "ENST00000361899": [
+              {
+                "chrom": "chrM",
+                "end": 9207,
+                "exon_num": 1,
+                "metrics": {
+                  "avg": 60.731277533039645,
+                  "count": 681,
+                  "frac_cov_at_least": {
+                    "10x": 1.0,
+                    "20x": 1.0,
+                    "30x": 0.9882525697503671,
+                    "40x": 0.8678414096916299,
+                    "50x": 0.7665198237885462,
+                    "8x": 1.0
+                  },
+                  "max": 93,
+                  "median": 62,
+                  "min": 28,
+                  "stdev": 15.647863215738127
+                },
+                "start": 8526
+              }
+            ]
+          },
+          "MT-ATP8": {
+            "ENST00000361851": [
+              {
+                "chrom": "chrM",
+                "end": 8572,
+                "exon_num": 1,
+                "metrics": {
+                  "avg": 93.15458937198068,
+                  "count": 207,
+                  "frac_cov_at_least": {
+                    "10x": 1.0,
+                    "20x": 0.9565217391304348,
+                    "30x": 0.9227053140096618,
+                    "40x": 0.8599033816425121,
+                    "50x": 0.7681159420289855,
+                    "8x": 1.0
+                  },
+                  "max": 164,
+                  "median": 86,
+                  "min": 16,
+                  "stdev": 46.32394656062807
+                },
+                "start": 8365
+              }
+            ]
+          }
+        },
+        "ins": {
+          "max_insert_size": 11382,
+          "median_absolute_deviation": 50,
+          "median_insert_size": 177,
+          "min_insert_size": 41
+        },
+        "rna": {
+          "median_3prime_bias": 0.4317,
+          "median_5prime_bias": 0.902383,
+          "median_5prime_to_3prime_bias": 1.75191,
+          "median_cv_coverage": 0.435072,
+          "normalized_cov": [
+            0.313568,
+            0.413474,
+            0.686603,
+            0.807523,
+            0.908735,
+            1.000374,
+            1.084898,
+            1.136506,
+            1.160578,
+            1.159704,
+            1.100256,
+            1.094532,
+            1.006825,
+            0.974442,
+            0.979131,
+            0.982666,
+            0.974774,
+            1.040666,
+            1.071826,
+            1.105414,
+            1.179082,
+            1.191235,
+            1.193482,
+            1.177719,
+            1.163547,
+            1.142907,
+            1.113513,
+            1.128783,
+            1.163715,
+            1.202241,
+            1.199018,
+            1.180307,
+            1.146113,
+            1.088003,
+            1.066038,
+            1.087484,
+            1.131756,
+            1.180374,
+            1.183665,
+            1.180267,
+            1.219009,
+            1.224032,
+            1.214155,
+            1.227003,
+            1.236918,
+            1.268622,
+            1.271863,
+            1.279719,
+            1.237521,
+            1.230006,
+            1.206862,
+            1.150264,
+            1.067606,
+            1.078852,
+            1.029251,
+            0.95243,
+            0.936047,
+            0.904827,
+            0.893166,
+            0.905631,
+            0.945685,
+            0.962615,
+            0.991277,
+            1.071449,
+            1.113974,
+            1.157215,
+            1.165981,
+            1.171852,
+            1.153744,
+            1.145333,
+            1.099232,
+            1.047086,
+            1.034365,
+            1.0201,
+            0.989194,
+            0.952129,
+            0.96912,
+            0.961427,
+            0.929933,
+            0.954047,
+            0.956454,
+            0.906169,
+            0.838186,
+            0.843257,
+            0.845075,
+            0.855427,
+            0.860874,
+            0.844207,
+            0.829513,
+            0.811152,
+            0.80807,
+            0.766051,
+            0.757638,
+            0.710701,
+            0.690544,
+            0.623763,
+            0.554274,
+            0.463671,
+            0.373124,
+            0.304854,
+            0.264201
+          ],
+          "num_coding_bases": 451227,
+          "num_intergenic_bases": 3228,
+          "num_intronic_bases": 0,
+          "num_mrna_bases": 505946,
+          "num_ribosomal_bases": 399,
+          "num_utr_bases": 54719,
+          "pct_coding_bases": 0.8855,
+          "pct_intergenic_bases": 0.006335,
+          "pct_intronic_bases": 0,
+          "pct_mrna_bases": 0.992882,
+          "pct_ribosomal_bases": 0.07830085188971943,
+          "pct_utr_bases": 0.107382
+        },
+        "var": {
+          "coding_consequences": {
+            "missense_variant": 12,
+            "synonymous_variant": 36
+          },
+          "num_deletions": 1,
+          "num_insertions": 0,
+          "num_snvs": 52,
+          "per_chromosome": {
+            "MT": 53
+          },
+          "polyphen": {
+            "num_benign_variants": 12,
+            "num_possibly_damaging_variants": 0,
+            "num_probably_damaging_variants": 0,
+            "num_unknown_variants": 0
+          },
+          "sift": {
+            "num_deleterious_variants": 0,
+            "num_tolerated_variants": 5
+          }
+        }
+      }
     }
   }
 }
