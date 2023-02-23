@@ -108,7 +108,10 @@
             "POS": 8566,
             "REF": "A",
             "genotype": "G/G",
-            "is_in_hotspot": true
+            "is_in_hotspot": true,
+            "RD": 10,
+            "AD": 20,
+            "DP": 40
           },
           {
             "Existing_variation": [],
@@ -119,7 +122,10 @@
             "POS": 8701,
             "REF": "A",
             "genotype": "G/G",
-            "is_in_hotspot": true
+            "is_in_hotspot": true,
+            "RD": 10,
+            "AD": 20,
+            "DP": 40
           },
           {
             "Existing_variation": [],
@@ -130,7 +136,10 @@
             "POS": 8860,
             "REF": "A",
             "genotype": "G/G",
-            "is_in_hotspot": true
+            "is_in_hotspot": true,
+            "RD": 10,
+            "AD": 20,
+            "DP": 40
           }
         ]
       },

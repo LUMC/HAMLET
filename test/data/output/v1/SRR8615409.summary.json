@@ -404,7 +404,10 @@
             "is_in_hotspot": "yes",
             "is_toi": "yes",
             "miRNA": "NA",
-            "sample_id": "SRR8615409"
+            "sample_id": "SRR8615409",
+            "RD": 10,
+            "AD": 20,
+            "DP": 40
           }
         ]
       },
