@@ -245,9 +245,25 @@ def group_variants(id_mapping, var_csv):
     with open(var_csv) as fin:
         for line in fin:
             js = json.loads(line)
+            js["FORMAT"] = get_format(js["input"])
+            js["INFO"] = get_info(js["input"])
             update_variant_overview(mapping, js, overview)
 
     return overview
+
+
+def get_info(vcf):
+    """Create an INFO dict from a vcf line"""
+    split = vcf.strip().split('\t')
+    return dict((pair.split('=') for pair in split[7].split(';')))
+
+
+def get_format(vcf):
+    """Create a FORMAT dict from a vcf line"""
+    split = vcf.strip().split('\t')
+    format_fields = split[8].split(":")
+    format_values = split[9].split(":")
+    return {k:v for k, v in zip(format_fields, format_values)}
 
 
 def main(id_mappings_path, var_csv,

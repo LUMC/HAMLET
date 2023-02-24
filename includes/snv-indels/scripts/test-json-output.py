@@ -9,6 +9,8 @@ update_variant_overview = json_output.update_variant_overview
 get_gene_id = json_output.get_gene_id
 get_gene_symbol = json_output.get_gene_symbol
 idf_to_gene_symbol = json_output.idf_to_gene_symbol
+get_format = json_output.get_format
+get_info = json_output.get_info
 
 
 @pytest.fixture
@@ -24,6 +26,11 @@ def id_mapping():
             }
     return [gene1, gene2]
 
+
+@pytest.fixture
+def vcf_line():
+    """The VCF input is included in the VEP json object"""
+    return "chrM\t13650\t.\tC\tT\t.\tPASS\tADP=17;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:81:17:17:0:15:100%:6.4467E-9:0:40:0:0:10:5"
 
 @pytest.fixture
 def mapping():
@@ -57,3 +64,15 @@ def test_update_variant_overview(mapping, vep_single):
     overview = defaultdict(list)
     update_variant_overview(mapping, vep_single, overview)
     assert "GENE1" in overview
+
+
+def test_get_format(vcf_line):
+    FORMAT = get_format(vcf_line)
+    assert FORMAT["GT"] == "1/1"
+    assert FORMAT["ADR"] == "5"
+
+
+def test_get_info(vcf_line):
+    INFO = get_info(vcf_line)
+    assert INFO["ADP"] == "17"
+    assert INFO["HOM"] == "1"
