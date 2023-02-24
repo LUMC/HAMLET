@@ -161,6 +161,36 @@ def parse_idm(fh):
     return idms
 
 
+def idf_to_gene_symbol(id_mapping):
+    """Convert id_mapping to gene_id, gene_symbol lookup dict"""
+    d = dict()
+
+    for m in id_mapping:
+        gene_id = m["gene_id"]
+        symbol = m["gene_symbol"]
+        d[gene_id] = symbol
+
+    return d
+
+
+def update_variant_overview(mapping, vep, overview):
+    """ Add the vep entry to overview """
+    symbol = get_gene_symbol(vep, mapping)
+    overview[symbol].append(vep)
+
+
+def get_gene_symbol(vep, mapping):
+    """Determine the gene symbol from a VEP object"""
+    consequences = vep.get("transcript_consequences")
+    gene_id = get_gene_id(consequences[0])
+    return mapping[gene_id]
+
+
+def get_gene_id(consequence):
+    """Extract the gene_id from a VEP transcript_consequnce"""
+    return consequence["gene_id"]
+
+
 def add_variant_overview(idm, fn_csv):
     idms = set([])
     for item in idm:
@@ -208,6 +238,18 @@ def add_variant_overview(idm, fn_csv):
     return rv
 
 
+def group_variants(id_mapping, var_csv):
+    """Group variants by gene symbol"""
+    mapping = idf_to_gene_symbol(id_mapping)
+    overview = defaultdict(list)
+    with open(var_csv) as fin:
+        for line in fin:
+            js = json.loads(line)
+            update_variant_overview(mapping, js, overview)
+
+    return overview
+
+
 def main(id_mappings_path, var_csv,
          aln_stats_path, rna_stats_path,
          insert_stats_path, exon_cov_stats_path, vep_stats_path):
@@ -218,30 +260,31 @@ def main(id_mappings_path, var_csv,
         "snv_indels": {
             "genes": {},
             "stats": {
-                "aln": process_aln_stats(aln_stats_path),
-                "rna": process_rna_stats(rna_stats_path),
-                "cov": process_exon_cov_stats(exon_cov_stats_path, idm),
-                "ins": process_insert_stats(insert_stats_path),
-                "var": process_var_stats(vep_stats_path)
+                "aln": process_aln_stats(aln_stats_path) if aln_stats_path else dict(),
+                "rna": process_rna_stats(rna_stats_path) if rna_stats_path else dict(),
+                "cov": process_exon_cov_stats(exon_cov_stats_path, idm) if exon_cov_stats_path else dict(),
+                "ins": process_insert_stats(insert_stats_path) if insert_stats_path else dict(),
+                "var": process_var_stats(vep_stats_path) if vep_stats_path else dict()
             }
         },
     }
 
-    combined["snv_indels"]["genes"] = add_variant_overview(
-        idm, var_csv)
-    combined["snv_indels"]["stats"] = post_process(combined["snv_indels"]["stats"])
+    combined["snv_indels"]["genes"] = group_variants(idm, var_csv) if var_csv else dict()
+
+    if aln_stats_path:
+        combined["snv_indels"]["stats"] = post_process(combined["snv_indels"]["stats"])
     print(json.dumps(combined, sort_keys=True, indent=2))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("id_mappings_path")
-    parser.add_argument("var_csv")
-    parser.add_argument("aln_stats_path")
-    parser.add_argument("rna_stats_path")
-    parser.add_argument("insert_stats_path")
-    parser.add_argument("exon_cov_stats_path")
-    parser.add_argument("vep_stats_path")
+    parser.add_argument("--var_csv")
+    parser.add_argument("--aln_stats_path")
+    parser.add_argument("--rna_stats_path")
+    parser.add_argument("--insert_stats_path")
+    parser.add_argument("--exon_cov_stats_path")
+    parser.add_argument("--vep_stats_path")
 
     args = parser.parse_args()
     main(
