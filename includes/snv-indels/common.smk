@@ -23,10 +23,6 @@ def set_default(key, value):
 
 set_default("genome_dict", config["genome_fasta"].rsplit(".", 1)[0] + ".dict")
 set_default("genome_fai", config["genome_fasta"] + ".fai")
-set_default("exon_cov_script", srcdir("scripts/aggr_exon_cov.py"))
-set_default("extract_script", srcdir("scripts/vcf2json.py"))
-set_default("csv_script", srcdir("scripts/json2csv.py"))
-set_default("plot_script", srcdir("scripts/plotVariants.R"))
 
 
 def get_forward(wildcards):

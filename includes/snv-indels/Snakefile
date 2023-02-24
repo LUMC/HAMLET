@@ -150,7 +150,7 @@ rule exon_cov:
         bed=".tmp.exon_cov_ref.bed",
         genome=".tmp.genome.txt",
         idm=config["ref_id_mapping"],
-        scr=config["exon_cov_script"],
+        scr=srcdir("scripts/aggr_exon_cov.py"),
     output:
         json="{sample}/snv-indels/{sample}.exon_cov_stats.json",
     log:
