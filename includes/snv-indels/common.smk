@@ -42,12 +42,12 @@ def get_bam_output(wildcards):
     return f"{wildcards.sample}/snv-indels/{wildcards.sample}.snv-indel.bam"
 
 
-def get_all_csv(wildcards):
-    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.variants_all.csv"
+def get_vep_high(wildcards):
+    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.vep.high.txt"
 
 
-def get_high_csv(wildcards):
-    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.variants_hi.csv"
+def get_vep_target(wildcards):
+    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.vep.target.txt"
 
 
 def get_json(wildcards):
@@ -56,7 +56,7 @@ def get_json(wildcards):
 
 module_output = SimpleNamespace(
     bam=get_bam_output,
-    var_all=get_all_csv,
-    var_hi=get_high_csv,
+    vep_high=get_vep_high,
+    vep_target=get_vep_target,
     json=get_json,
 )

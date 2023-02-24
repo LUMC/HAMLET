@@ -7,15 +7,15 @@ samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample
 
 
 localrules:
-    table_vars_all,
-    table_vars_hi,
+    filter_vep_target,
+    filter_vep_high,
 
 
 rule all:
     input:
         bam=[module_output.bam(sample) for sample in samples],
-        all_csv=[module_output.var_all(sample) for sample in samples],
-        high_csv=[module_output.var_hi(sample) for sample in samples],
+        vep_high=[module_output.vep_high(sample) for sample in samples],
+        vep_target=[module_output.vep_target(sample) for sample in samples],
         json=[module_output.json(sample) for sample in samples],
 
 
@@ -291,7 +291,7 @@ rule annotate_vars:
         if config.get("cache_vep")
         else "",
     output:
-        vcf="{sample}/snv-indels/{sample}.annotated.vcf.gz",
+        vep="{sample}/snv-indels/{sample}.vep.txt",
         stats="{sample}/snv-indels/{sample}.vep_stats.txt",
     log:
         "log/annotate_vars.{sample}.txt",
@@ -308,77 +308,63 @@ rule annotate_vars:
             --custom {input.ref_1kg},P3,vcf,exact,0,AF,AFR_AF,AMR_AF,EAS_AF,EUR_AF,SAS_AF \
             --custom {input.ref_gonl},GONL,vcf,exact,0,AF \
             --fork {threads} \
-            --allele_number --stats_text --vcf --force_overwrite --assembly GRCh38 \
+            --allele_number --stats_text --json --force_overwrite --assembly GRCh38 \
             --format vcf \
             --polyphen b \
             --sift b \
             --hgvs \
-            --stats_file {output.stats} -o STDOUT \
-            2> {log} | bgzip -c > {output.vcf}
+            --stats_file {output.stats} -o {output.vep}\
+            2> {log}
         """
 
 
-rule extract_vars:
+rule filter_vep_target:
     input:
-        vcf="{sample}/snv-indels/{sample}.annotated.vcf.gz",
-        ref_hotspots=config["bed_variant_hotspots"],
+        vep="{sample}/snv-indels/{sample}.vep.txt",
         ref_id_mapping=config["ref_id_mapping"],
-        scr=config["extract_script"],
+        scr=srcdir("scripts/filter_vep.py"),
     output:
-        json="{sample}/snv-indels/{sample}.variants.json",
+        high="{sample}/snv-indels/{sample}.vep.target.txt",
     log:
-        "log/extract_vars.{sample}.txt",
+        "log/filter_vep_target.{sample}.txt",
     threads: 1
     container:
         containers["hamlet-scripts"]
     shell:
         """
         python3 {input.scr} \
-            --hotspots {input.ref_hotspots} \
-            --sample-id {wildcards.sample} \
+            {input.vep} \
             {input.ref_id_mapping} \
-            {input.vcf} > {output.json} 2> {log}
+            > {output.high} 2> {log}
         """
 
 
-rule table_vars_all:
+rule filter_vep_high:
     input:
-        json="{sample}/snv-indels/{sample}.variants.json",
-        scr=config["csv_script"],
+        vep="{sample}/snv-indels/{sample}.vep.txt",
+        ref_id_mapping=config["ref_id_mapping"],
+        scr=srcdir("scripts/filter_vep.py"),
     output:
-        csv="{sample}/snv-indels/{sample}.variants_all.csv",
+        high="{sample}/snv-indels/{sample}.vep.high.txt",
     log:
-        "log/table_vars_all.{sample}.txt",
+        "log/filter_vep_high.{sample}.txt",
     threads: 1
     container:
         containers["hamlet-scripts"]
     shell:
         """
-        python3 {input.scr} {input.json} > {output.csv} 2> {log}
-        """
-
-
-rule table_vars_hi:
-    input:
-        json="{sample}/snv-indels/{sample}.variants.json",
-        scr=config["csv_script"],
-    output:
-        csv="{sample}/snv-indels/{sample}.variants_hi.csv",
-    log:
-        "log/table_vars_hi.{sample}.txt",
-    threads: 1
-    container:
-        containers["hamlet-scripts"]
-    shell:
-        """
-        python3 {input.scr} --hi {input.json} > {output.csv} 2> {log}
+        python3 {input.scr} \
+            --impact HIGH \
+            {input.vep} \
+            {input.ref_id_mapping} \
+            > {output.high} 2> {log}
         """
 
 
 rule json_output:
     input:
         id_mappings_path=config["ref_id_mapping"],
-        var_csv="{sample}/snv-indels/{sample}.variants_hi.csv",
+        vep_high="{sample}/snv-indels/{sample}.vep.high.txt",
         aln_stats="{sample}/snv-indels/{sample}.aln_stats",
         rna_stats="{sample}/snv-indels/{sample}.rna_stats",
         insert_stats="{sample}/snv-indels/{sample}.insert_stats",
@@ -395,7 +381,7 @@ rule json_output:
         """
         python3 {input.src} \
             {input.id_mappings_path} \
-            {input.var_csv} \
+            {input.vep_high} \
             {input.aln_stats} \
             {input.rna_stats} \
             {input.insert_stats} \

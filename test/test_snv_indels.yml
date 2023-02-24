@@ -11,14 +11,14 @@
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
-      - "TestSample1/snv-indels/TestSample1.variants_all.csv"
-      - "TestSample1/snv-indels/TestSample1.variants_hi.csv"
+      - "TestSample1/snv-indels/TestSample1.vep.txt"
+      - "TestSample1/snv-indels/TestSample1.vep.high.txt"
 
-      - "TestSample2/snv-indels/TestSample2.variants_all.csv"
-      - "TestSample2/snv-indels/TestSample2.variants_hi.csv"
+      - "TestSample2/snv-indels/TestSample2.vep.txt"
+      - "TestSample2/snv-indels/TestSample2.vep.high.txt"
 
-      - "TestSample3/snv-indels/TestSample3.variants_all.csv"
-      - "TestSample3/snv-indels/TestSample3.variants_hi.csv"
+      - "TestSample3/snv-indels/TestSample3.vep.txt"
+      - "TestSample3/snv-indels/TestSample3.vep.high.txt"
     contains_regex:
       - "STAR .* ID:TestSample1 .* --readFilesIn 'test/data/fastq/SRR8615409 chrM_1.fastq.gz' 'test/data/fastq/SRR8615409 chrM_2.fastq.gz'"
       # Test that params.min_intron_size is used
@@ -62,16 +62,12 @@
         - "outSAMattrRGline +ID:SRR8615409"
     - path: "SRR8615409/snv-indels/SRR8615409.snv-indel.bam"
     - path: "SRR8615409/snv-indels/SRR8615409.exon_cov_stats.json"
-    - path: "SRR8615409/snv-indels/SRR8615409.annotated.vcf.gz"
-      contains:
-        # VEP output should be in VCF format
-        - "##fileformat=VCFv4.1"
-        # VEP output should contain HGVS annotations
-        - "ENST00000361390.2:c.210C>A"
     - path: "SRR8615409/snv-indels/SRR8615409.aln_stats"
-    - path: "SRR8615409/snv-indels/SRR8615409.variants.json"
-    - path: "SRR8615409/snv-indels/SRR8615409.variants_all.csv"
-    - path: "SRR8615409/snv-indels/SRR8615409.variants_hi.csv"
+    - path: "SRR8615409/snv-indels/SRR8615409.vep.txt"
+    - path: "SRR8615409/snv-indels/SRR8615409.vep.target.txt"
+    - path: "SRR8615409/snv-indels/SRR8615409.vep.high.txt"
+      contains:
+        - "stop_gained"
     # Test log files
     - path: "SRR8615409/snv-indels/Log.final.out"
       contains:
@@ -96,9 +92,8 @@
       contains:
         - "CollectRnaSeqMetrics"
     - path: "log/annotate_vars.SRR8615409.txt"
-    - path: "log/extract_vars.SRR8615409.txt"
-    - path: "log/table_vars_all.SRR8615409.txt"
-    - path: "log/table_vars_hi.SRR8615409.txt"
+    - path: "log/filter_vep_high.SRR8615409.txt"
+    - path: "log/filter_vep_target.SRR8615409.txt"
     - path: "SRR8615409/snv-indels/snv-indels-output.json"
     # Test that a STAR counts file is generated
     - path: "SRR8615409/snv-indels/ReadsPerGene.out.tab"
