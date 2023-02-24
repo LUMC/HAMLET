@@ -21,6 +21,8 @@
       "variant": {
         "type": "object",
         "properties": {
+          "FORMAT": { "type": "object" },
+          "INFO": { "type": "object" },
           "seq_region_name": { "type": "string" },
           "start": { "type": "integer" },
           "genotype": { "type": "string" },

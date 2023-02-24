@@ -137,6 +137,7 @@
 - name: test-report
   tags:
     - hamlet
+    - report
   command: >
     python3 scripts/generate_report.py
     --html-output report.html
