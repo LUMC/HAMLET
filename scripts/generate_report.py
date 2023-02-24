@@ -151,7 +151,7 @@ def main(input_summary_path, css_path, templates_dir,
     # Format p-values for readability
     for gene in sd["modules"]["snv_indels"]["genes"].values():
         for variant in gene:
-            variant["PVAL"] = "{:0.1e}".format(variant["PVAL"])
+            variant["FORMAT"]["PVAL"] = "{:0.1e}".format(float(variant["FORMAT"]["PVAL"]))
 
     sdm = sd["metadata"]
     sample_name = sdm["sample_name"]
