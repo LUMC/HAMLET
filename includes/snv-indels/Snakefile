@@ -381,10 +381,10 @@ rule json_output:
         """
         python3 {input.src} \
             {input.id_mappings_path} \
-            {input.vep_high} \
-            {input.aln_stats} \
-            {input.rna_stats} \
-            {input.insert_stats} \
-            {input.exon_cov_stats} \
-            {input.vep_stats} > {output} 2> {log}
+            --vep_txt {input.vep_high} \
+            --aln_stats_path {input.aln_stats} \
+            --rna_stats_path {input.rna_stats} \
+            --insert_stats_path {input.insert_stats} \
+            --exon_cov_stats_path {input.exon_cov_stats} \
+            --vep_stats_path {input.vep_stats} > {output} 2> {log}
         """
