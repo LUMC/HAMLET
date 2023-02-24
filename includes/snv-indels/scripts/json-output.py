@@ -238,11 +238,11 @@ def add_variant_overview(idm, fn_csv):
     return rv
 
 
-def group_variants(id_mapping, var_csv):
+def group_variants(id_mapping, vep_txt):
     """Group variants by gene symbol"""
     mapping = idf_to_gene_symbol(id_mapping)
     overview = defaultdict(list)
-    with open(var_csv) as fin:
+    with open(vep_txt) as fin:
         for line in fin:
             js = json.loads(line)
             js["FORMAT"] = get_format(js["input"])
@@ -266,7 +266,7 @@ def get_format(vcf):
     return {k:v for k, v in zip(format_fields, format_values)}
 
 
-def main(id_mappings_path, var_csv,
+def main(id_mappings_path, vep_txt,
          aln_stats_path, rna_stats_path,
          insert_stats_path, exon_cov_stats_path, vep_stats_path):
     """Helper script for combining multiple stats files into one JSON."""
@@ -285,7 +285,7 @@ def main(id_mappings_path, var_csv,
         },
     }
 
-    combined["snv_indels"]["genes"] = group_variants(idm, var_csv) if var_csv else dict()
+    combined["snv_indels"]["genes"] = group_variants(idm, vep_txt) if vep_txt else dict()
 
     if aln_stats_path:
         combined["snv_indels"]["stats"] = post_process(combined["snv_indels"]["stats"])
@@ -295,7 +295,7 @@ def main(id_mappings_path, var_csv,
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("id_mappings_path")
-    parser.add_argument("--var_csv")
+    parser.add_argument("--vep_txt")
     parser.add_argument("--aln_stats_path")
     parser.add_argument("--rna_stats_path")
     parser.add_argument("--insert_stats_path")
@@ -305,7 +305,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     main(
         args.id_mappings_path,
-        args.var_csv,
+        args.vep_txt,
         args.aln_stats_path,
         args.rna_stats_path,
         args.insert_stats_path,
