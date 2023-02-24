@@ -20,22 +20,13 @@
       },
       "variant": {
         "type": "object",
-        "additionalProperties": false,
-        "minProperties": 13,
         "properties": {
-          "CHROM": { "type": "string" },
-          "POS": { "type": "integer" },
-          "REF": { "type": "string" },
+          "seq_region_name": { "type": "string" },
+          "start": { "type": "integer" },
           "genotype": { "type": "string" },
-          "HGVSc": { "type": "string" },
-          "HGVSp": { "type": "string" },
+          "transcript_consequences": { "type": "array", "minItems": 1},
           "Existing_variation": { "type": "array", "items": { "type": "string" }},
-          "FREQ": { "type": "number" },
-          "is_in_hotspot": { "type": "boolean" },
-          "PVAL": { "type": "number" },
-          "RD": { "type": "integer" },
-          "AD": { "type": "integer" },
-          "DP": { "type": "integer" }
+          "is_in_hotspot": { "type": "boolean" }
         }
       },
       "stats": {
