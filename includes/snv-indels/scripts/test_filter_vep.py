@@ -48,19 +48,40 @@ GENES_OF_INTEREST = [
 ]
 
 
-# transcripts, transcript_consequence lenght
+# transcripts, transcript_consequences lenght
 FILTER_TRANSCRIPTS = [
         ({"transcript1"}, 1),
         ({"transcript1", "transcript2"}, 2),
         ({"transcript9"}, 0),
 ]
 
+# consequence_terms, first gene_id
+FILTER_CONSEQUENCE = [
+        ({"transcript_ablation"}, "gene1"),
+        ({"stop_gained"}, "gene3"),
+        ({"transcript_ablation", "inframe_insertion"}, "gene1"),
+]
+
 @pytest.mark.parametrize(["transcripts", "length"], FILTER_TRANSCRIPTS)
-def test_filter_consequence(vep, transcripts, length):
-    """Test restricting consequences to transcript of interest"""
+def test_filter_transcript_id(vep, transcripts, length):
+    """Test filtering by transcript_id"""
     assert len(vep["transcript_consequences"]) == 3
     vep.filter_transcript_id(transcripts)
     assert len(vep["transcript_consequences"]) == length
+
+
+@pytest.mark.parametrize(["consequences", "gene"], FILTER_CONSEQUENCE)
+def test_filter_consequence_term(vep, consequences, gene):
+    """Test filtering by consequence_term"""
+    assert len(vep["transcript_consequences"]) == 3
+    vep.filter_consequence_term(consequences)
+    vep["transcript_consequences"][0] == gene
+
+
+def test_filter_consequence_emtpy(vep):
+    """Test that we get an empty list if no consequence matches"""
+    vep.filter_consequence_term({"no_such_consequence"})
+    assert not vep["transcript_consequences"]
 
 
 @pytest.mark.parametrize(["goi", "boolean"], GENES_OF_INTEREST)

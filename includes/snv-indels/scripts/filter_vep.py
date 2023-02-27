@@ -59,6 +59,12 @@ class VEP(dict):
         self["transcript_consequences"] = tc
 
 
+    def filter_consequence_term(self, consequences):
+        """Filter transcript consequences by consequence_term"""
+        tc = self["transcript_consequences"]
+        tc = [x for x in tc if not set(x["consequence_terms"]).isdisjoint(consequences)]
+        self["transcript_consequences"] = tc
+
 def gene_of_interest(cons, genes):
     """Is a VEP consequence applicable to a gene of interest"""
     return cons["gene_id"] in genes
