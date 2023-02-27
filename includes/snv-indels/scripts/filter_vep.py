@@ -139,8 +139,8 @@ if __name__ == "__main__":
 
     parser.add_argument("vep", help="VEP json output file")
     parser.add_argument("goi", help="Genes of interest")
-    parser.add_argument( "--consequences", nargs='+',
-            type=str, default=cons)
+    parser.add_argument( "--consequences", nargs='*',
+            type=str, default=list())
 
     args = parser.parse_args()
 

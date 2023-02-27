@@ -344,6 +344,8 @@ rule filter_vep_high:
         vep="{sample}/snv-indels/{sample}.vep.txt",
         ref_id_mapping=config["ref_id_mapping"],
         scr=srcdir("scripts/filter_vep.py"),
+    params:
+        vep_consequences=config["vep_consequences"],
     output:
         high="{sample}/snv-indels/{sample}.vep.high.txt",
     log:
@@ -354,9 +356,9 @@ rule filter_vep_high:
     shell:
         """
         python3 {input.scr} \
-            --impact HIGH \
             {input.vep} \
             {input.ref_id_mapping} \
+            --consequences {params.vep_consequences} \
             > {output.high} 2> {log}
         """
 
