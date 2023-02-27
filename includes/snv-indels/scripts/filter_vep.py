@@ -52,7 +52,12 @@ severity = [
 
 class VEP(dict):
     """Class to work with VEP objects"""
-    pass
+    def filter_transcript_id(self, transcripts):
+        """Filter transcript consequences by transcript_id"""
+        tc = self["transcript_consequences"]
+        tc = [x for x in tc if x["transcript_id"] in transcripts]
+        self["transcript_consequences"] = tc
+
 
 def gene_of_interest(cons, genes):
     """Is a VEP consequence applicable to a gene of interest"""

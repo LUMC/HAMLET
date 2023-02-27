@@ -3,7 +3,6 @@
 from filter_vep import (
     VEP,
     gene_of_interest,
-    transcript_of_interest,
     consequence_of_interest,
     consequences_of_interest,
     vep_of_interest,
@@ -49,12 +48,20 @@ GENES_OF_INTEREST = [
 ]
 
 
-# Compare vs gene1
-TRANSCRIPTS_OF_INTEREST = [
-        ({"transcript1"}, True),
-        ({"transcript2", "transcript1"}, True),
-        ({"transcript9"}, False),
+# transcripts, transcript_consequence lenght
+FILTER_TRANSCRIPTS = [
+        ({"transcript1"}, 1),
+        ({"transcript1", "transcript2"}, 2),
+        ({"transcript9"}, 0),
 ]
+
+@pytest.mark.parametrize(["transcripts", "length"], FILTER_TRANSCRIPTS)
+def test_filter_consequence(vep, transcripts, length):
+    """Test restricting consequences to transcript of interest"""
+    assert len(vep["transcript_consequences"]) == 3
+    vep.filter_transcript_id(transcripts)
+    assert len(vep["transcript_consequences"]) == length
+
 
 @pytest.mark.parametrize(["goi", "boolean"], GENES_OF_INTEREST)
 def test_gene_of_interest(gene1, goi, boolean):
@@ -63,15 +70,6 @@ def test_gene_of_interest(gene1, goi, boolean):
     Relative to genes of interest in goi
     """
     assert gene_of_interest(gene1, goi) == boolean
-
-
-@pytest.mark.parametrize(["toi", "boolean"], TRANSCRIPTS_OF_INTEREST)
-def test_transcript_of_interest(gene1, toi, boolean):
-    """Test if gene1 has transcript of interest
-
-    Relative to transcripts of interest toi
-    """
-    assert transcript_of_interest(gene1, toi) == boolean
 
 
 def test_consequence_of_interest(gene1):
