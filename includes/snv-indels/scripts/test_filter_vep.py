@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from filter_vep import (
+    VEP,
     gene_of_interest,
     transcript_of_interest,
     consequence_of_interest,
@@ -9,6 +10,7 @@ from filter_vep import (
     update_most_severe,
 )
 
+import json
 import pytest
 
 
@@ -35,18 +37,9 @@ def gene2():
 
 @pytest.fixture
 def vep():
-    return {
-        "most_severe_consequence": None,
-        "transcript_consequences": [
-            make_consequence("gene1", "transcript1", ["transcript_ablation"]),
-            make_consequence(
-                "gene2", "transcript2", ["splice_acceptor_variant"], "HIGH"
-            ),
-            make_consequence(
-                "gene3", "transcript3", ["inframe_insertion", "stop_gained"]
-            ),
-        ],
-    }
+    with open("test/data/output/v2/vep.json") as fin:
+        js = json.load(fin)
+    return VEP(js[0])
 
 # Compare vs gene1
 GENES_OF_INTEREST = [

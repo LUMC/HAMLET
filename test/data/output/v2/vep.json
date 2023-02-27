@@ -1,0 +1,29 @@
+[
+  {
+    "most_severe_consequence": null,
+    "transcript_consequences": [
+      { "gene_id": "gene1",
+        "transcript_id": "transcript1",
+        "consequence_terms": [
+          "transcript_ablation"
+        ],
+        "impact": "MODIFIER"
+      },
+      { "gene_id": "gene2",
+        "transcript_id": "transcript2",
+        "consequence_terms": [
+          "splice_acceptor_variant"
+        ],
+        "impact": "HIGH"
+      },
+      { "gene_id": "gene3",
+        "transcript_id": "transcript3",
+        "consequence_terms": [
+          "inframe_insertion",
+          "stop_gained"
+        ],
+        "impact": "MODIFIER"
+      }
+    ]
+  }
+]

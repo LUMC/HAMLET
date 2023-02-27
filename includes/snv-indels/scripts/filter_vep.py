@@ -5,7 +5,6 @@ import json
 
 from functools import partial
 
-
 # From most to least severe, taken from the ensembl website
 # https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html
 severity = [
@@ -49,6 +48,11 @@ severity = [
     "feature_truncation",
     "intergenic_variant",
 ]
+
+
+class VEP(dict):
+    """Class to work with VEP objects"""
+    pass
 
 def gene_of_interest(cons, genes):
     """Is a VEP consequence applicable to a gene of interest"""
