@@ -101,14 +101,14 @@ def parse_vep_json(vep_file):
     """Parse the VEP 'json' output file, each line contains a JSON entry"""
     with open(vep_file) as fin:
         for line in fin:
-            yield json.loads(line)
+            yield VEP(json.loads(line))
 
 
 def main(vep_file, goi_file, consequences):
     # Get genes and transcripts of interest
     goi, toi = read_goi_file(goi_file)
 
-    for variant in parse_vep_json(vep_file):
+    for vep in parse_vep_json(vep_file):
         # Filter on transcript of interest
         vep.filter_transcript_id(toi)
         # Filter on consequences of interest
@@ -144,4 +144,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    main(args.vep, args.goi, args.consequenes)
+    main(args.vep, args.goi, args.consequences)
