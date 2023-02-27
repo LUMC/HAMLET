@@ -48,27 +48,37 @@ def vep():
         ],
     }
 
-
-def test_is_gene_of_interest(gene1):
-    """Test recognition of gene of interest"""
-    assert gene_of_interest(gene1, {"gene1"})
-    assert gene_of_interest(gene1, {"gene2", "gene3", "gene1"})
-
-
-def test_is_not_gene_of_interest(gene1):
-    """Test recognition of gene not of interest"""
-    assert not gene_of_interest(gene1, {"gene9"})
+# Compare vs gene1
+GENES_OF_INTEREST = [
+        ({"gene1"}, True),
+        ({"gene2", "gene3", "gene1"}, True),
+        ({"gene9"}, False),
+]
 
 
-def test_is_transcript_of_interest(gene1):
-    """Test recognition of transcript of interest"""
-    assert transcript_of_interest(gene1, {"transcript1"})
-    assert transcript_of_interest(gene1, {"transcript2", "transcript1"})
+# Compare vs gene1
+TRANSCRIPTS_OF_INTEREST = [
+        ({"transcript1"}, True),
+        ({"transcript2", "transcript1"}, True),
+        ({"transcript9"}, False),
+]
+
+@pytest.mark.parametrize(["goi", "boolean"], GENES_OF_INTEREST)
+def test_gene_of_interest(gene1, goi, boolean):
+    """Test if gene1 is a gene of interest
+
+    Relative to genes of interest in goi
+    """
+    assert gene_of_interest(gene1, goi) == boolean
 
 
-def test_is_not_transcript_of_interest(gene1):
-    """Test recognition of transcript not of interest"""
-    assert not transcript_of_interest(gene1, {"transcript12"})
+@pytest.mark.parametrize(["toi", "boolean"], TRANSCRIPTS_OF_INTEREST)
+def test_transcript_of_interest(gene1, toi, boolean):
+    """Test if gene1 has transcript of interest
+
+    Relative to transcripts of interest toi
+    """
+    assert transcript_of_interest(gene1, toi) == boolean
 
 
 def test_consequence_of_interest(gene1):

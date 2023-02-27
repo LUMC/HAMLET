@@ -50,7 +50,6 @@ severity = [
     "intergenic_variant",
 ]
 
-
 def gene_of_interest(cons, genes):
     """Is a VEP consequence applicable to a gene of interest"""
     return cons["gene_id"] in genes
