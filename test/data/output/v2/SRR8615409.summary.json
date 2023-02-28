@@ -17,7 +17,7 @@
       }
     ],
     "pipeline_version": "v1.0.2-dev-1",
-    "run_name": "hamlet-e897cde6",
+    "run_name": "hamlet-072d3448",
     "sample_name": "SRR8615409"
   },
   "modules": {
@@ -157,6 +157,191 @@
     },
     "snv_indels": {
       "genes": {
+        "MT-ATP6": [
+          {
+            "FORMAT": {
+              "ABQ": "32",
+              "AD": "23",
+              "ADF": "12",
+              "ADR": "11",
+              "DP": "26",
+              "FREQ": "100%",
+              "GQ": "129",
+              "GT": "1/1",
+              "PVAL": "1.2146E-13",
+              "RBQ": "0",
+              "RD": "0",
+              "RDF": "0",
+              "RDR": "0",
+              "SDP": "26"
+            },
+            "INFO": {
+              "ADP": "26",
+              "HET": "0",
+              "HOM": "1",
+              "NC": "0",
+              "WT": "0"
+            },
+            "allele_string": "A/G",
+            "assembly_name": "GRCh38",
+            "end": 8566,
+            "id": ".",
+            "input": "chrM\t8566\t.\tA\tG\t.\tPASS\tADP=26;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:129:26:26:0:23:100%:1.2146E-13:0:32:0:0:12:11",
+            "most_severe_consequence": "missense_variant",
+            "seq_region_name": "MT",
+            "start": 8566,
+            "strand": 1,
+            "transcript_consequences": [
+              {
+                "allele_num": 1,
+                "amino_acids": "I/V",
+                "cdna_end": 40,
+                "cdna_start": 40,
+                "cds_end": 40,
+                "cds_start": 40,
+                "codons": "Atc/Gtc",
+                "consequence_terms": [
+                  "missense_variant"
+                ],
+                "gene_id": "ENSG00000198899",
+                "hgvsc": "ENST00000361899.2:c.40A>G",
+                "hgvsp": "ENSP00000354632.2:p.Ile14Val",
+                "impact": "MODERATE",
+                "polyphen_prediction": "benign",
+                "polyphen_score": 0.005,
+                "protein_end": 14,
+                "protein_start": 14,
+                "sift_prediction": "tolerated",
+                "sift_score": 0.11,
+                "strand": 1,
+                "transcript_id": "ENST00000361899",
+                "variant_allele": "G"
+              }
+            ]
+          },
+          {
+            "FORMAT": {
+              "ABQ": "41",
+              "AD": "39",
+              "ADF": "18",
+              "ADR": "21",
+              "DP": "45",
+              "FREQ": "95.12%",
+              "GQ": "206",
+              "GT": "1/1",
+              "PVAL": "2.1258E-21",
+              "RBQ": "33",
+              "RD": "2",
+              "RDF": "0",
+              "RDR": "2",
+              "SDP": "45"
+            },
+            "INFO": {
+              "ADP": "45",
+              "HET": "0",
+              "HOM": "1",
+              "NC": "0",
+              "WT": "0"
+            },
+            "allele_string": "A/G",
+            "assembly_name": "GRCh38",
+            "end": 8701,
+            "id": ".",
+            "input": "chrM\t8701\t.\tA\tG\t.\tPASS\tADP=45;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:206:45:45:2:39:95.12%:2.1258E-21:33:41:0:2:18:21",
+            "most_severe_consequence": "missense_variant",
+            "seq_region_name": "MT",
+            "start": 8701,
+            "strand": 1,
+            "transcript_consequences": [
+              {
+                "allele_num": 1,
+                "amino_acids": "T/A",
+                "cdna_end": 175,
+                "cdna_start": 175,
+                "cds_end": 175,
+                "cds_start": 175,
+                "codons": "Acc/Gcc",
+                "consequence_terms": [
+                  "missense_variant"
+                ],
+                "gene_id": "ENSG00000198899",
+                "hgvsc": "ENST00000361899.2:c.175A>G",
+                "hgvsp": "ENSP00000354632.2:p.Thr59Ala",
+                "impact": "MODERATE",
+                "polyphen_prediction": "benign",
+                "polyphen_score": 0.005,
+                "protein_end": 59,
+                "protein_start": 59,
+                "sift_prediction": "tolerated",
+                "sift_score": 0.51,
+                "strand": 1,
+                "transcript_id": "ENST00000361899",
+                "variant_allele": "G"
+              }
+            ]
+          },
+          {
+            "FORMAT": {
+              "ABQ": "33",
+              "AD": "12",
+              "ADF": "9",
+              "ADR": "3",
+              "DP": "16",
+              "FREQ": "100%",
+              "GQ": "64",
+              "GT": "1/1",
+              "PVAL": "3.698E-7",
+              "RBQ": "0",
+              "RD": "0",
+              "RDF": "0",
+              "RDR": "0",
+              "SDP": "16"
+            },
+            "INFO": {
+              "ADP": "16",
+              "HET": "0",
+              "HOM": "1",
+              "NC": "0",
+              "WT": "0"
+            },
+            "allele_string": "A/G",
+            "assembly_name": "GRCh38",
+            "end": 8860,
+            "id": ".",
+            "input": "chrM\t8860\t.\tA\tG\t.\tPASS\tADP=16;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:64:16:16:0:12:100%:3.698E-7:0:33:0:0:9:3",
+            "most_severe_consequence": "missense_variant",
+            "seq_region_name": "MT",
+            "start": 8860,
+            "strand": 1,
+            "transcript_consequences": [
+              {
+                "allele_num": 1,
+                "amino_acids": "T/A",
+                "cdna_end": 334,
+                "cdna_start": 334,
+                "cds_end": 334,
+                "cds_start": 334,
+                "codons": "Aca/Gca",
+                "consequence_terms": [
+                  "missense_variant"
+                ],
+                "gene_id": "ENSG00000198899",
+                "hgvsc": "ENST00000361899.2:c.334A>G",
+                "hgvsp": "ENSP00000354632.2:p.Thr112Ala",
+                "impact": "MODERATE",
+                "polyphen_prediction": "benign",
+                "polyphen_score": 0.003,
+                "protein_end": 112,
+                "protein_start": 112,
+                "sift_prediction": "tolerated",
+                "sift_score": 0.1,
+                "strand": 1,
+                "transcript_id": "ENST00000361899",
+                "variant_allele": "G"
+              }
+            ]
+          }
+        ],
         "MT-ATP8": [
           {
             "FORMAT": {
