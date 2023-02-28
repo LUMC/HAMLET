@@ -20,17 +20,20 @@
       {% for gene in modules.snv_indels.genes%}
         {% for item in modules.snv_indels.genes[gene] %}
           {% set geneloop = loop %}
+          {% if geneloop.first %}
+          <tr>
+            <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %} rowspan="{{ gene_rows(modules.snv_indels.genes[gene]) }}" class="hl">{{ gene }}</td>
+          {% endif %}
           {% for consequence in item.transcript_consequences %}
-            <tr>
-              {% if geneloop.first %}
-                <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %} rowspan="{{ geneloop.length }}" class="hl">{{ gene }}</td>
+              {% if not geneloop.first %}
+                <tr>
               {% endif %}
               <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ consequence.hgvsc }}<br/>{{ consequence.hgvsp }}</td>
               <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}><small>{{ item.Existing_variation|join(", ") }}</small></td>
               <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ item.FORMAT.FREQ }}</td>
               <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ "yes" if item.is_in_hotspot else "no" }}</td>
-              <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;{% endif %}white-space: nowrap">{{ item.FORMAT.PVAL }}</td>
-              <td{% if loop.last %} style="border-bottom: 2px solid #809ebf;{% endif %}white-space: nowrap">{{ item.FORMAT.RD }} | {{ item.FORMAT.AD }} | {{ item.FORMAT.DP }}</td>
+              <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;{% endif %} white-space: nowrap">{{ item.FORMAT.PVAL }}</td>
+              <td{% if loop.last %} style="border-bottom: 2px solid #809ebf;{% endif %} white-space: nowrap">{{ item.FORMAT.RD }} | {{ item.FORMAT.AD }} | {{ item.FORMAT.DP }}</td>
             </tr>
           {% endfor %}
         {% endfor %}

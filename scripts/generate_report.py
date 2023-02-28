@@ -97,12 +97,25 @@ class Report(object):
         def num_tids(idm):
             return sum([len(v["transcript_ids"]) for v in idm])
 
+        def gene_rows(gene):
+            """ Determine how many rows a gene should span
+
+            The number of rows for a gene is determined by two factors:
+            1. The number of variants for that gene
+            2. How many transcripts of interest overlap that variant
+            """
+            rows = 0
+            for variant in gene:
+                rows += len(variant["transcript_consequences"])
+            return rows
+
         env = Environment(loader=FileSystemLoader(tpl_dir))
         env.filters["show_int"] = show_int
         env.filters["show_pct"] = show_pct
         env.filters["show_float"] = show_float
         env.filters["as_pct"] = as_pct
         env.filters["num_tids"] = num_tids
+        env.globals["gene_rows"] = gene_rows
         self.env = env
         self.cover_tpl = env.get_template(cover_tpl_fname)
         self.contents_tpl = env.get_template(contents_tpl_fname)

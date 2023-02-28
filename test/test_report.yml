@@ -1,0 +1,23 @@
+# Test generating the report in html format
+- name: test-report
+  tags:
+    - hamlet
+    - report
+  command: >
+    python3 scripts/generate_report.py
+    --html-output report.html
+    test/data/output/v2/SRR8615409.summary.json
+  files:
+    - path: report.html
+
+# Test generating a fully nested report
+- name: test-full-report
+  tags:
+    - hamlet
+    - report
+  command: >
+    python3 scripts/generate_report.py
+    --html-output report.html
+    test/data/output/v2/full-report.summary.json
+  files:
+    - path: report.html
