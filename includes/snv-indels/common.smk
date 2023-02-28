@@ -33,7 +33,7 @@ cons = [
     "inframe_insertion",
     "inframe_deletion",
     "protein_altering_variant",
-    "missense_variant"
+    "missense_variant",
 ]
 set_default("vep_consequences", cons)
 
