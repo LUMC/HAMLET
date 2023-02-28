@@ -1,0 +1,653 @@
+{
+  "metadata": {
+    "genes_of_interest": [
+      {
+        "gene_id": "ENSG00000228253",
+        "gene_symbol": "MT-ATP8",
+        "transcript_ids": [
+          "ENST00000361851"
+        ]
+      },
+      {
+        "gene_id": "ENSG00000198899",
+        "gene_symbol": "MT-ATP6",
+        "transcript_ids": [
+          "ENST00000361899"
+        ]
+      }
+    ],
+    "pipeline_version": "v1.0.2-dev-1",
+    "run_name": "hamlet-072d3448",
+    "sample_name": "SRR8615409"
+  },
+  "modules": {
+    "fusion": {
+      "intersected": false,
+      "plots": {
+        "star-fusion": "test-hamlet-chrM/SRR8615409/fusion/SRR8615409.star-fusion-circos/fsnviz.png"
+      },
+      "tables": {
+        "star-fusion": {
+          "path": "test-hamlet-chrM/SRR8615409/fusion/SRR8615409.star-fusion",
+          "top20": []
+        }
+      }
+    },
+    "itd": {
+      "flt3": {
+        "path": "test-hamlet-chrM/SRR8615409/itd/SRR8615409.flt3.png",
+        "table": [
+          {
+            "boundary_type": "fuzzy-end",
+            "fuzziness": 1,
+            "rose_end_anchor_pos": 1853,
+            "rose_end_count": 3,
+            "rose_end_pos": 1882,
+            "rose_start_anchor_pos": 1882,
+            "rose_start_count": 574,
+            "rose_start_pos": 1852,
+            "td_ends": [
+              1881,
+              1882
+            ],
+            "td_starts": [
+              1853
+            ]
+          },
+          {
+            "boundary_type": "exact",
+            "fuzziness": 0,
+            "rose_end_anchor_pos": 1853,
+            "rose_end_count": 1110,
+            "rose_end_pos": 1883,
+            "rose_start_anchor_pos": 1882,
+            "rose_start_count": 574,
+            "rose_start_pos": 1852,
+            "td_ends": [
+              1882
+            ],
+            "td_starts": [
+              1853
+            ]
+          }
+        ]
+      },
+      "kmt2a": {
+        "path": "test-hamlet-chrM/SRR8615409/itd/SRR8615409.kmt2a.png",
+        "table": [
+          {
+            "boundary_type": "fuzzy",
+            "fuzziness": 4,
+            "rose_end_anchor_pos": 457,
+            "rose_end_count": 25,
+            "rose_end_pos": 4111,
+            "rose_start_anchor_pos": 4106,
+            "rose_start_count": 39,
+            "rose_start_pos": 452,
+            "td_ends": [
+              4106,
+              4110
+            ],
+            "td_starts": [
+              453,
+              457
+            ]
+          }
+        ]
+      }
+    },
+    "qc_seq": {
+      "all_read_groups": {
+        "proc": {
+          "num_reads_r1": 45665,
+          "num_reads_r2": 45665
+        },
+        "raw": {
+          "num_reads_r1": 45675,
+          "num_reads_r2": 45675
+        }
+      },
+      "per_read_group": [
+        {
+          "name": "rg_1",
+          "proc": {
+            "num_reads_r1": 2685,
+            "num_reads_r2": 2685,
+            "pct_gc_r1": 45,
+            "pct_gc_r2": 45
+          },
+          "raw": {
+            "num_reads_r1": 2685,
+            "num_reads_r2": 2685,
+            "pct_gc_r1": 45,
+            "pct_gc_r2": 45
+          }
+        },
+        {
+          "name": "rg_2",
+          "proc": {
+            "num_reads_r1": 25961,
+            "num_reads_r2": 25961,
+            "pct_gc_r1": 42,
+            "pct_gc_r2": 42
+          },
+          "raw": {
+            "num_reads_r1": 25964,
+            "num_reads_r2": 25964,
+            "pct_gc_r1": 42,
+            "pct_gc_r2": 42
+          }
+        },
+        {
+          "name": "rg_3",
+          "proc": {
+            "num_reads_r1": 17019,
+            "num_reads_r2": 17019,
+            "pct_gc_r1": 47,
+            "pct_gc_r2": 47
+          },
+          "raw": {
+            "num_reads_r1": 17026,
+            "num_reads_r2": 17026,
+            "pct_gc_r1": 47,
+            "pct_gc_r2": 47
+          }
+        }
+      ]
+    },
+    "snv_indels": {
+      "genes": {
+        "MT-ATP6": [
+          {
+            "FORMAT": {
+              "ABQ": "32",
+              "AD": "23",
+              "ADF": "12",
+              "ADR": "11",
+              "DP": "26",
+              "FREQ": "100%",
+              "GQ": "129",
+              "GT": "1/1",
+              "PVAL": "1.2146E-13",
+              "RBQ": "0",
+              "RD": "0",
+              "RDF": "0",
+              "RDR": "0",
+              "SDP": "26"
+            },
+            "INFO": {
+              "ADP": "26",
+              "HET": "0",
+              "HOM": "1",
+              "NC": "0",
+              "WT": "0"
+            },
+            "allele_string": "A/G",
+            "assembly_name": "GRCh38",
+            "end": 8566,
+            "id": ".",
+            "input": "chrM\t8566\t.\tA\tG\t.\tPASS\tADP=26;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:129:26:26:0:23:100%:1.2146E-13:0:32:0:0:12:11",
+            "most_severe_consequence": "missense_variant",
+            "seq_region_name": "MT",
+            "start": 8566,
+            "strand": 1,
+            "transcript_consequences": [
+              {
+                "allele_num": 1,
+                "amino_acids": "I/V",
+                "cdna_end": 40,
+                "cdna_start": 40,
+                "cds_end": 40,
+                "cds_start": 40,
+                "codons": "Atc/Gtc",
+                "consequence_terms": [
+                  "missense_variant"
+                ],
+                "gene_id": "ENSG00000198899",
+                "hgvsc": "ENST00000361899.2:c.40A>G",
+                "hgvsp": "ENSP00000354632.2:p.Ile14Val",
+                "impact": "MODERATE",
+                "polyphen_prediction": "benign",
+                "polyphen_score": 0.005,
+                "protein_end": 14,
+                "protein_start": 14,
+                "sift_prediction": "tolerated",
+                "sift_score": 0.11,
+                "strand": 1,
+                "transcript_id": "ENST00000361899",
+                "variant_allele": "G"
+              },
+              {
+                "allele_num": 1,
+                "amino_acids": "I/V",
+                "cdna_end": 40,
+                "cdna_start": 40,
+                "cds_end": 40,
+                "cds_start": 40,
+                "codons": "Atc/Gtc",
+                "consequence_terms": [
+                  "missense_variant"
+                ],
+                "gene_id": "ENSG00000198899",
+                "hgvsc": "ENST00000361899.2:c.40A>G",
+                "hgvsp": "ENSP00000354632.2:p.Ile14Val",
+                "impact": "MODERATE",
+                "polyphen_prediction": "benign",
+                "polyphen_score": 0.005,
+                "protein_end": 14,
+                "protein_start": 14,
+                "sift_prediction": "tolerated",
+                "sift_score": 0.11,
+                "strand": 1,
+                "transcript_id": "ENST00000361899",
+                "variant_allele": "G"
+              }
+            ]
+          },
+          {
+            "FORMAT": {
+              "ABQ": "41",
+              "AD": "39",
+              "ADF": "18",
+              "ADR": "21",
+              "DP": "45",
+              "FREQ": "95.12%",
+              "GQ": "206",
+              "GT": "1/1",
+              "PVAL": "2.1258E-21",
+              "RBQ": "33",
+              "RD": "2",
+              "RDF": "0",
+              "RDR": "2",
+              "SDP": "45"
+            },
+            "INFO": {
+              "ADP": "45",
+              "HET": "0",
+              "HOM": "1",
+              "NC": "0",
+              "WT": "0"
+            },
+            "allele_string": "A/G",
+            "assembly_name": "GRCh38",
+            "end": 8701,
+            "id": ".",
+            "input": "chrM\t8701\t.\tA\tG\t.\tPASS\tADP=45;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:206:45:45:2:39:95.12%:2.1258E-21:33:41:0:2:18:21",
+            "most_severe_consequence": "missense_variant",
+            "seq_region_name": "MT",
+            "start": 8701,
+            "strand": 1,
+            "transcript_consequences": [
+              {
+                "allele_num": 1,
+                "amino_acids": "T/A",
+                "cdna_end": 175,
+                "cdna_start": 175,
+                "cds_end": 175,
+                "cds_start": 175,
+                "codons": "Acc/Gcc",
+                "consequence_terms": [
+                  "missense_variant"
+                ],
+                "gene_id": "ENSG00000198899",
+                "hgvsc": "ENST00000361899.2:c.175A>G",
+                "hgvsp": "ENSP00000354632.2:p.Thr59Ala",
+                "impact": "MODERATE",
+                "polyphen_prediction": "benign",
+                "polyphen_score": 0.005,
+                "protein_end": 59,
+                "protein_start": 59,
+                "sift_prediction": "tolerated",
+                "sift_score": 0.51,
+                "strand": 1,
+                "transcript_id": "ENST00000361899",
+                "variant_allele": "G"
+              }
+            ]
+          },
+          {
+            "FORMAT": {
+              "ABQ": "33",
+              "AD": "12",
+              "ADF": "9",
+              "ADR": "3",
+              "DP": "16",
+              "FREQ": "100%",
+              "GQ": "64",
+              "GT": "1/1",
+              "PVAL": "3.698E-7",
+              "RBQ": "0",
+              "RD": "0",
+              "RDF": "0",
+              "RDR": "0",
+              "SDP": "16"
+            },
+            "INFO": {
+              "ADP": "16",
+              "HET": "0",
+              "HOM": "1",
+              "NC": "0",
+              "WT": "0"
+            },
+            "allele_string": "A/G",
+            "assembly_name": "GRCh38",
+            "end": 8860,
+            "id": ".",
+            "input": "chrM\t8860\t.\tA\tG\t.\tPASS\tADP=16;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:64:16:16:0:12:100%:3.698E-7:0:33:0:0:9:3",
+            "most_severe_consequence": "missense_variant",
+            "seq_region_name": "MT",
+            "start": 8860,
+            "strand": 1,
+            "transcript_consequences": [
+              {
+                "allele_num": 1,
+                "amino_acids": "T/A",
+                "cdna_end": 334,
+                "cdna_start": 334,
+                "cds_end": 334,
+                "cds_start": 334,
+                "codons": "Aca/Gca",
+                "consequence_terms": [
+                  "missense_variant"
+                ],
+                "gene_id": "ENSG00000198899",
+                "hgvsc": "ENST00000361899.2:c.334A>G",
+                "hgvsp": "ENSP00000354632.2:p.Thr112Ala",
+                "impact": "MODERATE",
+                "polyphen_prediction": "benign",
+                "polyphen_score": 0.003,
+                "protein_end": 112,
+                "protein_start": 112,
+                "sift_prediction": "tolerated",
+                "sift_score": 0.1,
+                "strand": 1,
+                "transcript_id": "ENST00000361899",
+                "variant_allele": "G"
+              }
+            ]
+          }
+        ],
+        "MT-ATP8": [
+          {
+            "FORMAT": {
+              "ABQ": "37",
+              "AD": "21",
+              "ADF": "21",
+              "ADR": "0",
+              "DP": "24",
+              "FREQ": "100%",
+              "GQ": "117",
+              "GT": "1/1",
+              "PVAL": "1.8578E-12",
+              "RBQ": "0",
+              "RD": "0",
+              "RDF": "0",
+              "RDR": "0",
+              "SDP": "24"
+            },
+            "INFO": {
+              "ADP": "24",
+              "HET": "0",
+              "HOM": "1",
+              "NC": "0",
+              "WT": "0"
+            },
+            "allele_string": "T/A",
+            "assembly_name": "GRCh38",
+            "end": 8390,
+            "id": ".",
+            "input": "chrM\t8390\t.\tT\tA\t.\tPASS\tADP=24;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:117:24:24:0:21:100%:1.8578E-12:0:37:0:0:21:0",
+            "most_severe_consequence": "stop_gained",
+            "seq_region_name": "MT",
+            "start": 8390,
+            "strand": 1,
+            "transcript_consequences": [
+              {
+                "allele_num": 1,
+                "amino_acids": "W/*",
+                "cdna_end": 25,
+                "cdna_start": 25,
+                "cds_end": 25,
+                "cds_start": 25,
+                "codons": "Tgg/Agg",
+                "consequence_terms": [
+                  "stop_gained"
+                ],
+                "gene_id": "ENSG00000228253",
+                "hgvsc": "ENST00000361851.1:c.25T>A",
+                "hgvsp": "ENSP00000355265.1:p.Trp9Ter",
+                "impact": "HIGH",
+                "protein_end": 9,
+                "protein_start": 9,
+                "strand": 1,
+                "transcript_id": "ENST00000361851",
+                "variant_allele": "A"
+              }
+            ]
+          }
+        ]
+      },
+      "stats": {
+        "aln": {
+          "num_aligned_bases": 502603,
+          "num_aligned_reads": 5318,
+          "num_aligned_reads_proper_pairs": 5258,
+          "num_total_bases": 504729,
+          "num_total_reads": 5318,
+          "pct_adapter": 0,
+          "pct_aligned_bases_from_total": 99.57878386223102,
+          "pct_aligned_reads_from_total": 100.0,
+          "pct_aligned_reads_proper_pairs": 98.87175629936065,
+          "pct_chimeras": 0.01147,
+          "rate_indel": 6.8e-05,
+          "rate_mismatch": 0.00532,
+          "strand_balance": 0.499624
+        },
+        "cov": {
+          "MT-ATP6": {
+            "ENST00000361899": [
+              {
+                "chrom": "chrM",
+                "end": 9207,
+                "exon_num": 1,
+                "metrics": {
+                  "avg": 48.06314243759178,
+                  "count": 681,
+                  "frac_cov_at_least": {
+                    "10x": 1.0,
+                    "20x": 0.9647577092511013,
+                    "30x": 0.8604992657856094,
+                    "40x": 0.7092511013215859,
+                    "50x": 0.5168869309838473,
+                    "8x": 1.0
+                  },
+                  "max": 77,
+                  "median": 50,
+                  "min": 16,
+                  "stdev": 14.866577441242029
+                },
+                "start": 8526
+              }
+            ]
+          },
+          "MT-ATP8": {
+            "ENST00000361851": [
+              {
+                "chrom": "chrM",
+                "end": 8572,
+                "exon_num": 1,
+                "metrics": {
+                  "avg": 79.57487922705315,
+                  "count": 207,
+                  "frac_cov_at_least": {
+                    "10x": 0.9468599033816425,
+                    "20x": 0.9033816425120773,
+                    "30x": 0.8454106280193237,
+                    "40x": 0.748792270531401,
+                    "50x": 0.6666666666666666,
+                    "8x": 0.9516908212560387
+                  },
+                  "max": 149,
+                  "median": 74,
+                  "min": 4,
+                  "stdev": 45.545271906838664
+                },
+                "start": 8365
+              }
+            ]
+          }
+        },
+        "ins": {
+          "max_insert_size": 10410,
+          "median_absolute_deviation": 50,
+          "median_insert_size": 177,
+          "min_insert_size": 47
+        },
+        "rna": {
+          "median_3prime_bias": 0.43784,
+          "median_5prime_bias": 0.903672,
+          "median_5prime_to_3prime_bias": 1.542735,
+          "median_cv_coverage": 0.437065,
+          "normalized_cov": [
+            0.309699,
+            0.414568,
+            0.67032,
+            0.783923,
+            0.885468,
+            0.978017,
+            1.062441,
+            1.111487,
+            1.135817,
+            1.135994,
+            1.098518,
+            1.103568,
+            1.020524,
+            0.984228,
+            0.987518,
+            0.99237,
+            0.985258,
+            1.052752,
+            1.087284,
+            1.11912,
+            1.191869,
+            1.20671,
+            1.208491,
+            1.184509,
+            1.165724,
+            1.145668,
+            1.114584,
+            1.131099,
+            1.166581,
+            1.206009,
+            1.200379,
+            1.182094,
+            1.146192,
+            1.089226,
+            1.06941,
+            1.095743,
+            1.139331,
+            1.18651,
+            1.191798,
+            1.187216,
+            1.222605,
+            1.22461,
+            1.217341,
+            1.231172,
+            1.240105,
+            1.277366,
+            1.279117,
+            1.280767,
+            1.240043,
+            1.233278,
+            1.208137,
+            1.14084,
+            1.071004,
+            1.080715,
+            1.030654,
+            0.961707,
+            0.945629,
+            0.918213,
+            0.905209,
+            0.915929,
+            0.954546,
+            0.97111,
+            1.001666,
+            1.067894,
+            1.106075,
+            1.137116,
+            1.148858,
+            1.167045,
+            1.152451,
+            1.145874,
+            1.104393,
+            1.058528,
+            1.047094,
+            1.028647,
+            0.997577,
+            0.960808,
+            0.978582,
+            0.964606,
+            0.929997,
+            0.954009,
+            0.955392,
+            0.903833,
+            0.838046,
+            0.846059,
+            0.84786,
+            0.855534,
+            0.854301,
+            0.835099,
+            0.819212,
+            0.795897,
+            0.79328,
+            0.749802,
+            0.733613,
+            0.690199,
+            0.669697,
+            0.60318,
+            0.542608,
+            0.46131,
+            0.37708,
+            0.309824,
+            0.268724
+          ],
+          "num_coding_bases": 444931,
+          "num_intergenic_bases": 3224,
+          "num_intronic_bases": 0,
+          "num_mrna_bases": 499270,
+          "num_ribosomal_bases": 399,
+          "num_utr_bases": 54339,
+          "pct_coding_bases": 0.884743,
+          "pct_intergenic_bases": 0.006411,
+          "pct_intronic_bases": 0,
+          "pct_mrna_bases": 0.992796,
+          "pct_ribosomal_bases": 0.07934093335958146,
+          "pct_utr_bases": 0.108053
+        },
+        "var": {
+          "coding_consequences": {
+            "missense_variant": 10,
+            "stop_gained": 1,
+            "synonymous_variant": 36
+          },
+          "num_deletions": 1,
+          "num_insertions": 0,
+          "num_snvs": 50,
+          "per_chromosome": {
+            "MT": 51
+          },
+          "polyphen": {
+            "num_benign_variants": 10,
+            "num_possibly_damaging_variants": 0,
+            "num_probably_damaging_variants": 0,
+            "num_unknown_variants": 0
+          },
+          "sift": {
+            "num_deleterious_variants": 0,
+            "num_tolerated_variants": 4
+          }
+        }
+      }
+    }
+  }
+}
