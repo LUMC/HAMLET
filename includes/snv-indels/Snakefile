@@ -313,6 +313,7 @@ rule annotate_vars:
             --polyphen b \
             --sift b \
             --hgvs \
+            --check_existing \
             --stats_file {output.stats} -o {output.vep}\
             2> {log}
         """
