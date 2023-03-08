@@ -47,8 +47,8 @@ rule fastqc_raw:
     output:
         folder=directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-raw"),
     params:
-        xms="1750M",
-        xmx="2048M",
+        xms="4096M",
+        xmx="4096M",
         fastqc_dir="usr/local/opt/fastqc-0.11.9",
     log:
         "log/fastqc_raw.{sample}.{read_group}.{pair}.txt",
@@ -110,8 +110,8 @@ rule fastqc_processed:
     output:
         folder=directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-processed"),
     params:
-        xms="1750M",
-        xmx="2048M",
+        xms="4096M",
+        xmx="4096M",
         fastqc_dir="usr/local/opt/fastqc-0.11.9",
     log:
         "log/fastqc_processed.{sample}.{read_group}.{pair}.txt",
