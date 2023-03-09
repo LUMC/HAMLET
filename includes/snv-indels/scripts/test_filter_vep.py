@@ -83,3 +83,12 @@ def test_update_most_severe(vep):
     vep["transcript_consequences"].pop(0)
     vep.update_most_severe()
     assert vep["most_severe_consequence"] == "stop_gained"
+
+
+def test_no_transcript_consequence():
+    """Test there are no crashes on empty VEP objects"""
+    # Create an empty VEP object
+    empty = VEP(dict())
+    transcripts = {"transcript1"}
+    empty.filter_transcript_id(transcripts)
+    empty.update_most_severe()

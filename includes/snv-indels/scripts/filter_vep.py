@@ -52,7 +52,7 @@ class VEP(dict):
     """Class to work with VEP objects"""
     def filter_transcript_id(self, transcripts):
         """Filter transcript consequences by transcript_id"""
-        tc = self["transcript_consequences"]
+        tc = self.get("transcript_consequences", list())
         tc = [x for x in tc if x["transcript_id"] in transcripts]
         self["transcript_consequences"] = tc
         self.update_most_severe()
