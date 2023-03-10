@@ -76,13 +76,40 @@ class HAMLET_V1:
 class HAMLET_V2(HAMLET_V1):
     def __init__(self, data):
         super().__init__(data)
+        # Translate VEP json values to old HAMLET format
+        self.vep_lookup = {
+            "Gene": "Gene",
+            "CHROM": "seq_region_name",
+            "POS": "start",
+            "HGVSc": "HGVSc",
+            "HGVSp": "HGVSp",
+            "REF": "REF",
+            "genotype": "allele_string",
+            "PVAL": "PVAL",
+            "Existing_variation": "Existing_variation",
+            "FREQ": "FREQ",
+            "is_in_hotspot": "is_in_hotspot"
+        }
 
     @property
     def variants(self):
         for gene, variants in self.json["modules"]["snv_indels"]["genes"].items():
             for var in variants:
+                if len(var["transcript_consequences"]) > 1:
+                    msg = "Multiple transcript consequences are not supported"
+                    raise NotImplementedError(msg)
+
+                # Format var to match the existing HAMLET outpu format
                 var["Gene"] = gene
-                d = {f: var[f] for f in self.variant_fields}
+                var["HGVSc"] = var["transcript_consequences"][0]["hgvsc"]
+                var["HGVSp"] = var["transcript_consequences"][0]["hgvsp"]
+                var["REF"] = var["input"].split('\t')[3]
+                var["PVAL"] = var["FORMAT"]["PVAL"]
+                existing = [x["id"] for x in var["colocated_variants"] if "id" in x]
+                var["Existing_variation"] = existing
+                var["FREQ"] = var["FORMAT"]["FREQ"]
+                var["is_in_hotspot"] = None
+                d = {f: var[self.vep_lookup[f]] for f in self.variant_fields}
                 yield d
 
 def main(args):
@@ -179,7 +206,7 @@ def print_itd_table(HAMLET, json_files, itd_gene):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--version", default="v1", help="HAMLET version")
+    parser.add_argument("--version", default="v2", help="HAMLET version")
     parser.add_argument(
         "table",
         choices=["variant", "fusion", "overexpression", "itd"],
