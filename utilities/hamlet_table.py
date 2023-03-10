@@ -31,10 +31,18 @@ class HAMLET_V1:
             "above_threshold",
         ]
 
-        self.itd_fields = ["td_starts", "td_ends", "rose_start_count",
-                "rose_end_count", "rose_start_pos", "rose_start_anchor_pos",
-                "rose_end_pos", "rose_end_anchor_pos", "boundary_type",
-                "fuzziness"]
+        self.itd_fields = [
+            "td_starts",
+            "td_ends",
+            "rose_start_count",
+            "rose_end_count",
+            "rose_start_pos",
+            "rose_start_anchor_pos",
+            "rose_end_pos",
+            "rose_end_anchor_pos",
+            "boundary_type",
+            "fuzziness",
+        ]
 
     @property
     def variants(self):
@@ -73,6 +81,7 @@ class HAMLET_V1:
         for event in self.json["results"]["itd"][gene]["table"]:
             yield event
 
+
 class HAMLET_V2(HAMLET_V1):
     def __init__(self, data):
         super().__init__(data)
@@ -88,29 +97,42 @@ class HAMLET_V2(HAMLET_V1):
             "PVAL": "PVAL",
             "Existing_variation": "Existing_variation",
             "FREQ": "FREQ",
-            "is_in_hotspot": "is_in_hotspot"
+            "is_in_hotspot": "is_in_hotspot",
         }
 
     @property
     def variants(self):
         for gene, variants in self.json["modules"]["snv_indels"]["genes"].items():
-            for var in variants:
-                if len(var["transcript_consequences"]) > 1:
-                    msg = "Multiple transcript consequences are not supported"
-                    raise NotImplementedError(msg)
+            for v in variants:
+                # Split variants so they always contain (at most) a single
+                # transcript consequence, so we can print it as a table
+                for var in self.split_by_consequence(v):
+                    # Format var to match the existing HAMLET output format
+                    var["Gene"] = gene
+                    var["HGVSc"] = var["transcript_consequences"][0]["hgvsc"]
+                    var["HGVSp"] = var["transcript_consequences"][0]["hgvsp"]
+                    var["REF"] = var["input"].split("\t")[3]
+                    var["PVAL"] = var["FORMAT"]["PVAL"]
+                    existing = [
+                        x["id"] for x in var.get("colocated_variants", []) if "id" in x
+                    ]
+                    var["Existing_variation"] = existing
+                    var["FREQ"] = var["FORMAT"]["FREQ"]
+                    var["is_in_hotspot"] = None
+                    d = {f: var[self.vep_lookup[f]] for f in self.variant_fields}
+                    yield d
 
-                # Format var to match the existing HAMLET output format
-                var["Gene"] = gene
-                var["HGVSc"] = var["transcript_consequences"][0]["hgvsc"]
-                var["HGVSp"] = var["transcript_consequences"][0]["hgvsp"]
-                var["REF"] = var["input"].split('\t')[3]
-                var["PVAL"] = var["FORMAT"]["PVAL"]
-                existing = [x["id"] for x in var.get("colocated_variants",[]) if "id" in x]
-                var["Existing_variation"] = existing
-                var["FREQ"] = var["FORMAT"]["FREQ"]
-                var["is_in_hotspot"] = None
-                d = {f: var[self.vep_lookup[f]] for f in self.variant_fields}
-                yield d
+    @staticmethod
+    def split_by_consequence(variant):
+        """Yield a variant with a single transcript_consequence, for each
+        transcript_consequence"""
+        if "transcript_consequences" not in variant:
+            yield variant
+        for i in range(len(variant["transcript_consequences"])):
+            newvar = variant.copy()
+            newvar["transcript_consequences"] = [variant["transcript_consequences"][i]]
+            yield newvar
+
 
 def main(args):
     if args.version == "v1":
@@ -131,7 +153,7 @@ def main(args):
 
 
 def print_variant_table(HAMLET, json_files):
-    """ Print variant table """
+    """Print variant table"""
     # Did we print the header already
     header_printed = False
 
@@ -150,7 +172,7 @@ def print_variant_table(HAMLET, json_files):
 
 
 def print_fusion_table(HAMLET, json_files):
-    """ Print fusion table """
+    """Print fusion table"""
     # Did we print the header already
     header_printed = False
 
@@ -168,7 +190,7 @@ def print_fusion_table(HAMLET, json_files):
 
 
 def print_overexpression_table(HAMLET, json_files):
-    """ Print overexpression table """
+    """Print overexpression table"""
     # Did we print the header already
     header_printed = False
 
@@ -186,6 +208,7 @@ def print_overexpression_table(HAMLET, json_files):
                 H.sample, *[expr[field] for field in H.overexpression_fields], sep="\t"
             )
 
+
 def print_itd_table(HAMLET, json_files, itd_gene):
     # Did we print the header already
     header_printed = False
@@ -200,9 +223,8 @@ def print_itd_table(HAMLET, json_files, itd_gene):
             header_printed = True
 
         for expr in H.itd(itd_gene):
-            print(
-                H.sample, *[expr[field] for field in H.itd_fields], sep="\t"
-            )
+            print(H.sample, *[expr[field] for field in H.itd_fields], sep="\t")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -219,6 +241,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.table == "itd" and not args.itd_gene:
-        raise parser.error('Please specify an itd gene with --itd-gene')
+        raise parser.error("Please specify an itd gene with --itd-gene")
 
     main(args)
