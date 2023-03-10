@@ -99,13 +99,13 @@ class HAMLET_V2(HAMLET_V1):
                     msg = "Multiple transcript consequences are not supported"
                     raise NotImplementedError(msg)
 
-                # Format var to match the existing HAMLET outpu format
+                # Format var to match the existing HAMLET output format
                 var["Gene"] = gene
                 var["HGVSc"] = var["transcript_consequences"][0]["hgvsc"]
                 var["HGVSp"] = var["transcript_consequences"][0]["hgvsp"]
                 var["REF"] = var["input"].split('\t')[3]
                 var["PVAL"] = var["FORMAT"]["PVAL"]
-                existing = [x["id"] for x in var["colocated_variants"] if "id" in x]
+                existing = [x["id"] for x in var.get("colocated_variants",[]) if "id" in x]
                 var["Existing_variation"] = existing
                 var["FREQ"] = var["FORMAT"]["FREQ"]
                 var["is_in_hotspot"] = None
