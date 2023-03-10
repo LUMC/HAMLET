@@ -292,6 +292,7 @@ rule annotate_vars:
         offline=f" --offline --cache_version 108 --everything --merged --dir {config['cache_vep']}"
         if config.get("cache_vep")
         else "",
+        max_af=0.05,
     output:
         vep="{sample}/snv-indels/{sample}.vep.txt",
         stats="{sample}/snv-indels/{sample}.vep_stats.txt",
@@ -316,6 +317,10 @@ rule annotate_vars:
             --sift b \
             --hgvs \
             --check_existing \
+            --af \
+            --freq_freq {params.max_af} \
+            --freq_gt_lt lt \
+            --freq_filter include \
             --stats_file {output.stats} -o {output.vep}\
             2> {log}
         """
