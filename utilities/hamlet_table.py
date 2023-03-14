@@ -107,6 +107,7 @@ class HAMLET_V2(HAMLET_V1):
             "HGVSc": "HGVSc",
             "HGVSp": "HGVSp",
             "REF": "REF",
+            "ALT": "ALT",
             "genotype": "allele_string",
             "PVAL": "PVAL",
             "Existing_variation": "Existing_variation",
@@ -123,11 +124,14 @@ class HAMLET_V2(HAMLET_V1):
                 for var in self.split_by_consequence(v):
                     # Include reference base in variant
                     self.rewrite_indel(var)
+                    # Get the transcript_consequence object
+                    cons = var["transcript_consequences"][0]
                     # Format var to match the existing HAMLET output format
                     var["Gene"] = gene
-                    var["HGVSc"] = var["transcript_consequences"][0]["hgvsc"]
-                    var["HGVSp"] = var["transcript_consequences"][0]["hgvsp"]
-                    var["REF"] = var["input"].split("\t")[3]
+                    var["HGVSc"] = cons["hgvsc"]
+                    var["HGVSp"] = cons["hgvsp"]
+                    var["REF"] = cons["used_ref"]
+                    var["ALT"] = cons["variant_allele"]
                     var["PVAL"] = var["FORMAT"]["PVAL"]
                     existing = [
                         x["id"] for x in var.get("colocated_variants", []) if "id" in x
