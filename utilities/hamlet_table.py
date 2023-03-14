@@ -14,6 +14,7 @@ class HAMLET_V1:
             "HGVSc",
             "HGVSp",
             "REF",
+            "ALT",
             "genotype",
             "PVAL",
             "Existing_variation",
@@ -61,6 +62,7 @@ class HAMLET_V1:
         for gene, variants in self.json["results"]["var"]["overview"].items():
             for var in variants:
                 var["Gene"] = gene
+                var["ALT"] = self.get_alt(var["REF"], var["genotype"])
                 d = {f: var[f] for f in self.variant_fields}
                 d["POS"] = int(d["POS"])
                 d["Existing_variation"] = var["Existing_variation"].split(",")
