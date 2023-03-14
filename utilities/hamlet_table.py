@@ -128,6 +128,7 @@ class HAMLET_V2(HAMLET_V1):
                     cons = var["transcript_consequences"][0]
                     # Format var to match the existing HAMLET output format
                     var["Gene"] = gene
+                    var["POS"] = self.vcf_pos(var)
                     var["HGVSc"] = cons["hgvsc"]
                     var["HGVSp"] = cons["hgvsp"]
                     var["REF"] = cons["used_ref"]
