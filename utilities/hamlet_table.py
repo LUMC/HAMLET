@@ -103,7 +103,7 @@ class HAMLET_V2(HAMLET_V1):
         self.vep_lookup = {
             "Gene": "Gene",
             "CHROM": "seq_region_name",
-            "POS": "start",
+            "POS": "POS",
             "HGVSc": "HGVSc",
             "HGVSp": "HGVSp",
             "REF": "REF",
