@@ -125,17 +125,6 @@ if __name__ == "__main__":
         "Extract genes (and transcript) of interest from VEP output"
     )
 
-    # Default consequences of interest
-    cons = [
-        "stop_gained",
-        "frameshift_variant",
-        "stop_lost",
-        "start_lost",
-        "inframe_insertion",
-        "inframe_deletion",
-        "protein_altering_variant",
-        "missense_variant"
-    ]
 
     parser.add_argument("vep", help="VEP json output file")
     parser.add_argument("goi", help="Genes of interest")
