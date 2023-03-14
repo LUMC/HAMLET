@@ -44,6 +44,18 @@ class HAMLET_V1:
             "fuzziness",
         ]
 
+    @staticmethod
+    def get_alt(ref, genotype):
+        """Extract alt from genotype string"""
+        gt = genotype.split("/")
+        # Remove the reference call from the genotype
+        alt = set(gt)-{ref}
+        # Make sure that there is only a single ALT allele
+        if len(alt) > 1:
+            raise NotImplementedError(genotype)
+        return alt.pop()
+
+
     @property
     def variants(self):
         for gene, variants in self.json["results"]["var"]["overview"].items():

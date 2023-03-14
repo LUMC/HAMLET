@@ -130,3 +130,23 @@ def test_rewrite_indel_large_deletion():
     assert var["allele_string"] == "TCGCCGCCGC/T"
     assert var["start"] == 1
     assert var["end"] == 9
+
+
+def test_extract_alt_heterozygous():
+    ref = "A"
+    genotype = "A/T"
+    assert HAMLET_V1.get_alt(ref, genotype) == "T"
+
+
+def test_extract_alt_hom_alt():
+    ref = "A"
+    genotype = "T/T"
+    assert HAMLET_V1.get_alt(ref, genotype) == "T"
+
+
+def test_two_alts():
+    """Not supported"""
+    ref = "A"
+    genotype = "T/C"
+    with pytest.raises(NotImplementedError):
+        HAMLET_V1.get_alt(ref, genotype)
