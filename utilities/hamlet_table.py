@@ -205,6 +205,14 @@ class HAMLET_V2(HAMLET_V1):
         var["start"] -= 1
         var["end"] -= 1
 
+    @staticmethod
+    def vcf_pos(var):
+        c = var["variant_class"]
+        if c == "SNV":
+            return var["start"]
+        elif c == "insertion" or c == "deletion" or c == "sequence variation":
+            return var["start"] - 1
+
 def main(args):
     if args.version == "v1":
         HAMLET = HAMLET_V1

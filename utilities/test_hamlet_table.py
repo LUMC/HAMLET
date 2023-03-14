@@ -150,3 +150,27 @@ def test_two_alts():
     genotype = "T/C"
     with pytest.raises(NotImplementedError):
         HAMLET_V1.get_alt(ref, genotype)
+
+
+def test_vcf_pos_SNV():
+    """For SNV's, the vcf POS is the same as the VEP start and end"""
+    var = {"variant_class": "SNV", "start": 10}
+    assert HAMLET_V2.vcf_pos(var) == 10
+
+
+def test_vcf_pos_insertion():
+    """For insertions, the vcf POS start - 1"""
+    var = {"variant_class": "insertion", "start": 11}
+    assert HAMLET_V2.vcf_pos(var) == 10
+
+
+def test_vcf_pos_deletion():
+    """For deletions, the vcf POS start - 1"""
+    var = {"variant_class": "deletion", "start": 11}
+    assert HAMLET_V2.vcf_pos(var) == 10
+
+
+def test_vcf_pos_sequence_variation():
+    """For sequence variation, the vcf POS start - 1"""
+    var = {"variant_class": "sequence variation", "start": 11}
+    assert HAMLET_V2.vcf_pos(var) == 10
