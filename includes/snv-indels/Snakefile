@@ -352,6 +352,7 @@ rule filter_vep_target:
     input:
         vep="{sample}/snv-indels/{sample}.vep.txt",
         ref_id_mapping=config["ref_id_mapping"],
+        hotspots="{sample}/snv-indels/{sample}.hotspot.vcf",
         scr=srcdir("scripts/filter_vep.py"),
     output:
         high="{sample}/snv-indels/{sample}.vep.target.txt",
@@ -365,6 +366,7 @@ rule filter_vep_target:
         python3 {input.scr} \
             {input.vep} \
             {input.ref_id_mapping} \
+            --hotspot {input.hotspots} \
             > {output.high} 2> {log}
         """
 
@@ -373,6 +375,7 @@ rule filter_vep_high:
     input:
         vep="{sample}/snv-indels/{sample}.vep.txt",
         ref_id_mapping=config["ref_id_mapping"],
+        hotspots="{sample}/snv-indels/{sample}.hotspot.vcf",
         scr=srcdir("scripts/filter_vep.py"),
     params:
         vep_consequences=config["vep_consequences"],
@@ -388,6 +391,7 @@ rule filter_vep_high:
         python3 {input.scr} \
             {input.vep} \
             {input.ref_id_mapping} \
+            --hotspot {input.hotspots} \
             --consequences {params.vep_consequences} \
             > {output.high} 2> {log}
         """
