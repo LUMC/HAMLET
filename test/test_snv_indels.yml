@@ -19,6 +19,8 @@
 
       - "TestSample3/snv-indels/TestSample3.vep.txt"
       - "TestSample3/snv-indels/TestSample3.vep.high.txt"
+
+      - "TestSample3/snv-indels/TestSample3.hotspot.vcf"
     contains_regex:
       - "STAR .* ID:TestSample1 .* --readFilesIn 'test/data/fastq/SRR8615409 chrM_1.fastq.gz' 'test/data/fastq/SRR8615409 chrM_2.fastq.gz'"
       # Test that params.min_intron_size is used
@@ -99,6 +101,15 @@
     - path: "SRR8615409/snv-indels/ReadsPerGene.out.tab"
       contains:
         - "N_unmapped"
+    # Test that one specific variant between MT-ATP8 and MT-ATP6 hotspots is
+    # not in the hotspot vcf file
+    - path: SRR8615409/snv-indels/SRR8615409.hotspot.vcf
+      must_not_contain:
+        - "chrM\t8566"
+      # flanking variants
+      contains:
+        - "chrM\t8468"
+        - "chrM\t8655"
 
 
 # VEP should switch to offline mode when "cache_vep" is specified

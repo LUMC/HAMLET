@@ -63,9 +63,14 @@ def get_json(wildcards):
     return f"{wildcards.sample}/snv-indels/snv-indels-output.json"
 
 
+def get_hotspot(wildcards):
+    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.hotspot.vcf"
+
+
 module_output = SimpleNamespace(
     bam=get_bam_output,
     vep_high=get_vep_high,
     vep_target=get_vep_target,
     json=get_json,
+    hotspot=get_hotspot,
 )

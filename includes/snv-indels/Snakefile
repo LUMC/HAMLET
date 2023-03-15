@@ -17,6 +17,7 @@ rule all:
         vep_high=[module_output.vep_high(sample) for sample in samples],
         vep_target=[module_output.vep_target(sample) for sample in samples],
         json=[module_output.json(sample) for sample in samples],
+        hotspot=[module_output.hotspot(sample) for sample in samples],
 
 
 rule align_vars:
@@ -323,6 +324,27 @@ rule annotate_vars:
             --freq_filter include \
             --stats_file {output.stats} -o {output.vep}\
             2> {log}
+        """
+
+
+rule hotspot_variants:
+    input:
+        vcf="{sample}/snv-indels/{sample}.raw.vcf.gz",
+        bed=config["bed_variant_hotspots"],
+    output:
+        vcf="{sample}/snv-indels/{sample}.hotspot.vcf",
+    log:
+        "log/hotspot_variants.{sample}.txt",
+    threads: 1
+    container:
+        containers["bedtools-2.27-grep-2.14-gawk-5.0-python-3.7"]
+    shell:
+        """
+        bedtools intersect \
+            -a {input.vcf} \
+            -b {input.bed} \
+            -header \
+            > {output.vcf} 2> {log}
         """
 
 
