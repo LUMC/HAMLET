@@ -104,15 +104,33 @@ def parse_vep_json(vep_file):
             yield VEP(json.loads(line))
 
 
-def main(vep_file, goi_file, consequences):
+def get_hotspot(fname):
+    hotspots = set()
+    with open(fname) as fin:
+        for line in fin:
+            if line.startswith('#'):
+                continue
+            else:
+                hotspots.add(line.strip('\n'))
+    return hotspots
+
+def main(vep_file, goi_file, consequences, hotspot_file):
     # Get genes and transcripts of interest
     goi, toi = read_goi_file(goi_file)
+
+    # Get the hotspot mutations
+    if hotspot_file:
+        hotspot = get_hotspot(hotspot_file)
+    else:
+        hotspot = set()
 
     for vep in parse_vep_json(vep_file):
         # Filter on transcript of interest
         vep.filter_transcript_id(toi)
         # Filter on consequences of interest
         vep.filter_consequence_term(consequences)
+        # Add is_in_hotspot field
+        vep["is_in_hotspot"] = vep["input"] in hotspot
 
         # If there is no consequence of interest left
         if not vep["transcript_consequences"]:
@@ -130,7 +148,8 @@ if __name__ == "__main__":
     parser.add_argument("goi", help="Genes of interest")
     parser.add_argument( "--consequences", nargs='*',
             type=str, default=list())
+    parser.add_argument("--hotspot", help="VCF file with hotspot variants")
 
     args = parser.parse_args()
 
-    main(args.vep, args.goi, args.consequences)
+    main(args.vep, args.goi, args.consequences, args.hotspot)
