@@ -184,9 +184,25 @@
             },
             "allele_string": "A/G",
             "assembly_name": "GRCh38",
+            "colocated_variants": [
+              {
+                "allele_string": "A/G",
+                "clin_sig": [
+                  "benign"
+                ],
+                "clin_sig_allele": "G:benign",
+                "end": 8566,
+                "id": "rs3020563",
+                "phenotype_or_disease": 1,
+                "start": 8566,
+                "strand": 1,
+                "variation_id": 384184143
+              }
+            ],
             "end": 8566,
             "id": ".",
             "input": "chrM\t8566\t.\tA\tG\t.\tPASS\tADP=26;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:129:26:26:0:23:100%:1.2146E-13:0:32:0:0:12:11",
+            "is_in_hotspot": false,
             "most_severe_consequence": "missense_variant",
             "seq_region_name": "MT",
             "start": 8566,
@@ -215,11 +231,9 @@
                 "sift_score": 0.11,
                 "strand": 1,
                 "transcript_id": "ENST00000361899",
-                "used_ref": "A",
                 "variant_allele": "G"
               }
-            ],
-            "variant_class": "SNV"
+            ]
           },
           {
             "FORMAT": {
@@ -247,9 +261,35 @@
             },
             "allele_string": "A/G",
             "assembly_name": "GRCh38",
+            "colocated_variants": [
+              {
+                "allele_string": "COSMIC_MUTATION",
+                "end": 8701,
+                "id": "COSV104419767",
+                "phenotype_or_disease": 1,
+                "somatic": 1,
+                "start": 8701,
+                "strand": 1,
+                "variation_id": 766907668
+              },
+              {
+                "allele_string": "A/C/G",
+                "clin_sig": [
+                  "benign"
+                ],
+                "clin_sig_allele": "G:benign",
+                "end": 8701,
+                "id": "rs2000975",
+                "phenotype_or_disease": 1,
+                "start": 8701,
+                "strand": 1,
+                "variation_id": 384181712
+              }
+            ],
             "end": 8701,
             "id": ".",
             "input": "chrM\t8701\t.\tA\tG\t.\tPASS\tADP=45;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:206:45:45:2:39:95.12%:2.1258E-21:33:41:0:2:18:21",
+            "is_in_hotspot": true,
             "most_severe_consequence": "missense_variant",
             "seq_region_name": "MT",
             "start": 8701,
@@ -278,11 +318,9 @@
                 "sift_score": 0.51,
                 "strand": 1,
                 "transcript_id": "ENST00000361899",
-                "used_ref": "A",
                 "variant_allele": "G"
               }
-            ],
-            "variant_class": "SNV"
+            ]
           },
           {
             "FORMAT": {
@@ -310,9 +348,25 @@
             },
             "allele_string": "A/G",
             "assembly_name": "GRCh38",
+            "colocated_variants": [
+              {
+                "allele_string": "A/C/G",
+                "clin_sig": [
+                  "benign"
+                ],
+                "clin_sig_allele": "G:benign",
+                "end": 8860,
+                "id": "rs2001031",
+                "phenotype_or_disease": 1,
+                "start": 8860,
+                "strand": 1,
+                "variation_id": 384181850
+              }
+            ],
             "end": 8860,
             "id": ".",
             "input": "chrM\t8860\t.\tA\tG\t.\tPASS\tADP=16;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:64:16:16:0:12:100%:3.698E-7:0:33:0:0:9:3",
+            "is_in_hotspot": true,
             "most_severe_consequence": "missense_variant",
             "seq_region_name": "MT",
             "start": 8860,
@@ -341,11 +395,9 @@
                 "sift_score": 0.1,
                 "strand": 1,
                 "transcript_id": "ENST00000361899",
-                "used_ref": "A",
                 "variant_allele": "G"
               }
-            ],
-            "variant_class": "SNV"
+            ]
           }
         ],
         "MT-ATP8": [
@@ -378,6 +430,7 @@
             "end": 8390,
             "id": ".",
             "input": "chrM\t8390\t.\tT\tA\t.\tPASS\tADP=24;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:117:24:24:0:21:100%:1.8578E-12:0:37:0:0:21:0",
+            "is_in_hotspot": true,
             "most_severe_consequence": "stop_gained",
             "seq_region_name": "MT",
             "start": 8390,
@@ -402,11 +455,9 @@
                 "protein_start": 9,
                 "strand": 1,
                 "transcript_id": "ENST00000361851",
-                "used_ref": "T",
                 "variant_allele": "A"
               }
-            ],
-            "variant_class": "SNV"
+            ]
           }
         ]
       },
