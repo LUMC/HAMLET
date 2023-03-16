@@ -109,11 +109,32 @@ class Report(object):
                 rows += len(variant["transcript_consequences"])
             return rows
 
+        def database_url(identifier):
+            """Turn a database identifier into the apropriate url
+
+            If not known, return the identifier itself
+            """
+            if identifier.startswith('rs'):
+                return f"https://www.ncbi.nlm.nih.gov/snp/{identifier}"
+            elif identifier.startswith('COSV'):
+                return f"https://cancer.sanger.ac.uk/cosmic/search?q={identifier}"
+            else:
+                return identifier
+
+        def make_href(identifier):
+            """Create a link for identifier"""
+            url = database_url(identifier)
+            # Don't know how to make an url
+            if url == identifier:
+                return identifier
+            else:
+                return f"<a href={url}>{identifier}</a>"
+
         def database_identifiers(item):
             """Extract the id's from colocated variants"""
             ids = list()
             for known_var in item.get("colocated_variants", list()):
-                ids.append(known_var["id"])
+                ids.append(make_href(known_var["id"]))
             return ids
 
         env = Environment(loader=FileSystemLoader(tpl_dir))
