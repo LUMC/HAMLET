@@ -285,8 +285,6 @@ rule rna_stats:
 rule annotate_vars:
     input:
         vcf="{sample}/snv-indels/{sample}.raw.vcf.gz",
-        ref_1kg=config["vcf_1kg"],
-        ref_gonl=config["vcf_gonl"],
         genome_fasta=config["genome_fasta"],
     params:
         online="" if config.get("cache_vep") else "--database",
@@ -309,8 +307,6 @@ rule annotate_vars:
             --fasta {input.genome_fasta} \
             {params.online} \
             {params.offline} \
-            --custom {input.ref_1kg},P3,vcf,exact,0,AF,AFR_AF,AMR_AF,EAS_AF,EUR_AF,SAS_AF \
-            --custom {input.ref_gonl},GONL,vcf,exact,0,AF \
             --fork {threads} \
             --allele_number --stats_text --json --force_overwrite --assembly GRCh38 \
             --format vcf \

@@ -4,8 +4,6 @@
   "ref_id_mapping": "test/data/reference/id_mappings.tsv",
   "rrna_refflat": "test/data/reference/chrM_rrna.refFlat",
   "bed_variant_hotspots": "test/data/reference/hotspots_genome.bed",
-  "vcf_gonl": "test/data/reference/gonl.grch38.sorted.filtered.snps_indels.r5.vcf.gz",
-  "vcf_1kg": "test/data/reference/1KG.phase3.GRCh38.with_chr.vcf.gz",
   "exon_names": [
       "MT-TA:5586-5655"
   ],
