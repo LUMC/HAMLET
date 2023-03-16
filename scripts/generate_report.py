@@ -109,6 +109,13 @@ class Report(object):
                 rows += len(variant["transcript_consequences"])
             return rows
 
+        def database_identifiers(item):
+            """Extract the id's from colocated variants"""
+            ids = list()
+            for known_var in item.get("colocated_variants", list()):
+                ids.append(known_var["id"])
+            return ids
+
         env = Environment(loader=FileSystemLoader(tpl_dir))
         env.filters["show_int"] = show_int
         env.filters["show_pct"] = show_pct
@@ -116,6 +123,7 @@ class Report(object):
         env.filters["as_pct"] = as_pct
         env.filters["num_tids"] = num_tids
         env.globals["gene_rows"] = gene_rows
+        env.globals["database_identifiers"] = database_identifiers
         self.env = env
         self.cover_tpl = env.get_template(cover_tpl_fname)
         self.contents_tpl = env.get_template(contents_tpl_fname)

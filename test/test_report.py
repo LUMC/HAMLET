@@ -66,6 +66,28 @@ def test_is_in_hotspot(workflow_dir):
         assert row[hotspot_column] == expected
 
 
+@pytest.mark.workflow('test-report')
+def test_database_identifiers(workflow_dir):
+    report = f"{workflow_dir}/report.html"
+    with open(report) as fin:
+        soup = bs4.BeautifulSoup(fin, features="html.parser")
+
+    # Extract the variant table
+    variant_table = soup.find('table', id='var-overview')
+
+    expected_values = [
+            "rs3020563",
+            "COSV104419767, rs2000975",
+            "rs2001031",
+            ""
+    ]
+
+    database_column = 2
+
+    for row, expected in zip(get_rows(variant_table), expected_values):
+        assert row[database_column] == expected
+
+
 @pytest.mark.workflow('test-full-report')
 def test_full_variant_overview(workflow_dir):
     """ Test the content of the variant overview
