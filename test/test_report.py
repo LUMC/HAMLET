@@ -1,6 +1,28 @@
 import pytest
 import bs4
 
+def get_rows(table):
+    """Get rows from table, supports rowspan in the first column only"""
+    # To deal with rowspan
+    rowspan = None
+    gene = None
+
+    rows = table.find("tbody").find_all("tr")
+    for row in rows:
+        cells = row.find_all("td")
+        text = [x.get_text() for x in cells]
+
+        # We need to do some special magic for rowspan in the first column
+        if cells[0].get("rowspan"):
+            gene = cells[0].get_text()
+            rowspan = int(cells[0]["rowspan"])
+        elif rowspan > 0:
+            # Prepend the gene name
+            text.insert(0, gene)
+            rowspan -= 1
+
+        yield text
+
 @pytest.mark.workflow('test-report')
 def test_variant_overview(workflow_dir):
     """ Test the content of the variant overview
@@ -27,6 +49,22 @@ def test_variant_overview(workflow_dir):
 
     assert gene2["rowspan"] == "1"
     assert gene2.text == "MT-ATP8"
+
+
+@pytest.mark.workflow('test-report')
+def test_is_in_hotspot(workflow_dir):
+    report = f"{workflow_dir}/report.html"
+    with open(report) as fin:
+        soup = bs4.BeautifulSoup(fin, features="html.parser")
+
+    # Extract the variant table
+    variant_table = soup.find('table', id='var-overview')
+    expected_values = ['no', 'yes', 'yes', 'yes']
+    hotspot_column = 4
+
+    for row, expected in zip(get_rows(variant_table), expected_values):
+        assert row[hotspot_column] == expected
+
 
 @pytest.mark.workflow('test-full-report')
 def test_full_variant_overview(workflow_dir):
