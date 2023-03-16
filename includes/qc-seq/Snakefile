@@ -143,7 +143,7 @@ rule rg_stats:
         raw2="{sample}/qc-seq/{read_group}/fastqc-R2-raw",
         proc1="{sample}/qc-seq/{read_group}/fastqc-R1-processed",
         proc2="{sample}/qc-seq/{read_group}/fastqc-R2-processed",
-        rg_stats_script=config["rg_stats_script"],
+        rg_stats_script=srcdir("scripts/gather_rg_stats.py"),
     output:
         stats="{sample}/qc-seq/{read_group}/stats.json",
     log:
@@ -163,7 +163,7 @@ rule sample_stats:
     """Gathers read statistics on the sample level."""
     input:
         rg_stats=get_sample_stats,
-        sample_stats_script=config["sample_stats_script"],
+        sample_stats_script=srcdir("scripts/gather_sample_stats.py"),
     output:
         stats="{sample}/qc-seq/{sample}.seq_stats.json",
     log:

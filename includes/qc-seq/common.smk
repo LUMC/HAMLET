@@ -7,9 +7,6 @@ containers = {
     "fastqc": "docker://quay.io/biocontainers/fastqc:0.11.9--hdfd78af_1",
 }
 
-config["rg_stats_script"] = srcdir(path.join("scripts", "gather_rg_stats.py"))
-config["sample_stats_script"] = srcdir(path.join("scripts", "gather_sample_stats.py"))
-
 
 def get_fastq(wildcards, pair):
     """Get the input fastq file (R1 or R2), based on the wildcards
