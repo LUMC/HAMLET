@@ -1,17 +1,28 @@
 {
-  "genome_fasta": "test/data/reference/chrM.fa",
-  "star_index": "test/data/reference/star",
-  "ref_id_mapping": "test/data/reference/id_mappings.tsv",
-  "rrna_refflat": "test/data/reference/chrM_rrna.refFlat",
-  "bed_variant_hotspots": "test/data/reference/hotspots_genome.bed",
-  "exon_names": [
-      "MT-TA:5586-5655"
-  ],
-  "exon_min_ratio": 0.1,
-  "gtf": "test/data/reference/ucsc_gencode_chrM.gtf",
   "flt3_fasta": "test/data/flt3/flt3-001.fa",
   "kmt2a_fasta": "test/data/kmt2a/kmt2a-213.fa",
   "genome_star_fusion_lib": "test/data/ctat_genome_lib_build_dir_chrM",
   "transcripts_bed": "test/data/reference/transcripts_chrM.bed",
-  "annotation_refflat": "test/data/reference/chrM.refFlat"
+  "ref_id_mapping": "test/data/reference/id_mappings.tsv",
+  "snv-indels": {
+    "genome_fasta": "test/data/reference/chrM.fa",
+    "genome_fai": "test/data/reference/chrM.fa.fai",
+    "genome_dict": "test/data/reference/chrM.dict",
+    "star_index": "test/data/reference/star",
+    "ref_id_mapping": "test/data/reference/id_mappings.tsv",
+    "rrna_refflat": "test/data/reference/chrM_rrna.refFlat",
+    "bed_variant_hotspots": "test/data/reference/hotspots_genome.bed",
+    "gtf": "test/data/reference/ucsc_gencode_chrM.gtf",
+    "annotation_refflat": "test/data/reference/chrM.refFlat",
+    "vep_include_consequence": [
+      "stop_gained",
+      "frameshift_variant",
+      "stop_lost",
+      "start_lost",
+      "inframe_insertion",
+      "inframe_deletion",
+      "protein_altering_variant",
+      "missense_variant"
+    ]
+  }
 }

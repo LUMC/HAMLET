@@ -30,6 +30,10 @@ rule all:
         report=expand("{sample}/hamlet_report.{sample}.pdf", sample=samples),
 
 
+# Add the PEP configuration to each submodule
+config["snv-indels"]["pepfile"] = config["pepfile"]
+
+
 # Define HAMLET modules
 module qc_seq:
     snakefile:
@@ -71,7 +75,7 @@ module align:
     snakefile:
         "includes/snv-indels/Snakefile"
     config:
-        config
+        config["snv-indels"]
 
 
 use rule * from align as align_*
@@ -82,8 +86,8 @@ use rule align_vars from align as align_align_vars with:
     input:
         fq1=qc_seq.module_output.forward,
         fq2=qc_seq.module_output.reverse,
-        index=config["star_index"],
-        gtf=config["gtf"],
+        index=config["snv-indels"]["star_index"],
+        gtf=config["snv-indels"]["gtf"],
 
 
 module fusion:

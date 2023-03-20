@@ -15,29 +15,6 @@ containers = {
 }
 
 
-def set_default(key, value):
-    """Set default value for settings"""
-    if key not in config:
-        config[key] = value
-
-
-set_default("genome_dict", config["genome_fasta"].rsplit(".", 1)[0] + ".dict")
-set_default("genome_fai", config["genome_fasta"] + ".fai")
-
-# Default consequences of interest
-cons = [
-    "stop_gained",
-    "frameshift_variant",
-    "stop_lost",
-    "start_lost",
-    "inframe_insertion",
-    "inframe_deletion",
-    "protein_altering_variant",
-    "missense_variant",
-]
-set_default("vep_consequences", cons)
-
-
 def get_forward(wildcards):
     return pep.sample_table.loc[wildcards.sample, "R1"]
 

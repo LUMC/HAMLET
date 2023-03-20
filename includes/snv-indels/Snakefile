@@ -374,7 +374,7 @@ rule filter_vep_high:
         hotspots="{sample}/snv-indels/{sample}.hotspot.vcf",
         scr=srcdir("scripts/filter_vep.py"),
     params:
-        vep_consequences=config["vep_consequences"],
+        vep_consequences=config["vep_include_consequence"],
     output:
         high="{sample}/snv-indels/{sample}.vep.high.txt",
     log:
