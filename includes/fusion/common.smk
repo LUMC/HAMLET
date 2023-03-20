@@ -13,14 +13,9 @@ containers = {
 }
 
 
-def set_default(key, value):
-    """Set default value for settings"""
-    if key not in config:
-        config[key] = value
-
-
-set_default("sf_subset_script", srcdir("scripts/subset_sf.py"))
-set_default("fusioncatcher_data", False)
+# Make sure fusioncatcher_data key always exists
+if "fusioncatcher_data" not in config:
+    config["fusioncatcher_data"] = False
 
 
 def get_forward(wildcards):

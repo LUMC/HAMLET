@@ -176,7 +176,7 @@ rule subset_sf:
     input:
         sf="{sample}/fusion/{sample}.star-fusion",
         isect="{sample}/fusion/{sample}.fuma",
-        subset_script=config["sf_subset_script"],
+        subset_script=srcdir("scripts/subset_sf.py"),
     output:
         sf="{sample}/fusion/{sample}.sf-isect",
     log:
