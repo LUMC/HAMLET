@@ -22,6 +22,8 @@ that users understand how the changes affect the new version.
 - Use multiple threads for Cutadapt, and reduce the compression of output files
 
 ### Changes
+- Add script to generate a configuration file
+- Add pipeline to generate reference files
 - Add per-module configuration options
 - Add support for PEP sample configuration
 - Add support for Snakemake 7.8.5

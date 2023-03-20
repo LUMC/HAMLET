@@ -55,6 +55,11 @@ snakemake \
     --directory HAMLET-data
 ```
 
+Next, you can automatically generate a configuration file with the following helper script
+```bash
+python3 python3 utilities/create-config.py HAMLET-data
+```
+
 For the **master** branch of HAMLET, you can download the data files
 [here](https://barmsijs.lumc.nl/HAMLET/deps-1.0.0.tar.gz), the md5sum for the
 archive is `5541718e8bc17bcd00ec90ff23ebcfae`.  Please contact the author or
