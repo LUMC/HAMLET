@@ -125,7 +125,7 @@ use rule fusioncatcher from fusion as fusion_fusioncatcher with:
 rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""
     input:
-        idm=config["ref_id_mapping"],
+        idm=config["snv-indels"]["ref_id_mapping"],
         qc_seq_json=qc_seq.module_output.json,
         fusion_json=fusion.module_output.json,
         snv_indels_json=align.module_output.json,

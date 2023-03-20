@@ -10,7 +10,7 @@
     --reason
     --printshellcmds
     --verbose
-    --configfile test/data/config/chrM-fusioncatcher.json
+    --configfile test/data/config/hamlet-fusioncatcher.json
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
@@ -69,7 +69,7 @@
   command: >
     snakemake -rp
     --snakefile Snakefile
-    --configfile test/data/config/chrM.json
+    --configfile test/data/config/hamlet.json
     --config pepfile=test/pep/targetted.csv
     --cores 1
     --verbose
@@ -87,7 +87,7 @@
     --snakefile Snakefile
     --reason
     --printshellcmds
-    --configfile test/data/config/chrM.json
+    --configfile test/data/config/hamlet.json
     --config pepfile=test/pep/chrM.csv
   stdout:
     must_not_contain:
@@ -103,7 +103,7 @@
     --snakefile Snakefile
     --reason
     --printshellcmds
-    --configfile test/data/config/chrM-fusioncatcher.json
+    --configfile test/data/config/hamlet-fusioncatcher.json
     --config pepfile=test/pep/chrM.csv
   stdout:
     contains:
@@ -117,7 +117,7 @@
   command: >
     snakemake
     --snakefile Snakefile
-    --configfile test/data/config/chrM.json
+    --configfile test/data/config/hamlet.json
     --config pepfile=test/pep/chrM_itd.csv
     --cores 1
     --notemp
@@ -141,7 +141,7 @@
     snakemake
     --lint
     --snakefile Snakefile
-    --configfile test/data/config/chrM.json
+    --configfile test/data/config/hamlet.json
     --config pepfile=test/pep/chrM.csv
 
 - name: snakefmt-hamlet

@@ -7,7 +7,7 @@
     snakemake -n
     --snakefile includes/fusion/Snakefile
     --printshellcmds
-    --configfile test/data/config/fusioncatcher.json
+    --configfile test/data/config/fusion-fusioncatcher.json
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
