@@ -81,6 +81,9 @@ rule cutadapt:
     output:
         fq1="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz",
         fq2="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz",
+    params:
+        f_adapter=config["forward_adapter"],
+        r_adapter=config["reverse_adapter"],
     log:
         "log/cutadapt.{sample}.{read_group}.txt",
     threads: 8
@@ -89,8 +92,8 @@ rule cutadapt:
     shell:
         """
         cutadapt \
-            -a AGATCGGAAGAG \
-            -A AGATCGGAAGAG \
+            -a {params.f_adapter} \
+            -A {params.r_adapter} \
             --cores={threads} \
             --compression-level=1 \
             --minimum-length=20 \

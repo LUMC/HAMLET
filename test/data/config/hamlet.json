@@ -1,4 +1,8 @@
 {
+  "qc-seq": {
+    "forward_adapter": "AGATCGGAAGAG",
+    "reverse_adapter": "AGATCGGAAGAG"
+  },
   "itd": {
     "flt3_fasta": "test/data/flt3/flt3-001.fa",
     "flt3_name": "FLT3-001",

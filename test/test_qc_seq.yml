@@ -7,6 +7,7 @@
     snakemake -n
     --snakefile includes/qc-seq/Snakefile
     --printshellcmds
+    --configfile test/data/config/qc-seq.json
     --config pepfile=test/pep/chrM-trio-subsamples.csv
   stdout:
     contains:
@@ -81,6 +82,7 @@
   command: >
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
+    --configfile test/data/config/qc-seq.json
     --config pepfile=test/pep/chrM-trio-subsamples.csv
     --cores 1
     --verbose
@@ -129,6 +131,7 @@
   command: >
     snakemake -rp
     --snakefile includes/qc-seq/Snakefile
+    --configfile test/data/config/qc-seq.json
     --config pepfile=test/pep/low-qual-adapters.csv
     --cores 1
     --verbose
@@ -158,6 +161,7 @@
     snakemake
     --lint
     --snakefile includes/qc-seq/Snakefile
+    --configfile test/data/config/qc-seq.json
     --config pepfile=test/pep/chrM-trio-subsamples.csv
 
 - name: snakefmt-qc

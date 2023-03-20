@@ -31,6 +31,7 @@ rule all:
 
 
 # Add the PEP configuration to each submodule
+config["qc-seq"]["pepfile"] = config["pepfile"]
 config["snv-indels"]["pepfile"] = config["pepfile"]
 config["itd"]["pepfile"] = config["pepfile"]
 config["fusion"]["pepfile"] = config["pepfile"]
@@ -41,7 +42,7 @@ module qc_seq:
     snakefile:
         "includes/qc-seq/Snakefile"
     config:
-        config
+        config["qc-seq"]
 
 
 use rule * from qc_seq as qc_seq_*
