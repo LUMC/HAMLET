@@ -33,6 +33,7 @@ rule all:
 # Add the PEP configuration to each submodule
 config["snv-indels"]["pepfile"] = config["pepfile"]
 config["itd"]["pepfile"] = config["pepfile"]
+config["fusion"]["pepfile"] = config["pepfile"]
 
 
 # Define HAMLET modules
@@ -95,7 +96,7 @@ module fusion:
     snakefile:
         "includes/fusion/Snakefile"
     config:
-        config
+        config["fusion"]
 
 
 use rule * from fusion as fusion_*
@@ -106,7 +107,7 @@ use rule star_fusion from fusion as fusion_star_fusion with:
     input:
         fq1=qc_seq.module_output.forward,
         fq2=qc_seq.module_output.reverse,
-        lib=config["genome_star_fusion_lib"],
+        lib=config["fusion"]["genome_star_fusion_lib"],
     container:
         fusion.containers["star-fusion"]
 

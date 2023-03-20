@@ -1,8 +1,10 @@
 {
-  "genome_star_fusion_lib": "test/data/ctat_genome_lib_build_dir_chrM",
-  "transcripts_bed": "test/data/reference/transcripts_chrM.bed",
+  "fusion": {
+    "genome_star_fusion_lib": "test/data/ctat_genome_lib_build_dir_chrM",
+    "transcripts_bed": "test/data/reference/transcripts_chrM.bed",
+    "fusioncatcher_data": "fake/path/to/fusioncatcher_data"
+  },
   "ref_id_mapping": "test/data/reference/id_mappings.tsv",
-  "fusioncatcher_data": "fake/path/to/fusioncatcher_data",
   "snv-indels": {
     "genome_fasta": "test/data/reference/chrM.fa",
     "genome_fai": "test/data/reference/chrM.fa.fai",

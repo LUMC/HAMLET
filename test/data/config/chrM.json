@@ -9,8 +9,10 @@
     "kmt2a_start": 406,
     "kmt2a_end": 4769
   },
-  "genome_star_fusion_lib": "test/data/ctat_genome_lib_build_dir_chrM",
-  "transcripts_bed": "test/data/reference/transcripts_chrM.bed",
+  "fusion": {
+    "genome_star_fusion_lib": "test/data/ctat_genome_lib_build_dir_chrM",
+    "transcripts_bed": "test/data/reference/transcripts_chrM.bed"
+  },
   "ref_id_mapping": "test/data/reference/id_mappings.tsv",
   "snv-indels": {
     "genome_fasta": "test/data/reference/chrM.fa",
