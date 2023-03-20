@@ -59,6 +59,7 @@ rule detect_itd_kmt2a:
         csv="{sample}/itd/{sample}.kmt2a.csv",
         bg_csv="{sample}/itd/{sample}.kmt2a.bg.csv",
     params:
+        # Region of interest for kmt2a ~ exon 2-10 in transcript coordinates.
         trx_name=config["kmt2a_name"],
         start=config["kmt2a_start"],
         end=config["kmt2a_end"],
@@ -142,6 +143,7 @@ rule detect_itd_flt3:
         csv="{sample}/itd/{sample}.flt3.csv",
         bg_csv="{sample}/itd/{sample}.flt3.bg.csv",
     params:
+        # Region of interest for flt3 ~ exon 14-15 in transcript coordinates.
         trx_name=config["flt3_name"],
         start=config["flt3_start"],
         end=config["flt3_end"],

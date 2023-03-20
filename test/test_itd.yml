@@ -7,7 +7,7 @@
     snakemake -n
     --snakefile includes/itd/Snakefile
     --printshellcmds
-    --configfile test/data/config/chrM.json
+    --configfile test/data/config/itd.json
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
@@ -54,7 +54,7 @@
   command: >
     snakemake -rp
     --snakefile includes/itd/Snakefile
-    --configfile test/data/config/chrM.json
+    --configfile test/data/config/itd.json
     --config pepfile=test/pep/itd.csv
     --cores 1
     --notemp
@@ -128,7 +128,7 @@
   command: >
     snakemake -rp
     --snakefile includes/itd/Snakefile
-    --configfile test/data/config/chrM.json
+    --configfile test/data/config/itd.json
     --config pepfile=test/pep/chrM.csv
     --cores 1
     --notemp
@@ -169,7 +169,7 @@
     snakemake
     --lint
     --snakefile includes/itd/Snakefile
-    --configfile test/data/config/chrM.json
+    --configfile test/data/config/itd.json
     --config pepfile=test/pep/chrM-bam.csv
 
 - name: snakefmt-itd

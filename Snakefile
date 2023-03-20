@@ -32,6 +32,7 @@ rule all:
 
 # Add the PEP configuration to each submodule
 config["snv-indels"]["pepfile"] = config["pepfile"]
+config["itd"]["pepfile"] = config["pepfile"]
 
 
 # Define HAMLET modules
@@ -49,7 +50,7 @@ module itd:
     snakefile:
         "includes/itd/Snakefile"
     config:
-        config
+        config["itd"]
 
 
 use rule * from itd as itd_*
@@ -60,7 +61,7 @@ use rule align_kmt2a from itd as itd_align_kmt2a with:
     input:
         fq1=qc_seq.module_output.forward,
         fq2=qc_seq.module_output.reverse,
-        fasta=config["kmt2a_fasta"],
+        fasta=config["itd"]["kmt2a_fasta"],
 
 
 # Connect the align_flt3 rule to the output of qc-seq
@@ -68,7 +69,7 @@ use rule align_flt3 from itd as itd_align_flt3 with:
     input:
         fq1=qc_seq.module_output.forward,
         fq2=qc_seq.module_output.reverse,
-        fasta=config["flt3_fasta"],
+        fasta=config["itd"]["flt3_fasta"],
 
 
 module align:

@@ -1,6 +1,14 @@
 {
-  "flt3_fasta": "test/data/flt3/flt3-001.fa",
-  "kmt2a_fasta": "test/data/kmt2a/kmt2a-213.fa",
+  "itd": {
+    "flt3_fasta": "test/data/flt3/flt3-001.fa",
+    "flt3_name": "FLT3-001",
+    "flt3_start": 1787,
+    "flt3_end": 2024,
+    "kmt2a_fasta": "test/data/kmt2a/kmt2a-213.fa",
+    "kmt2a_name": "KMT2A-213",
+    "kmt2a_start": 406,
+    "kmt2a_end": 4769
+  },
   "genome_star_fusion_lib": "test/data/ctat_genome_lib_build_dir_chrM",
   "transcripts_bed": "test/data/reference/transcripts_chrM.bed",
   "ref_id_mapping": "test/data/reference/id_mappings.tsv",

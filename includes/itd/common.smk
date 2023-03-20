@@ -10,23 +10,6 @@ containers = {
 }
 
 
-def set_default(key, value):
-    """Set default value for settings"""
-    if key not in config:
-        config[key] = value
-
-
-# Region of interest for kmt2a ~ exon 2-10 in transcript coordinates.
-set_default("kmt2a_name", "KMT2A-213")
-set_default("kmt2a_start", 406)
-set_default("kmt2a_end", 4769)
-
-# Region of interest for flt3 ~ exon 14-15 in transcript coordinates.
-set_default("flt3_name", "FLT3-001")
-set_default("flt3_start", 1787)
-set_default("flt3_end", 2024)
-
-
 def get_forward(wildcards):
     return pep.sample_table.loc[wildcards.sample, "R1"]
 
