@@ -60,6 +60,9 @@ class VEP(dict):
 
     def filter_consequence_term(self, consequences):
         """Filter transcript consequences by consequence_term"""
+        # If there are not consequences to filter on, we do nothing
+        if not consequences:
+            return
         tc = self["transcript_consequences"]
         tc = [x for x in tc if not set(x["consequence_terms"]).isdisjoint(consequences)]
         self["transcript_consequences"] = tc

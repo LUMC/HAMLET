@@ -110,6 +110,10 @@
       contains:
         - "chrM\t8468"
         - "chrM\t8655"
+    # Test that the targetted VEP output is not empty
+    - path: SRR8615409/snv-indels/SRR8615409.vep.target.txt
+      contains:
+        - "allele_string"
 
 
 # VEP should switch to offline mode when "cache_vep" is specified

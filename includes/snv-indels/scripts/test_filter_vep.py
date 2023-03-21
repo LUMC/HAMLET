@@ -49,6 +49,14 @@ def test_filter_consequence_emtpy(vep):
     assert not vep["transcript_consequences"]
 
 
+def test_filter_consequence_none(vep):
+    """Check that we filter nothing if the consequences are empty"""
+    before = vep["transcript_consequences"]
+    vep.filter_consequence_term({})
+    after = vep["transcript_consequences"]
+    assert before == after
+
+
 def test_vep_of_interest_one_transcript(vep):
     """Test rewriting the VEP object when there is a single transcript of
     interest"""
