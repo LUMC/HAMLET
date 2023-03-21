@@ -49,7 +49,7 @@ rule align_vars:
             --genomeDir {input.index} \
             --sjdbGTFfile {input.gtf} \
             --readFilesCommand zcat \
-            --outSAMattrRGline "ID:{params.rg_sample} SM:{params.rg_sample}" \
+            --outSAMattrRGline "ID:{params.rg_sample}" "SM:{params.rg_sample}" \
             --outFileNamePrefix $(dirname {output.bam})/ \
             --outSAMtype BAM SortedByCoordinate \
             --alignIntronMin {params.min_intron_size} \
