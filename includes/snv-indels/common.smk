@@ -29,11 +29,11 @@ def get_bam_output(wildcards):
 
 
 def get_vep_high(wildcards):
-    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.vep.high.txt"
+    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.vep.high.txt.gz"
 
 
 def get_vep_target(wildcards):
-    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.vep.target.txt"
+    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.vep.target.txt.gz"
 
 
 def get_json(wildcards):

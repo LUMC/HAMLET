@@ -11,14 +11,14 @@
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
-      - "TestSample1/snv-indels/TestSample1.vep.txt"
-      - "TestSample1/snv-indels/TestSample1.vep.high.txt"
+      - "TestSample1/snv-indels/TestSample1.vep.txt.gz"
+      - "TestSample1/snv-indels/TestSample1.vep.high.txt.gz"
 
-      - "TestSample2/snv-indels/TestSample2.vep.txt"
-      - "TestSample2/snv-indels/TestSample2.vep.high.txt"
+      - "TestSample2/snv-indels/TestSample2.vep.txt.gz"
+      - "TestSample2/snv-indels/TestSample2.vep.high.txt.gz"
 
-      - "TestSample3/snv-indels/TestSample3.vep.txt"
-      - "TestSample3/snv-indels/TestSample3.vep.high.txt"
+      - "TestSample3/snv-indels/TestSample3.vep.txt.gz"
+      - "TestSample3/snv-indels/TestSample3.vep.high.txt.gz"
 
       - "TestSample3/snv-indels/TestSample3.hotspot.vcf"
     contains_regex:
@@ -65,9 +65,9 @@
     - path: "SRR8615409/snv-indels/SRR8615409.snv-indel.bam"
     - path: "SRR8615409/snv-indels/SRR8615409.exon_cov_stats.json"
     - path: "SRR8615409/snv-indels/SRR8615409.aln_stats"
-    - path: "SRR8615409/snv-indels/SRR8615409.vep.txt"
-    - path: "SRR8615409/snv-indels/SRR8615409.vep.target.txt"
-    - path: "SRR8615409/snv-indels/SRR8615409.vep.high.txt"
+    - path: "SRR8615409/snv-indels/SRR8615409.vep.txt.gz"
+    - path: "SRR8615409/snv-indels/SRR8615409.vep.target.txt.gz"
+    - path: "SRR8615409/snv-indels/SRR8615409.vep.high.txt.gz"
       contains:
         - "stop_gained"
     # Test log files
@@ -111,7 +111,7 @@
         - "chrM\t8468"
         - "chrM\t8655"
     # Test that the targetted VEP output is not empty
-    - path: SRR8615409/snv-indels/SRR8615409.vep.target.txt
+    - path: SRR8615409/snv-indels/SRR8615409.vep.target.txt.gz
       contains:
         - "allele_string"
 

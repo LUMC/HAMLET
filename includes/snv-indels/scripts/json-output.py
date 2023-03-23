@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import gzip
 import json
 import csv
 from pathlib import Path
@@ -242,7 +243,7 @@ def group_variants(id_mapping, vep_txt):
     """Group variants by gene symbol"""
     mapping = idf_to_gene_symbol(id_mapping)
     overview = defaultdict(list)
-    with open(vep_txt) as fin:
+    with gzip.open(vep_txt, "rt") as fin:
         for line in fin:
             js = json.loads(line)
             js["FORMAT"] = get_format(js["input"])

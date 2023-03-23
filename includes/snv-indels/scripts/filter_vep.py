@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import gzip
 import json
 
 # From most to least severe, taken from the ensembl website
@@ -102,7 +103,7 @@ def read_goi_file(fname):
 
 def parse_vep_json(vep_file):
     """Parse the VEP 'json' output file, each line contains a JSON entry"""
-    with open(vep_file) as fin:
+    with gzip.open(vep_file, "rt") as fin:
         for line in fin:
             yield VEP(json.loads(line))
 

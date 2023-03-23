@@ -293,7 +293,7 @@ rule annotate_vars:
         else "",
         max_af=0.05,
     output:
-        vep="{sample}/snv-indels/{sample}.vep.txt",
+        vep="{sample}/snv-indels/{sample}.vep.txt.gz",
         stats="{sample}/snv-indels/{sample}.vep_stats.txt",
     log:
         "log/annotate_vars.{sample}.txt",
@@ -318,7 +318,8 @@ rule annotate_vars:
             --freq_freq {params.max_af} \
             --freq_gt_lt lt \
             --freq_filter include \
-            --stats_file {output.stats} -o {output.vep}\
+            --stats_file {output.stats} \
+            --output_file STDOUT | gzip > {output.vep}\
             2> {log}
         """
 
@@ -346,12 +347,12 @@ rule hotspot_variants:
 
 rule filter_vep_target:
     input:
-        vep="{sample}/snv-indels/{sample}.vep.txt",
+        vep="{sample}/snv-indels/{sample}.vep.txt.gz",
         ref_id_mapping=config["ref_id_mapping"],
         hotspots="{sample}/snv-indels/{sample}.hotspot.vcf",
         scr=srcdir("scripts/filter_vep.py"),
     output:
-        high="{sample}/snv-indels/{sample}.vep.target.txt",
+        high="{sample}/snv-indels/{sample}.vep.target.txt.gz",
     log:
         "log/filter_vep_target.{sample}.txt",
     threads: 1
@@ -363,20 +364,20 @@ rule filter_vep_target:
             {input.vep} \
             {input.ref_id_mapping} \
             --hotspot {input.hotspots} \
-            > {output.high} 2> {log}
+            | gzip > {output.high} 2> {log}
         """
 
 
 rule filter_vep_high:
     input:
-        vep="{sample}/snv-indels/{sample}.vep.txt",
+        vep="{sample}/snv-indels/{sample}.vep.txt.gz",
         ref_id_mapping=config["ref_id_mapping"],
         hotspots="{sample}/snv-indels/{sample}.hotspot.vcf",
         scr=srcdir("scripts/filter_vep.py"),
     params:
         vep_consequences=config["vep_include_consequence"],
     output:
-        high="{sample}/snv-indels/{sample}.vep.high.txt",
+        high="{sample}/snv-indels/{sample}.vep.high.txt.gz",
     log:
         "log/filter_vep_high.{sample}.txt",
     threads: 1
@@ -389,14 +390,14 @@ rule filter_vep_high:
             {input.ref_id_mapping} \
             --hotspot {input.hotspots} \
             --consequences {params.vep_consequences} \
-            > {output.high} 2> {log}
+            | gzip > {output.high} 2> {log}
         """
 
 
 rule json_output:
     input:
         id_mappings_path=config["ref_id_mapping"],
-        vep_high="{sample}/snv-indels/{sample}.vep.high.txt",
+        vep_high="{sample}/snv-indels/{sample}.vep.high.txt.gz",
         aln_stats="{sample}/snv-indels/{sample}.aln_stats",
         rna_stats="{sample}/snv-indels/{sample}.rna_stats",
         insert_stats="{sample}/snv-indels/{sample}.insert_stats",
