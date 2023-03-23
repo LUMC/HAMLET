@@ -74,64 +74,6 @@ def test_split_by_consequence_two():
         assert split["transcript_consequences"] == [i]
 
 
-def test_rewrite_unknown_variant_class():
-    var = {"variant_class": "no-such-class"}
-    with pytest.raises(NotImplementedError):
-        HAMLET_V2.rewrite_indel(var)
-
-def test_rewrite_indel_snv():
-    """A SNV should not be rewritten"""
-    var = {"variant_class": "SNV"}
-    orig = var.copy()
-    HAMLET_V2.rewrite_indel(var)
-    assert var == orig
-
-
-def test_rewrite_indel_insertion():
-    """Test rewriting an insertion"""
-    var = {
-        "variant_class": "insertion",
-        "start": 10,
-        "end": 9,
-        "allele_string": "-/TGCA",
-        "input": "\t".join(('chr1','9','.','T','TTGCA'))
-    }
-    HAMLET_V2.rewrite_indel(var)
-    assert var["allele_string"] == "T/TTGCA"
-    assert var["start"] == 9
-    assert var["end"] == 8
-
-
-def test_rewrite_indel_deletion():
-    """Test rewriting an insertion"""
-    var = {
-        "variant_class": "deletion",
-        "start": 10,
-        "end": 9,
-        "allele_string": "T/-",
-        "input": "\t".join(('chr1','9','.','AT','A'))
-    }
-    HAMLET_V2.rewrite_indel(var)
-    assert var["allele_string"] == "AT/A"
-    assert var["start"] == 9
-    assert var["end"] == 8
-
-
-def test_rewrite_indel_large_deletion():
-    """Test rewriting an insertion"""
-    var = {
-        "variant_class": "deletion",
-        "start": 2,
-        "end": 10,
-        "allele_string": "CGCCGCCGC/-",
-        "input": "\t".join(('chr1','1','.','TCGCCGCCGC','T'))
-    }
-    HAMLET_V2.rewrite_indel(var)
-    assert var["allele_string"] == "TCGCCGCCGC/T"
-    assert var["start"] == 1
-    assert var["end"] == 9
-
-
 def test_extract_alt_heterozygous():
     ref = "A"
     genotype = "A/T"

@@ -122,8 +122,6 @@ class HAMLET_V2(HAMLET_V1):
                 # Split variants so they always contain (at most) a single
                 # transcript consequence, so we can print it as a table
                 for var in self.split_by_consequence(v):
-                    # Include reference base in variant
-                    self.rewrite_indel(var)
                     # Get the transcript_consequence object
                     cons = var["transcript_consequences"][0]
                     # Format var to match the existing HAMLET output format
@@ -154,61 +152,6 @@ class HAMLET_V2(HAMLET_V1):
             newvar["transcript_consequences"] = [variant["transcript_consequences"][i]]
             yield newvar
 
-    @staticmethod
-    def rewrite_indel(var):
-        """Rewrite an insertion/deletion to include the reference base
-
-        VEP does not include the reference base in the allele_description from
-        the JSON output, but we need this to be compatible with older version
-        of the HAMLET output.
-
-        Insertion:
-        ---------
-        VEP:
-        allele_string: -/T
-        start: 105234996
-        end:   105234996
-
-        VCF:
-        REF: T
-        ALT: TT
-
-        Deletion:
-        ---------
-        VEP:
-        allele_string: T/-
-        start: 32431640
-        end:   32431639
-
-        VCF:
-        REF: AT
-        ALT: A
-        POS: 32431639
-        """
-        supported_classes = {"SNV", "insertion", "deletion"}
-        if var["variant_class"] not in supported_classes:
-            raise NotImplementedError
-
-        # We do not have to re-write SNVs
-        if var["variant_class"] == "SNV":
-            return
-
-        # Get the reference_sequence from the VCF field
-        ref_seq = var["input"].split("\t")[3]
-
-        # Get the ref/alt call from VEP out of the allele_string
-        ref, alt = var["allele_string"].split("/")
-
-        if var["variant_class"] == "insertion":
-            # Prepend the reference base to the allele description
-            var["allele_string"] = f"{ref_seq}/{ref_seq}{alt}"
-        if var["variant_class"] == "deletion":
-            # Include the reference base in the allele description
-            var["allele_string"] = f"{ref_seq}/{ref_seq[0]}"
-
-        # Shift the start/end positions
-        var["start"] -= 1
-        var["end"] -= 1
 
     @staticmethod
     def vcf_pos(var):
