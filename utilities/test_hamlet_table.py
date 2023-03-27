@@ -74,26 +74,6 @@ def test_split_by_consequence_two():
         assert split["transcript_consequences"] == [i]
 
 
-def test_extract_alt_heterozygous():
-    ref = "A"
-    genotype = "A/T"
-    assert HAMLET_V1.get_alt(ref, genotype) == "T"
-
-
-def test_extract_alt_hom_alt():
-    ref = "A"
-    genotype = "T/T"
-    assert HAMLET_V1.get_alt(ref, genotype) == "T"
-
-
-def test_two_alts():
-    """Not supported"""
-    ref = "A"
-    genotype = "T/C"
-    with pytest.raises(NotImplementedError):
-        HAMLET_V1.get_alt(ref, genotype)
-
-
 def test_vcf_pos_SNV():
     """For SNV's, the vcf POS is the same as the VEP start and end"""
     var = {"variant_class": "SNV", "start": 10}
@@ -116,3 +96,20 @@ def test_vcf_pos_sequence_variation():
     """For sequence variation, the vcf POS start - 1"""
     var = {"variant_class": "sequence variation", "start": 11}
     assert HAMLET_V2.vcf_pos(var) == 10
+
+REF_ALT = [
+    # ref, genotype -> (ref, alt)
+    ('C', 'A/C', ('C', 'A')),
+    ('C', 'A/A', ('C', 'A')),
+    # Insertion
+    ('C', 'CA/C', ('-', 'A')),
+    ('C', 'CTGC/C', ('-', 'TGC')),
+    # Deletion
+    ('AG', 'A', ('G', '-')),
+    ('CCGCGGGCG', 'C', ('CGCGGGCG', '-')),
+
+]
+
+@pytest.mark.parametrize("ref genotype result".split(), REF_ALT)
+def test_get_alt(ref, genotype, result):
+    assert HAMLET_V1.rewrite_ref_alt(ref, genotype) == result

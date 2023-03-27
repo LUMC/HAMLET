@@ -46,23 +46,32 @@ class HAMLET_V1:
         ]
 
     @staticmethod
-    def get_alt(ref, genotype):
-        """Extract alt from genotype string"""
+    def rewrite_ref_alt(ref, genotype):
         gt = genotype.split("/")
         # Remove the reference call from the genotype
         alt = set(gt)-{ref}
         # Make sure that there is only a single ALT allele
         if len(alt) > 1:
             raise NotImplementedError(genotype)
-        return alt.pop()
-
+        alt = alt.pop()
+        # Insertion
+        if len(alt) > len(ref):
+            alt = alt[len(ref):]
+            ref = '-'
+        # Deletion
+        elif len(ref) > len(alt):
+            alt = '-'
+            ref = ref[len(alt):]
+        return ref, alt
 
     @property
     def variants(self):
         for gene, variants in self.json["results"]["var"]["overview"].items():
             for var in variants:
                 var["Gene"] = gene
-                var["ALT"] = self.get_alt(var["REF"], var["genotype"])
+                ref, alt = self.rewrite_ref_alt(var["REF"], var["genotype"])
+                var["REF"] = ref
+                var["ALT"] = alt
                 d = {f: var[f] for f in self.variant_fields}
                 d["POS"] = int(d["POS"])
                 d["Existing_variation"] = var["Existing_variation"].split(",")
