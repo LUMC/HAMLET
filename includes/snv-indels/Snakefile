@@ -291,6 +291,7 @@ rule annotate_vars:
         offline=f" --offline --cache_version 108 --everything --merged --dir {config['cache_vep']}"
         if config.get("cache_vep")
         else "",
+        freq_filter=" --af_gnomade --check-frequency" if config.get("cache_vep") else "",
         max_af=0.05,
     output:
         vep="{sample}/snv-indels/{sample}.vep.txt.gz",
@@ -307,16 +308,14 @@ rule annotate_vars:
             --fasta {input.genome_fasta} \
             {params.online} \
             {params.offline} \
+            {params.freq_filter} \
             --fork {threads} \
             --allele_number --stats_text --json --force_overwrite --assembly GRCh38 \
             --format vcf \
             --polyphen b \
             --sift b \
             --hgvs \
-            --check_existing \
             --af \
-            --af_gnomade \
-            --check_frequency \
             --freq_pop gnomADe \
             --freq_freq {params.max_af} \
             --freq_gt_lt gt \
