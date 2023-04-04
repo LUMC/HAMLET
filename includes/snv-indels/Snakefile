@@ -315,9 +315,12 @@ rule annotate_vars:
             --hgvs \
             --check_existing \
             --af \
+            --af_gnomade \
+            --check_frequency \
+            --freq_pop gnomADe \
             --freq_freq {params.max_af} \
-            --freq_gt_lt lt \
-            --freq_filter include \
+            --freq_gt_lt gt \
+            --freq_filter exclude \
             --stats_file {output.stats} \
             --output_file STDOUT | gzip > {output.vep}\
             2> {log}
