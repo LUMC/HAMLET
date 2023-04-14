@@ -24,9 +24,7 @@ and a zipped file containing this report and the essential result files.
 
 # Which version should you use?
 The version of HAMLET on the 'devel' branch is the latest version, and is probably the version most people are
-interested in. The tagged versions on the 'master' branch have been validated more extensively and are used by the LUMC
-for clinical purposes. Although we can give **no guarantees** that the output of HAMLET is correct or complete, this is
-probably the version you should use (**at your own risk**) if you plan to analyse clinical samples.
+interested in.
 
 # Installation
 The dependencies required for running the pipeline are listed in the provided `environment.yml` file. To use it, first
@@ -60,9 +58,9 @@ Next, you can automatically generate a configuration file with the following hel
 python3 python3 utilities/create-config.py HAMLET-data
 ```
 
-For the **master** branch of HAMLET, you can download the data files
+For the old **master** branch of HAMLET, you can download the data files
 [here](https://barmsijs.lumc.nl/HAMLET/deps-1.0.0.tar.gz), the md5sum for the
-archive is `5541718e8bc17bcd00ec90ff23ebcfae`.  Please contact the author or
+archive is `5541718e8bc17bcd00ec90ff23ebcfae`. Please contact the author or
 open an issue if the link is not working.
 
 ## Testing
