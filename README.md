@@ -55,7 +55,7 @@ snakemake \
 
 Next, you can automatically generate a configuration file with the following helper script
 ```bash
-python3 python3 utilities/create-config.py HAMLET-data
+python3 utilities/create-config.py HAMLET-data
 ```
 
 For the old **master** branch of HAMLET, you can download the data files
