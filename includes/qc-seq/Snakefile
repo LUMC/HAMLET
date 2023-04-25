@@ -79,8 +79,8 @@ rule cutadapt:
         fq1=get_forward,
         fq2=get_reverse,
     output:
-        fq1="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz",
-        fq2="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz",
+        fq1=temp("{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz"),
+        fq2=temp("{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz"),
     params:
         f_adapter=config["forward_adapter"],
         r_adapter=config["reverse_adapter"],
