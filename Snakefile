@@ -48,6 +48,17 @@ module qc_seq:
 use rule * from qc_seq as qc_seq_*
 
 
+# Make the trimmed, merged FastQ files temporary
+use rule merge_fastqs_r1 from qc_seq as qc_seq_merge_fastqs_r1 with:
+    output:
+        merged=temp("{sample}/{sample}-R1.fq.gz"),
+
+
+use rule merge_fastqs_r2 from qc_seq as qc_seq_merge_fastqs_r2 with:
+    output:
+        merged=temp("{sample}/{sample}-R2.fq.gz"),
+
+
 module itd:
     snakefile:
         "includes/itd/Snakefile"

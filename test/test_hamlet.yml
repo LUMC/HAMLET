@@ -120,7 +120,6 @@
     --configfile test/data/config/hamlet.json
     --config pepfile=test/pep/chrM_itd.csv
     --cores 1
-    --notemp
     --verbose
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
@@ -132,6 +131,11 @@
     # Test log files
     - path: "log/create_summary.SRR8615409.txt"
     - path: "log/generate_report.SRR8615409.txt"
+    # FastQ files should be cleaned up when they are no longer needed
+    - path: SRR8615409/SRR8615409-R1.fq.gz
+      should_exist: false
+    - path: SRR8615409/SRR8615409-R2.fq.gz
+      should_exist: false
 
 - name: lint-hamlet
   tags:
