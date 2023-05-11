@@ -291,7 +291,7 @@ rule annotate_vars:
         offline=f" --offline --cache_version 108 --everything --merged --dir {config['cache_vep']}"
         if config.get("cache_vep")
         else "",
-        freq_filter=" --af_gnomade --check-frequency" if config.get("cache_vep") else "",
+        freq_filter=" --af_gnomade --check_frequency" if config.get("cache_vep") else "",
         max_af=0.05,
     output:
         vep="{sample}/snv-indels/{sample}.vep.txt.gz",
