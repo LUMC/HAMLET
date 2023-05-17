@@ -25,7 +25,7 @@ def get_reverse(wildcards):
 
 ## Functions for module outputs ##
 def get_bam_output(wildcards):
-    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.snv-indel.bam"
+    return f"{wildcards.sample}/snv-indels/Aligned.sortedByCoord.out.bam"
 
 
 def get_vep_high(wildcards):

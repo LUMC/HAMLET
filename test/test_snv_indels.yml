@@ -62,7 +62,9 @@
     - path: "SRR8615409/snv-indels/Log.out"
       contains_regex:
         - "outSAMattrRGline +ID:SRR8615409"
-    - path: "SRR8615409/snv-indels/SRR8615409.snv-indel.bam"
+    - path: "SRR8615409/snv-indels/Aligned.sortedByCoord.out.bam"
+    - path: "SRR8615409/snv-indels/Aligned.sortedByCoord.out.bam.bai"
+    - path: "SRR8615409/snv-indels/ReadsPerGene.out.tab"
     - path: "SRR8615409/snv-indels/SRR8615409.exon_cov_stats.json"
     - path: "SRR8615409/snv-indels/SRR8615409.aln_stats"
     - path: "SRR8615409/snv-indels/SRR8615409.vep.txt.gz"
@@ -75,9 +77,6 @@
       contains:
         - "Started job on"
     - path: "log/index_bamfile.SRR8615409.txt"
-    - path: "log/reorder_aln_header.SRR8615409.txt"
-      contains:
-        - "ReorderSam"
     - path: "log/tmp.genome.txt"
     - path: "log/exon_cov_ref.txt"
     - path: "log/exon_cov.SRR8615409.txt"

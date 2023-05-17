@@ -79,34 +79,6 @@ rule index_bamfile:
         """
 
 
-rule reorder_aln_header:
-    input:
-        bam="{sample}/snv-indels/Aligned.sortedByCoord.out.bam",
-        bai="{sample}/snv-indels/Aligned.sortedByCoord.out.bam.bai",
-        ref=config["genome_fasta"],
-        refd=config["genome_dict"],
-    output:
-        bam="{sample}/snv-indels/{sample}.snv-indel.bam",
-        bai="{sample}/snv-indels/{sample}.snv-indel.bai",
-    params:
-        rg_sample=lambda wildcards: wildcards.sample,
-    log:
-        "log/reorder_aln_header.{sample}.txt",
-    threads: 1
-    container:
-        containers["picard"]
-    shell:
-        """
-        picard -Xmx4G ReorderSam \
-            I={input.bam} \
-            SD={input.bam} \
-            O={output.bam} \
-            R={input.ref} \
-            VALIDATION_STRINGENCY=SILENT \
-            CREATE_INDEX=true 2> {log}
-        """
-
-
 rule genome_txt:
     input:
         ref_dict=config["genome_dict"],
@@ -149,7 +121,8 @@ rule exon_cov_ref:
 
 rule exon_cov:
     input:
-        bam="{sample}/snv-indels/{sample}.snv-indel.bam",
+        bam="{sample}/snv-indels/Aligned.sortedByCoord.out.bam",
+        bai="{sample}/snv-indels/Aligned.sortedByCoord.out.bam.bai",
         bed=".tmp.exon_cov_ref.bed",
         genome=".tmp.genome.txt",
         idm=config["ref_id_mapping"],
@@ -176,7 +149,8 @@ rule exon_cov:
 
 rule call_vars:
     input:
-        bam="{sample}/snv-indels/{sample}.snv-indel.bam",
+        bam="{sample}/snv-indels/Aligned.sortedByCoord.out.bam",
+        bai="{sample}/snv-indels/Aligned.sortedByCoord.out.bam.bai",
         ref=config["genome_fasta"],
     output:
         vcf="{sample}/snv-indels/{sample}.raw.vcf.gz",
@@ -205,8 +179,8 @@ rule call_vars:
 
 rule aln_stats:
     input:
-        bam="{sample}/snv-indels/{sample}.snv-indel.bam",
-        bai="{sample}/snv-indels/{sample}.snv-indel.bai",
+        bam="{sample}/snv-indels/Aligned.sortedByCoord.out.bam",
+        bai="{sample}/snv-indels/Aligned.sortedByCoord.out.bam.bai",
         ref=config["genome_fasta"],
         ref_dict=config["genome_dict"],
     output:
@@ -228,8 +202,8 @@ rule aln_stats:
 
 rule insert_stats:
     input:
-        bam="{sample}/snv-indels/{sample}.snv-indel.bam",
-        bai="{sample}/snv-indels/{sample}.snv-indel.bai",
+        bam="{sample}/snv-indels/Aligned.sortedByCoord.out.bam",
+        bai="{sample}/snv-indels/Aligned.sortedByCoord.out.bam.bai",
         ref=config["genome_fasta"],
         ref_dict=config["genome_dict"],
     output:
@@ -253,8 +227,8 @@ rule insert_stats:
 
 rule rna_stats:
     input:
-        bam="{sample}/snv-indels/{sample}.snv-indel.bam",
-        bai="{sample}/snv-indels/{sample}.snv-indel.bai",
+        bam="{sample}/snv-indels/Aligned.sortedByCoord.out.bam",
+        bai="{sample}/snv-indels/Aligned.sortedByCoord.out.bam.bai",
         ref=config["genome_fasta"],
         ref_dict=config["genome_dict"],
         ref_rrna=config["rrna_refflat"],
