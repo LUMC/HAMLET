@@ -22,7 +22,7 @@ rule all:
 
 rule tmpdir:
     output:
-        directory("tmp"),
+        directory("snv-indel-tmp"),
     container:
         containers["vardict"]
     log:
