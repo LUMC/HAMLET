@@ -10,6 +10,7 @@ that users understand how the changes affect the new version.
 ## v2.0.0-dev
 
 ### Tool changes
+- Replace VarScan variant caller with VarDict
 - Replace GSNAP aligner with STAR
 
 ### Tool updates
