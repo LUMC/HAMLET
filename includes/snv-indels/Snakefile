@@ -83,7 +83,7 @@ rule index_bamfile:
     log:
         "log/index_bamfile.{sample}.txt",
     container:
-        containers["varscan-2.4.2-samtools-1.3.1-tabix-0.2.6-grep-2.14"]
+        containers["vardict"],
     shell:
         """
         samtools index {input.bam} 2> {log}
@@ -126,7 +126,7 @@ rule genome_txt:
     log:
         "log/tmp.genome.txt",
     container:
-        containers["varscan-2.4.2-samtools-1.3.1-tabix-0.2.6-grep-2.14"]
+        containers["vardict"],
     shell:
         """
         cat {input.ref_dict} \
@@ -310,6 +310,7 @@ rule rna_stats:
 
 
 rule annotate_vars:
+    """Annotate variants using VEP"""
     input:
         vcf="{sample}/snv-indels/{sample}.raw.vcf.gz",
         genome_fasta=config["genome_fasta"],
@@ -319,7 +320,7 @@ rule annotate_vars:
         if config.get("cache_vep")
         else "",
         freq_filter=" --af_gnomade --check_frequency" if config.get("cache_vep") else "",
-        max_af=0.05,
+        max_pop_af=0.01,
     output:
         vep="{sample}/snv-indels/{sample}.vep.txt.gz",
         stats="{sample}/snv-indels/{sample}.vep_stats.txt",
@@ -344,14 +345,13 @@ rule annotate_vars:
             --hgvs \
             --af \
             --freq_pop gnomADe \
-            --freq_freq {params.max_af} \
+            --freq_freq {params.max_pop_af} \
             --freq_gt_lt gt \
             --freq_filter exclude \
             --stats_file {output.stats} \
             --output_file STDOUT | gzip > {output.vep}\
             2> {log}
         """
-
 
 rule hotspot_variants:
     input:
