@@ -127,6 +127,9 @@
   files:
     # HAMLET pipeline should generate the final output files
     - path: SRR8615409/SRR8615409.summary.json
+      # This variant was blacklisted
+      must_not_contain:
+        - "ENST00000361899.2:c.175A>G"
     - path: SRR8615409/hamlet_report.SRR8615409.pdf
     # Test log files
     - path: "log/create_summary.SRR8615409.txt"

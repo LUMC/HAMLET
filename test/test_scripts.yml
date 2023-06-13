@@ -1,0 +1,28 @@
+- name: test-filter-vep
+  tags:
+    - integration
+    - vep
+    - scripts
+  command: >
+    python3 includes/snv-indels/scripts/filter_vep.py
+      test/data/output/v2/SRR8615409.vep.txt.gz
+      test/data/reference/id_mappings.tsv
+  stdout:
+    contains:
+      # We blacklist this variant in test-filter-vep-blacklist, so it should exist here
+      - "ENST00000361899.2:c.516C>T"
+
+- name: test-filter-vep-blacklist
+  tags:
+    - integration
+    - vep
+    - scripts
+  command: >
+    python3 includes/snv-indels/scripts/filter_vep.py
+      test/data/output/v2/SRR8615409.vep.txt.gz
+      test/data/reference/id_mappings.tsv
+      --blacklist test/data/blacklist.txt
+  stdout:
+    must_not_contain:
+      # We blacklist this variant, so it should not be in the output
+      - "ENST00000361899.2:c.516C>T"
