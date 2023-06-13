@@ -12,7 +12,6 @@
         <th>Database identifiers</th>
         <th>Allele frequency</th>
         <th>Hotspot</th>
-        <th>P-value</th>
         <th>Ref | Alt | Total</th>
       </tr>
     </thead>
@@ -30,9 +29,8 @@
               {% endif %}
               <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ consequence.hgvsc }}<br/>{{ consequence.hgvsp }}</td>
               <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}><small>{{ database_identifiers(item) | join(", ") }}</small></td>
-              <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ item.FORMAT.FREQ }}</td>
+              <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ item.FORMAT.AF}}</td>
               <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ "yes" if item.is_in_hotspot else "no" }}</td>
-              <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;{% endif %} white-space: nowrap">{{ item.FORMAT.PVAL }}</td>
               <td{% if loop.last %} style="border-bottom: 2px solid #809ebf;{% endif %} white-space: nowrap">{{ item.FORMAT.RD }} | {{ item.FORMAT.AD }} | {{ item.FORMAT.DP }}</td>
             </tr>
           {% endfor %}
