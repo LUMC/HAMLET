@@ -81,9 +81,9 @@
     - path: "log/tmp.genome.txt"
     - path: "log/exon_cov_ref.txt"
     - path: "log/exon_cov.SRR8615409.txt"
-    - path: "log/call_vars.SRR8615409.txt"
+    - path: "log/vardict.SRR8615409.txt"
       contains:
-        - "bin/varscan"
+        - "TIME: Getting REF"
     - path: "log/aln_stats.SRR8615409.txt"
       contains:
         - "CollectAlignmentSummaryMetrics"
