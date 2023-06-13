@@ -32,6 +32,7 @@ rule tmpdir:
         mkdir -p {output} 2> {log}
         """
 
+
 rule align_vars:
     input:
         fq1=get_forward,
@@ -83,7 +84,7 @@ rule index_bamfile:
     log:
         "log/index_bamfile.{sample}.txt",
     container:
-        containers["vardict"],
+        containers["vardict"]
     shell:
         """
         samtools index {input.bam} 2> {log}
@@ -126,7 +127,7 @@ rule genome_txt:
     log:
         "log/tmp.genome.txt",
     container:
-        containers["vardict"],
+        containers["vardict"]
     shell:
         """
         cat {input.ref_dict} \
@@ -229,6 +230,7 @@ rule call_vars:
             |
         gzip > {output.vcf} 2> {log.gzip}
         """
+
 
 rule aln_stats:
     input:
@@ -352,6 +354,7 @@ rule annotate_vars:
             --output_file STDOUT | gzip > {output.vep}\
             2> {log}
         """
+
 
 rule hotspot_variants:
     input:
