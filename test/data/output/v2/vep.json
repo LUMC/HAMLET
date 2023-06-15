@@ -4,6 +4,7 @@
     "transcript_consequences": [
       { "gene_id": "gene1",
         "transcript_id": "transcript1",
+        "hgvsc": "ENTS0123.1:c.40A>C",
         "consequence_terms": [
           "transcript_ablation"
         ],
@@ -11,6 +12,7 @@
       },
       { "gene_id": "gene2",
         "transcript_id": "transcript2",
+        "hgvsc": "ENTS0124.1:c.40A>C",
         "consequence_terms": [
           "splice_acceptor_variant"
         ],

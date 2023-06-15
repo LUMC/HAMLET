@@ -80,9 +80,9 @@
     - path: "log/tmp.genome.txt"
     - path: "log/exon_cov_ref.txt"
     - path: "log/exon_cov.SRR8615409.txt"
-    - path: "log/call_vars.SRR8615409.txt"
+    - path: "log/vardict.SRR8615409.txt"
       contains:
-        - "bin/varscan"
+        - "TIME: Getting REF"
     - path: "log/aln_stats.SRR8615409.txt"
       contains:
         - "CollectAlignmentSummaryMetrics"
@@ -131,6 +131,23 @@
       - 'vep .* --offline'
     must_not_contain_regex:
       - 'vep .* --database'
+
+# Test if a blacklist variant file is passed to filter-vep script
+- name: test-chrM-variant-blacklist
+  tags:
+    - dry-run
+    - snv-indels
+  command: >
+    snakemake -n
+    --snakefile includes/snv-indels/Snakefile
+    --printshellcmds
+    --configfile test/data/config/snv-indels-vep-cache.json
+    --config
+      pepfile=test/pep/chrM.csv
+      variant_blacklist=test/data/blacklist.txt
+  stdout:
+    contains_regex:
+      - 'filter_vep.py .* --blacklist test/data/blacklist.txt'
 
 - name: lint-snv-indels
   tags:

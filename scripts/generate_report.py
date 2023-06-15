@@ -190,11 +190,6 @@ def main(input_summary_path, css_path, templates_dir,
     with open(input_summary_path) as src:
         sd = json.load(src)
 
-    # Format p-values for readability
-    for gene in sd["modules"]["snv_indels"]["genes"].values():
-        for variant in gene:
-            variant["FORMAT"]["PVAL"] = "{:0.1e}".format(float(variant["FORMAT"]["PVAL"]))
-
     sdm = sd["metadata"]
     sample_name = sdm["sample_name"]
     run_name = sdm["run_name"]

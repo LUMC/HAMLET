@@ -63,6 +63,12 @@ For the old **master** branch of HAMLET, you can download the data files
 archive is `5541718e8bc17bcd00ec90ff23ebcfae`. Please contact the author or
 open an issue if the link is not working.
 
+## Optional input files
+To blacklist false-positive variants, you can specify a
+`snv-indels/variant_blacklist` file, as shown
+[here](test/data/config/hamlet.json). The variant should match the hgvsc
+description from VEP, see [here](test/data/blacklist.txt) for an example.
+
 ## Testing
 The following commands can be used to test different aspects of HAMLET. If any
 of the tests fail, you can inspect the `log.err` and `log.out` files in the run

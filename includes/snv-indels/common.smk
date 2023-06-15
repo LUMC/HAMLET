@@ -9,6 +9,7 @@ containers = {
     "hamlet-scripts": "docker://quay.io/redmar_van_den_berg/hamlet-scripts:0.3",
     "picard": "docker://quay.io/biocontainers/picard:2.27.4--hdfd78af_0",
     "varscan-2.4.2-samtools-1.3.1-tabix-0.2.6-grep-2.14": "docker://quay.io/biocontainers/mulled-v2-58936b48a08c4e06505165c6f560ec9460b431ea:ef260d10ee671f4c7bd8e783939839bb2e0b684e-0",
+    "vardict": "docker://quay.io/biocontainers/vardict-java:1.8.3--hdfd78af_0",
     "vep": "docker://quay.io/biocontainers/ensembl-vep:108.2--pl5321h4a94de4_0",
     "star": "docker://quay.io/biocontainers/star:2.7.10b--h9ee0642_0",
     "crimson": "docker://quay.io/biocontainers/crimson:1.1.0--pyh5e36f6f_0",

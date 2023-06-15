@@ -21,3 +21,18 @@
     test/data/output/v2/full-report.summary.json
   files:
     - path: report.html
+
+# Test generating the report from VarDict data
+- name: test-report-vardict
+  tags:
+    - hamlet
+    - report
+  command: >
+    python3 scripts/generate_report.py
+    --html-output report.html
+    test/data/output/v2/SRR8615409.vardict.summary.json
+  files:
+    - path: report.html
+      contains:
+        # AF for ENST00000361899.2:c.175A>G
+        - '0.9583'

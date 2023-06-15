@@ -10,6 +10,7 @@ that users understand how the changes affect the new version.
 ## v2.0.0-dev
 
 ### Tool changes
+- Replace VarScan variant caller with VarDict
 - Replace GSNAP aligner with STAR
 
 ### Tool updates
@@ -22,6 +23,7 @@ that users understand how the changes affect the new version.
 - Use multiple threads for Cutadapt, and reduce the compression of output files
 
 ### Changes
+- Add support for variant blacklist in VEP hgvsc format
 - Add script to generate a configuration file
 - Add pipeline to generate reference files
 - Add per-module configuration options

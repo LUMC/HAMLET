@@ -25,8 +25,10 @@
     "ref_id_mapping": "test/data/reference/id_mappings.tsv",
     "rrna_refflat": "test/data/reference/chrM_rrna.refFlat",
     "bed_variant_hotspots": "test/data/reference/hotspots_genome.bed",
+    "bed_variant_call_regions": "test/data/reference/call_regions.bed",
     "gtf": "test/data/reference/ucsc_gencode_chrM.gtf",
     "annotation_refflat": "test/data/reference/chrM.refFlat",
+    "variant_blacklist": "test/data/blacklist.txt",
     "vep_include_consequence": [
       "stop_gained",
       "frameshift_variant",
