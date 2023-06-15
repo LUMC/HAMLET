@@ -60,6 +60,7 @@ rule all:
         rrna_refflat="ucsc_rrna.refFlat",
         transcripts_bed="transcripts.bed",
         bwa_index="flt3-001.fa.bwt",
+        blacklist="blacklist.txt",
 
 
 rule download_reference:
@@ -191,6 +192,19 @@ rule create_id_mappings:
         srcdir("small-files/id_mappings.tsv"),
     output:
         "id_mappings.tsv",
+    singularity:
+        containers["hamlet-scripts"]
+    shell:
+        """
+        cp {input} {output}
+        """
+
+
+rule create_blacklist:
+    input:
+        srcdir("small-files/blacklist.txt"),
+    output:
+        "blacklist",
     singularity:
         containers["hamlet-scripts"]
     shell:

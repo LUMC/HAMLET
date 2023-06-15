@@ -47,6 +47,7 @@ def get_snv_indels_config(dirname):
         "bed_variant_call_regions": join("call_regions.bed"),
         "gtf": join("Homo_sapiens.GRCh38.104.chr.gtf"),
         "annotation_refflat": join("ucsc_gencode.refFlat"),
+        "blacklist": join("blacklist.txt"),
         "vep_include_consequence": [
             "stop_gained",
             "frameshift_variant",
