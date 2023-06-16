@@ -291,11 +291,11 @@ rule annotate_vars:
         vcf="{sample}/snv-indels/{sample}.raw.vcf.gz",
         genome_fasta=config["genome_fasta"],
     params:
-        online="" if config.get("cache_vep") else "--database",
-        offline=f" --offline --cache_version 108 --everything --merged --dir {config['cache_vep']}"
-        if config.get("cache_vep")
+        online="" if config.get("vep_cache") else "--database",
+        offline=f" --offline --cache_version 108 --everything --merged --dir {config['vep_cache']}"
+        if config.get("vep_cache")
         else "",
-        freq_filter=" --af_gnomade --check_frequency" if config.get("cache_vep") else "",
+        freq_filter=" --af_gnomade --check_frequency" if config.get("vep_cache") else "",
         max_pop_af=0.01,
     output:
         vep="{sample}/snv-indels/{sample}.vep.txt.gz",
