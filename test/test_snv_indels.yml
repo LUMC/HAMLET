@@ -115,7 +115,7 @@
         - "allele_string"
 
 
-# VEP should switch to offline mode when "cache_vep" is specified
+# VEP should switch to offline mode when "vep_cache" is specified
 - name: test-chrM-vep-cache
   tags:
     - dry-run

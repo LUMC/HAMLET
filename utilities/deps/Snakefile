@@ -48,7 +48,7 @@ rule all:
         fasta_dict=reference_dict,
         refflat="ucsc_gencode.refFlat",
         bed_variant_hotspots="hotspots_genome.bed",
-        cache_vep="homo_sapiens_merged",
+        vep_cache="homo_sapiens_merged",
         expression_gtf=gtf_renamed,
         flt3_fasta="flt3-001.fa",
         kmt2a_fasta="kmt2a-213.fa",
