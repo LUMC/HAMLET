@@ -56,7 +56,7 @@
       --verbose \
       --use-singularity \
       --singularity-args '--cleanenv --bind /tmp' \
-      --singularity-prefix '~/.singularity/cache/snakemake';
+      --singularity-prefix '~/.singularity/cache/snakemake'
 
     rm test/data/reference/hamlet-ref.fa;
     rm test/data/reference/hamlet-star/Genome;

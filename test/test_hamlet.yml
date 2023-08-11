@@ -67,15 +67,23 @@
     - functional
     - hamlet
   command: >
-    snakemake -rp
-    --snakefile Snakefile
-    --configfile test/data/config/hamlet.json
-    --config pepfile=test/pep/targetted.csv
-    --cores 1
-    --verbose
-    --use-singularity
-    --singularity-args '--cleanenv --bind /tmp'
-    --singularity-prefix '~/.singularity/cache/snakemake'
+    bash -c "
+    unxz -k test/data/reference/hamlet-ref.fa.xz;
+    unxz -k test/data/reference/hamlet-star/Genome.xz;
+
+    snakemake -rp \
+      --snakefile Snakefile \
+      --configfile test/data/config/hamlet.json \
+      --config pepfile=test/pep/targetted.csv \
+      --cores 1 \
+      --verbose \
+      --use-singularity \
+      --singularity-args '--cleanenv --bind /tmp' \
+      --singularity-prefix '~/.singularity/cache/snakemake'
+
+    rm test/data/reference/hamlet-ref.fa;
+    rm test/data/reference/hamlet-star/Genome;
+    "
 
 # HAMLET pipeline should not run fusioncatcher by default
 - name: test-hamlet-dry-run-chrM
@@ -87,7 +95,7 @@
     --snakefile Snakefile
     --reason
     --printshellcmds
-    --configfile test/data/config/hamlet.json
+    --configfile test/data/config/hamlet-dry.json
     --config pepfile=test/pep/chrM.csv
   stdout:
     must_not_contain:
@@ -115,15 +123,23 @@
     - functional
     - hamlet
   command: >
-    snakemake
-    --snakefile Snakefile
-    --configfile test/data/config/hamlet.json
-    --config pepfile=test/pep/chrM_itd.csv
-    --cores 1
-    --verbose
-    --use-singularity
-    --singularity-args '--cleanenv --bind /tmp'
-    --singularity-prefix '~/.singularity/cache/snakemake'
+    bash -c "
+    unxz -k test/data/reference/hamlet-ref.fa.xz;
+    unxz -k test/data/reference/hamlet-star/Genome.xz;
+
+    snakemake \
+      --snakefile Snakefile \
+      --configfile test/data/config/hamlet.json \
+      --config pepfile=test/pep/chrM_itd.csv \
+      --cores 1 \
+      --verbose \
+      --use-singularity \
+      --singularity-args '--cleanenv --bind /tmp' \
+      --singularity-prefix '~/.singularity/cache/snakemake'
+
+    rm test/data/reference/hamlet-ref.fa;
+    rm test/data/reference/hamlet-star/Genome;
+    "
   files:
     # HAMLET pipeline should generate the final output files
     - path: SRR8615409/SRR8615409.summary.json
@@ -148,7 +164,7 @@
     snakemake
     --lint
     --snakefile Snakefile
-    --configfile test/data/config/hamlet.json
+    --configfile test/data/config/hamlet-dry.json
     --config pepfile=test/pep/chrM.csv
 
 - name: snakefmt-hamlet
