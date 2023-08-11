@@ -7,7 +7,7 @@
     snakemake -n
     --snakefile includes/snv-indels/Snakefile
     --printshellcmds
-    --configfile test/data/config/snv-indels.json
+    --configfile test/data/config/snv-indels-vep-cache.json
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
@@ -43,16 +43,24 @@
     - functional
     - snv-indels
   command: >
-    snakemake -rp
-    --snakefile includes/snv-indels/Snakefile
-    --configfile test/data/config/snv-indels.json
-    --config pepfile=test/pep/chrM.csv
-    --cores 1
-    --notemp
-    --verbose
-    --use-singularity
-    --singularity-args '--cleanenv --bind /tmp'
-    --singularity-prefix '~/.singularity/cache/snakemake'
+    bash -c "
+    unxz -k test/data/reference/hamlet-ref.fa.xz;
+    unxz -k test/data/reference/hamlet-star/Genome.xz;
+
+    snakemake -rp \
+      --snakefile includes/snv-indels/Snakefile \
+      --configfile test/data/config/snv-indels.json \
+      --config pepfile=test/pep/chrM.csv \
+      --cores 1 \
+      --notemp \
+      --verbose \
+      --use-singularity \
+      --singularity-args '--cleanenv --bind /tmp' \
+      --singularity-prefix '~/.singularity/cache/snakemake';
+
+    rm test/data/reference/hamlet-ref.fa;
+    rm test/data/reference/hamlet-star/Genome;
+    "
   stderr:
     # snv-indel should not use a local VEP database, but query ensembl
     must_not_contain_regex:
@@ -113,7 +121,6 @@
     - path: SRR8615409/snv-indels/SRR8615409.vep.target.txt.gz
       contains:
         - "allele_string"
-
 
 # VEP should switch to offline mode when "vep_cache" is specified
 - name: test-chrM-vep-cache

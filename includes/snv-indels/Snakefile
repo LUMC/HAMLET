@@ -255,6 +255,7 @@ rule insert_stats:
 
 
 rule rna_stats:
+    """Note: if no reads overlap the annotation_refflat, no output is produced"""
     input:
         bam="{sample}/snv-indels/Aligned.sortedByCoord.out.bam",
         bai="{sample}/snv-indels/Aligned.sortedByCoord.out.bam.bai",
