@@ -87,6 +87,15 @@ jobs:
           - test-hamlet-chrM
           - utilities
     steps:
+      - name: Maximise build space
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 512
+          swap-size-mb: 1024
+          remove-android: 'true'
+          remove-dotnet: 'true'
+          remove-codeql: 'true'
+
       - uses: actions/checkout@v2.3.4 # https://github.com/actions/checkout.
         with:
           submodules: recursive
