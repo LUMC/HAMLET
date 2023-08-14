@@ -1,0 +1,179 @@
+1	pfam	protein_domain	114708613	114708654	0	-	.	Name=Ras family;color=#80FFFF;gene_id=ENSG00000213281;gene_name=NRAS;protein_domain_id=PF00071
+1	pfam	protein_domain	114709569	114709728	0	-	.	Name=Ras family;color=#80FFFF;gene_id=ENSG00000213281;gene_name=NRAS;protein_domain_id=PF00071
+1	pfam	protein_domain	114713800	114713978	0	-	.	Name=Ras family;color=#80FFFF;gene_id=ENSG00000213281;gene_name=NRAS;protein_domain_id=PF00071
+1	pfam	protein_domain	114716050	114716148	0	-	.	Name=Ras family;color=#80FFFF;gene_id=ENSG00000213281;gene_name=NRAS;protein_domain_id=PF00071
+2	pfam	protein_domain	25240323	25240450	0	-	.	Name=C-5 cytosine-specific DNA methylase;color=#800080;gene_id=ENSG00000119772;gene_name=DNMT3A;protein_domain_id=PF00145
+2	pfam	protein_domain	25240640	25240730	0	-	.	Name=C-5 cytosine-specific DNA methylase;color=#800080;gene_id=ENSG00000119772;gene_name=DNMT3A;protein_domain_id=PF00145
+2	pfam	protein_domain	25241562	25241707	0	-	.	Name=C-5 cytosine-specific DNA methylase;color=#800080;gene_id=ENSG00000119772;gene_name=DNMT3A;protein_domain_id=PF00145
+2	pfam	protein_domain	25243898	25243934	0	-	.	Name=C-5 cytosine-specific DNA methylase;color=#800080;gene_id=ENSG00000119772;gene_name=DNMT3A;protein_domain_id=PF00145
+2	pfam	protein_domain	25244617	25244652	0	-	.	Name=Cysteine rich ADD domain in DNMT3;color=#FFFF80;gene_id=ENSG00000119772;gene_name=DNMT3A;protein_domain_id=PF17980
+2	pfam	protein_domain	25245253	25245332	0	-	.	Name=Cysteine rich ADD domain in DNMT3;color=#FFFF80;gene_id=ENSG00000119772;gene_name=DNMT3A;protein_domain_id=PF17980
+2	pfam	protein_domain	25246020	25246064	0	-	.	Name=Cysteine rich ADD domain in DNMT3;color=#FFFF80;gene_id=ENSG00000119772;gene_name=DNMT3A;protein_domain_id=PF17980
+2	pfam	protein_domain	25246160	25246166	0	-	.	Name=Cysteine rich ADD domain in DNMT3;color=#FFFF80;gene_id=ENSG00000119772;gene_name=DNMT3A;protein_domain_id=PF17980
+2	pfam	protein_domain	25247051	25247158	0	-	.	Name=PWWP domain;color=#FF0000;gene_id=ENSG00000119772;gene_name=DNMT3A;protein_domain_id=PF00855
+2	pfam	protein_domain	25247591	25247734	0	-	.	Name=PWWP domain;color=#FF0000;gene_id=ENSG00000119772;gene_name=DNMT3A;protein_domain_id=PF00855
+2	pfam	protein_domain	197405359	197405472	0	-	.	Name=Splicing factor 3B subunit 1;color=#800080;gene_id=ENSG00000115524;gene_name=SF3B1;protein_domain_id=PF08920
+2	pfam	protein_domain	197407998	197408119	0	-	.	Name=Splicing factor 3B subunit 1;color=#800080;gene_id=ENSG00000115524;gene_name=SF3B1;protein_domain_id=PF08920
+2	pfam	protein_domain	197408369	197408501	0	-	.	Name=Splicing factor 3B subunit 1;color=#800080;gene_id=ENSG00000115524;gene_name=SF3B1;protein_domain_id=PF08920
+2	pfam	protein_domain	208237127	208237169	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000138413;gene_name=IDH1;protein_domain_id=PF00180
+2	pfam	protein_domain	208239071	208239233	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000138413;gene_name=IDH1;protein_domain_id=PF00180
+2	pfam	protein_domain	208239863	208240003	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000138413;gene_name=IDH1;protein_domain_id=PF00180
+2	pfam	protein_domain	208241994	208242145	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000138413;gene_name=IDH1;protein_domain_id=PF00180
+2	pfam	protein_domain	208243427	208243604	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000138413;gene_name=IDH1;protein_domain_id=PF00180
+2	pfam	protein_domain	208245319	208245424	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000138413;gene_name=IDH1;protein_domain_id=PF00180
+2	pfam	protein_domain	208248369	208248660	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000138413;gene_name=IDH1;protein_domain_id=PF00180
+2	pfam	protein_domain	208251430	208251521	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000138413;gene_name=IDH1;protein_domain_id=PF00180
+4	pfam	protein_domain	54699659	54699766	0	+	.	Name=Immunoglobulin domain;color=#FF00FF;gene_id=ENSG00000157404;gene_name=KIT;protein_domain_id=PF00047
+4	pfam	protein_domain	54703724	54703879	0	+	.	Name=Immunoglobulin domain;color=#FF00FF;gene_id=ENSG00000157404;gene_name=KIT;protein_domain_id=PF00047
+4	pfam	protein_domain	54727533	54727542	0	+	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000157404;gene_name=KIT;protein_domain_id=PF00069
+4	pfam	protein_domain	54727823	54727927	0	+	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000157404;gene_name=KIT;protein_domain_id=PF00069
+4	pfam	protein_domain	54728011	54728121	0	+	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000157404;gene_name=KIT;protein_domain_id=PF00069
+4	pfam	protein_domain	54729335	54729485	0	+	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000157404;gene_name=KIT;protein_domain_id=PF00069
+4	pfam	protein_domain	54731328	54731419	0	+	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000157404;gene_name=KIT;protein_domain_id=PF00069
+4	pfam	protein_domain	54731871	54731998	0	+	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000157404;gene_name=KIT;protein_domain_id=PF00069
+4	pfam	protein_domain	54733070	54733192	0	+	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000157404;gene_name=KIT;protein_domain_id=PF00069
+4	pfam	protein_domain	54736498	54736609	0	+	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000157404;gene_name=KIT;protein_domain_id=PF00069
+4	pfam	protein_domain	54736721	54736820	0	+	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000157404;gene_name=KIT;protein_domain_id=PF00069
+4	pfam	protein_domain	54737175	54737247	0	+	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000157404;gene_name=KIT;protein_domain_id=PF00069
+4	pfam	protein_domain	105259683	105259769	0	+	.	Name=Oxygenase domain of the 2OGFeDO superfamily ;color=#FFFFFF;gene_id=ENSG00000168769;gene_name=TET2;protein_domain_id=PF12851
+4	pfam	protein_domain	105261759	105261848	0	+	.	Name=Oxygenase domain of the 2OGFeDO superfamily ;color=#FFFFFF;gene_id=ENSG00000168769;gene_name=TET2;protein_domain_id=PF12851
+4	pfam	protein_domain	105269610	105269747	0	+	.	Name=Oxygenase domain of the 2OGFeDO superfamily ;color=#FFFFFF;gene_id=ENSG00000168769;gene_name=TET2;protein_domain_id=PF12851
+4	pfam	protein_domain	105272564	105272918	0	+	.	Name=Oxygenase domain of the 2OGFeDO superfamily ;color=#FFFFFF;gene_id=ENSG00000168769;gene_name=TET2;protein_domain_id=PF12851
+4	pfam	protein_domain	105275048	105276225	0	+	.	Name=Oxygenase domain of the 2OGFeDO superfamily ;color=#FFFFFF;gene_id=ENSG00000168769;gene_name=TET2;protein_domain_id=PF12851
+5	pfam	protein_domain	171388000	171388006	0	+	.	Name=Nucleoplasmin/nucleophosmin domain;color=#80FF00;gene_id=ENSG00000181163;gene_name=NPM1;protein_domain_id=PF03066
+5	pfam	protein_domain	171390051	171390130	0	+	.	Name=Nucleoplasmin/nucleophosmin domain;color=#80FF00;gene_id=ENSG00000181163;gene_name=NPM1;protein_domain_id=PF03066
+5	pfam	protein_domain	171391305	171391424	0	+	.	Name=Nucleoplasmin/nucleophosmin domain;color=#80FF00;gene_id=ENSG00000181163;gene_name=NPM1;protein_domain_id=PF03066
+5	pfam	protein_domain	171391706	171391798	0	+	.	Name=Nucleoplasmin/nucleophosmin domain;color=#80FF00;gene_id=ENSG00000181163;gene_name=NPM1;protein_domain_id=PF03066
+5	pfam	protein_domain	171405365	171405403	0	+	.	Name=Nucleophosmin C-terminal domain;color=#FF8080;gene_id=ENSG00000181163;gene_name=NPM1;protein_domain_id=PF16276
+5	pfam	protein_domain	171407129	171407161	0	+	.	Name=Nucleophosmin C-terminal domain;color=#FF8080;gene_id=ENSG00000181163;gene_name=NPM1;protein_domain_id=PF16276
+5	pfam	protein_domain	171407700	171407774	0	+	.	Name=Nucleophosmin C-terminal domain;color=#FF8080;gene_id=ENSG00000181163;gene_name=NPM1;protein_domain_id=PF16276
+5	pfam	protein_domain	171407719	171407736	0	+	.	Name=Nucleoplasmin/nucleophosmin domain;color=#80FF00;gene_id=ENSG00000181163;gene_name=NPM1;protein_domain_id=PF03066
+5	pfam	protein_domain	171410527	171410559	0	+	.	Name=Nucleophosmin C-terminal domain;color=#FF8080;gene_id=ENSG00000181163;gene_name=NPM1;protein_domain_id=PF16276
+7	pfam	protein_domain	148809073	148809155	0	-	.	Name=SET domain;color=#FF0080;gene_id=ENSG00000106462;gene_name=EZH2;protein_domain_id=PF00856
+7	pfam	protein_domain	148809310	148809390	0	-	.	Name=SET domain;color=#FF0080;gene_id=ENSG00000106462;gene_name=EZH2;protein_domain_id=PF00856
+7	pfam	protein_domain	148810333	148810414	0	-	.	Name=SET domain;color=#FF0080;gene_id=ENSG00000106462;gene_name=EZH2;protein_domain_id=PF00856
+7	pfam	protein_domain	148811625	148811690	0	-	.	Name=SET domain;color=#FF0080;gene_id=ENSG00000106462;gene_name=EZH2;protein_domain_id=PF00856
+7	pfam	protein_domain	148814025	148814120	0	-	.	Name=CXC domain;color=#808000;gene_id=ENSG00000106462;gene_name=EZH2;protein_domain_id=PF18264
+7	pfam	protein_domain	148826614	148826632	0	-	.	Name=Polycomb repressive complex 2 tri-helical domain;color=#000080;gene_id=ENSG00000106462;gene_name=EZH2;protein_domain_id=PF18118
+7	pfam	protein_domain	148827164	148827266	0	-	.	Name=Polycomb repressive complex 2 tri-helical domain;color=#000080;gene_id=ENSG00000106462;gene_name=EZH2;protein_domain_id=PF18118
+7	pfam	protein_domain	148828740	148828880	0	-	.	Name=Polycomb repressive complex 2 tri-helical domain;color=#000080;gene_id=ENSG00000106462;gene_name=EZH2;protein_domain_id=PF18118
+7	pfam	protein_domain	148829728	148829740	0	-	.	Name=Polycomb repressive complex 2 tri-helical domain;color=#000080;gene_id=ENSG00000106462;gene_name=EZH2;protein_domain_id=PF18118
+7	pfam	protein_domain	148846512	148846598	0	-	.	Name=WD repeat binding protein EZH2;color=#00FF00;gene_id=ENSG00000106462;gene_name=EZH2;protein_domain_id=PF11616
+7	pfam	protein_domain	148847182	148847184	0	-	.	Name=WD repeat binding protein EZH2;color=#00FF00;gene_id=ENSG00000106462;gene_name=EZH2;protein_domain_id=PF11616
+9	pfam	protein_domain	130854183	130854237	0	+	.	Name=SH3 domain;color=#FF0000;gene_id=ENSG00000097007;gene_name=ABL1;protein_domain_id=PF00018
+9	pfam	protein_domain	130854801	130854886	0	+	.	Name=SH3 domain;color=#FF0000;gene_id=ENSG00000097007;gene_name=ABL1;protein_domain_id=PF00018
+9	pfam	protein_domain	130854926	130855096	0	+	.	Name=SH2 domain;color=#80FFFF;gene_id=ENSG00000097007;gene_name=ABL1;protein_domain_id=PF00017
+9	pfam	protein_domain	130862763	130862819	0	+	.	Name=SH2 domain;color=#80FFFF;gene_id=ENSG00000097007;gene_name=ABL1;protein_domain_id=PF00017
+9	pfam	protein_domain	130862937	130863035	0	+	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000097007;gene_name=ABL1;protein_domain_id=PF00069
+9	pfam	protein_domain	130872129	130872213	0	+	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000097007;gene_name=ABL1;protein_domain_id=PF00069
+9	pfam	protein_domain	130872860	130873037	0	+	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000097007;gene_name=ABL1;protein_domain_id=PF00069
+9	pfam	protein_domain	130874868	130875052	0	+	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000097007;gene_name=ABL1;protein_domain_id=PF00069
+9	pfam	protein_domain	130878415	130878567	0	+	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000097007;gene_name=ABL1;protein_domain_id=PF00069
+9	pfam	protein_domain	130880068	130880120	0	+	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000097007;gene_name=ABL1;protein_domain_id=PF00069
+9	pfam	protein_domain	130885366	130885680	0	+	.	Name=F-actin binding;color=#800000;gene_id=ENSG00000097007;gene_name=ABL1;protein_domain_id=PF08919
+11	pfam	protein_domain	32389094	32389168	0	-	.	Name=Zinc finger%2C C2H2 type;color=#80FF00;gene_id=ENSG00000184937;gene_name=WT1;protein_domain_id=PF00096
+11	pfam	protein_domain	32391985	32392053	0	-	.	Name=Zinc finger%2C C2H2 type;color=#80FF00;gene_id=ENSG00000184937;gene_name=WT1;protein_domain_id=PF00096
+11	pfam	protein_domain	32392670	32392744	0	-	.	Name=Zinc finger%2C C2H2 type;color=#80FF00;gene_id=ENSG00000184937;gene_name=WT1;protein_domain_id=PF00096
+11	pfam	protein_domain	32396339	32396407	0	-	.	Name=Wilm's tumour protein;color=#0080FF;gene_id=ENSG00000184937;gene_name=WT1;protein_domain_id=PF02165
+11	pfam	protein_domain	32399948	32400044	0	-	.	Name=Wilm's tumour protein;color=#0080FF;gene_id=ENSG00000184937;gene_name=WT1;protein_domain_id=PF02165
+11	pfam	protein_domain	32416490	32416540	0	-	.	Name=Wilm's tumour protein;color=#0080FF;gene_id=ENSG00000184937;gene_name=WT1;protein_domain_id=PF02165
+11	pfam	protein_domain	32417577	32417654	0	-	.	Name=Wilm's tumour protein;color=#0080FF;gene_id=ENSG00000184937;gene_name=WT1;protein_domain_id=PF02165
+11	pfam	protein_domain	32427956	32428058	0	-	.	Name=Wilm's tumour protein;color=#0080FF;gene_id=ENSG00000184937;gene_name=WT1;protein_domain_id=PF02165
+11	pfam	protein_domain	32428497	32428619	0	-	.	Name=Wilm's tumour protein;color=#0080FF;gene_id=ENSG00000184937;gene_name=WT1;protein_domain_id=PF02165
+11	pfam	protein_domain	32430530	32430536	0	-	.	Name=Wilm's tumour protein;color=#0080FF;gene_id=ENSG00000184937;gene_name=WT1;protein_domain_id=PF02165
+11	pfam	protein_domain	32433936	32433948	0	-	.	Name=Wilm's tumour protein;color=#0080FF;gene_id=ENSG00000184937;gene_name=WT1;protein_domain_id=PF02165
+11	pfam	protein_domain	32434700	32435141	0	-	.	Name=Wilm's tumour protein;color=#0080FF;gene_id=ENSG00000184937;gene_name=WT1;protein_domain_id=PF02165
+13	pfam	protein_domain	28014482	28014557	0	-	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000122025;gene_name=FLT3;protein_domain_id=PF00069
+13	pfam	protein_domain	28015157	28015256	0	-	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000122025;gene_name=FLT3;protein_domain_id=PF00069
+13	pfam	protein_domain	28015590	28015701	0	-	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000122025;gene_name=FLT3;protein_domain_id=PF00069
+13	pfam	protein_domain	28018467	28018589	0	-	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000122025;gene_name=FLT3;protein_domain_id=PF00069
+13	pfam	protein_domain	28023350	28023477	0	-	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000122025;gene_name=FLT3;protein_domain_id=PF00069
+13	pfam	protein_domain	28024861	28024943	0	-	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000122025;gene_name=FLT3;protein_domain_id=PF00069
+13	pfam	protein_domain	28027088	28027241	0	-	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000122025;gene_name=FLT3;protein_domain_id=PF00069
+13	pfam	protein_domain	28028178	28028288	0	-	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000122025;gene_name=FLT3;protein_domain_id=PF00069
+13	pfam	protein_domain	28033887	28033991	0	-	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000122025;gene_name=FLT3;protein_domain_id=PF00069
+13	pfam	protein_domain	28034082	28034091	0	-	.	Name=Protein kinase domain;color=#80FF00;gene_id=ENSG00000122025;gene_name=FLT3;protein_domain_id=PF00069
+13	pfam	protein_domain	28049388	28049537	0	-	.	Name=Immunoglobulin domain;color=#FF00FF;gene_id=ENSG00000122025;gene_name=FLT3;protein_domain_id=PF00047
+13	pfam	protein_domain	28049635	28049748	0	-	.	Name=Immunoglobulin domain;color=#FF00FF;gene_id=ENSG00000122025;gene_name=FLT3;protein_domain_id=PF00047
+15	pfam	protein_domain	90084302	90084353	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000182054;gene_name=IDH2;protein_domain_id=PF00180
+15	pfam	protein_domain	90084816	90084908	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000182054;gene_name=IDH2;protein_domain_id=PF00180
+15	pfam	protein_domain	90085001	90085098	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000182054;gene_name=IDH2;protein_domain_id=PF00180
+15	pfam	protein_domain	90085275	90085387	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000182054;gene_name=IDH2;protein_domain_id=PF00180
+15	pfam	protein_domain	90087112	90087263	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000182054;gene_name=IDH2;protein_domain_id=PF00180
+15	pfam	protein_domain	90087439	90087575	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000182054;gene_name=IDH2;protein_domain_id=PF00180
+15	pfam	protein_domain	90088359	90088502	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000182054;gene_name=IDH2;protein_domain_id=PF00180
+15	pfam	protein_domain	90088587	90088747	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000182054;gene_name=IDH2;protein_domain_id=PF00180
+15	pfam	protein_domain	90090479	90090644	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000182054;gene_name=IDH2;protein_domain_id=PF00180
+15	pfam	protein_domain	90091553	90091627	0	-	.	Name=Isocitrate/isopropylmalate dehydrogenase;color=#FF0000;gene_id=ENSG00000182054;gene_name=IDH2;protein_domain_id=PF00180
+17	pfam	protein_domain	7670638	7670715	0	-	.	Name=P53 tetramerisation motif;color=#80FF00;gene_id=ENSG00000141510;gene_name=TP53;protein_domain_id=PF07710
+17	pfam	protein_domain	7673535	7673573	0	-	.	Name=P53 tetramerisation motif;color=#80FF00;gene_id=ENSG00000141510;gene_name=TP53;protein_domain_id=PF07710
+17	pfam	protein_domain	7673756	7673837	0	-	.	Name=P53 DNA-binding domain;color=#00FF00;gene_id=ENSG00000141510;gene_name=TP53;protein_domain_id=PF00870
+17	pfam	protein_domain	7674181	7674290	0	-	.	Name=P53 DNA-binding domain;color=#00FF00;gene_id=ENSG00000141510;gene_name=TP53;protein_domain_id=PF00870
+17	pfam	protein_domain	7674859	7674971	0	-	.	Name=P53 DNA-binding domain;color=#00FF00;gene_id=ENSG00000141510;gene_name=TP53;protein_domain_id=PF00870
+17	pfam	protein_domain	7675053	7675236	0	-	.	Name=P53 DNA-binding domain;color=#00FF00;gene_id=ENSG00000141510;gene_name=TP53;protein_domain_id=PF00870
+17	pfam	protein_domain	7675994	7676071	0	-	.	Name=P53 DNA-binding domain;color=#00FF00;gene_id=ENSG00000141510;gene_name=TP53;protein_domain_id=PF00870
+17	pfam	protein_domain	7676192	7676266	0	-	.	Name=Transactivation domain 2;color=#FFFFFF;gene_id=ENSG00000141510;gene_name=TP53;protein_domain_id=PF18521
+17	pfam	protein_domain	7676388	7676403	0	-	.	Name=P53 transactivation motif;color=#008080;gene_id=ENSG00000141510;gene_name=TP53;protein_domain_id=PF08563
+17	pfam	protein_domain	7676521	7676579	0	-	.	Name=P53 transactivation motif;color=#008080;gene_id=ENSG00000141510;gene_name=TP53;protein_domain_id=PF08563
+17	pfam	protein_domain	76736903	76737112	0	-	.	Name=RNA recognition motif. (a.k.a. RRM%2C RBD%2C or RNP domain);color=#FF8080;gene_id=ENSG00000161547;gene_name=SRSF2;protein_domain_id=PF00076
+19	pfam	protein_domain	33301413	33301571	0	-	.	Name=Basic region leucine zipper;color=#FF8000;gene_id=ENSG00000245848;gene_name=CEBPA;protein_domain_id=PF07716
+20	pfam	protein_domain	32358806	32358832	0	+	.	Name=HB1%2C ASXL%2C restriction endonuclease HTH domain;color=#80FFFF;gene_id=ENSG00000171456;gene_name=ASXL1;protein_domain_id=PF05066
+20	pfam	protein_domain	32359332	32359334	0	+	.	Name=HB1%2C ASXL%2C restriction endonuclease HTH domain;color=#80FFFF;gene_id=ENSG00000171456;gene_name=ASXL1;protein_domain_id=PF05066
+20	pfam	protein_domain	32359786	32359791	0	+	.	Name=HB1%2C ASXL%2C restriction endonuclease HTH domain;color=#80FFFF;gene_id=ENSG00000171456;gene_name=ASXL1;protein_domain_id=PF05066
+20	pfam	protein_domain	32366384	32366467	0	+	.	Name=HB1%2C ASXL%2C restriction endonuclease HTH domain;color=#80FFFF;gene_id=ENSG00000171456;gene_name=ASXL1;protein_domain_id=PF05066
+20	pfam	protein_domain	32367727	32367729	0	+	.	Name=HB1%2C ASXL%2C restriction endonuclease HTH domain;color=#80FFFF;gene_id=ENSG00000171456;gene_name=ASXL1;protein_domain_id=PF05066
+20	pfam	protein_domain	32369013	32369117	0	+	.	Name=HB1%2C ASXL%2C restriction endonuclease HTH domain;color=#80FFFF;gene_id=ENSG00000171456;gene_name=ASXL1;protein_domain_id=PF05066
+20	pfam	protein_domain	32429425	32429431	0	+	.	Name=Asx homology domain;color=#8080FF;gene_id=ENSG00000171456;gene_name=ASXL1;protein_domain_id=PF13919
+20	pfam	protein_domain	32430044	32430053	0	+	.	Name=Asx homology domain;color=#8080FF;gene_id=ENSG00000171456;gene_name=ASXL1;protein_domain_id=PF13919
+20	pfam	protein_domain	32431321	32431484	0	+	.	Name=Asx homology domain;color=#8080FF;gene_id=ENSG00000171456;gene_name=ASXL1;protein_domain_id=PF13919
+20	pfam	protein_domain	32431583	32431679	0	+	.	Name=Asx homology domain;color=#8080FF;gene_id=ENSG00000171456;gene_name=ASXL1;protein_domain_id=PF13919
+20	pfam	protein_domain	32432880	32432983	0	+	.	Name=Asx homology domain;color=#8080FF;gene_id=ENSG00000171456;gene_name=ASXL1;protein_domain_id=PF13919
+20	pfam	protein_domain	32437210	32437329	0	+	.	Name=PHD domain of transcriptional enhancer%2C Asx;color=#80FFFF;gene_id=ENSG00000171456;gene_name=ASXL1;protein_domain_id=PF13922
+21	pfam	protein_domain	34792138	34792413	0	-	.	Name=Runx inhibition domain;color=#FFFFFF;gene_id=ENSG00000159216;gene_name=RUNX1;protein_domain_id=PF08504
+21	pfam	protein_domain	34799458	34799462	0	-	.	Name=Runt domain;color=#80FF80;gene_id=ENSG00000159216;gene_name=RUNX1;protein_domain_id=PF00853
+21	pfam	protein_domain	34834597	34834601	0	-	.	Name=Runt domain;color=#80FF80;gene_id=ENSG00000159216;gene_name=RUNX1;protein_domain_id=PF00853
+21	pfam	protein_domain	34859474	34859578	0	-	.	Name=Runt domain;color=#80FF80;gene_id=ENSG00000159216;gene_name=RUNX1;protein_domain_id=PF00853
+21	pfam	protein_domain	34880557	34880713	0	-	.	Name=Runt domain;color=#80FF80;gene_id=ENSG00000159216;gene_name=RUNX1;protein_domain_id=PF00853
+21	pfam	protein_domain	34886843	34886959	0	-	.	Name=Runt domain;color=#80FF80;gene_id=ENSG00000159216;gene_name=RUNX1;protein_domain_id=PF00853
+21	pfam	protein_domain	43094524	43094563	0	-	.	Name=Zinc finger C-x8-C-x5-C-x3-H type (and similar);color=#FF8000;gene_id=ENSG00000160201;gene_name=U2AF1;protein_domain_id=PF00642
+21	pfam	protein_domain	43094655	43094689	0	-	.	Name=Zinc finger C-x8-C-x5-C-x3-H type (and similar);color=#FF8000;gene_id=ENSG00000160201;gene_name=U2AF1;protein_domain_id=PF00642
+21	pfam	protein_domain	43094714	43094788	0	-	.	Name=RNA recognition motif. (a.k.a. RRM%2C RBD%2C or RNP domain);color=#FF8080;gene_id=ENSG00000160201;gene_name=U2AF1;protein_domain_id=PF00076
+21	pfam	protein_domain	43095438	43095515	0	-	.	Name=RNA recognition motif. (a.k.a. RRM%2C RBD%2C or RNP domain);color=#FF8080;gene_id=ENSG00000160201;gene_name=U2AF1;protein_domain_id=PF00076
+21	pfam	protein_domain	43104333	43104402	0	-	.	Name=Zinc finger C-x8-C-x5-C-x3-H type (and similar);color=#FF8000;gene_id=ENSG00000160201;gene_name=U2AF1;protein_domain_id=PF00642
+21	pfam	protein_domain	43107451	43107452	0	-	.	Name=Zinc finger C-x8-C-x5-C-x3-H type (and similar);color=#FF8000;gene_id=ENSG00000160201;gene_name=U2AF1;protein_domain_id=PF00642
+22	pfam	protein_domain	23180967	23181185	0	+	.	Name=Bcr-Abl oncoprotein oligomerisation domain;color=#FF0000;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF09036
+22	pfam	protein_domain	23260995	23261054	0	+	.	Name=RhoGEF domain;color=#000000;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF00621
+22	pfam	protein_domain	23261355	23261540	0	+	.	Name=RhoGEF domain;color=#000000;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF00621
+22	pfam	protein_domain	23268408	23268515	0	+	.	Name=RhoGEF domain;color=#000000;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF00621
+22	pfam	protein_domain	23271532	23271592	0	+	.	Name=RhoGEF domain;color=#000000;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF00621
+22	pfam	protein_domain	23273081	23273133	0	+	.	Name=RhoGEF domain;color=#000000;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF00621
+22	pfam	protein_domain	23273634	23273726	0	+	.	Name=RhoGEF domain;color=#000000;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF00621
+22	pfam	protein_domain	23273772	23273774	0	+	.	Name=PH domain;color=#FF8080;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF19057
+22	pfam	protein_domain	23283977	23284098	0	+	.	Name=PH domain;color=#FF8080;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF19057
+22	pfam	protein_domain	23285033	23285120	0	+	.	Name=PH domain;color=#FF8080;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF19057
+22	pfam	protein_domain	23290368	23290413	0	+	.	Name=C2 domain;color=#00FF00;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF00168
+22	pfam	protein_domain	23292541	23292638	0	+	.	Name=C2 domain;color=#00FF00;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF00168
+22	pfam	protein_domain	23295024	23295155	0	+	.	Name=C2 domain;color=#00FF00;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF00168
+22	pfam	protein_domain	23309424	23309432	0	+	.	Name=C2 domain;color=#00FF00;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF00168
+22	pfam	protein_domain	23311716	23311836	0	+	.	Name=RhoGAP domain;color=#FFFFFF;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF00620
+22	pfam	protein_domain	23312887	23313021	0	+	.	Name=RhoGAP domain;color=#FFFFFF;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF00620
+22	pfam	protein_domain	23313968	23314073	0	+	.	Name=RhoGAP domain;color=#FFFFFF;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF00620
+22	pfam	protein_domain	23314552	23314642	0	+	.	Name=RhoGAP domain;color=#FFFFFF;gene_id=ENSG00000186716;gene_name=BCR;protein_domain_id=PF00620
+X	pfam	protein_domain	15809263	15809318	0	+	.	Name=Zinc finger C-x8-C-x5-C-x3-H type (and similar);color=#FF8000;gene_id=ENSG00000169249;gene_name=ZRSR2;protein_domain_id=PF00642
+X	pfam	protein_domain	15815677	15815695	0	+	.	Name=Zinc finger C-x8-C-x5-C-x3-H type (and similar);color=#FF8000;gene_id=ENSG00000169249;gene_name=ZRSR2;protein_domain_id=PF00642
+X	pfam	protein_domain	15815840	15815890	0	+	.	Name=RNA recognition motif. (a.k.a. RRM%2C RBD%2C or RNP domain);color=#FF8080;gene_id=ENSG00000169249;gene_name=ZRSR2;protein_domain_id=PF00076
+X	pfam	protein_domain	15818587	15818642	0	+	.	Name=RNA recognition motif. (a.k.a. RRM%2C RBD%2C or RNP domain);color=#FF8080;gene_id=ENSG00000169249;gene_name=ZRSR2;protein_domain_id=PF00076
+X	pfam	protein_domain	15820207	15820270	0	+	.	Name=RNA recognition motif. (a.k.a. RRM%2C RBD%2C or RNP domain);color=#FF8080;gene_id=ENSG00000169249;gene_name=ZRSR2;protein_domain_id=PF00076
+X	pfam	protein_domain	15820298	15820316	0	+	.	Name=Zinc finger C-x8-C-x5-C-x3-H type (and similar);color=#FF8000;gene_id=ENSG00000169249;gene_name=ZRSR2;protein_domain_id=PF00642
+X	pfam	protein_domain	15822731	15822786	0	+	.	Name=Zinc finger C-x8-C-x5-C-x3-H type (and similar);color=#FF8000;gene_id=ENSG00000169249;gene_name=ZRSR2;protein_domain_id=PF00642
+X	pfam	protein_domain	40052139	40052400	0	-	.	Name=BCORL-PCGF1-binding domain;color=#0000FF;gene_id=ENSG00000183337;gene_name=BCOR;protein_domain_id=PF16553
+X	pfam	protein_domain	40053885	40053962	0	-	.	Name=BCORL-PCGF1-binding domain;color=#0000FF;gene_id=ENSG00000183337;gene_name=BCOR;protein_domain_id=PF16553
+X	pfam	protein_domain	40055435	40055513	0	-	.	Name=Ankyrin repeats (3 copies);color=#FFFF80;gene_id=ENSG00000183337;gene_name=BCOR;protein_domain_id=PF12796
+X	pfam	protein_domain	40057155	40057321	0	-	.	Name=Ankyrin repeats (3 copies);color=#FFFF80;gene_id=ENSG00000183337;gene_name=BCOR;protein_domain_id=PF12796
+X	pfam	protein_domain	40062139	40062168	0	-	.	Name=Ankyrin repeats (3 copies);color=#FFFF80;gene_id=ENSG00000183337;gene_name=BCOR;protein_domain_id=PF12796
+X	pfam	protein_domain	40062325	40062393	0	-	.	Name=BCL-6 co-repressor%2C non-ankyrin-repeat region;color=#808080;gene_id=ENSG00000183337;gene_name=BCOR;protein_domain_id=PF15808
+X	pfam	protein_domain	40062746	40063071	0	-	.	Name=BCL-6 co-repressor%2C non-ankyrin-repeat region;color=#808080;gene_id=ENSG00000183337;gene_name=BCOR;protein_domain_id=PF15808
+X	pfam	protein_domain	40063608	40063851	0	-	.	Name=BCL-6 co-repressor%2C non-ankyrin-repeat region;color=#808080;gene_id=ENSG00000183337;gene_name=BCOR;protein_domain_id=PF15808
+X	pfam	protein_domain	40064336	40064336	0	-	.	Name=BCL-6 co-repressor%2C non-ankyrin-repeat region;color=#808080;gene_id=ENSG00000183337;gene_name=BCOR;protein_domain_id=PF15808
+X	pfam	protein_domain	124045173	124045368	0	+	.	Name=STAG domain  ;color=#800000;gene_id=ENSG00000101972;gene_name=STAG2;protein_domain_id=PF08514
+X	pfam	protein_domain	124047354	124047481	0	+	.	Name=STAG domain  ;color=#800000;gene_id=ENSG00000101972;gene_name=STAG2;protein_domain_id=PF08514

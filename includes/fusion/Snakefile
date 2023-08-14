@@ -6,234 +6,72 @@ include: "common.smk"
 samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample_name"]]
 
 
-localrules:
-    intersect_fusions,
-    plot_cp,
-    plot_isect,
-    plot_sf,
-    star_fusion_cp,
-    subset_sf,
-
-
 rule all:
     input:
-        star_predictions=[module_output.star_fusion(sample) for sample in samples],
-        fusioncatcher_predictions=[
-            module_output.optional.fusion_catcher(sample) for sample in samples
-        ],
-        intersect_predictions=[
-            module_output.optional.intersect(sample) for sample in samples
-        ],
+        arriba=[module_output.arriba(sample) for sample in samples],
         json=[module_output.json(sample) for sample in samples],
 
 
-rule star_fusion:
+rule arriba:
     input:
-        fq1=get_forward,
-        fq2=get_reverse,
-        lib=config["genome_star_fusion_lib"],
+        bam=get_bam,
+        ref=config["genome_fasta"],
+        gtf=config["gtf"],
+        blacklist=config["blacklist"],
+        known_fusions=config["known_fusions"],
+        protein_domains=config["protein_domains"],
     output:
-        txt="{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv",
-        folder=directory("{sample}/fusion/star-fusion"),
+        fusions="{sample}/fusion/arriba/fusions.tsv",
+        discarded="{sample}/fusion/arriba/fusions.discarded.tsv",
     log:
-        "log/star_fusion.{sample}.txt",
-    threads: 8
+        "log/arriba.{sample}.txt",
+    threads: 1
     container:
-        containers["star-fusion"]
+        containers["arriba"]
     shell:
         """
-        rm -rf {output.folder} && \
-        mkdir -p {output.folder} && \
-        STAR-Fusion \
-            --genome_lib_dir {input.lib} \
-            --output_dir {output.folder} \
-            --left_fq {input.fq1:q} \
-            --right_fq {input.fq2:q} 2> {log}
+        arriba \
+            -x {input.bam} \
+            -a {input.ref} \
+            -g {input.gtf} \
+            -b {input.blacklist} \
+            -k {input.known_fusions} \
+            -t {input.known_fusions} \
+            -p {input.protein_domains} \
+            -o {output.fusions} \
+            -O {output.discarded} 2> {log}
         """
 
 
-rule star_fusion_cp:
+rule arriba_to_json:
     input:
-        txt="{sample}/fusion/star-fusion/star-fusion.fusion_predictions.tsv",
+        fusions="{sample}/fusion/arriba/fusions.tsv",
+        src=srcdir("scripts/arriba2json.py"),
     output:
-        txt="{sample}/fusion/{sample}.star-fusion",
+        json="{sample}/fusion/arriba/fusions.json",
     log:
-        "log/star_fusion_cp.{sample}.txt",
+        "log/arriba_to_json.{sample}.txt",
+    threads: 1
     container:
-        containers["fsnviz"]
+        containers["arriba"]
     shell:
         """
-        cp {input.txt}  {output.txt} 2>{log}
-        """
-
-
-rule plot_sf:
-    input:
-        txt="{sample}/fusion/{sample}.star-fusion",
-    output:
-        png="{sample}/fusion/{sample}.star-fusion-circos/fsnviz.png",
-    log:
-        "log/plot_sf.{sample}.txt",
-    container:
-        containers["fsnviz"]
-    shell:
-        """
-        PERL5LIB="" fsnviz \
-            --out-dir `dirname {output.png}` \
-            --png \
-            -k human.hg38 \
-            star-fusion \
-            {input.txt} 2> {log}
-        """
-
-
-rule fusioncatcher:
-    input:
-        fq1=get_forward,
-        fq2=get_reverse,
-    params:
-        data=config["fusioncatcher_data"],
-        max_junctions=1500000,
-    output:
-        txt="{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt",
-    log:
-        "log/fusioncatcher.{sample}.log",
-    threads: 8
-    container:
-        containers["fusioncatcher"]
-    shell:
-        """
-        dir=`dirname {output.txt}` && \
-        fusioncatcher.py \
-            --threads {threads} \
-            -i {input.fq1:q},{input.fq2:q} \
-            -o ${{dir}} \
-            --data {params.data} \
-            --limitSjdbInsertNsj {params.max_junctions} 2> {log}
-        """
-
-
-rule fusioncatcher_cp:
-    input:
-        txt="{sample}/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt",
-    output:
-        txt="{sample}/fusion/{sample}.fusioncatcher",
-    log:
-        "log/fusioncatcher_cp.{sample}.txt",
-    container:
-        containers["fsnviz"]
-    shell:
-        """
-        cp {input.txt} {output.txt} 2> {log}
-        """
-
-
-rule plot_fc:
-    input:
-        txt="{sample}/fusion/{sample}.fusioncatcher",
-    output:
-        png="{sample}/fusion/{sample}.fusioncatcher-circos/fsnviz.png",
-    log:
-        "log/plot_fc.{sample}.txt",
-    container:
-        containers["fsnviz"]
-    shell:
-        """
-        PERL5LIB="" fsnviz \
-            --out-dir `dirname {output.png}` \
-            --png \
-            -k human.hg38 \
-            fusioncatcher {input.txt} 2> {log}
-        """
-
-
-rule intersect_fusions:
-    input:
-        sf="{sample}/fusion/{sample}.star-fusion",
-        fc="{sample}/fusion/{sample}.fusioncatcher",
-        bed=config["transcripts_bed"],
-    output:
-        txt="{sample}/fusion/{sample}.fuma",
-    log:
-        "log/intersect_fusions.{sample}.txt",
-    container:
-        containers["fuma"]
-    shell:
-        """
-        fuma \
-            -a hg38:{input.bed} \
-            -s fc-{wildcards.sample}:fusion-catcher_final:{input.fc} \
-            sf-{wildcards.sample}:star-fusion_final:{input.sf} \
-            -l "fc-{wildcards.sample}:hg38" \
-            "sf-{wildcards.sample}:hg38" \
-            -f extensive \
-            -o - \
-            | grep -vE "FuMa::" > {output.txt} 2> {log}
-        """
-
-
-rule subset_sf:
-    input:
-        sf="{sample}/fusion/{sample}.star-fusion",
-        isect="{sample}/fusion/{sample}.fuma",
-        subset_script=srcdir("scripts/subset_sf.py"),
-    output:
-        sf="{sample}/fusion/{sample}.sf-isect",
-    log:
-        "log/subset_sf.{sample}.txt",
-    container:
-        containers["crimson"]
-    shell:
-        """
-        python3 {input.subset_script} {input.isect} {input.sf} > {output.sf} 2> {log}
-        """
-
-
-rule plot_isect:
-    input:
-        txt="{sample}/fusion/{sample}.sf-isect",
-    output:
-        png="{sample}/fusion/{sample}.sf-isect-circos/fsnviz.png",
-    log:
-        "log/plot_isect.{sample}.txt",
-    container:
-        containers["fsnviz"]
-    shell:
-        """
-        PERL5LIB="" fsnviz \
-            --out-dir `dirname {output.png}` \
-            --png \
-            -k human.hg38 \
-            star-fusion {input.txt} 2> {log}
+        {input.src} {input} > {output} 2> {log}
         """
 
 
 rule json_output:
     input:
-        fusioncatcher=module_output.optional.fusion_catcher,
-        star_fusion=module_output.star_fusion,
-        subset=module_output.optional.subset_predictions,
-        fc_png=module_output.optional.fusioncatcher_fig,
-        sf_png=module_output.star_fusion_fig,
-        is_png=module_output.optional.intersect_fig,
+        json="{sample}/fusion/arriba/fusions.json",
         src=srcdir("scripts/json-output.py"),
-    params:
-        intersected="--intersected" if config["fusioncatcher_data"] else "",
-        tools="fusioncatcher intersection star-fusion"
-        if config["fusioncatcher_data"]
-        else "star-fusion",
     output:
-        "{sample}/fusion/fusion-output.json",
+        json="{sample}/fusion/fusion-output.json",
     log:
         "log/fusion_json_output.{sample}.txt",
+    threads: 1
     container:
-        containers["crimson"]
+        containers["arriba"]
     shell:
         """
-        python3 {input.src} \
-            {params.intersected} \
-            --tools {params.tools} \
-            --plots {input.fc_png} {input.sf_png} {input.is_png} \
-            --tables {input.fusioncatcher} {input.subset} {input.star_fusion} \
-            > {output} 2> {log}
+        {input.src} {input.json} > {output} 2> {log}
         """

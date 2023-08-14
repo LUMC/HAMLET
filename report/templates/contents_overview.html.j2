@@ -42,7 +42,7 @@
 
 <div class="keep-together">
   <div class="table-title">
-    <p>Table 10 | Top 5 detected fusion genes by supporting reads</p>
+    <p>Table 10 | Detected fusion genes</p>
   </div>
   <table class="table-wide" style="margin-bottom: 2em;">
     <thead>
@@ -53,33 +53,18 @@
         <th class="text-right">Spanning fragments count</th>
       </tr>
     </thead>
-  {% if modules.fusion.intersected %}
     <tbody>
-      {% for item in modules.fusion.tables.intersection.top20[:5] %}
+      {% for item in modules.fusion %}
       <tr>
-        <td>{{ item.name }}</td>
+        <td>{{ item.gene1}}::{{ item.gene2}}</td>
         <td>{{ item.type }}</td>
-        <td class="text-right">{{ item.jr_count }}</td>
-        <td class="text-right">{{ item.sf_count }}</td>
+        <td class="text-right">{{ item.coverage1 + item.coverage2}}</td>
+        <td class="text-right">{{ item.discordant_mates }}</td>
       </tr>
       {% endfor %}
       <tr>
       </tr>
     </tbody>
-  {% else %}
-    <tbody>
-      {% for item in modules.fusion.tables["star-fusion"]["top20"][:5] %}
-      <tr>
-        <td>{{ item.name }}</td>
-        <td>{{ item.type }}</td>
-        <td class="text-right">{{ item.jr_count }}</td>
-        <td class="text-right">{{ item.sf_count }}</td>
-      </tr>
-      {% endfor %}
-      <tr>
-      </tr>
-    </tbody>
-  {% endif %}
   </table>
 </div>
 

@@ -40,58 +40,7 @@
         "qc_seq": { "$ref": "#/definitions/modules/qc_seq" }
       },
       "fusion": {
-        "type": "object",
-        "additionalProperties": false,
-        "minProperties": 3,
-        "properties": {
-          "intersected": { "type": "boolean" },
-          "plots": { "$ref": "#/definitions/modules/fusion/plot" },
-          "tables": { "$ref": "#/definitions/modules/fusion/tables" }
-        },
-        "plot": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "fusioncatcher": { "type": "string" },
-            "intersection": { "type": "string" },
-            "star-fusion": { "type": "string" }
-          }
-        },
-        "tables": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "fusioncatcher": { "$ref": "#/definitions/modules/fusion/table" },
-            "intersection": { "$ref": "#/definitions/modules/fusion/table" },
-            "star-fusion": { "$ref": "#/definitions/modules/fusion/table" }
-          }
-        },
-        "table": {
-          "type": "object",
-          "additionalProperties": false,
-          "minProperties": 2,
-          "properties": {
-            "path": { "type": "string" },
-            "top20": {
-              "type": "array",
-              "items": { "$ref": "#/definitions/modules/fusion/event" }
-            }
-          }
-        },
-        "event": {
-          "type": "object",
-          "additionalProperties": false,
-          "minProperties": 4,
-          "properties": {
-            "jr_count": { "type": "integer" },
-            "name": { "type": "string" },
-            "sf_count": { "type": "integer"},
-            "type": {
-              "type": "string",
-              "enum": ["ONLY_REF_SPLICE", "INCL_NON_REF_SPLICE"]
-            }
-          }
-        }
+        "type": "array"
       },
       "itd": {
         "type": "object",

@@ -1,7 +1,0 @@
-# Test the full json schema
-- name: test-full-schema
-  tags:
-    - sanity
-    - schema
-  command: >
-    jsonschema -i test/data/output/v2/SRR8615409.summary.json utilities/output-schema.json

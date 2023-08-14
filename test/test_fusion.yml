@@ -7,32 +7,22 @@
     snakemake -n
     --snakefile includes/fusion/Snakefile
     --printshellcmds
-    --configfile test/data/config/fusion-fusioncatcher.json
+    --configfile test/data/config/fusion-dummy.json
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
     contains:
       # fusion pipeline should generate the following files
-      - "TestSample1/fusion/TestSample1.star-fusion"
-      - "TestSample1/fusion/TestSample1.star-fusion-circos/fsnviz.png"
-      - "TestSample1/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
-      - "TestSample1/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
-      - "TestSample1/fusion/TestSample1.fusioncatcher"
-      - "TestSample1/fusion/TestSample1.fusioncatcher-circos/fsnviz.png"
-      - "TestSample1/fusion/TestSample1.fuma"
-      - "TestSample1/fusion/TestSample1.sf-isect"
+      - "TestSample1/fusion/arriba/fusions.tsv"
+      - "TestSample1/fusion/arriba/fusions.discarded.tsv"
       # fusion pipeline should handle multiple samples
-      - "TestSample2/fusion/TestSample2.star-fusion"
-      - "TestSample2/fusion/TestSample2.star-fusion-circos/fsnviz.png"
-      - "TestSample2/fusion/star-fusion/star-fusion.fusion_predictions.tsv"
-      - "TestSample2/fusion/fusioncatcher/final-list_candidate-fusion-genes.txt"
-      - "TestSample2/fusion/TestSample2.fusioncatcher"
-      - "TestSample2/fusion/TestSample2.fusioncatcher-circos/fsnviz.png"
-      - "TestSample2/fusion/TestSample2.fuma"
-      - "TestSample2/fusion/TestSample2.sf-isect"
+      - "TestSample2/fusion/arriba/fusions.tsv"
+      - "TestSample2/fusion/arriba/fusions.discarded.tsv"
       # fusion pipeline should create a final json file
       - "TestSample2/fusion/fusion-output.json"
-    contains_regex:
-      - "STAR-Fusion .* --left_fq 'test/data/fastq/SRR8615409 chrM_1.fastq.gz' +--right_fq 'test/data/fastq/SRR8615409 chrM_2.fastq.gz'"
+      # arriba should be run
+      - "rule arriba:"
+      # The final json output file should be produced
+      - "TestSample1/fusion/fusion-output.json"
 
 # Singularity should be available
 - name: test-fusion-sanity-singularity
@@ -51,70 +41,32 @@
     - functional
     - fusion
   command: >
+    bash -c "
+    unxz -k test/data/reference/hamlet-ref.fa.xz;
+
     snakemake -rp
     --snakefile includes/fusion/Snakefile
     --configfile test/data/config/fusion.json
-    --config pepfile=test/pep/itd.csv
+    --config pepfile=test/pep/chrM.csv
     --cores 1
     --notemp
     --verbose
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
     --singularity-prefix '~/.singularity/cache/snakemake'
-    SRR8615687/fusion/star-fusion/star-fusion.fusion_predictions.tsv
-    SRR8615687/fusion/SRR8615687.star-fusion
-    SRR8615687/fusion/fusion-output.json
+
+    rm test/data/reference/hamlet-ref.fa;
+    "
   files:
-    # Should create the star-fusion output file
-    - path: SRR8615687/fusion/star-fusion/star-fusion.fusion_predictions.tsv
-    # Should create the star-fusion output folder
-    - path: SRR8615687/fusion/SRR8615687.star-fusion
-    # Test for log files
-    - path: "log/star_fusion.SRR8615687.txt"
-      contains:
-        - "Running CMD: /usr/local/bin/STAR"
-    - path: "log/star_fusion_cp.SRR8615687.txt"
+    # Should create the arriba output files
+    - path: SRR8615409/fusion/arriba/fusions.tsv
+    - path: SRR8615409/fusion/arriba/fusions.discarded.tsv
     # Test for module output file
-    - path: "SRR8615687/fusion/fusion-output.json"
-
-- name: test-fusion-output
-  tags:
-    - functional
-    - fusion
-  command: >
-    bash -c "
-    python3 includes/fusion/scripts/json-output.py \
-      --intersected \
-      --tools fusioncatcher intersection star-fusion \
-      --plots \
-        test/data/fusion/sample.fusioncatcher-circos/fsnviz.png \
-        test/data/fusion/sample.sf-isect-circos/fsnviz.png \
-        test/data/fusion/sample.star-fusion-circos/fsnviz.png \
-      --tables \
-        test/data/fusion/sample.fusioncatcher \
-        test/data/fusion/sample.sf-isect \
-        test/data/fusion/sample.star-fusion \
-      > fusion-output.json
-    "
-  files:
-    - path: fusion-output.json
-
-- name: test-star-fusion-output
-  tags:
-    - functional
-    - fusion
-  command: >
-    bash -c "
-    python3 includes/fusion/scripts/json-output.py \
-      --tools star-fusion \
-      --plots \
-        test/data/fusion/sample.star-fusion-circos/fsnviz.png \
-      --tables \
-        test/data/fusion/sample.star-fusion \
-      > fusion-output.json
-    "
-  files:
-    - path: fusion-output.json
+    - path: "SRR8615409/fusion/fusion-output.json"
+    # Test for log files
+    - path: "log/arriba.SRR8615409.txt"
+      contains:
+        - "WARNING: unknown gene: OR4F5"
 
 - name: lint-fusion
   tags:

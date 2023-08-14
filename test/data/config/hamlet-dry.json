@@ -14,8 +14,11 @@
     "kmt2a_end": 4769
   },
   "fusion": {
-    "genome_star_fusion_lib": "test/data/ctat_genome_lib_build_dir_chrM",
-    "transcripts_bed": "test/data/reference/transcripts_chrM.bed"
+    "genome_fasta": "test/data/reference/hamlet-ref.fa.xz",
+    "gtf": "test/data/reference/hamlet-ref.gtf",
+    "blacklist": "test/data/reference/arriba/blacklist_hg38_GRCh38_v2.4.0.head.tsv.gz",
+    "known_fusions": "test/data/reference/arriba/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz",
+    "protein_domains": "test/data/reference/arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3"
   },
   "snv-indels": {
     "genome_fasta": "test/data/reference/hamlet-ref.fa.xz",

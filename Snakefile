@@ -8,13 +8,7 @@ localrules:
     align_table_vars_all,
     align_table_vars_hi,
     create_summary,
-    fusion_fusioncatcher_cp,
-    fusion_intersect_fusions,
-    fusion_json_output,
-    fusion_plot_isect,
-    fusion_plot_sf,
-    fusion_star_fusion_cp,
-    fusion_subset_sf,
+    fusion_arriba_to_json,
     generate_report,
     itd_detect_itd_ftl3,
     itd_detect_itd_kmt2a,
@@ -114,24 +108,17 @@ module fusion:
 use rule * from fusion as fusion_*
 
 
-# Connect the star_fusion rule to the output of qc-seq
-use rule star_fusion from fusion as fusion_star_fusion with:
+# Connect the output of snv-indels to the arriba rule
+use rule arriba from fusion as fusion_arriba with:
     input:
-        fq1=qc_seq.module_output.forward,
-        fq2=qc_seq.module_output.reverse,
-        lib=config["fusion"]["genome_star_fusion_lib"],
+        bam=align.module_output.bam,
+        ref=config["fusion"]["genome_fasta"],
+        gtf=config["fusion"]["gtf"],
+        blacklist=config["fusion"]["blacklist"],
+        known_fusions=config["fusion"]["known_fusions"],
+        protein_domains=config["fusion"]["protein_domains"],
     container:
-        fusion.containers["star-fusion"]
-
-
-# Connect the fusioncather rule to the output of qc-seq. Fusioncatcher should
-# use the raw (untrimmed) output files, according to the manual.
-use rule fusioncatcher from fusion as fusion_fusioncatcher with:
-    input:
-        fq1=qc_seq.module_output.forward_raw,
-        fq2=qc_seq.module_output.reverse_raw,
-    container:
-        fusion.containers["fusioncatcher"]
+        fusion.containers["arriba"]
 
 
 rule create_summary:
@@ -177,6 +164,7 @@ rule generate_report:
         scr=srcdir("scripts/generate_report.py"),
     output:
         pdf="{sample}/hamlet_report.{sample}.pdf",
+        html="{sample}/hamlet_report.{sample}.html",
     log:
         "log/generate_report.{sample}.txt",
     container:
@@ -189,5 +177,6 @@ rule generate_report:
             --css-path {input.css} \
             --toc-path {input.toc} \
             {input.summary} \
+            --html-output {output.html} \
             --pdf-output {output.pdf} 2> {log}
         """

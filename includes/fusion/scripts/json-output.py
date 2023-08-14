@@ -4,32 +4,11 @@ import json
 import argparse
 import os
 
-from crimson import star_fusion
-from crimson import fusioncatcher
-
-def transform_star_fusion(event):
-    """ Transform a star_fusion event to a simplified form """
-    return {
-        "jr_count": event["nJunctionReads"],
-        "name": event["fusionName"],
-        "sf_count": event["nSpanningFrags"],
-        "type": event["spliceType"]
-    }
-
-def transform_fusioncatcher(event):
-    """ Transform a fusioncatcher event to a simplified form """
-    return {
-        "name": f"{event['5end']['geneSymbol']}--{event['3end']['geneSymbol']}",
-        "sf_count": event["nSpanningPairs"],
-    }
 
 def fusion_results(args):
     # Initialise the results dictionary
-    results = {
-            "intersected": args.intersected,
-            "plots": dict(),
-            "tables": dict()
-    }
+    with open(args.arriba) as fin:
+        return json.load(fin)
 
     # Add the results for each tool
     for tool, plot, table in zip(args.tools, args.plots, args.tables):
@@ -59,13 +38,8 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--intersected', default=False, action='store_true')
-    parser.add_argument('--tools', required=True, nargs='+', help='Tools')
-    parser.add_argument('--plots', required=True, nargs='+', help='PNG plots, in the same order as --tools')
-    parser.add_argument('--tables', required=True, nargs='+', help='Result tables, in the same order as --tools')
+    parser.add_argument('arriba', help='Arriba output converted to JSON')
 
     args = parser.parse_args()
-    assert len(args.tools) == len(args.plots)
-    assert len(args.tools) == len(args.tables)
     main(args)
 

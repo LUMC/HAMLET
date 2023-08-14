@@ -1,6 +1,7 @@
 import json
 import jsonschema
 import pathlib
+import os
 import pytest
 
 def validate_files(output_file, schema_file):
@@ -44,91 +45,10 @@ def test_qc_seq_schema(workflow_dir):
 
 @pytest.mark.workflow('test-fusion-chrM')
 def test_fusion_schema(workflow_dir):
-    sample = "SRR8615687"
+    sample = "SRR8615409"
     output_file = pathlib.Path(workflow_dir, f"{sample}/fusion/fusion-output.json")
     schema_file = pathlib.Path(workflow_dir, "includes/fusion/output-schema.json")
     validate_files(output_file, schema_file)
-
-@pytest.mark.workflow('test-fusion-chrM')
-def test_fusion_plot_path(workflow_dir):
-    """ Test that the fusion plots use an absolute path """
-    sample = "SRR8615687"
-    output_file = pathlib.Path(workflow_dir, f"{sample}/fusion/fusion-output.json")
-    with open(output_file) as fin:
-        js = json.load(fin)
-    assert js['fusion']['plots']['star-fusion'].startswith("/")
-    assert js['fusion']['tables']['star-fusion']['path'].startswith("/")
-
-@pytest.mark.workflow('test-fusion-output')
-def test_example_fusion_output_schema(workflow_dir):
-    output_file = pathlib.Path(workflow_dir, "fusion-output.json")
-    schema_file = pathlib.Path(workflow_dir, "includes/fusion/output-schema.json")
-    validate_files(output_file, schema_file)
-
-@pytest.mark.workflow('test-fusion-output')
-def test_example_fusion_output_content(workflow_dir):
-    output_file = pathlib.Path(workflow_dir, "fusion-output.json")
-    with open(output_file) as fin:
-        js = json.load(fin)
-
-    # Test if we recognised the data is intersected
-    assert js["fusion"]["intersected"]
-
-    # Test if we have a table for each tool
-    tools = ["fusioncatcher", "star-fusion", "intersection"]
-    for tool in tools:
-        assert tool in js["fusion"]["tables"]
-
-    # Test first and last result for intersection
-    results = js["fusion"]["tables"]["intersection"]["top20"]
-    first = results[0]
-    last = results[-1]
-
-    assert first["name"] == "PLAA--MIR31HG"
-    assert first["sf_count"] == 101
-
-    assert last["type"] == "INCL_NON_REF_SPLICE"
-    assert last["name"] == "PTMA--NPM1"
-    assert last["jr_count"] == 5
-
-    # Test first result for star-fusion
-    results = js["fusion"]["tables"]["intersection"]["top20"]
-    first = results[0]
-    last = results[-1]
-
-    assert first["name"] == "PLAA--MIR31HG"
-    assert first["sf_count"] == 101
-
-@pytest.mark.workflow('test-fusion-output')
-def test_example_fusion_output_pngs(workflow_dir):
-    """ Test if we have a png plot for each tool """
-    output_file = pathlib.Path(workflow_dir, "fusion-output.json")
-    with open(output_file) as fin:
-        js = json.load(fin)
-
-    # Get the plots for each tool
-    fc = js["fusion"]["plots"]["fusioncatcher"]
-    isect = js["fusion"]["plots"]["intersection"]
-    star = js["fusion"]["plots"]["star-fusion"]
-
-    # Check the content
-    assert fc.endswith("sample.fusioncatcher-circos/fsnviz.png")
-    assert isect.endswith("sample.sf-isect-circos/fsnviz.png")
-    assert star.endswith("sample.star-fusion-circos/fsnviz.png")
-
-@pytest.mark.workflow('test-star-fusion-output')
-def test_star_fusion_output(workflow_dir):
-    """ Test if we have a png plot for each tool """
-    output_file = pathlib.Path(workflow_dir, "fusion-output.json")
-    with open(output_file) as fin:
-        js = json.load(fin)
-
-    # Get the plots for each tool
-    star = js["fusion"]["plots"]["star-fusion"]
-
-    # Check the content
-    assert star.endswith("sample.star-fusion-circos/fsnviz.png")
-    assert not js["fusion"]["intersected"]
 
 @pytest.mark.workflow('test-snv-indels-chrM')
 def test_snv_indel_schema(workflow_dir):
@@ -143,3 +63,11 @@ def test_itd_schema(workflow_dir):
     output_file = pathlib.Path(workflow_dir, f"{sample}/itd//itd-output.json")
     schema_file = pathlib.Path(workflow_dir, "includes/itd/output-schema.json")
     validate_files(output_file, schema_file)
+
+
+if __name__ == '__main__':
+    import sys
+    instance = sys.argv[1]
+    schema = sys.argv[2]
+
+    validate_files(instance, schema)

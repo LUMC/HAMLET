@@ -2,65 +2,22 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Schema of the output from the fusion module for HAMLET",
   "definitions": {
-    "fusion": {
+    "event": {
       "type": "object",
-      "additionalProperties": false,
-      "minProperties": 3,
       "properties": {
-        "intersected": { "type": "boolean" },
-        "plots": { "$ref": "#/definitions/fusion/plot" },
-        "tables": { "$ref": "#/definitions/fusion/tables" }
-      },
-      "plot": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "fusioncatcher": { "type": "string" },
-          "intersection": { "type": "string" },
-          "star-fusion": { "type": "string" }
-        }
-      },
-      "tables": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "fusioncatcher": { "$ref": "#/definitions/fusion/table" },
-          "intersection": { "$ref": "#/definitions/fusion/table" },
-          "star-fusion": { "$ref": "#/definitions/fusion/table" }
-        }
-      },
-      "table": {
-        "type": "object",
-        "additionalProperties": false,
-        "minProperties": 2,
-        "properties": {
-          "path": { "type": "string" },
-          "top20": {
-            "type": "array",
-            "items": { "$ref": "#/definitions/fusion/event" }
-          }
-        }
-      },
-      "event": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "jr_count": { "type": "integer" },
-          "name": { "type": "string" },
-          "sf_count": { "type": "integer"},
-          "type": {
-            "type": "string",
-            "enum": ["ONLY_REF_SPLICE", "INCL_NON_REF_SPLICE"]
-          }
-        },
-        "required": [ "name", "sf_count"]
+        "gene1": { "type": "string" },
+        "gene2": { "type": "string" },
+        "discordant_mates": { "type": "integer"},
+        "split_reads1": { "type": "integer" },
+        "split_reads2": { "type": "integer" },
+        "coverage1":  { "type": "integer" },
+        "coverage2":  { "type": "integer" }
       }
     }
   },
-  "additionalProperties": false,
-  "minProperties": 1,
   "type": "object",
-  "properties": {
-    "fusion": { "$ref": "#/definitions/fusion" }
+  "fusion": {
+    "type": "array",
+    "item": { "$ref": "#definitions/event" }
   }
 }
