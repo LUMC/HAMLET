@@ -68,6 +68,7 @@ rule plot_fusions:
           --annotation={input.gtf} \
           --cytobands={input.cytobands} \
           --proteinDomains={input.protein_domains} \
+          --sampleName={wildcards.sample} \
           --output={output.fusions} 2> {log}
         """
 
