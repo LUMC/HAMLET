@@ -9,13 +9,16 @@ defaults:
     shell: bash -l {0}
 
 jobs:
-  snakemake-tests:
+  quick-tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         test:
           - sanity
           - dry-run
+          - utilities
+          - report
+          - scripts
     steps:
       - uses: actions/checkout@v2.3.4 # https://github.com/actions/checkout.
         with:
@@ -73,24 +76,22 @@ jobs:
           for file in $(find /tmp -name log.err);
           do echo $file; cat $file; done'
 
-  test-functional:
+  functional-tests:
+    needs: quick-tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
         module:
           - qc-seq
+          - snv-indels
           - itd
           - fusion
-          - expression
-          - snv-indels
-          - test-hamlet-targetted-RNA
-          - test-hamlet-chrM
-          - utilities
+          - hamlet
     steps:
       - name: Maximise build space
         uses: easimon/maximize-build-space@master
         with:
-          root-reserve-mb: 512
+          root-reserve-mb: 30720
           swap-size-mb: 1024
           remove-android: 'true'
           remove-dotnet: 'true'
