@@ -10,11 +10,13 @@ rule all:
     input:
         arriba=[module_output.arriba(sample) for sample in samples],
         json=[module_output.json(sample) for sample in samples],
+        plot=[module_output.plot(sample) for sample in samples],
 
 
 rule arriba:
     input:
         bam=get_bam,
+        bai=get_bai,
         ref=config["genome_fasta"],
         gtf=config["gtf"],
         blacklist=config["blacklist"],
@@ -40,6 +42,33 @@ rule arriba:
             -p {input.protein_domains} \
             -o {output.fusions} \
             -O {output.discarded} 2> {log}
+        """
+
+
+rule plot_fusions:
+    input:
+        fusions="{sample}/fusion/arriba/fusions.tsv",
+        bam=get_bam,
+        gtf=config["gtf"],
+        blacklist=config["blacklist"],
+        cytobands=config["cytobands"],
+        protein_domains=config["protein_domains"],
+    output:
+        fusions="{sample}/fusion/arriba/fusions.pdf",
+    log:
+        "log/plot_fusions.{sample}.txt",
+    threads: 1
+    container:
+        containers["arriba"]
+    shell:
+        """
+        draw_fusions.R \
+          --fusions={input.fusions} \
+          --alignments={input.bam} \
+          --annotation={input.gtf} \
+          --cytobands={input.cytobands} \
+          --proteinDomains={input.protein_domains} \
+          --output={output.fusions} 2> {log}
         """
 
 

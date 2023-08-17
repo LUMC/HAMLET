@@ -369,7 +369,7 @@ rule filter_vep_target:
         "log/filter_vep_target.{sample}.txt",
     threads: 1
     container:
-        containers["hamlet-scripts"]
+        containers["crimson"]
     shell:
         """
         python3 {input.scr} \
@@ -399,7 +399,7 @@ rule filter_vep_high:
         "log/filter_vep_high.{sample}.txt",
     threads: 1
     container:
-        containers["hamlet-scripts"]
+        containers["crimson"]
     shell:
         """
         python3 {input.scr} \

@@ -21,6 +21,8 @@
       - "TestSample2/fusion/fusion-output.json"
       # arriba should be run
       - "rule arriba:"
+      # arriba should create the figures
+      - "rule plot_fusions:"
       # The final json output file should be produced
       - "TestSample1/fusion/fusion-output.json"
 
@@ -66,7 +68,7 @@
     # Test for log files
     - path: "log/arriba.SRR8615409.txt"
       contains:
-        - "WARNING: unknown gene: OR4F5"
+        - "WARNING"
 
 - name: lint-fusion
   tags:

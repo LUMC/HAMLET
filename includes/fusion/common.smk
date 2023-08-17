@@ -6,11 +6,16 @@ pepfile: config["pepfile"]
 
 containers = {
     "arriba": "docker://quay.io/biocontainers/arriba:2.4.0--h0033a41_2",
+    "poppler": "docker://quay.io/biocontainers/keggcharter:0.6.0--hdfd78af_0",
 }
 
 
 def get_bam(wildcards):
     return pep.sample_table.loc[wildcards.sample, "bam"]
+
+
+def get_bai(wildcards):
+    return f"{get_bam(wildcards)}.bai"
 
 
 ## Functions for module outputs ##
@@ -22,7 +27,12 @@ def arriba(wildcards):
     return f"{wildcards.sample}/fusion/arriba/fusions.tsv"
 
 
+def plot(wildcards):
+    return f"{wildcards.sample}/fusion/arriba/fusions.pdf"
+
+
 module_output = SimpleNamespace(
     arriba=arriba,
+    plot=plot,
     json=json,
 )
