@@ -21,18 +21,7 @@
     "sample_name": "SRR8615409"
   },
   "modules": {
-    "fusion": {
-      "intersected": false,
-      "plots": {
-        "star-fusion": "test-hamlet-chrM/SRR8615409/fusion/SRR8615409.star-fusion-circos/fsnviz.png"
-      },
-      "tables": {
-        "star-fusion": {
-          "path": "test-hamlet-chrM/SRR8615409/fusion/SRR8615409.star-fusion",
-          "top20": []
-        }
-      }
-    },
+    "fusion": [],
     "itd": {
       "flt3": {
         "path": "test-hamlet-chrM/SRR8615409/itd/SRR8615409.flt3.png",

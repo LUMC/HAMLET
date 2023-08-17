@@ -6,7 +6,7 @@
   command: >
     python3 scripts/generate_report.py
     --html-output report.html
-    test/data/output/v2/SRR8615409.summary.json
+    test/data/output/v2/SRR8615409.vardict.summary.json
   files:
     - path: report.html
 
