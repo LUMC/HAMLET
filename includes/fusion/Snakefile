@@ -11,6 +11,7 @@ rule all:
         arriba=[module_output.arriba(sample) for sample in samples],
         json=[module_output.json(sample) for sample in samples],
         plot=[module_output.plot(sample) for sample in samples],
+        plot_dir=[module_output.plot_dir(sample) for sample in samples],
 
 
 rule arriba:
@@ -70,6 +71,23 @@ rule plot_fusions:
           --proteinDomains={input.protein_domains} \
           --sampleName={wildcards.sample} \
           --output={output.fusions} 2> {log}
+        """
+
+
+rule split_fusion_plots:
+    input:
+        fusions="{sample}/fusion/arriba/fusions.pdf",
+    output:
+        folder=directory("{sample}/fusion/arriba/plots"),
+    log:
+        "log/split_fusion_plots.{sample}.txt",
+    threads: 1
+    container:
+        containers["poppler"]
+    shell:
+        """
+        mkdir -p {output.folder}
+        pdftoppm -png {input.fusions} {output.folder}/fusion
         """
 
 

@@ -23,6 +23,8 @@
       - "rule arriba:"
       # arriba should create the figures
       - "rule plot_fusions:"
+      # The fusion plot pdf should be split to png's
+      - "rule split_fusion_plots:"
       # The final json output file should be produced
       - "TestSample1/fusion/fusion-output.json"
 
@@ -69,6 +71,8 @@
     - path: "log/arriba.SRR8615409.txt"
       contains:
         - "WARNING"
+    # Test that we split the fusion plot pfd to png
+    - path: "SRR8615409/fusion/arriba/plots/fusion-1.png"
 
 - name: lint-fusion
   tags:

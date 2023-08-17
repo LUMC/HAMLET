@@ -31,8 +31,8 @@ def plot(wildcards):
     return f"{wildcards.sample}/fusion/arriba/fusions.pdf"
 
 
-module_output = SimpleNamespace(
-    arriba=arriba,
-    plot=plot,
-    json=json,
-)
+def plot_dir(wildcards):
+    return f"{wildcards.sample}/fusion/arriba/plots"
+
+
+module_output = SimpleNamespace(arriba=arriba, plot=plot, json=json, plot_dir=plot_dir)
