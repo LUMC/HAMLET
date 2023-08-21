@@ -58,6 +58,7 @@ rule all:
         blacklist="blacklist.txt",
         arriba="arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3",
 
+
 rule download_reference:
     output:
         fasta=reference_fname,
@@ -299,7 +300,7 @@ rule arriba_database:
         blacklist="arriba/blacklist_hg38_GRCh38_v2.4.0.tsv.gz",
         known_fusions="arriba/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz",
         cytobands="arriba/cytobands_hg38_GRCh38_v2.4.0.tsv",
-        protein_domains="arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3"
+        protein_domains="arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3",
     singularity:
         containers["arriba"]
     shell:
