@@ -24,13 +24,13 @@ def get_itd_config(dirname):
 
 
 def get_fusion_config(dirname):
+    join = functools.partial(os.path.join, dirname)
     return {
-        "genome_star_fusion_lib": os.path.join(
-            dirname,
-            "GRCh38_gencode_v37_CTAT_lib_Mar012021.plug-n-play/ctat_genome_lib_build_dir",
-        ),
-        "transcripts_bed": os.path.join(dirname, "transcripts.bed"),
-        "fusioncatcher_data": os.path.join(dirname, "fusioncatcher/current"),
+        "genome_fasta": join("GCA_000001405.15_GRCh38_no_alt_analysis_set.fna"),
+        "blacklist": join("arriba/blacklist_hg38_GRCh38_v2.4.0.tsv.gz"),
+        "cytobands": join("arriba/cytobands_hg38_GRCh38_v2.4.0.tsv"),
+        "known_fusions": join("arriba/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz"),
+        "protein_domains": join("arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3")
     }
 
 
