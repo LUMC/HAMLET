@@ -1,5 +1,4 @@
 {
-  "genome_star_fusion_lib": "test/data/ctat_genome_lib_build_dir_chrM",
   "transcripts_bed": "test/data/reference/transcripts_chrM.bed",
   "genome_fasta": "test/data/reference/hamlet-ref.fa",
   "gtf": "test/data/reference/hamlet-ref.gtf",
