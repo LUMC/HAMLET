@@ -10,26 +10,6 @@ def fusion_results(args):
     with open(args.arriba) as fin:
         return json.load(fin)
 
-    # Add the results for each tool
-    for tool, plot, table in zip(args.tools, args.plots, args.tables):
-        results["plots"][tool] = os.path.abspath(plot)
-
-        if tool == "fusioncatcher":
-            events = fusioncatcher.parse(table)
-            results["tables"][tool] = {
-                "path": os.path.abspath(table),
-                "top20": [transform_fusioncatcher(event) for event in events[:20]]
-            }
-        else:
-            events = star_fusion.parse(table)
-            results["tables"][tool] = {
-                "path": os.path.abspath(table),
-                "top20": [transform_star_fusion(event) for event in events[:20]]
-            }
-
-    return results
-
-
 def main(args):
     """ Create json output of fusion results """
     results = fusion_results(args)
