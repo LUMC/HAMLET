@@ -86,7 +86,8 @@ jobs:
           - snv-indels
           - itd
           - fusion
-          - hamlet
+          - test-hamlet-targetted-RNA
+          - test-hamlet-chrM
     steps:
       - name: Maximise build space
         uses: easimon/maximize-build-space@master
