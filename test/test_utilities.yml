@@ -55,3 +55,6 @@
     --reason
     --printshellcmds
     --verbose
+  stdout:
+    contains:
+      - rule create_call_region

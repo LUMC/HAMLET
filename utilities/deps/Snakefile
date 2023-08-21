@@ -56,6 +56,7 @@ rule all:
         rrna_refflat="ucsc_rrna.refFlat",
         bwa_index="flt3-001.fa.bwt",
         blacklist="blacklist.txt",
+        call_regions="call_regions.bed",
         arriba="arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3",
 
 
@@ -201,6 +202,19 @@ rule create_blacklist:
         srcdir("small-files/blacklist.txt"),
     output:
         "blacklist.txt",
+    singularity:
+        containers["hamlet-scripts"]
+    shell:
+        """
+        cp {input} {output}
+        """
+
+
+rule create_call_region:
+    input:
+        srcdir("small-files/call_regions.bed"),
+    output:
+        "call_regions.bed",
     singularity:
         containers["hamlet-scripts"]
     shell:
