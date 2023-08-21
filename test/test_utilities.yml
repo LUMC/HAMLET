@@ -43,3 +43,15 @@
       # The variant table headers
       - "sample\texon\tdivisor_gene"
       - "SRR8615409\tMECOM:169146722-169147734\tHMBS"
+
+
+- name: test-reference-files-dry-run
+  tags:
+    - dry-run
+    - hamlet
+  command: >
+    snakemake -n
+    --snakefile utilities/deps/Snakefile
+    --reason
+    --printshellcmds
+    --verbose

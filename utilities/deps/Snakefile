@@ -54,7 +54,6 @@ rule all:
         star_index="star-index",
         ref_id_mapping="id_mappings.tsv",
         rrna_refflat="ucsc_rrna.refFlat",
-        transcripts_bed="transcripts.bed",
         bwa_index="flt3-001.fa.bwt",
         blacklist="blacklist.txt",
         arriba="arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3",
@@ -200,7 +199,7 @@ rule create_blacklist:
     input:
         srcdir("small-files/blacklist.txt"),
     output:
-        "blacklist",
+        "blacklist.txt",
     singularity:
         containers["hamlet-scripts"]
     shell:
