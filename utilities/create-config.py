@@ -10,6 +10,14 @@ def get_qc_config():
     return {"forward_adapter": "AGATCGGAAGAG", "reverse_adapter": "AGATCGGAAGAG"}
 
 
+def get_reference(dirname):
+    return os.path.join(dirname, "GCA_000001405.15_GRCh38_no_alt_analysis_set.fna")
+
+
+def get_gtf(dirname):
+    return os.path.join(dirname, "Homo_sapiens.GRCh38.104.chr.gtf")
+
+
 def get_itd_config(dirname):
     return {
         "flt3_fasta": os.path.join(dirname, "flt3-001.fa"),
@@ -26,18 +34,19 @@ def get_itd_config(dirname):
 def get_fusion_config(dirname):
     join = functools.partial(os.path.join, dirname)
     return {
-        "genome_fasta": join("GCA_000001405.15_GRCh38_no_alt_analysis_set.fna"),
+        "genome_fasta": get_reference(dirname),
+        "gtf": get_gtf(dirname),
         "blacklist": join("arriba/blacklist_hg38_GRCh38_v2.4.0.tsv.gz"),
         "cytobands": join("arriba/cytobands_hg38_GRCh38_v2.4.0.tsv"),
         "known_fusions": join("arriba/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz"),
-        "protein_domains": join("arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3")
+        "protein_domains": join("arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3"),
     }
 
 
 def get_snv_indels_config(dirname):
     join = functools.partial(os.path.join, dirname)
     return {
-        "genome_fasta": join("GCA_000001405.15_GRCh38_no_alt_analysis_set.fna"),
+        "genome_fasta": get_reference(dirname),
         "genome_fai": join("GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.fai"),
         "genome_dict": join("GCA_000001405.15_GRCh38_no_alt_analysis_set.dict"),
         "star_index": join("star-index"),
@@ -45,7 +54,7 @@ def get_snv_indels_config(dirname):
         "rrna_refflat": join("ucsc_rrna.refFlat"),
         "bed_variant_hotspots": join("hotspots_genome.bed"),
         "bed_variant_call_regions": join("call_regions.bed"),
-        "gtf": join("Homo_sapiens.GRCh38.104.chr.gtf"),
+        "gtf": get_gtf(dirname),
         "annotation_refflat": join("ucsc_gencode.refFlat"),
         "blacklist": join("blacklist.txt"),
         "vep_cache": dirname,
