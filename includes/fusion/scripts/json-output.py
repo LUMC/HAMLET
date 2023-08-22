@@ -19,7 +19,7 @@ def main(args):
         if not os.path.exists(plot):
             raise RuntimeError(f"Missing fusion figure: {plot}")
 
-        fusion["plot"] = plot
+        fusion["plot"] = os.path.abspath(plot)
 
     print(json.dumps({"fusion": results}, sort_keys=True, indent=2))
 
