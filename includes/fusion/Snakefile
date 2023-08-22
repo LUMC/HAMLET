@@ -95,6 +95,10 @@ rule arriba_to_json:
     input:
         fusions="{sample}/fusion/arriba/fusions.tsv",
         src=srcdir("scripts/arriba2json.py"),
+    params:
+        fusion_partners=f"--fusion-partners {' '.join(config['fusion-partners'])}"
+        if config.get("fusion-partners")
+        else "",
     output:
         json="{sample}/fusion/arriba/fusions.json",
     log:
@@ -104,7 +108,7 @@ rule arriba_to_json:
         containers["arriba"]
     shell:
         """
-        {input.src} {input} > {output} 2> {log}
+        {input.src} {input.fusions} {params.fusion_partners} > {output} 2> {log}
         """
 
 

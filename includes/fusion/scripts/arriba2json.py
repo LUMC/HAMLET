@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import sys
+import argparse
 import json
 
 def to_list(d, field, sep=','):
@@ -37,10 +37,24 @@ def parse_arriba(fin):
         yield d
 
 
-if __name__ == "__main__":
-    with open(sys.argv[1]) as fin:
+def main(fusions, fusion_partners):
+    with open(fusions) as fin:
         # We want to keep the fusions in the same order as the input file
         fusions = list()
         for record in parse_arriba(fin):
-            fusions.append(record)
+            if not fusion_partners:
+                fusions.append(record)
+            else:
+                if record["gene1"] in fusion_partners or record["gene2"] in fusion_partners:
+                    fusions.append(record)
         print(json.dumps(fusions, indent=True))
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("fusions")
+    parser.add_argument("--fusion-partners", nargs='+')
+
+    args = parser.parse_args()
+
+    main(args.fusions, args.fusion_partners)

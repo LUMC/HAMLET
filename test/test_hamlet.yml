@@ -120,7 +120,18 @@
       should_exist: false
     # Fusion figures
     - path: SRR8615409/fusion/arriba/plots/fusion-1.png
-    - path: SRR8615409/fusion/arriba/plots/fusion-2.png
+    # There should be only one fusion, since FLT3 is not part of the
+    # "fusion-partners" whitelist. So the HAMLET report should only contain the
+    # BCR::ABL fusion
+    - path: SRR8615409/hamlet_report.SRR8615409.html
+      contains:
+        - "BCR::ABL"
+      must_not_contain:
+        - "FLT3::FLT3"
+  stderr:
+    contains_regex:
+      # We should pass the fusion partners to arriba2json
+      - 'arriba2json.py .* --fusion-partners BCR'
 
 
 - name: lint-hamlet
