@@ -13,7 +13,15 @@ def fusion_results(fname):
 def main(args):
     """ Create json output of fusion results """
     results = fusion_results(args.arriba)
-    for i, fusion in enumerate(results, 1):
+
+    # The padding in the png filename is dependent on the total number of
+    # fusions
+    nr_fusions = len(results)
+    padding = len(str(nr_fusions))
+
+    for count, fusion in enumerate(results, 1):
+        # Add padding to the fusion count
+        i = str(count).zfill(padding)
         # Here, we magically know the name of the png file.
         plot = os.path.join(args.plots, f"fusion-{i}.png")
         if not os.path.exists(plot):
