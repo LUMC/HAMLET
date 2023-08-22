@@ -16,12 +16,28 @@ def get_rows(table):
         if cells[0].get("rowspan"):
             gene = cells[0].get_text()
             rowspan = int(cells[0]["rowspan"])
-        elif rowspan > 0:
+        elif rowspan and rowspan > 0:
             # Prepend the gene name
             text.insert(0, gene)
             rowspan -= 1
 
         yield text
+
+def parse_table(table):
+    """Convert a table to a list of dicts"""
+    data = list()
+    # Get the headers
+    headers = [header.get_text() for header in table.find_all('th')]
+
+    # Get the rows
+    for row in table.find("tbody").find_all("tr"):
+        d = {k: v.get_text() for k, v in zip(headers, row.find_all("td"))}
+        # Convert the price field to float
+        for k, v in d.items():
+            if "€" in v:
+                d[k] = price_to_float(v)
+        data.append(d)
+    return data
 
 @pytest.mark.workflow('test-report')
 def test_variant_overview(workflow_dir):
@@ -49,6 +65,25 @@ def test_variant_overview(workflow_dir):
 
     assert gene2["rowspan"] == "1"
     assert gene2.text == "MT-ATP8"
+
+
+@pytest.mark.workflow('test-report')
+def test_fusion_overview(workflow_dir):
+    """ Test the content of the fusion overview
+
+    """
+    report = f"{workflow_dir}/report.html"
+    with open(report) as fin:
+        soup = bs4.BeautifulSoup(fin, features="html.parser")
+
+    # Extract the fusion table
+    fusion_table = parse_table(soup.find('table', id='fusion-overview'))
+
+    # Check the headers
+    assert "Split reads 1" in fusion_table[0]
+    assert "Split reads 2" in fusion_table[0]
+    assert "Discordant mates" in fusion_table[0]
+    assert "Confidence" in fusion_table[0]
 
 
 @pytest.mark.workflow('test-report')

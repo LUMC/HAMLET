@@ -44,13 +44,15 @@
   <div class="table-title">
     <p>Table 10 | Detected fusion genes</p>
   </div>
-  <table class="table-wide" style="margin-bottom: 2em;">
+  <table class="table-wide" id="fusion-overview" style="margin-bottom: 2em;">
     <thead>
       <tr>
         <th>Fusion name</th>
         <th>Fusion type</th>
-        <th class="text-right">Junction reads count</th>
-        <th class="text-right">Spanning fragments count</th>
+        <th class="text-right">Split reads 1</th>
+        <th class="text-right">Split reads 2</th>
+        <th class="text-right">Discordant mates</th>
+        <th class="text-right">Confidence</th>
       </tr>
     </thead>
     <tbody>
@@ -58,8 +60,10 @@
       <tr>
         <td>{{ item.gene1}}::{{ item.gene2}}</td>
         <td>{{ item.type }}</td>
-        <td class="text-right">{{ item.coverage1 + item.coverage2}}</td>
+        <td class="text-right">{{ item.split_reads1 }}</td>
+        <td class="text-right">{{ item.split_reads2 }}</td>
         <td class="text-right">{{ item.discordant_mates }}</td>
+        <td class="text-right">{{ item.confidence}}</td>
       </tr>
       {% endfor %}
       <tr>
