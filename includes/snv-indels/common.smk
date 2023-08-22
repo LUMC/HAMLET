@@ -28,6 +28,10 @@ def get_bam_output(wildcards):
     return f"{wildcards.sample}/snv-indels/Aligned.sortedByCoord.out.bam"
 
 
+def get_bai_output(wildcards):
+    return get_bam_output(wildcards) + ".bai"
+
+
 def get_vep_high(wildcards):
     return f"{wildcards.sample}/snv-indels/{wildcards.sample}.vep.high.txt.gz"
 
@@ -46,6 +50,7 @@ def get_hotspot(wildcards):
 
 module_output = SimpleNamespace(
     bam=get_bam_output,
+    bai=get_bai_output,
     vep_high=get_vep_high,
     vep_target=get_vep_target,
     json=get_json,

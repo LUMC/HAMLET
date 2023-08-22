@@ -14,6 +14,7 @@ localrules:
 rule all:
     input:
         bam=[module_output.bam(sample) for sample in samples],
+        bai=[module_output.bai(sample) for sample in samples],
         vep_high=[module_output.vep_high(sample) for sample in samples],
         vep_target=[module_output.vep_target(sample) for sample in samples],
         json=[module_output.json(sample) for sample in samples],
