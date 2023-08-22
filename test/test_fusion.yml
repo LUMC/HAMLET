@@ -67,6 +67,8 @@
     - path: SRR8615409/fusion/arriba/fusions.discarded.tsv
     # Test for module output file
     - path: "SRR8615409/fusion/fusion-output.json"
+      contains_regex:
+        - 'plot.*fusion-1.png'
     # Test for log files
     - path: "log/arriba.SRR8615409.txt"
       contains:

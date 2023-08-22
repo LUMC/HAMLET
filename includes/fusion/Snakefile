@@ -111,6 +111,7 @@ rule arriba_to_json:
 rule json_output:
     input:
         json="{sample}/fusion/arriba/fusions.json",
+        plots="{sample}/fusion/arriba/plots",
         src=srcdir("scripts/json-output.py"),
     output:
         json="{sample}/fusion/fusion-output.json",
@@ -121,5 +122,5 @@ rule json_output:
         containers["arriba"]
     shell:
         """
-        {input.src} {input.json} > {output} 2> {log}
+        {input.src} {input.json} {input.plots} > {output} 2> {log}
         """
