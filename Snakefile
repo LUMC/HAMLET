@@ -121,6 +121,19 @@ use rule arriba from fusion as fusion_arriba with:
         fusion.containers["arriba"]
 
 
+use rule plot_fusions from fusion as fusion_plot_fusions with:
+    input:
+        fusions="{sample}/fusion/arriba/fusions.tsv",
+        bam=align.module_output.bam,
+        bai=align.module_output.bai,
+        gtf=config["fusion"]["gtf"],
+        blacklist=config["fusion"]["blacklist"],
+        cytobands=config["fusion"]["cytobands"],
+        protein_domains=config["fusion"]["protein_domains"],
+    container:
+        fusion.containers["arriba"]
+
+
 rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""
     input:

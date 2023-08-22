@@ -17,7 +17,6 @@ rule all:
 rule arriba:
     input:
         bam=get_bam,
-        bai=get_bai,
         ref=config["genome_fasta"],
         gtf=config["gtf"],
         blacklist=config["blacklist"],
@@ -50,6 +49,7 @@ rule plot_fusions:
     input:
         fusions="{sample}/fusion/arriba/fusions.tsv",
         bam=get_bam,
+        bai=get_bai,
         gtf=config["gtf"],
         blacklist=config["blacklist"],
         cytobands=config["cytobands"],

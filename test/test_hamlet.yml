@@ -118,6 +118,11 @@
       should_exist: false
     - path: SRR8615409/SRR8615409-R2.fq.gz
       should_exist: false
+    # Fusion figures
+    - path: SRR8615409/fusion/arriba/plots/fusion-1.png
+    - path: SRR8615409/fusion/arriba/plots/fusion-2.png
+
+
 
 - name: lint-hamlet
   tags:
