@@ -24,6 +24,7 @@ that users understand how the changes affect the new version.
 - Use multiple threads for Cutadapt, and reduce the compression of output files
 
 ### Changes
+- Add fusion plots from Arriba
 - Add default blacklist with common false-positive variants
 - Add support for variant blacklist in VEP hgvsc format
 - Add script to generate a configuration file
