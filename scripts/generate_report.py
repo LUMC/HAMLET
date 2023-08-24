@@ -137,6 +137,17 @@ class Report(object):
                 ids.append(make_href(known_var["id"]))
             return ids
 
+        def ref_AD(item):
+            """Extract the reference depth from the vardict FORMAT AD field"""
+            ad = item["FORMAT"]["AD"]
+            return int(ad.split(',')[0])
+
+        def alt_AD(item):
+            """Extract the alt depth(s) from the vardcit FORMAT AD field"""
+            ad = item["FORMAT"]["AD"]
+            ref, *alt = ad.split(',')
+            return [int(x) for x in alt]
+
         env = Environment(loader=FileSystemLoader(tpl_dir))
         env.filters["show_int"] = show_int
         env.filters["show_pct"] = show_pct
@@ -145,6 +156,8 @@ class Report(object):
         env.filters["num_tids"] = num_tids
         env.globals["gene_rows"] = gene_rows
         env.globals["database_identifiers"] = database_identifiers
+        env.globals["ref_AD"] = ref_AD
+        env.globals["alt_AD"] = alt_AD
         self.env = env
         self.cover_tpl = env.get_template(cover_tpl_fname)
         self.contents_tpl = env.get_template(contents_tpl_fname)

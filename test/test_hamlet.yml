@@ -104,7 +104,8 @@
       --use-singularity \
       --singularity-args '--cleanenv --bind /tmp' \
       --singularity-prefix '~/.singularity/cache/snakemake' \
-      SRR8615409/hamlet_report.SRR8615409.html
+      SRR8615409/hamlet_report.SRR8615409.html \
+      SRR8615409/hamlet_report.SRR8615409.pdf
 
     rm test/data/reference/hamlet-ref.fa;
     rm test/data/reference/hamlet-star/Genome;
