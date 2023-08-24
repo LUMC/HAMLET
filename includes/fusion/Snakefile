@@ -68,6 +68,7 @@ rule filter_fusions:
         {input.to_tsv} {output.json} > {output.tsv} 2>> {log}
         """
 
+
 rule plot_fusions:
     input:
         fusions="{sample}/fusion/arriba/fusions.tsv",
@@ -112,8 +113,6 @@ rule split_fusion_plots:
         mkdir -p {output.folder}
         pdftoppm -png {input.fusions} {output.folder}/fusion
         """
-
-
 
 
 rule json_output:
