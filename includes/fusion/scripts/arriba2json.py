@@ -1,51 +1,99 @@
 #!/usr/bin/env python3
 
+from typing import Any, Dict, List
 import argparse
 import json
 
-def to_list(d, field, sep=','):
-    """Split values in d[field] into a list"""
-    if not d[field]:
-        return
-    d[field] = d[field].split(sep)
+arriba_header = [
+    "gene1",
+    "gene2",
+    "strand1(gene/fusion)",
+    "strand2(gene/fusion)",
+    "breakpoint1",
+    "breakpoint2",
+    "site1",
+    "site2",
+    "type",
+    "split_reads1",
+    "split_reads2",
+    "discordant_mates",
+    "coverage1",
+    "coverage2",
+    "confidence",
+    "reading_frame",
+    "tags",
+    "retained_protein_domains",
+    "closest_genomic_breakpoint1",
+    "closest_genomic_breakpoint2",
+    "gene_id1",
+    "gene_id2",
+    "transcript_id1",
+    "transcript_id2",
+    "direction1",
+    "direction2",
+    "filters",
+    "fusion_transcript",
+    "peptide_sequence",
+    "read_identifiers",
+]
 
 
-def parse_arriba(fin):
-    header = next(fin)[1:-1].split('\t')
-    for line in fin:
-        d = {k: v for k, v in zip(header, line.strip('\n').split('\t'))}
+def arriba_to_json(header, line):
+    """Convert an arriba line to json"""
+    d = {k: v for k, v in zip(header, line.split("\t"))}
 
-        # Convert '.' to None
-        for key, value in d.items():
-            d[key] = value if value != "." else None
+    # Convert '.' to None
+    for key, value in d.items():
+        d[key] = value if value != "." else None
 
-        # Convert lists
-        to_list(d, "read_identifiers")
-        to_list(d, "filters")
+    # Convert lists
+    d["read_identifiers"] = d["read_identifiers"].split(",")
 
-        # Convert to int
-        for field in ["split_reads1", "split_reads2", "coverage1", "coverage2", "discordant_mates"]:
+    # Convert to int, if possible
+    for field in d.keys():
+        try:
             d[field] = int(d[field])
+        except (ValueError, TypeError):
+            pass
 
-        # Update filters, if there are any
-        if d["filters"]:
-            filters = dict()
-            for f in d["filters"]:
-                name, removed_reads = f.split("(")
-                filters[name] = int(removed_reads[:-1])
-            d["filters"] = filters
-        yield d
+    return d
 
 
-def main(fusions, fusion_partners):
-    with open(fusions) as fin:
+def json_to_arriba(header, data):
+    """Convert arriba data to a list of strings"""
+    # Join read identifiers into single string
+    data["read_identifiers"] = ",".join(data["read_identifiers"])
+
+    # Convert 'None' values to a dot
+    for field, value in data.items():
+        if value is None:
+            data[field] = '.'
+
+    return "\t".join((str(data[field]) for field in header))
+
+
+def parse_arriba(fin) -> Dict[str, Any]:
+    header = next(fin)[1:-1].split("\t")
+
+    if header != arriba_header:
+        raise RuntimeError("Unexpected file header")
+
+    for line in fin:
+        yield arriba_to_json(header, line.strip("\n"))
+
+
+def main(fusion_file: str, fusion_partners: List[str]) -> None:
+    with open(fusion_file) as fin:
         # We want to keep the fusions in the same order as the input file
         fusions = list()
         for record in parse_arriba(fin):
             if not fusion_partners:
                 fusions.append(record)
             else:
-                if record["gene1"] in fusion_partners or record["gene2"] in fusion_partners:
+                if (
+                    record["gene1"] in fusion_partners
+                    or record["gene2"] in fusion_partners
+                ):
                     fusions.append(record)
         print(json.dumps(fusions, indent=True))
 
@@ -53,7 +101,7 @@ def main(fusions, fusion_partners):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("fusions")
-    parser.add_argument("--fusion-partners", nargs='+')
+    parser.add_argument("--fusion-partners", nargs="+")
 
     args = parser.parse_args()
 
