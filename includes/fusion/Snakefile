@@ -23,8 +23,8 @@ rule arriba:
         known_fusions=config["known_fusions"],
         protein_domains=config["protein_domains"],
     output:
-        fusions="{sample}/fusion/arriba/fusions.tsv",
-        discarded="{sample}/fusion/arriba/fusions.discarded.tsv",
+        fusions="{sample}/fusion/arriba/fusions.raw.tsv",
+        discarded="{sample}/fusion/arriba/fusions.raw.discarded.tsv",
     log:
         "log/arriba.{sample}.txt",
     threads: 1
@@ -44,6 +44,29 @@ rule arriba:
             -O {output.discarded} 2> {log}
         """
 
+
+rule filter_fusions:
+    input:
+        fusions="{sample}/fusion/arriba/fusions.raw.tsv",
+        to_json=srcdir("scripts/arriba2json.py"),
+        to_tsv=srcdir("scripts/json2arriba.py"),
+    params:
+        fusion_partners=f"--fusion-partners {' '.join(config['fusion-partners'])}"
+        if config.get("fusion-partners")
+        else "",
+    output:
+        json="{sample}/fusion/arriba/fusions.json",
+        tsv="{sample}/fusion/arriba/fusions.tsv",
+    log:
+        "log/arriba_to_json.{sample}.txt",
+    threads: 1
+    container:
+        containers["arriba"]
+    shell:
+        """
+        {input.to_json} {input.fusions} {params.fusion_partners} > {output.json} 2> {log}
+        {input.to_tsv} {output.json} > {output.tsv} 2>> {log}
+        """
 
 rule plot_fusions:
     input:
@@ -91,25 +114,6 @@ rule split_fusion_plots:
         """
 
 
-rule arriba_to_json:
-    input:
-        fusions="{sample}/fusion/arriba/fusions.tsv",
-        src=srcdir("scripts/arriba2json.py"),
-    params:
-        fusion_partners=f"--fusion-partners {' '.join(config['fusion-partners'])}"
-        if config.get("fusion-partners")
-        else "",
-    output:
-        json="{sample}/fusion/arriba/fusions.json",
-    log:
-        "log/arriba_to_json.{sample}.txt",
-    threads: 1
-    container:
-        containers["arriba"]
-    shell:
-        """
-        {input.src} {input.fusions} {params.fusion_partners} > {output} 2> {log}
-        """
 
 
 rule json_output:

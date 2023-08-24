@@ -118,16 +118,34 @@
       should_exist: false
     - path: SRR8615409/SRR8615409-R2.fq.gz
       should_exist: false
-    # Fusion figures
+    # Test the fusions results
+    # We should detect both a BCR::ABL1 and FLT3::FLT3 in the raw fusion results
+    # Since only BCR is specified as a fusion partner in the  configuration,
+    # the FLT3::FLT3 fusion should be filtered
     - path: SRR8615409/fusion/arriba/plots/fusion-1.png
-    # There should be only one fusion, since FLT3 is not part of the
-    # "fusion-partners" whitelist. So the HAMLET report should only contain the
-    # BCR::ABL fusion
+    # This means there should only be a single fusion plot
+    - path: SRR8615409/fusion/arriba/plots/fusion-2.png
+      should_exist: false
+
+    # The final HAMLET report should contain BCR::ABL, but not FLT3::FLT3
     - path: SRR8615409/hamlet_report.SRR8615409.html
       contains:
         - "BCR::ABL"
       must_not_contain:
         - "FLT3::FLT3"
+
+    # The FLT3 fusion should exist in the initial arriba output file, before it
+    # is filtered
+    - path: SRR8615409/fusion/arriba/fusions.raw.tsv
+      contains:
+         - "BCR\tABL1"
+         - "FLT3\tFLT3"
+    # The final fusion results should contain the BCR ABL1 fusion, but not the FLT3
+    - path: SRR8615409/fusion/arriba/fusions.tsv
+      contains:
+         - "BCR\tABL1"
+      must_not_contain:
+         - "FLT3\tFLT3"
   stderr:
     contains_regex:
       # We should pass the fusion partners to arriba2json

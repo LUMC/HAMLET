@@ -13,10 +13,12 @@
     contains:
       # fusion pipeline should generate the following files
       - "TestSample1/fusion/arriba/fusions.tsv"
-      - "TestSample1/fusion/arriba/fusions.discarded.tsv"
+      - "TestSample1/fusion/arriba/fusions.raw.tsv"
+      - "TestSample1/fusion/arriba/fusions.raw.discarded.tsv"
       # fusion pipeline should handle multiple samples
       - "TestSample2/fusion/arriba/fusions.tsv"
-      - "TestSample2/fusion/arriba/fusions.discarded.tsv"
+      - "TestSample2/fusion/arriba/fusions.raw.tsv"
+      - "TestSample2/fusion/arriba/fusions.raw.discarded.tsv"
       # fusion pipeline should create a final json file
       - "TestSample2/fusion/fusion-output.json"
       # arriba should be run
@@ -66,7 +68,8 @@
   files:
     # Should create the arriba output files
     - path: SRR8615409/fusion/arriba/fusions.tsv
-    - path: SRR8615409/fusion/arriba/fusions.discarded.tsv
+    - path: SRR8615409/fusion/arriba/fusions.raw.tsv
+    - path: SRR8615409/fusion/arriba/fusions.raw.discarded.tsv
     # Test for module output file
     - path: "SRR8615409/fusion/fusion-output.json"
       contains_regex:
