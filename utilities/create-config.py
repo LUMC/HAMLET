@@ -47,6 +47,7 @@ def get_fusion_config(dirname):
         "cytobands": join("arriba/cytobands_hg38_GRCh38_v2.4.0.tsv"),
         "known_fusions": join("arriba/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz"),
         "protein_domains": join("arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3"),
+        "fusion-partners": fusion_partners,
     }
 
 
