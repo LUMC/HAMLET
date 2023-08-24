@@ -40,6 +40,9 @@
       - 'arriba .* -x TestSample2/snv-indels/Aligned.sortedByCoord.out.bam'
       - 'arriba .* -x TestSample3/snv-indels/Aligned.sortedByCoord.out.bam'
 
+    must_not_contain:
+      - "rule generate_html_report:"
+
 # Singularity should be available
 - name: test-hamlet-sanity-singularity
   tags:
@@ -77,6 +80,8 @@
     rm test/data/reference/hamlet-ref.fa;
     rm test/data/reference/hamlet-star/Genome;
     "
+    - path: MO1-RNAseq-1-16714/hamlet_report.SRR8615409.pdf
+    - path: "log/generate_report.MO1-RNAseq-1-16714.txt"
 
 # HAMLET pipeline should run successfully with default settings
 - name: test-hamlet-chrM
@@ -98,7 +103,8 @@
       --verbose \
       --use-singularity \
       --singularity-args '--cleanenv --bind /tmp' \
-      --singularity-prefix '~/.singularity/cache/snakemake'
+      --singularity-prefix '~/.singularity/cache/snakemake' \
+      SRR8615409/hamlet_report.SRR8615409.html
 
     rm test/data/reference/hamlet-ref.fa;
     rm test/data/reference/hamlet-star/Genome;
@@ -109,10 +115,8 @@
       # This variant was blacklisted
       must_not_contain:
         - "ENST00000361899.2:c.175A>G"
-    - path: SRR8615409/hamlet_report.SRR8615409.pdf
     # Test log files
     - path: "log/create_summary.SRR8615409.txt"
-    - path: "log/generate_report.SRR8615409.txt"
     # FastQ files should be cleaned up when they are no longer needed
     - path: SRR8615409/SRR8615409-R1.fq.gz
       should_exist: false

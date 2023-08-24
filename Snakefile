@@ -176,8 +176,7 @@ rule generate_report:
         toc=srcdir("report/assets/toc.xsl"),
         scr=srcdir("scripts/generate_report.py"),
     output:
-        pdf="{sample}/hamlet_report.{sample}.pdf",
-        html="{sample}/hamlet_report.{sample}.html",
+        "{sample}/hamlet_report.{sample}.pdf",
     log:
         "log/generate_report.{sample}.txt",
     container:
@@ -190,6 +189,32 @@ rule generate_report:
             --css-path {input.css} \
             --toc-path {input.toc} \
             {input.summary} \
-            --html-output {output.html} \
-            --pdf-output {output.pdf} 2> {log}
+            --pdf-output {output} 2> {log}
+        """
+
+
+rule generate_html_report:
+    """Generates a HTML report of the essential results, used for testing only"""
+    input:
+        summary=rules.create_summary.output.js,
+        css=srcdir("report/assets/style.css"),
+        templates=srcdir("report/templates"),
+        imgs=srcdir("report/assets/img"),
+        toc=srcdir("report/assets/toc.xsl"),
+        scr=srcdir("scripts/generate_report.py"),
+    output:
+        "{sample}/hamlet_report.{sample}.html",
+    log:
+        "log/generate_html_report.{sample}.txt",
+    container:
+        containers["hamlet-scripts"]
+    shell:
+        """
+        python3 {input.scr} \
+            --templates-dir {input.templates} \
+            --imgs-dir {input.imgs} \
+            --css-path {input.css} \
+            --toc-path {input.toc} \
+            {input.summary} \
+            --html-output {output} 2> {log}
         """
