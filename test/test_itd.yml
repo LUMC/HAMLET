@@ -56,7 +56,7 @@
     --snakefile includes/itd/Snakefile
     --configfile test/data/config/itd.json
     --config pepfile=test/pep/itd.csv
-    --cores 1
+    --cores
     --notemp
     --verbose
     --use-singularity
@@ -130,7 +130,7 @@
     --snakefile includes/itd/Snakefile
     --configfile test/data/config/itd.json
     --config pepfile=test/pep/chrM.csv
-    --cores 1
+    --cores
     --notemp
     --verbose
     --use-singularity

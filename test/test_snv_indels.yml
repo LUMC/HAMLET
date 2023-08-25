@@ -51,7 +51,7 @@
       --snakefile includes/snv-indels/Snakefile \
       --configfile test/data/config/snv-indels.json \
       --config pepfile=test/pep/chrM.csv \
-      --cores 1 \
+      --cores \
       --notemp \
       --verbose \
       --use-singularity \
