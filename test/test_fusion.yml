@@ -56,7 +56,7 @@
     --snakefile includes/fusion/Snakefile
     --configfile test/data/config/fusion.json
     --config pepfile=test/pep/chrM.csv
-    --cores 1
+    --cores
     --notemp
     --verbose
     --use-singularity

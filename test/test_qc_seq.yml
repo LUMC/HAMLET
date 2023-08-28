@@ -84,7 +84,7 @@
     --snakefile includes/qc-seq/Snakefile
     --configfile test/data/config/qc-seq.json
     --config pepfile=test/pep/chrM-trio-subsamples.csv
-    --cores 1
+    --cores
     --verbose
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
