@@ -83,12 +83,6 @@ To test the full behaviour of HAMLET, you can use
 pytest --kwd --tag functional
 ```
 
-If you want to manually test HAMLET without using pytest-workflow, you can run the following command.
-
-```bash
-snakemake --cores 1 --configfile test/data/config/chrM.json --config pepfile=test/pep/chrM.csv --use-singularity
-```
-
 # Usage
 ## Input files
 HAMLET requires two separate input files. Firstly, a `json` file that contains
@@ -117,7 +111,7 @@ $ snakemake -s Snakefile \
     --cluster-config config-cluster.yml \
     --rerun-incomplete \
     --use-singularity \
-    --singularity-args ' --containall --bind /exports/:/exports/' \
+    --singularity-args ' --containall' \
     # ... other flags
 ```
 
@@ -133,18 +127,16 @@ $ snakemake -s Snakefile \
 
 ## Output files
 
-Assuming the output directory is set to `/path/to/output`, Hamlet will create `/path/to/output/{sample_name}` for each
-sample present in the config file. Inside the directory, all the essential results are packaged in a zip file called
-`hamlet_results.{sample_name}.zip`. This includes a PDF report called `hamlet_report.{sample_name}.pdf` which contains
-the overview of the essential results.
+Assuming the output directory is set to `/path/to/output`, Hamlet will create
+`/path/to/output/{sample_name}` for each sample present in the config file.
+Inside the directory, there will be a PDF report called
+`hamlet_report.{sample_name}.pdf` which contains the overview of the essential
+results. The same data is also present in the JSON file called `{sample_name}.summary.json`.
 
 ## Notes
 
 1. You can run Hamlet from anywhere, but preferably this is done outside of the repository. This way, the temporary
 Snakemake files are written elsewhere and does not pollute the repository.
-
-2. You can direct Hamlet to create the output directory anywhere. This is a configuration value that is supplied in the
-config file via `output_dir`.
 
 # Citation
 If you use HAMLET in your research, please cite the [HAMLET publication](https://www.nature.com/articles/s41375-020-0762-8).
