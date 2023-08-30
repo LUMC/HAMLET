@@ -24,6 +24,14 @@ that users understand how the changes affect the new version.
 - Use multiple threads for Cutadapt, and reduce the compression of output files
 
 ### Changes
+- Add additional genes of interest
+    - SRSF2
+    - SF3B1
+    - U2AF1
+    - BCOR
+    - STAG2
+    - ZRSR2
+    - EZH2
 - Filter fusion results based on fusion partners
 - Add fusion plots from Arriba
 - Add default blacklist with common false-positive variants
