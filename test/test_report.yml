@@ -35,4 +35,4 @@
     - path: report.html
       contains:
         # AF for ENST00000361899.2:c.175A>G
-        - '0.9583'
+        - '95.83%'

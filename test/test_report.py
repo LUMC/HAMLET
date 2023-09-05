@@ -155,7 +155,7 @@ def test_full_variant_overview(workflow_dir):
     assert gene2.text == "MT-ATP8"
 
 @pytest.mark.workflow('test-report-vardict')
-def test_full_variant_overview(workflow_dir):
+def test_full_variant_overview_vardict(workflow_dir):
     """ Test the content of the variant overview from vardict
     """
     report = f"{workflow_dir}/report.html"
@@ -170,3 +170,6 @@ def test_full_variant_overview(workflow_dir):
     assert row["Ref"] == '0'
     assert row["Alt"] == '27'
     assert row["Total"] == '27'
+
+    # The allele frequency should be given in percentage: 100%, not 1
+    assert row["Allele frequency"] == '100.0%'

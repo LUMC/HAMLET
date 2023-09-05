@@ -27,6 +27,7 @@ that users understand how the changes affect the new version.
 - Use multiple threads for Cutadapt, and reduce the compression of output files
 
 ### Changes
+- Show allele frequency as a percentage in the pfd report
 - Add additional genes of interest
     - SRSF2
     - SF3B1
