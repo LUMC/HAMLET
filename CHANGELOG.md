@@ -11,6 +11,7 @@ that users understand how the changes affect the new version.
 
 ### Bugfixes
 - Fix a bug with inconsistent config setting 'blacklist' in snv-indels 
+- Fix a bug where unmapped reads are not included in STAR output file
 
 ### Tool changes
 - Replace StarFusion and FusionCatcher with Arriba

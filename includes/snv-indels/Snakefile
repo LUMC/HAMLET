@@ -66,6 +66,7 @@ rule align_vars:
             --outSAMattrRGline "ID:{params.rg_sample}" "SM:{params.rg_sample}" \
             --outFileNamePrefix $(dirname {output.bam})/ \
             --outSAMtype BAM SortedByCoordinate \
+            --outSAMunmapped Within \
             --alignIntronMin {params.min_intron_size} \
             --alignInsertionFlush {params.alignInsertionFlush} \
             --twopassMode {params.twopassMode} \
