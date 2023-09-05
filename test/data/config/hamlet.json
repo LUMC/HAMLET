@@ -35,7 +35,7 @@
     "bed_variant_call_regions": "test/data/reference/hamlet-ref.bed",
     "gtf": "test/data/reference/hamlet-ref.gtf",
     "annotation_refflat": "test/data/reference/hamlet-ref.refFlat",
-    "variant_blacklist": "test/data/blacklist.txt",
+    "blacklist": "test/data/blacklist.txt",
     "vep_include_consequence": [
       "stop_gained",
       "frameshift_variant",

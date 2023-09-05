@@ -151,7 +151,7 @@
     --configfile test/data/config/snv-indels-vep-cache.json
     --config
       pepfile=test/pep/chrM.csv
-      variant_blacklist=test/data/blacklist.txt
+      blacklist=test/data/blacklist.txt
   stdout:
     contains_regex:
       - 'filter_vep.py .* --blacklist test/data/blacklist.txt'

@@ -9,6 +9,9 @@ that users understand how the changes affect the new version.
 
 ## v2.0.0-dev
 
+### Bugfixes
+- Fix a bug with inconsistent config setting 'blacklist' in snv-indels 
+
 ### Tool changes
 - Replace StarFusion and FusionCatcher with Arriba
 - Replace VarScan variant caller with VarDict

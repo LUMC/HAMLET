@@ -359,13 +359,11 @@ rule filter_vep_target:
         ref_id_mapping=config["ref_id_mapping"],
         hotspots="{sample}/snv-indels/{sample}.hotspot.vcf",
         scr=srcdir("scripts/filter_vep.py"),
-        blacklist=config.get("variant_blacklist", []),
+        blacklist=config.get("blacklist", []),
     output:
         high="{sample}/snv-indels/{sample}.vep.target.txt.gz",
     params:
-        blacklist=f"--blacklist {config['variant_blacklist']}"
-        if "variant_blacklist" in config
-        else "",
+        blacklist=f"--blacklist {config['blacklist']}" if "blacklist" in config else "",
     log:
         "log/filter_vep_target.{sample}.txt",
     threads: 1
@@ -388,12 +386,10 @@ rule filter_vep_high:
         ref_id_mapping=config["ref_id_mapping"],
         hotspots="{sample}/snv-indels/{sample}.hotspot.vcf",
         scr=srcdir("scripts/filter_vep.py"),
-        blacklist=config.get("variant_blacklist", []),
+        blacklist=config.get("blacklist", []),
     params:
         vep_consequences=config["vep_include_consequence"],
-        blacklist=f"--blacklist {config['variant_blacklist']}"
-        if "variant_blacklist" in config
-        else "",
+        blacklist=f"--blacklist {config['blacklist']}" if "blacklist" in config else "",
     output:
         high="{sample}/snv-indels/{sample}.vep.high.txt.gz",
     log:
