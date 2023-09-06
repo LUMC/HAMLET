@@ -10,8 +10,9 @@ fusion_partners = ['ABL', 'AFDN', 'AFF1', 'BCOR', 'BCR', 'CBFA2T3', 'CBFB',
         'CREBBP', 'DEK', 'ELL', 'ERG', 'ETV6', 'FIP1L1', 'FUS', 'GATA2',
         'GLIS2', 'IRF2BP2', 'KAT6A', 'KMT2A', 'MECOM', 'MLF1', 'MLLT1',
         'MLLT10', 'MLLT3', 'MNX1', 'MRTF1', 'MYC', 'MYH11', 'NPM1', 'NUP214',
-        'NUP98', 'PICALM', 'PML', 'PRDM16', 'RARA', 'RBM15', 'RPN1', 'RUNX',
-        'RUNX1', 'RUNX1T1', 'STAT3B', 'STAT5B', 'TBL1XR1', 'TET1', 'ZBTB16']
+        'NUP98', 'PICALM', 'PML', 'PRDM16', 'RARA', 'RBM15', 'RPN1',
+        'RUNX1', 'RUNX1T1', 'STAT3B', 'STAT5B', 'TBL1XR1', 'TET1', 'ZBTB16',
+        'KMD5A', 'NSD1']
 
 def get_qc_config():
     return {"forward_adapter": "AGATCGGAAGAG", "reverse_adapter": "AGATCGGAAGAG"}
