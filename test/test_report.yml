@@ -35,4 +35,5 @@
     - path: report.html
       contains:
         # AF for ENST00000361899.2:c.175A>G
+        # Test that we convert it to percentage, and round it
         - '95.83%'
