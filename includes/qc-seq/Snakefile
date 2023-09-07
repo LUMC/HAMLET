@@ -19,8 +19,6 @@ rule all:
     input:
         merged_forward=[module_output.forward(sample) for sample in samples],
         merged_reverse=[module_output.reverse(sample) for sample in samples],
-        merged_raw_forward=[module_output.forward_raw(sample) for sample in samples],
-        merged_raw_reverse=[module_output.reverse_raw(sample) for sample in samples],
         sample_json=[module_output.json(sample) for sample in samples],
 
 
@@ -213,40 +211,4 @@ rule merge_fastqs_r2:
         cp {input.fqs} {output.merged} 2> {log} \
         || \
         cat {input.fqs} > {output.merged} 2> {log}
-        """
-
-
-rule merge_fastqs_raw_r1:
-    """Merges all raw FASTQ files for a given sample from its read groups."""
-    input:
-        fqs=get_all_r1,
-    output:
-        merged=temp("{sample}/{sample}-R1.raw.fq.gz"),
-    log:
-        "log/merge_fastqs_raw_r1.{sample}.txt",
-    container:
-        containers["fastqc"]
-    shell:
-        """
-        cp {input.fqs:q} {output.merged} 2> {log} \
-        || \
-        cat {input.fqs:q} > {output.merged} 2> {log}
-        """
-
-
-rule merge_fastqs_raw_r2:
-    """Merges all raw FASTQ files for a given sample from its read groups."""
-    input:
-        fqs=get_all_r2,
-    output:
-        merged=temp("{sample}/{sample}-R2.raw.fq.gz"),
-    log:
-        "log/merge_fastqs_raw_r2.{sample}.txt",
-    container:
-        containers["fastqc"]
-    shell:
-        """
-        cp {input.fqs:q} {output.merged} 2> {log} \
-        || \
-        cat {input.fqs:q} > {output.merged} 2> {log}
         """

@@ -48,14 +48,6 @@
     - "TestSample3/TestSample3-R1.fq.gz"
     - "TestSample3/TestSample3-R2.fq.gz"
 
-    # The raw fastq files should be merged
-    - "TestSample1/TestSample1-R1.raw.fq.gz"
-    - "TestSample1/TestSample1-R2.raw.fq.gz"
-    - "TestSample2/TestSample2-R1.raw.fq.gz"
-    - "TestSample2/TestSample2-R2.raw.fq.gz"
-    - "TestSample3/TestSample3-R1.raw.fq.gz"
-    - "TestSample3/TestSample3-R2.raw.fq.gz"
-
     contains_regex:
     # The forward/reverse fastq files from the PEP should be handled correctly
     - '-Dfastqc.output_dir=TestSample1.* test/data/fastq/R1.fq.gz test/data/fastq/R2.fq.gz'
