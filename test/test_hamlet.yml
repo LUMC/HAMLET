@@ -125,7 +125,7 @@
       should_exist: false
     # Test the fusions results
     # We should detect both a BCR::ABL1 and FLT3::FLT3 in the raw fusion results
-    # Since only BCR is specified as a fusion partner in the  configuration,
+    # Since only BCR is specified as a fusion partner in the configuration,
     # the FLT3::FLT3 fusion should be filtered
     - path: SRR8615409/fusion/arriba/plots/fusion-1.png
     # This means there should only be a single fusion plot
