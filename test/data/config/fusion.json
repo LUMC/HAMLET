@@ -1,5 +1,4 @@
 {
-  "transcripts_bed": "test/data/reference/transcripts_chrM.bed",
   "genome_fasta": "test/data/reference/hamlet-ref.fa",
   "gtf": "test/data/reference/hamlet-ref.gtf",
   "blacklist": "test/data/reference/arriba/blacklist_hg38_GRCh38_v2.4.0.head.tsv.gz",
