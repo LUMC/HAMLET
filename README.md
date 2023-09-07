@@ -8,19 +8,19 @@ Hamlet is a pipeline for analysis of human acute myeloid leukemia RNA-seq sample
 
 Four distinct analysis modules comprise Hamlet, which can be run independently:
 
-  1. `snv-indels`, for small variant detection
-  2. `fusion`, for fusion gene detection
-  3. `itd`, for tandem duplication detection
+  1. `qc-seq`, for adapter trimming and quality control
+  2. `snv-indels`, for small variant detection
+  3. `fusion`, for fusion gene detection
+  4. `itd`, for tandem duplication detection
 
-There is also a `qc-seq` module which does quality control for input sequence files. Everything is tied together by
-a main `Snakefile` using
+Everything is tied together by a main `Snakefile` using
 [modules](https://snakemake.readthedocs.io/en/stable/snakefiles/modularization.html#modules).
 
 HAMLET is build to use Singularity to run every Snakemake rule inside its own container. The base execution
 environment for HAMLET defined by an `environment.yml` file.
 
 In addition to the raw output files, Hamlet also generates a PDF report containing an overview of the essential results
-and a zipped file containing this report and the essential result files.
+and a JSON file containing the underlying data that are shown in the report.
 
 # Which version should you use?
 The version of HAMLET on the 'devel' branch is the latest version, and is probably the version most people are
