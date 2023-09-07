@@ -151,10 +151,6 @@
          - "BCR\tABL1"
       must_not_contain:
          - "FLT3\tFLT3"
-  stderr:
-    contains_regex:
-      # We should pass the fusion partners to arriba2json
-      - 'arriba2json.py .* --fusion-partners BCR'
 
 
 - name: lint-hamlet

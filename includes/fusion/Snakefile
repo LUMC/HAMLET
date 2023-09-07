@@ -50,10 +50,7 @@ rule filter_fusions:
         fusions="{sample}/fusion/arriba/fusions.raw.tsv",
         to_json=srcdir("scripts/arriba2json.py"),
         to_tsv=srcdir("scripts/json2arriba.py"),
-    params:
-        fusion_partners=f"--fusion-partners {' '.join(config['fusion-partners'])}"
-        if config.get("fusion-partners")
-        else "",
+        report_genes=config["report_genes"],
     output:
         json="{sample}/fusion/arriba/fusions.json",
         tsv="{sample}/fusion/arriba/fusions.tsv",
@@ -64,7 +61,7 @@ rule filter_fusions:
         containers["arriba"]
     shell:
         """
-        {input.to_json} {input.fusions} {params.fusion_partners} > {output.json} 2> {log}
+        {input.to_json} {input.fusions} --report-genes {input.report_genes} > {output.json} 2> {log}
         {input.to_tsv} {output.json} > {output.tsv} 2>> {log}
         """
 

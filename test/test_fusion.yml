@@ -29,8 +29,6 @@
       - "rule split_fusion_plots:"
       # The final json output file should be produced
       - "TestSample1/fusion/fusion-output.json"
-    must_not_contain:
-      - "--fusion-partners"
 
 # Singularity should be available
 - name: test-fusion-sanity-singularity
@@ -80,10 +78,6 @@
         - "WARNING"
     # Test that we split the fusion plot pfd to png
     - path: "SRR8615409/fusion/arriba/plots/fusion-1.png"
-  stderr:
-    must_not_contain:
-      # We don't define any fusion partners in the configuration
-      - "--fusion-partners"
 
 - name: lint-fusion
   tags:

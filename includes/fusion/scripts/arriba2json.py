@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from typing import Any, Dict, List
+from typing import Any, Dict, Set
 import argparse
 import json
 
@@ -82,18 +82,24 @@ def parse_arriba(fin) -> Dict[str, Any]:
         yield arriba_to_json(header, line.strip("\n"))
 
 
-def main(fusion_file: str, fusion_partners: List[str]) -> None:
+def read_genes(fname: str) -> Set[str]:
+    """Read the genes we want to report"""
+    report_genes = set()
+    with open(fname) as fin:
+        for line in fin:
+            report_genes.add(line.strip('\n'))
+    return report_genes
+
+
+def main(fusion_file: str, report_genes_file: str) -> None:
     with open(fusion_file) as fin:
         # We want to keep the fusions in the same order as the input file
         fusions = list()
+        # Get the genes we want to report open
+        report_genes = read_genes(report_genes_file)
+
         for record in parse_arriba(fin):
-            if not fusion_partners:
-                fusions.append(record)
-            else:
-                if (
-                    record["gene1"] in fusion_partners
-                    or record["gene2"] in fusion_partners
-                ):
+            if record["gene1"] in report_genes or record["gene2"] in report_genes:
                     fusions.append(record)
         print(json.dumps(fusions, indent=True))
 
@@ -101,8 +107,8 @@ def main(fusion_file: str, fusion_partners: List[str]) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("fusions")
-    parser.add_argument("--fusion-partners", nargs="+")
+    parser.add_argument("--report-genes")
 
     args = parser.parse_args()
 
-    main(args.fusions, args.fusion_partners)
+    main(args.fusions, args.report_genes)
