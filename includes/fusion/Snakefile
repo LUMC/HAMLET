@@ -10,8 +10,6 @@ rule all:
     input:
         arriba=[module_output.arriba(sample) for sample in samples],
         json=[module_output.json(sample) for sample in samples],
-        plot=[module_output.plot(sample) for sample in samples],
-        plot_dir=[module_output.plot_dir(sample) for sample in samples],
 
 
 rule arriba:
