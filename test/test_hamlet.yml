@@ -27,14 +27,10 @@
       - "TestSample3/TestSample3.summary.json"
 
     contains_regex:
-      # The align_kmt2a rule should use the output of the qc-seq module
-      - 'bwa mem .*kmt2a-213.fa *TestSample1/TestSample1.R1.fq.gz'
-      - 'bwa mem .*kmt2a-213.fa *TestSample2/TestSample2.R1.fq.gz'
-      - 'bwa mem .*kmt2a-213.fa *TestSample3/TestSample3.R1.fq.gz'
-      # The align_flt3 rule should use the output of the qc-seq module
-      - 'bwa mem .*flt3-001.fa *TestSample1/TestSample1.R1.fq.gz'
-      - 'bwa mem .*flt3-001.fa *TestSample2/TestSample2.R1.fq.gz'
-      - 'bwa mem .*flt3-001.fa *TestSample3/TestSample3.R1.fq.gz'
+      # The align_genes rule should use the output of the qc-seq module
+      - 'bwa mem .*itd_genes.fa *TestSample1/TestSample1.R1.fq.gz'
+      - 'bwa mem .*itd_genes.fa *TestSample2/TestSample2.R1.fq.gz'
+      - 'bwa mem .*itd_genes.fa *TestSample3/TestSample3.R1.fq.gz'
       # The fusion_arriba rule should use the aligned bam file of the align module
       - 'arriba .* -x TestSample1/snv-indels/Aligned.sortedByCoord.out.bam'
       - 'arriba .* -x TestSample2/snv-indels/Aligned.sortedByCoord.out.bam'

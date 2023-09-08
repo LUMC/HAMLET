@@ -63,20 +63,12 @@ module itd:
 use rule * from itd as itd_*
 
 
-# Connect the align_kmt2a rule to the output of qc-seq
-use rule align_kmt2a from itd as itd_align_kmt2a with:
+# Connect the align_reads rule to the output of qc-seq
+use rule align_reads from itd as itd_align_reads with:
     input:
         fq1=qc_seq.module_output.forward,
         fq2=qc_seq.module_output.reverse,
-        fasta=config["itd"]["kmt2a_fasta"],
-
-
-# Connect the align_flt3 rule to the output of qc-seq
-use rule align_flt3 from itd as itd_align_flt3 with:
-    input:
-        fq1=qc_seq.module_output.forward,
-        fq2=qc_seq.module_output.reverse,
-        fasta=config["itd"]["flt3_fasta"],
+        fasta=config["itd"]["fasta"],
 
 
 module align:

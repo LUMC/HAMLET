@@ -104,7 +104,7 @@
     # Test if the json output file for the module is created
     - path: "SRR8616218/itd/itd-output.json"
     # Test the log files
-    - path: "log/align_kmt2a.SRR8616218.txt"
+    - path: "log/align_reads.SRR8616218.txt"
       contains:
         - "M::bwa_idx_load_from_disk"
     - path: "log/plot_itd_kmt2a.SRR8616218.txt"
@@ -112,9 +112,6 @@
         - "plotting rose events"
     - path: "log/detect_itd_kmt2a.SRR8616218.txt"
 
-    - path: "log/align_flt3.SRR8615687.txt"
-      contains:
-        - "M::bwa_idx_load_from_disk"
     - path: "log/plot_itd_flt3.SRR8615687.txt"
       contains:
         - "plotting rose events"

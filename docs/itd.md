@@ -18,12 +18,11 @@ The output of this module are a JSON file with an overview of the most important
 The configuration for this module is tailored to the provided reference files, be very careful if you want to modify any of these settings.
 
 | Option                      | description                                   | required |
-| --------------------------- | ---------------------------------------       | -------- |
-| `flt3_fasta`                | The fasta file for FLT3                       | yes      |
+| --------------------------- | --------------------------------------------- | -------- |
+| `fasta`                     | The fasta file, which contains FLT3 and KMT2A | yes      |
 | `flt3_name`                 | The name of the FLT3 sequence                 | yes      |
 | `flt3_start`                | The start of the FLT3 region to investigate   | yes      |
 | `flt3_end`                  | The end of the FLT3 region to investigate     | yes      |
-| `kmt2a_fasta`               | The fasta file for KMT2A                      | yes      |
 | `kmt2a_name`                | The name of the KMT2A sequence                | yes      |
 | `kmt2a_start`               | The start of the KMT2A region to investigate  | yes      |
 | `kmt2a_end`                 | The end of the KMT2A region to investigate    | yes      |

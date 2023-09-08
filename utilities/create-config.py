@@ -28,11 +28,10 @@ def get_gtf(dirname):
 
 def get_itd_config(dirname):
     return {
-        "flt3_fasta": os.path.join(dirname, "flt3-001.fa"),
+        "fasta": os.path.join(dirname, "itd/itd_genes.fa"),
         "flt3_name": "FLT3-001",
         "flt3_start": 1787,
         "flt3_end": 2024,
-        "kmt2a_fasta": os.path.join(dirname, "kmt2a-213.fa"),
         "kmt2a_name": "KMT2A-213",
         "kmt2a_start": 406,
         "kmt2a_end": 4769,
@@ -48,7 +47,7 @@ def get_fusion_config(dirname):
         "cytobands": join("arriba/cytobands_hg38_GRCh38_v2.4.0.tsv"),
         "known_fusions": join("arriba/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz"),
         "protein_domains": join("arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3"),
-        "fusion-partners": fusion_partners,
+        "report_genes": join("arriba/report_genes.txt"),
     }
 
 
