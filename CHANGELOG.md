@@ -49,3 +49,4 @@ that users understand how the changes affect the new version.
 - Add support for PEP sample configuration
 - Add support for Snakemake 7.8.5
 - Remove variants plots
+- Use MANE select transcript for all genes
