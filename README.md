@@ -133,6 +133,23 @@ Inside the directory, there will be a PDF report called
 `hamlet_report.{sample_name}.pdf` which contains the overview of the essential
 results. The same data is also present in the JSON file called `{sample_name}.summary.json`.
 
+## Create an overview
+If you analysed multiple samples using HAMLET, you can generate an overview of
+multiple samples from the `{sample_name}.summary.json` files, using the
+`utilities/hamlet_table.py` script.
+
+```bash
+$ python3 utilities/hamlet_table.py --help
+usage: hamlet_table.py [-h] [--itd-gene ITD_GENE] {variant,fusion,itd} json_files [json_files ...]
+
+positional arguments:
+  {variant,fusion,itd}  Table to output
+  json_files
+
+options:
+  -h, --help            show this help message and exit
+  --itd-gene ITD_GENE
+```
 ## Notes
 
 1. You can run Hamlet from anywhere, but preferably this is done outside of the repository. This way, the temporary
