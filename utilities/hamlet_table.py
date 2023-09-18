@@ -8,9 +8,7 @@ def main(args):
     if args.table == "variant":
         print_variant_table(args.json_files)
     elif args.table == "fusion":
-        print_fusion_table( args.json_files)
-    elif args.table == "overexpression":
-        print_overexpression_table(args.json_files)
+        print_fusion_table(args.json_files)
     elif args.table == "itd":
         print_itd_table(args.json_files, args.itd_gene)
 
@@ -94,44 +92,42 @@ def print_variant_table(json_files):
             print(*(var_line[field] for field in header), sep="\t")
 
 
-def print_fusion_table(HAMLET, json_files):
+def print_fusion_table(json_files):
     """Print fusion table"""
     # Did we print the header already
-    header_printed = False
+    header = None
 
     for js in json_files:
         with open(js) as fin:
             data = json.load(fin)
-        H = HAMLET(data)
 
-        if not header_printed:
-            print("sample", *H.fusion_fields, sep="\t")
-            header_printed = True
+        if "modules" in data: # HAMLET 2.0
+            fusions = data["modules"]["fusion"]
+        elif "results" in data: # HAMLET 1.0
+            fusions = data["results"]["fusion"]["tables"]["intersection"]["top20"]
 
-        for fusion in H.fusions:
-            print(H.sample, *[fusion[field] for field in H.fusion_fields], sep="\t")
+        for fusion in fusions:
+            # Sneakily put the sample name first
+            new_fusion = {"sample": sample_name(data)}
+            new_fusion.update(fusion)
+            fusion = new_fusion
+
+            # Throw out the reads
+            if "read_identifiers" in fusion:
+                fusion.pop("read_identifiers")
+
+            if header is None:
+                header = list(fusion.keys())
+                print(*header, sep="\t")
+            else:
+                new_header = list(fusion.keys())
+                if new_header != header:
+                    raise RuntimeError()
+            print(*(fusion[key] for key in header), sep="\t")
+
 
 def sample_name(data):
     return data["metadata"]["sample_name"]
-
-def print_overexpression_table(HAMLET, json_files):
-    """Print overexpression table"""
-    # Did we print the header already
-    header_printed = False
-
-    for js in json_files:
-        with open(js) as fin:
-            data = json.load(fin)
-        H = HAMLET(data)
-
-        if not header_printed:
-            print("sample", *H.overexpression_fields, sep="\t")
-            header_printed = True
-
-        for expr in H.overexpression:
-            print(
-                H.sample, *[expr[field] for field in H.overexpression_fields], sep="\t"
-            )
 
 
 def print_itd_table(json_files, itd_gene):
@@ -180,7 +176,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "table",
-        choices=["variant", "fusion", "overexpression", "itd"],
+        choices=["variant", "fusion", "itd"],
         default="variant",
         help="Table to output",
     )
