@@ -6,12 +6,12 @@ Hamlet is a pipeline for analysis of human acute myeloid leukemia RNA-seq sample
 [public github repository](https://github.com/LUMC/HAMLET) to open issues or pull requests.
 
 
-Four distinct analysis modules comprise Hamlet, which can be run independently:
+Four distinct analysis modules comprise Hamlet, which can be run independently and have their own documentation:
 
-  1. `qc-seq`, for adapter trimming and quality control
-  2. `snv-indels`, for small variant detection
-  3. `fusion`, for fusion gene detection
-  4. `itd`, for tandem duplication detection
+  1. [qc-seq](docs/qc-seq.md), for adapter trimming and quality control
+  2. [snv-indels](docs/snv-indels.md), for small variant detection
+  3. [fusion](docs/fusion.md), for fusion gene detection
+  4. [itd](docs/itd.md), for tandem duplication detection
 
 Everything is tied together by a main `Snakefile` using
 [modules](https://snakemake.readthedocs.io/en/stable/snakefiles/modularization.html#modules).
