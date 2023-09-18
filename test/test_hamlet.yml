@@ -105,6 +105,12 @@
 
     rm test/data/reference/hamlet-ref.fa;
     rm test/data/reference/hamlet-star/Genome;
+
+    # Test if the table scripts can still parse the summary.json file
+    
+    python3 utilities/hamlet_table.py variant SRR8615409/SRR8615409.summary.json > variant.tsv;
+    python3 utilities/hamlet_table.py fusion SRR8615409/SRR8615409.summary.json > fusion.tsv;
+    python3 utilities/hamlet_table.py itd --itd-gene flt3 SRR8615409/SRR8615409.summary.json > itd_flt3.tsv;
     "
   files:
     # HAMLET pipeline should generate the final output files
@@ -147,6 +153,17 @@
          - "BCR\tABL1"
       must_not_contain:
          - "FLT3\tFLT3"
+    # Test the hamlet_table.py utility script
+    - path: variant.tsv
+      contains:
+        - "sample\tgene\tCHROM"
+    - path: fusion.tsv
+      contains:
+        - "sample\tbreakpoint1\tbreakpoint2"
+    - path: itd_flt3.tsv
+      contains:
+        - "sample\tboundary_type\tfuzziness"
+
 
 
 - name: lint-hamlet
