@@ -4,207 +4,94 @@ import argparse
 import json
 
 
-class HAMLET_V1:
-    def __init__(self, data):
-        self.json = data
-        self.variant_fields = [
-            "Gene",
-            "CHROM",
-            "POS",
-            "HGVSc",
-            "HGVSp",
-            "REF",
-            "ALT",
-            "genotype",
-            "PVAL",
-            "Existing_variation",
-            "FREQ",
-            "is_in_hotspot",
-        ]
-        self.fusion_fields = ["jr_count", "name", "sf_count", "type"]
-
-        self.overexpression_fields = [
-            "exon",
-            "divisor_gene",
-            "count",
-            "divisor_exp",
-            "ratio",
-            "above_threshold",
-        ]
-
-        self.itd_fields = [
-            "td_starts",
-            "td_ends",
-            "rose_start_count",
-            "rose_end_count",
-            "rose_start_pos",
-            "rose_start_anchor_pos",
-            "rose_end_pos",
-            "rose_end_anchor_pos",
-            "boundary_type",
-            "fuzziness",
-        ]
-
-    @staticmethod
-    def rewrite_ref_alt(ref, genotype):
-        gt = genotype.split("/")
-        # Remove the reference call from the genotype
-        alt = set(gt)-{ref}
-        # Make sure that there is only a single ALT allele
-        if len(alt) > 1:
-            raise NotImplementedError(genotype)
-        alt = alt.pop()
-        # Insertion
-        if len(alt) > len(ref):
-            alt = alt[len(ref):]
-            ref = '-'
-        # Deletion
-        elif len(ref) > len(alt):
-            alt = '-'
-            ref = ref[len(alt):]
-        return ref, alt
-
-    @property
-    def variants(self):
-        for gene, variants in self.json["results"]["var"]["overview"].items():
-            for var in variants:
-                var["Gene"] = gene
-                ref, alt = self.rewrite_ref_alt(var["REF"], var["genotype"])
-                var["REF"] = ref
-                var["ALT"] = alt
-                d = {f: var[f] for f in self.variant_fields}
-                d["POS"] = int(d["POS"])
-                d["Existing_variation"] = var["Existing_variation"].split(",")
-                d["FREQ"] = float(var["FREQ"][:-1]) / 100
-                d["is_in_hotspot"] = var["is_in_hotspot"] == "yes"
-                yield d
-
-    @property
-    def sample(self):
-        return self.json["metadata"]["sample_name"]
-
-    @property
-    def fusions(self):
-        for fusion in self.json["results"]["fusion"]["tables"]["intersection"]["top20"]:
-            fusion["jr_count"] = int(fusion["jr_count"])
-            fusion["sf_count"] = int(fusion["sf_count"])
-            yield fusion
-
-    @property
-    def overexpression(self):
-        for expression in self.json["results"]["expr"]:
-            d = {f: expression[f] for f in self.overexpression_fields}
-            d["count"] = int(d["count"])
-            d["ratio"] = float(d["ratio"])
-            d["above_threshold"] = d["above_threshold"] == "yes"
-            d["divisor_exp"] = int(d["divisor_exp"])
-            yield d
-
-    def itd(self, gene):
-        for event in self.json["results"]["itd"][gene]["table"]:
-            yield event
-
-
-class HAMLET_V2(HAMLET_V1):
-    def __init__(self, data):
-        super().__init__(data)
-        # Translate VEP json values to old HAMLET format
-        self.vep_lookup = {
-            "Gene": "Gene",
-            "CHROM": "seq_region_name",
-            "POS": "POS",
-            "HGVSc": "HGVSc",
-            "HGVSp": "HGVSp",
-            "REF": "REF",
-            "ALT": "ALT",
-            "genotype": "allele_string",
-            "PVAL": "PVAL",
-            "Existing_variation": "Existing_variation",
-            "FREQ": "FREQ",
-            "is_in_hotspot": "is_in_hotspot",
-        }
-
-    @property
-    def variants(self):
-        for gene, variants in self.json["modules"]["snv_indels"]["genes"].items():
-            for v in variants:
-                # Split variants so they always contain (at most) a single
-                # transcript consequence, so we can print it as a table
-                for var in self.split_by_consequence(v):
-                    # Get the transcript_consequence object
-                    cons = var["transcript_consequences"][0]
-                    # Format var to match the existing HAMLET output format
-                    var["Gene"] = gene
-                    var["POS"] = self.vcf_pos(var)
-                    var["HGVSc"] = cons["hgvsc"]
-                    var["HGVSp"] = cons["hgvsp"]
-                    var["REF"] = cons["used_ref"]
-                    var["ALT"] = cons["variant_allele"]
-                    var["PVAL"] = var["FORMAT"]["PVAL"]
-                    existing = [
-                        x["id"] for x in var.get("colocated_variants", []) if "id" in x
-                    ]
-                    var["Existing_variation"] = existing
-                    var["FREQ"] = var["FORMAT"]["FREQ"]
-                    var["is_in_hotspot"] = None
-                    d = {f: var[self.vep_lookup[f]] for f in self.variant_fields}
-                    yield d
-
-    @staticmethod
-    def split_by_consequence(variant):
-        """Yield a variant with a single transcript_consequence, for each
-        transcript_consequence"""
-        if "transcript_consequences" not in variant:
-            yield variant
-        for i in range(len(variant["transcript_consequences"])):
-            newvar = variant.copy()
-            newvar["transcript_consequences"] = [variant["transcript_consequences"][i]]
-            yield newvar
-
-
-    @staticmethod
-    def vcf_pos(var):
-        c = var["variant_class"]
-        if c == "SNV":
-            return var["start"]
-        elif c == "insertion" or c == "deletion" or c == "sequence variation":
-            return var["start"] - 1
-
 def main(args):
-    if args.version == "v1":
-        HAMLET = HAMLET_V1
-    elif args.version == "v2":
-        HAMLET = HAMLET_V2
-    else:
-        raise NotImplementedError
-
     if args.table == "variant":
-        print_variant_table(HAMLET, args.json_files)
+        print_variant_table(args.json_files)
     elif args.table == "fusion":
-        print_fusion_table(HAMLET, args.json_files)
+        print_fusion_table( args.json_files)
     elif args.table == "overexpression":
-        print_overexpression_table(HAMLET, args.json_files)
+        print_overexpression_table(args.json_files)
     elif args.table == "itd":
-        print_itd_table(HAMLET, args.json_files, args.itd_gene)
+        print_itd_table(args.json_files, args.itd_gene)
 
 
-def print_variant_table(HAMLET, json_files):
+def print_variant_table(json_files):
     """Print variant table"""
-    # Did we print the header already
-    header_printed = False
+    def parse_genes_v1(_, genes):
+        """ Parse HAMLET variant results in v1 format"""
+        for gene in genes:
+            for variant in genes[gene]:
+                yield variant
+
+    def parse_genes_v2(sample, genes):
+        """Parse HAMLET variant results in V2 format"""
+        for gene, variants in genes.items():
+            for variant in variants:
+                for transcript_consequence in variant["transcript_consequences"]:
+                    values = parse_variant(sample, gene, variant)
+                    # Copy over hgvs
+                    for field in ["hgvsc", "hgvsp", "impact"]:
+                        values[field] = transcript_consequence[field]
+                    # Copy over consequence terms
+                    values["consequence_terms"] = ",".join(transcript_consequence["consequence_terms"])
+                    # Throw out the 'input' field, since that is just the VCF
+                    # information again
+                    values.pop("input")
+                    yield values
+
+    def parse_colocated_variants(coloc):
+        return ','.join((var["id"] for var in coloc))
+
+    def parse_variant(sample, gene, variant):
+        """ Parse a single variant"""
+        var = dict()
+        var["sample"] = sample
+        var["gene"] = gene
+
+        # Add headers for the VCF fields
+        vcf_header = "CHROM POS ID REF ALT QUAL FILTER INFO FORMAT FORMAT_DATA".split()
+        var.update({field: value for field, value in zip(vcf_header, variant["input"].split("\t"))})
+
+        # Copy over all simple values
+        for field in variant:
+            if isinstance(variant[field], (str, float, int)):
+                var[field] = variant[field]
+
+        # Copy over all colocated variants
+        var["colocated_variants"] = parse_colocated_variants(variant.get("colocated_variants", list()))
+
+        return var
+    # The headers in the csv file are based on the json output
+    header = None
 
     # Process every json file
-    for js in json_files:
-        with open(js) as fin:
+    for fname in json_files:
+        with open(fname) as fin:
             data = json.load(fin)
-        H = HAMLET(data)
 
-        if not header_printed:
-            print("sample", *H.variant_fields, sep="\t")
-            header_printed = True
+        # See if the data is from HAMLET 1.0 or 2.0
+        if "modules" in data: # HAMLET 2.0
+            genes = data["modules"]["snv_indels"]["genes"]
+            parse = parse_genes_v2
+        elif "results" in data: # HAMLET 1.0
+            genes = data["results"]["var"]["overview"]
+            parse = parse_genes_v1
 
-        for variant in H.variants:
-            print(H.sample, *[variant[field] for field in H.variant_fields], sep="\t")
+        # Extract the sample name
+        sample = data["metadata"]["sample_name"]
+
+        # Print the headers if this is the first time
+        # Next print every variant line
+        for var_line in parse(sample, genes):
+            if header is None:
+                header = list(var_line.keys())
+                print(*header, sep="\t")
+            else:
+                current_keys = list(var_line.keys())
+                if current_keys != header:
+                    msg = f"{current_keys}\n{dynamic_keys}\n do not match!"
+                    raise RuntimeError(msg)
+            print(*(var_line[field] for field in header), sep="\t")
 
 
 def print_fusion_table(HAMLET, json_files):
@@ -264,7 +151,6 @@ def print_itd_table(HAMLET, json_files, itd_gene):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--version", default="v2", help="HAMLET version")
     parser.add_argument(
         "table",
         choices=["variant", "fusion", "overexpression", "itd"],
