@@ -111,6 +111,8 @@ def print_fusion_table(HAMLET, json_files):
         for fusion in H.fusions:
             print(H.sample, *[fusion[field] for field in H.fusion_fields], sep="\t")
 
+def sample_name(data):
+    return data["metadata"]["sample_name"]
 
 def print_overexpression_table(HAMLET, json_files):
     """Print overexpression table"""
@@ -132,21 +134,46 @@ def print_overexpression_table(HAMLET, json_files):
             )
 
 
-def print_itd_table(HAMLET, json_files, itd_gene):
+def print_itd_table(json_files, itd_gene):
+    def join_list(positions):
+        """Join a list of positions
+
+        Also handle the case where we don't get a list at all
+        """
+        if isinstance(positions, list):
+            return ",".join((str(x) for x in positions))
+        else:
+            return positions
+
     # Did we print the header already
-    header_printed = False
+    header = None
 
     for js in json_files:
         with open(js) as fin:
             data = json.load(fin)
-        H = HAMLET(data)
 
-        if not header_printed:
-            print("sample", *H.itd_fields, sep="\t")
-            header_printed = True
+        if "modules" in data:  # HAMLET 2.0
+            itd_table = data["modules"]["itd"][itd_gene]["table"]
+        elif "results" in data: # HAMLET 1.0
+            itd_table = data["results"]["itd"][itd_gene]["table"]
 
-        for expr in H.itd(itd_gene):
-            print(H.sample, *[expr[field] for field in H.itd_fields], sep="\t")
+        for event in itd_table:
+            event["td_ends"] = join_list(event["td_ends"])
+            event["td_starts"] = join_list(event["td_starts"])
+
+            # Sneakily put the sample name first
+            new_event = {"sample": sample_name(data)}
+            new_event.update(event)
+            event = new_event
+
+            if header is None:
+                header = list(event.keys())
+                print(*header, sep="\t")
+            else:
+                new_header = list(event.keys())
+                if new_header != header:
+                    raise RuntimError()
+            print(*(event[field] for field in header), sep="\t")
 
 
 if __name__ == "__main__":
