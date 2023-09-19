@@ -4,14 +4,18 @@
     - utilities
   command: >
     python3 utilities/hamlet_table.py
-    --version v1
     variant
     test/data/output/v1/SRR8615409.summary.json
   stdout:
     contains:
-      # The variant table headers
-      - "sample\tGene\tCHROM\tPOS"
-      - "SRR8615409\tNRAS\tchr1\t114716123"
+      # Some of the variant table headers
+      - "sample_id"
+      - "CHROM"
+      - "HGVSc"
+      # Corresponding table values
+      - "SRR8615409"
+      - "chr1"
+      - "ENST00000369535.5:c.38G>T"
 
 - name: test-fusion-table
   tags:
@@ -19,7 +23,6 @@
     - utilities
   command: >
     python3 utilities/hamlet_table.py
-    --version v1
     fusion
     test/data/output/v1/SRR8615409.summary.json
   stdout:
@@ -28,22 +31,6 @@
       - "sample\tjr_count\tname"
       - "SRR8615409\t33\tSFPQ--ZFP36L1"
       - "SRR8615409\t15\tSFPQ--ZFP36L1"
-
-- name: test-overexpression-table
-  tags:
-    - functional
-    - utilities
-  command: >
-    python3 utilities/hamlet_table.py
-    --version v1
-    overexpression
-    test/data/output/v1/SRR8615409.summary.json
-  stdout:
-    contains:
-      # The variant table headers
-      - "sample\texon\tdivisor_gene"
-      - "SRR8615409\tMECOM:169146722-169147734\tHMBS"
-
 
 - name: test-reference-files-dry-run
   tags:

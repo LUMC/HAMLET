@@ -156,14 +156,16 @@
     # Test the hamlet_table.py utility script
     - path: variant.tsv
       contains:
-        - "sample\tgene\tCHROM"
+        - "sample\tgene\tCHROM\tPOS"
+        - "SRR8615409\tFLT3\tchr13\t28034117"
     - path: fusion.tsv
       contains:
         - "sample\tbreakpoint1\tbreakpoint2"
+        - "SRR8615409\tchr22:23290413\tchr9:130854064"
     - path: itd_flt3.tsv
       contains:
         - "sample\tboundary_type\tfuzziness"
-
+        - "SRR8615409\tfuzzy-end\t1"
 
 
 - name: lint-hamlet
