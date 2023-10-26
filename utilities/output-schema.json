@@ -5,14 +5,13 @@
     "metadata": {
       "type": "object",
       "additionalProperties": false,
-      "minProperties": 4,
+      "minProperties": 3,
       "properties": {
         "genes_of_interest": {
           "type": "array",
           "items": { "$ref": "#/definitions/metadata/gene_of_interest" }
         },
         "pipeline_version": { "type": "string" },
-        "run_name": { "type": "string" },
         "sample_name": { "type": "string" }
       },
       "gene_of_interest": {

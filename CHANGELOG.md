@@ -28,6 +28,7 @@ that users understand how the changes affect the new version.
 - Use multiple threads for Cutadapt, and reduce the compression of output files
 
 ### Changes
+- Remove run name from the report
 - Deprecate option `fusion-partners`, in favour of `report_genes`, which points
   to a list of fusion genes to report
 - Show allele frequency as a percentage in the pfd report

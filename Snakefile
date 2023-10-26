@@ -5,7 +5,6 @@ localrules:
     align_exon_cov_ref,
     align_genome_txt,
     align_json_output,
-    align_table_vars_all,
     align_table_vars_hi,
     create_summary,
     fusion_arriba_to_json,
@@ -15,7 +14,6 @@ localrules:
     itd_json_output,
     itd_plot_itd_flt3,
     itd_plot_itd_kmt2a,
-    package_results,
 
 
 rule all:
@@ -137,7 +135,6 @@ rule create_summary:
         scr=srcdir("scripts/create_summary.py"),
     params:
         pipeline_ver=PIPELINE_VERSION,
-        run_name=RUN_NAME,
     output:
         js="{sample}/{sample}.summary.json",
     log:
@@ -149,7 +146,6 @@ rule create_summary:
         python {input.scr} \
             {input.idm} \
             --pipeline-version {params.pipeline_ver} \
-            --run-name {params.run_name} \
             --sample-name {wildcards.sample} \
             --module {input.fusion_json} \
             --module {input.snv_indels_json} \

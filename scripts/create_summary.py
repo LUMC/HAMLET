@@ -23,7 +23,6 @@ def main(args):
     combined = {
         "metadata": {
             "pipeline_version": args.pipeline_version,
-            "run_name": args.run_name,
             "sample_name": args.sample_name,
             "genes_of_interest": idm,
         },
@@ -44,7 +43,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("id_mappings_path")
-    parser.add_argument("--run-name", help="Name of the run in which the stats were generated.")
     parser.add_argument("--sample-name", help="Name of the sample from which the stats were generated.")
     parser.add_argument("--pipeline-version", help="Version string of the pipeline.")
     parser.add_argument("--module", action="append", help="JSON outputs from various modules")

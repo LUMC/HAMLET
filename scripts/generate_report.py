@@ -29,7 +29,6 @@ class Report(object):
         sdm = summaryd["metadata"]
         self.summary = summaryd
         self.sample_name = sdm["sample_name"]
-        self.run_name = sdm["run_name"]
         self.pipeline_version = sdm["pipeline_version"]
         self.cover_tpl_fname = cover_tpl_fname
         self.contents_tpl_fname = contents_tpl_fname
@@ -41,7 +40,6 @@ class Report(object):
 
         hf_ctx = {
             "sample_name": self.sample_name,
-            "run_name": self.run_name,
             "timestamp": self.timestamp,
         }
         pdfkit_opts = pdfkit_opts or {
@@ -168,7 +166,6 @@ class Report(object):
         tmp_prefix = str(Path.cwd()) + "/"
         cover_ctx = {
             "sample_name": self.sample_name,
-            "run_name": self.run_name,
             "pipeline_version": self.pipeline_version,
             "timestamp": self.timestamp,
             "css_fname": self.css_fname,
@@ -205,10 +202,8 @@ def main(input_summary_path, css_path, templates_dir,
 
     sdm = sd["metadata"]
     sample_name = sdm["sample_name"]
-    run_name = sdm["run_name"]
     pipeline_version = sdm["pipeline_version"]
-    header_caption = ("Hamlet Report -"
-                      f" Sample {sample_name!r} of Run {run_name!r}")
+    header_caption = f"Hamlet Report - Sample {sample_name!r}"
     footer_lcaption = "Generated on {timestamp:%A, %d %B %Y at %H:%M}"
     footer_rcaption = "[page]/[toPage]"
 
