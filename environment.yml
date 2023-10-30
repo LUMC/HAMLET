@@ -7,9 +7,9 @@ channels:
   - conda-forge
 dependencies:
   - bs4=4.11
-  - crimson=1.1.0
-  - peppy=0.35
-  - pytest-workflow=1.6.0
-  - snakemake-minimal=7.15
-  - snakefmt=0.6.1
-  - tabulate=0.8.10
+  - peppy>=0.35
+  - pytest-workflow>=1.6.0
+  - snakemake-minimal=7.32
+  - snakefmt>=0.6.1
+  - sphinx=7.1.2
+  - sphinx-rtd-theme
