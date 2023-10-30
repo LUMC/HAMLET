@@ -1,4 +1,7 @@
 [![Continuous Integration](https://github.com/LUMC/HAMLET/actions/workflows/ci.yml/badge.svg)](https://github.com/LUMC/HAMLET/actions/workflows/ci.yml)
+[![PEP compatible](http://pepkit.github.io/img/PEP-compatible-green.svg)](http://pep.databio.org)
+![GitHub release](https://img.shields.io/github/v/release/LUMC/HAMLET)
+![Commits since latest release](https://img.shields.io/github/commits-since/LUMC/HAMLET/latest)
 
 # Hamlet
 
