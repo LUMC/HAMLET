@@ -1,0 +1,8 @@
+# Test generating the report in html format
+- name: test-docs
+  tags:
+    - hamlet
+    - docs
+  command: make -C docs/ html
+  files:
+    - path: docs/build/html/genindex.html
