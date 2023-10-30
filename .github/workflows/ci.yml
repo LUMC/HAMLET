@@ -19,6 +19,7 @@ jobs:
           - utilities
           - report
           - scripts
+          - docs
     steps:
       - uses: actions/checkout@v2.3.4 # https://github.com/actions/checkout.
         with:
