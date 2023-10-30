@@ -22,10 +22,6 @@ environment for HAMLET defined by an `environment.yml` file.
 In addition to the raw output files, Hamlet also generates a PDF report containing an overview of the essential results
 and a JSON file containing the underlying data that are shown in the report.
 
-# Which version should you use?
-The version of HAMLET on the 'devel' branch is the latest version, and is probably the version most people are
-interested in.
-
 # Installation
 The dependencies required for running the pipeline are listed in the provided `environment.yml` file. To use it, first
 make sure that you have [Conda](https://docs.conda.io/en/latest/miniconda.html) installed on your system.
