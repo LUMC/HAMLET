@@ -8,6 +8,14 @@ Changelog
 .. that users understand how the changes affect the new version.
 
 **********
+v2.0.1
+**********
+
+Bugfixes
+========
+- Update version number in HAMLET report
+
+**********
 v2.0.0
 **********
 
