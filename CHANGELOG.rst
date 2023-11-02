@@ -8,6 +8,13 @@ Changelog
 .. that users understand how the changes affect the new version.
 
 **********
+v2.0.2-dev
+**********
+
+Bugfixes
+========
+
+**********
 v2.0.1
 **********
 
