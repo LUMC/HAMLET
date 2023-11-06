@@ -10,9 +10,7 @@ Changelog
 **********
 v2.0.2-dev
 **********
-
-Bugfixes
-========
+- Include the sample name in the final BAM file
 
 **********
 v2.0.1

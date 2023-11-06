@@ -25,6 +25,8 @@
       - "STAR .* \"ID:TestSample1\" \"SM:TestSample1\" .* --readFilesIn 'test/data/fastq/SRR8615409 chrM_1.fastq.gz' 'test/data/fastq/SRR8615409 chrM_2.fastq.gz'"
       # Test that params.min_intron_size is used
       - "STAR .* --alignIntronMin 50"
+      - "TestSample1/snv-indels/Aligned.sortedByCoord.out.bam"
+      - "TestSample1/snv-indels/Aligned.sortedByCoord.out.bam.bai"
 
 # Singularity should be available
 - name: test-snv-indels-sanity-singularity
@@ -70,8 +72,6 @@
     - path: "SRR8615409/snv-indels/Log.out"
       contains_regex:
         - "outSAMattrRGline +ID:SRR8615409"
-    - path: "SRR8615409/snv-indels/Aligned.sortedByCoord.out.bam"
-    - path: "SRR8615409/snv-indels/Aligned.sortedByCoord.out.bam.bai"
     - path: "SRR8615409/snv-indels/ReadsPerGene.out.tab"
     - path: "SRR8615409/snv-indels/SRR8615409.exon_cov_stats.json"
     - path: "SRR8615409/snv-indels/SRR8615409.aln_stats"

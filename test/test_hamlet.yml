@@ -32,9 +32,9 @@
       - 'bwa mem .*itd_genes.fa *TestSample2/TestSample2.R1.fq.gz'
       - 'bwa mem .*itd_genes.fa *TestSample3/TestSample3.R1.fq.gz'
       # The fusion_arriba rule should use the aligned bam file of the align module
-      - 'arriba .* -x TestSample1/snv-indels/Aligned.sortedByCoord.out.bam'
-      - 'arriba .* -x TestSample2/snv-indels/Aligned.sortedByCoord.out.bam'
-      - 'arriba .* -x TestSample3/snv-indels/Aligned.sortedByCoord.out.bam'
+      - 'arriba .* -x TestSample1/snv-indels/TestSample1.bam'
+      - 'arriba .* -x TestSample2/snv-indels/TestSample2.bam'
+      - 'arriba .* -x TestSample3/snv-indels/TestSample3.bam'
 
     must_not_contain:
       - "rule generate_html_report:"

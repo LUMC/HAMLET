@@ -25,7 +25,7 @@ def get_reverse(wildcards):
 
 ## Functions for module outputs ##
 def get_bam_output(wildcards):
-    return f"{wildcards.sample}/snv-indels/Aligned.sortedByCoord.out.bam"
+    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.bam"
 
 
 def get_bai_output(wildcards):
