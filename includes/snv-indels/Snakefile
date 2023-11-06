@@ -41,7 +41,7 @@ rule align_vars:
         index=config["star_index"],
         gtf=config["gtf"],
     output:
-        bam="{sample}/snv-indels/Aligned.sortedByCoord.out.bam",
+        bam=temporary("{sample}/snv-indels/Aligned.sortedByCoord.out.bam"),
         gene_count="{sample}/snv-indels/ReadsPerGene.out.tab",
     params:
         rg_sample=lambda wildcards: wildcards.sample,
@@ -82,7 +82,7 @@ rule index_bamfile:
         bam="{sample}/snv-indels/Aligned.sortedByCoord.out.bam",
         tmp=rules.tmpdir.output,
     output:
-        bai="{sample}/snv-indels/Aligned.sortedByCoord.out.bam.bai",
+        bai=temporary("{sample}/snv-indels/Aligned.sortedByCoord.out.bam.bai"),
     log:
         "log/index_bamfile.{sample}.txt",
     container:
