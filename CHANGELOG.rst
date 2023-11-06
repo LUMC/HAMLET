@@ -8,6 +8,10 @@ Changelog
 .. that users understand how the changes affect the new version.
 
 **********
+v2.0.3-dev
+**********
+
+**********
 v2.0.2
 **********
 - Include the sample name in the final BAM file
