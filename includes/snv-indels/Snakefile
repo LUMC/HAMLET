@@ -9,6 +9,7 @@ samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample
 localrules:
     filter_vep_target,
     filter_vep_high,
+    final_bamfile,
 
 
 rule all:
@@ -107,8 +108,8 @@ rule final_bamfile:
         containers["picard"]
     shell:
         """
-        cp {input.bam} {output.bam} 2> {log}
-        cp {input.bai} {output.bai} 2>> {log}
+        ln {input.bam} {output.bam} 2> {log}
+        ln {input.bai} {output.bai} 2>> {log}
         """
 
 
