@@ -8,7 +8,7 @@ Changelog
 .. that users understand how the changes affect the new version.
 
 **********
-v2.0.3-dev
+v2.0.3
 **********
 
 Bugfixes
