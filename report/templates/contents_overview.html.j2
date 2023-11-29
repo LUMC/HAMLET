@@ -29,7 +29,7 @@
               {% if not geneloop.first %}
                 <tr>
               {% endif %}
-              <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ consequence.hgvsc }}<br/>{{ consequence.hgvsp }}</td>
+              <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %} class="break">{{ consequence.hgvsc }}<br/>{{ consequence.hgvsp }}</td>
               <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}><small>{{ database_identifiers(item) | join(", ") }}</small></td>
               <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ (item.FORMAT.AF | float * 100) | round(2) }}%</td>
               <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ "yes" if item.is_in_hotspot else "no" }}</td>

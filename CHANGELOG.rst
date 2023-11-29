@@ -11,6 +11,10 @@ Changelog
 v2.0.3-dev
 **********
 
+Bugfixes
+========
+* Fix a bug where long HGVS descriptions make the "Results Overview" table overflow the page
+
 **********
 v2.0.2
 **********

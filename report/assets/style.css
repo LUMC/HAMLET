@@ -132,6 +132,16 @@ div.table-title {
   vertical-align: middle;
 }
 
+.table-wide td.break {
+  background: #fff;
+  padding: .5em;
+  text-align: left;
+  font-weight: 300;
+  font-size: 15px;
+  vertical-align: middle;
+  word-break: break-all;
+}
+
 .table-wide th:first-child {
   border-left: 0px;
   border-right: 0px;
