@@ -28,9 +28,9 @@ if __name__ == "__main__":
 
     changelog_version = get_changelog_version()
     hamlet_version = get_hamlet_version()
-    print(f"Expected version: {version}")
+    print(f"Expected version:  {version}")
     print(f"Changelog version: {changelog_version}")
-    print(f"HAMLET version: {hamlet_version}")
+    print(f"HAMLET version:    {hamlet_version}")
 
     if changelog_version == version and hamlet_version == version:
         exit(0)
