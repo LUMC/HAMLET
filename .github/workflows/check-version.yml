@@ -1,0 +1,22 @@
+name: Check HAMLET version on tag creation
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  version-check:
+    name: Check version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Get shortened version of release tag
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+      - name: Check if release tag is set in Changelog and HAMLET itself
+        shell: bash
+        run: python3 utilities/check-version.py ${{ env.RELEASE_VERSION }}

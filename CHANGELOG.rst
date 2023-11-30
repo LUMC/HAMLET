@@ -8,6 +8,11 @@ Changelog
 .. that users understand how the changes affect the new version.
 
 **********
+v2.0.4
+**********
+* Automatically check the release tag is set correctly
+
+**********
 v2.0.3
 **********
 
@@ -18,7 +23,7 @@ Bugfixes
 **********
 v2.0.2
 **********
-- Include the sample name in the final BAM file
+* Include the sample name in the final BAM file
 
 **********
 v2.0.1
@@ -26,7 +31,7 @@ v2.0.1
 
 Bugfixes
 ========
-- Update version number in HAMLET report
+* Update version number in HAMLET report
 
 **********
 v2.0.0
