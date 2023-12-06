@@ -132,7 +132,7 @@ div.table-title {
   vertical-align: middle;
 }
 
-.table-wide td.break {
+.table-wide td.hgvs {
   background: #fff;
   padding: .5em;
   text-align: left;
@@ -140,6 +140,7 @@ div.table-title {
   font-size: 15px;
   vertical-align: middle;
   word-break: break-all;
+  width: 99%;
 }
 
 .table-wide th:first-child {

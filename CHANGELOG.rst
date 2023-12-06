@@ -8,6 +8,11 @@ Changelog
 .. that users understand how the changes affect the new version.
 
 **********
+v2.0.5-dev
+**********
+* Increase space for the HGVS description in "Results Overview" table
+
+**********
 v2.0.4
 **********
 * Automatically check the release tag is set correctly
