@@ -112,7 +112,7 @@ def test_database_identifiers(workflow_dir):
 
     expected_values = [
             "rs3020563",
-            "COSV104419767, rs2000975",
+            "COSV104419767 rs2000975",
             "rs2001031",
             ""
     ]
