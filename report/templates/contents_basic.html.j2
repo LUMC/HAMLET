@@ -25,7 +25,7 @@
 <div class="table-title">
   <p>Table 2 | Genes of interest defined for analysis</p>
 </div>
-<table class="table-wide">
+<table class="table-wide" id="genes-of-interest">
   <thead>
     <tr>
       <th class="text-right">No.</th>
@@ -35,7 +35,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for item in metadata.genes_of_interest %}
+    {% for item in metadata.genes_of_interest|sort(attribute='gene_symbol') %}
     <tr>
       <td class="text-right">{{ loop.index }}.</td>
       <td>{{ item.gene_symbol }}</td>

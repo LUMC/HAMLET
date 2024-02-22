@@ -8,6 +8,11 @@ Changelog
 .. that users understand how the changes affect the new version.
 
 **********
+v2.0.5-dev
+**********
+* Modified PDF formatting
+  -Sort the genes of interest alphabetically
+**********
 v2.0.5
 **********
 * Increase space for the HGVS description in "Results Overview" table
