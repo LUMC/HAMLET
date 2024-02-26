@@ -32,10 +32,6 @@ def parse_table(table):
     # Get the rows
     for row in table.find("tbody").find_all("tr"):
         d = {k: v.get_text() for k, v in zip(headers, row.find_all("td"))}
-        # Convert the price field to float
-        # for k, v in d.items():
-        #     if "€" in v:
-        #         d[k] = price_to_float(v)
         data.append(d)
     return data
 
