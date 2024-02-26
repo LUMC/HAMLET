@@ -8,10 +8,12 @@ Changelog
 .. that users understand how the changes affect the new version.
 
 **********
-v2.0.5-dev
+v2.0.6-dev
 **********
+* Update FastQC to 0.12.1
 * Modified PDF formatting
-  -Sort the genes of interest alphabetically
+* Sort the genes of interest alphabetically
+
 **********
 v2.0.5
 **********
