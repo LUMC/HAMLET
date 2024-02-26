@@ -48,7 +48,7 @@
     - fusion
   command: >
     bash -c "
-    unxz -k test/data/reference/hamlet-ref.fa.xz;
+    source test/helper.sh
 
     snakemake -rp
     --snakefile includes/fusion/Snakefile
@@ -60,8 +60,6 @@
     --use-singularity
     --singularity-args '--cleanenv --bind /tmp'
     --singularity-prefix '~/.singularity/cache/snakemake'
-
-    rm test/data/reference/hamlet-ref.fa;
     "
   files:
     # Should create the arriba output files
