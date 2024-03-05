@@ -45,9 +45,7 @@ rule fastqc_raw:
     output:
         folder=directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-raw"),
     params:
-        xms="4096M",
-        xmx="4096M",
-        fastqc_dir="usr/local/opt/fastqc-0.11.9",
+        memory=4096,
     log:
         "log/fastqc_raw.{sample}.{read_group}.{pair}.txt",
     threads: 4
@@ -57,16 +55,13 @@ rule fastqc_raw:
         """
         mkdir -p {output.folder}
 
-        FASTQC_DIR=/{params.fastqc_dir}
-        export CLASSPATH="$FASTQC_DIR:$FASTQC_DIR/sam-1.103.jar:$FASTQC_DIR/jbzip2-0.9.jar:$FASTQC_DIR/cisd-jhdf5.jar"
-
-        java -Djava.awt.headless=true -Xms{params.xms} -Xmx{params.xmx} \
-            -Dfastqc.output_dir={output.folder} \
-            -Dfastqc.io.tmpdir={input.tmp} \
-            -Dfastqc.unzip=true \
-            -Dfastqc.nogroup=true \
-            -Dfastqc.threads={threads} \
-            uk.ac.babraham.FastQC.FastQCApplication \
+        fastqc \
+            --outdir {output.folder} \
+            --dir {input.tmp} \
+            --extract \
+            --nogroup \
+            --threads {threads} \
+            --memory {params.memory} \
             {input.fq1:q} {input.fq2:q} 2> {log}
         """
 
@@ -102,39 +97,15 @@ rule cutadapt:
         """
 
 
-rule fastqc_processed:
-    """Runs FastQC for each pair of QC-ed inputs."""
+use rule fastqc_raw as fastqc_processed with:
     input:
         fq1="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz",
         fq2="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz",
         tmp="tmp",
     output:
         folder=directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-processed"),
-    params:
-        xms="4096M",
-        xmx="4096M",
-        fastqc_dir="usr/local/opt/fastqc-0.11.9",
     log:
         "log/fastqc_processed.{sample}.{read_group}.{pair}.txt",
-    threads: 4
-    container:
-        containers["fastqc"]
-    shell:
-        """
-        mkdir -p {output.folder}
-
-        FASTQC_DIR=/{params.fastqc_dir}
-        export CLASSPATH="$FASTQC_DIR:$FASTQC_DIR/sam-1.103.jar:$FASTQC_DIR/jbzip2-0.9.jar:$FASTQC_DIR/cisd-jhdf5.jar"
-
-        java -Djava.awt.headless=true -Xms{params.xms} -Xmx{params.xmx} \
-            -Dfastqc.output_dir={output.folder} \
-            -Dfastqc.io.tmpdir={input.tmp} \
-            -Dfastqc.unzip=true \
-            -Dfastqc.nogroup=true \
-            -Dfastqc.threads={threads} \
-            uk.ac.babraham.FastQC.FastQCApplication \
-            {input.fq1:q} {input.fq2:q} 2> {log}
-        """
 
 
 rule rg_stats:

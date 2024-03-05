@@ -58,10 +58,7 @@
     - hamlet
   command: >
     bash -c "
-    set -e 
-
-    unxz -k test/data/reference/hamlet-ref.fa.xz;
-    unxz -k test/data/reference/hamlet-star/Genome.xz;
+    source test/helper.sh
 
     snakemake -rp \
       --snakefile Snakefile \
@@ -72,9 +69,6 @@
       --use-singularity \
       --singularity-args '--cleanenv --bind /tmp' \
       --singularity-prefix '~/.singularity/cache/snakemake'
-
-    rm test/data/reference/hamlet-ref.fa;
-    rm test/data/reference/hamlet-star/Genome;
     "
     - path: MO1-RNAseq-1-16714/hamlet_report.SRR8615409.pdf
     - path: "log/generate_report.MO1-RNAseq-1-16714.txt"
@@ -86,25 +80,19 @@
     - hamlet
   command: >
     bash -c "
-    set -e 
-
-    unxz -k test/data/reference/hamlet-ref.fa.xz;
-    unxz -k test/data/reference/hamlet-star/Genome.xz;
+    source test/helper.sh
 
     snakemake \
       --snakefile Snakefile \
       --configfile test/data/config/hamlet.json \
       --config pepfile=test/pep/chrM_itd.csv \
-      --cores \
+      --cores 1 \
       --verbose \
       --use-singularity \
       --singularity-args '--cleanenv --bind /tmp' \
       --singularity-prefix '~/.singularity/cache/snakemake' \
       SRR8615409/hamlet_report.SRR8615409.html \
       SRR8615409/hamlet_report.SRR8615409.pdf
-
-    rm test/data/reference/hamlet-ref.fa;
-    rm test/data/reference/hamlet-star/Genome;
 
     # Test if the table scripts can still parse the summary.json file
     

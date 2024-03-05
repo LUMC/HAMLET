@@ -46,8 +46,7 @@
     - snv-indels
   command: >
     bash -c "
-    unxz -k test/data/reference/hamlet-ref.fa.xz;
-    unxz -k test/data/reference/hamlet-star/Genome.xz;
+    source test/helper.sh
 
     snakemake -rp \
       --snakefile includes/snv-indels/Snakefile \
@@ -59,9 +58,6 @@
       --use-singularity \
       --singularity-args '--cleanenv --bind /tmp' \
       --singularity-prefix '~/.singularity/cache/snakemake'
-
-    rm test/data/reference/hamlet-ref.fa;
-    rm test/data/reference/hamlet-star/Genome;
     "
   stderr:
     # snv-indel should not use a local VEP database, but query ensembl
