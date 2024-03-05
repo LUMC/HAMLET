@@ -11,7 +11,9 @@ Changelog
 v2.0.5-dev
 **********
 * Modified PDF formatting
+  -Add bookmarks under chapter variant
   -Sort the genes of interest alphabetically
+  -Lock snakefmt version
 **********
 v2.0.5
 **********

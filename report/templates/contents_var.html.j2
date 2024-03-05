@@ -3,45 +3,12 @@
 
 <h1>Variant Calling Results</h1>
 
-<div class="table-title">
-  <p>Table 12 | Variant calling results by type</p>
-</div>
-<table class="table-wide" style="margin-bottom: 2em;">
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th class="text-right">Count</th>
-      <th class="text-right">% of total</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Total</td>
-      <td class="text-right">{{ total_vars|show_int }}</td>
-      <td class="text-right">100%</td>
-    </tr>
-    <tr>
-      <td>SNV</td>
-      <td class="text-right">{{ stats.var.num_snvs|show_int }}</td>
-      <td class="text-right">{{ stats.var.num_snvs|show_pct(total_vars) }}</td>
-    </tr>
-    <tr>
-      <td>Insertion</td>
-      <td class="text-right">{{ stats.var.num_insertions|show_int }}</td>
-      <td class="text-right">{{ stats.var.num_insertions|show_pct(total_vars) }}</td>
-    </tr>
-    <tr>
-      <td>Deletion</td>
-      <td class="text-right">{{ stats.var.num_deletions|show_int }}</td>
-      <td class="text-right">{{ stats.var.num_deletions|show_pct(total_vars) }}</td>
-    </tr>
-  </tbody>
-</table>
 
-{% set vars = {'figure_idx': 1, 'table_idx': 13} %}
+{% set vars = {'figure_idx': 1, 'table_idx': 10} %}
 {% for gene in stats.cov %}
   {% for tid, exons in stats.cov[gene].items() %}
   <div class="keep-together">
+    <h2 style="margin-bottom: -.5em;">{{ gene }}</h2>
     <div class="table-title">
       <p>Table {{ vars['table_idx'] }} | Exon statistics of transcript {{ tid }} ({{ gene }})</p>
       {% if vars.update({'table_idx': vars['table_idx'] + 1}) %} {% endif %}
