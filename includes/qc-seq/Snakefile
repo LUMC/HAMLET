@@ -154,7 +154,7 @@ rule merge_fastqs_r1:
     input:
         fqs=get_all_trimmed_forward,
     output:
-        merged="{sample}/{sample}-R1.fq.gz",
+        merged="{sample}/qc-seq/{sample}-R1.fq.gz",
     log:
         "log/merge_fastqs_r1.{sample}.txt",
     container:
@@ -172,7 +172,7 @@ rule merge_fastqs_r2:
     input:
         fqs=get_all_trimmed_reverse,
     output:
-        merged="{sample}/{sample}-R2.fq.gz",
+        merged="{sample}/qc-seq/{sample}-R2.fq.gz",
     log:
         "log/merge_fastqs_r2.{sample}.txt",
     container:

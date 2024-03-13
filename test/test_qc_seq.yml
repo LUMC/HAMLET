@@ -41,12 +41,12 @@
     - "TestSample3/qc-seq/rg_3/stats.json"
 
     # The trimmed fastq files should be merged
-    - "TestSample1/TestSample1-R1.fq.gz"
-    - "TestSample1/TestSample1-R2.fq.gz"
-    - "TestSample2/TestSample2-R1.fq.gz"
-    - "TestSample2/TestSample2-R2.fq.gz"
-    - "TestSample3/TestSample3-R1.fq.gz"
-    - "TestSample3/TestSample3-R2.fq.gz"
+    - "TestSample1/qc-seq/TestSample1-R1.fq.gz"
+    - "TestSample1/qc-seq/TestSample1-R2.fq.gz"
+    - "TestSample2/qc-seq/TestSample2-R1.fq.gz"
+    - "TestSample2/qc-seq/TestSample2-R2.fq.gz"
+    - "TestSample3/qc-seq/TestSample3-R1.fq.gz"
+    - "TestSample3/qc-seq/TestSample3-R2.fq.gz"
 
     contains_regex:
     # The forward/reverse fastq files from the PEP should be handled correctly
@@ -83,8 +83,8 @@
     --singularity-prefix '~/.singularity/cache/snakemake'
   files:
     # QC pipeline should create output files for TestSample1
-    - path: "TestSample1/TestSample1-R1.fq.gz"
-    - path: "TestSample1/TestSample1-R2.fq.gz"
+    - path: "TestSample1/qc-seq/TestSample1-R1.fq.gz"
+    - path: "TestSample1/qc-seq/TestSample1-R2.fq.gz"
     - path: "TestSample1/qc-seq/rg_1/stats.json"
     - path: "TestSample1/qc-seq/rg_1"
     - path: "TestSample1/qc-seq/rg_1/fastqc-R1-processed"
@@ -92,8 +92,8 @@
     - path: "TestSample1/qc-seq/rg_1/fastqc-R1-raw"
     - path: "TestSample1/qc-seq/rg_1/fastqc-R2-raw"
     # QC pipeline should create output files for TestSample2
-    - path: "TestSample2/TestSample2-R1.fq.gz"
-    - path: "TestSample2/TestSample2-R2.fq.gz"
+    - path: "TestSample2/qc-seq/TestSample2-R1.fq.gz"
+    - path: "TestSample2/qc-seq/TestSample2-R2.fq.gz"
     # QC pipeline should discard intermediate output from cutadapt (these are merged later)
     - path: "TestSample2/qc-seq/rg_1/TestSample2-rg_1-R1.fq.gz"
       should_exist: false
@@ -104,8 +104,8 @@
     - path: "TestSample2/qc-seq/rg_2/TestSample2-rg_2-R2.fq.gz"
       should_exist: false
     # QC pipeline should create output file for TestSample3
-    - path: "TestSample3/TestSample3-R1.fq.gz"
-    - path: "TestSample3/TestSample3-R2.fq.gz"
+    - path: "TestSample3/qc-seq/TestSample3-R1.fq.gz"
+    - path: "TestSample3/qc-seq/TestSample3-R2.fq.gz"
     # QC pipeline should discard intermediate output from cutadapt (these are merged later)
     - path: "TestSample3/qc-seq/rg_1/TestSample3-rg_1-R1.fq.gz"
       should_exist: false

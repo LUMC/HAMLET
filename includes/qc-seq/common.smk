@@ -97,7 +97,7 @@ def get_reverse_output(wildcards):
 
 
 def get_merged_output(wildcards, pair):
-    return f"{wildcards.sample}/{wildcards.sample}-{pair}.fq.gz"
+    return f"{wildcards.sample}/qc-seq/{wildcards.sample}-{pair}.fq.gz"
 
 
 def get_sample_json(wildcards):
