@@ -20,6 +20,7 @@ rule all:
         merged_forward=[module_output.forward(sample) for sample in samples],
         merged_reverse=[module_output.reverse(sample) for sample in samples],
         sample_json=[module_output.json(sample) for sample in samples],
+        folder=[f"{wc.sample}/qc-seq/fastqc" for wc in samples],
 
 
 rule mktmp:
@@ -183,3 +184,14 @@ rule merge_fastqs_r2:
         || \
         cat {input.fqs} > {output.merged} 2> {log}
         """
+
+
+use rule fastqc_raw as fastqc_merged with:
+    input:
+        fq1=module_output.forward,
+        fq2=module_output.reverse,
+        tmp="tmp",
+    output:
+        folder=directory("{sample}/qc-seq/fastqc"),
+    log:
+        "log/fastqc_merged.{sample}.txt",

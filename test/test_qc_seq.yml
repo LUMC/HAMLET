@@ -123,6 +123,9 @@
     - path: "log/fastqc_processed.TestSample3.rg_3.R1.txt"
       contains:
         - "Started analysis of TestSample3-rg_3-R1.fq.gz"
+    # FastQC output for merged FastQ file
+    - path: TestSample1/qc-seq/fastqc/TestSample1-R1_fastqc/fastqc_data.txt
+    - path: TestSample1/qc-seq/fastqc/TestSample1-R2_fastqc/fastqc_data.txt
 
 # QC pipeline should detect low quality fastq files
 - name: test-qc-single-low-qual-adapters
