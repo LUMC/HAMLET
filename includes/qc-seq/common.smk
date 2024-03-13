@@ -89,14 +89,14 @@ def get_sample_stats(wildcards):
 
 ## Functions for module outputs ##
 def get_forward_output(wildcards):
-    return get_output(wildcards, "R1")
+    return get_merged_output(wildcards, "R1")
 
 
 def get_reverse_output(wildcards):
-    return get_output(wildcards, "R2")
+    return get_merged_output(wildcards, "R2")
 
 
-def get_output(wildcards, pair):
+def get_merged_output(wildcards, pair):
     return f"{wildcards.sample}/{wildcards.sample}-{pair}.fq.gz"
 
 
