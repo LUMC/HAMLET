@@ -1,25 +1,14 @@
 include: "common.smk"
 
 
-pepfile: config["pepfile"]
-
-
-# Put each sample name in a SimpleNamespace to mimic Snakemake wildcard usage
-# (e.g {wildcards.sample}). This is only used in the 'all' rule.
-samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample_name"]]
-
-
 localrules:
     mktmp,
-    rg_stats,
-    sample_stats,
 
 
 rule all:
     input:
         merged_forward=[module_output.forward(sample) for sample in samples],
         merged_reverse=[module_output.reverse(sample) for sample in samples],
-        sample_json=[module_output.json(sample) for sample in samples],
         folder=[f"{wc.sample}/qc-seq/fastqc" for wc in samples],
 
 
@@ -37,18 +26,51 @@ rule mktmp:
         """
 
 
-rule fastqc_raw:
-    """Runs FastQC for each pair of each read group of each sample given in the config file."""
+rule cutadapt:
+    """Clip and merge fastq files"""
     input:
-        fq1=get_forward,
-        fq2=get_reverse,
+        fq1=get_forward_input,
+        fq2=get_reverse_input,
+    output:
+        fq1="{sample}/qc-seq/{sample}-R1.fq.gz",
+        fq2="{sample}/qc-seq/{sample}-R2.fq.gz",
+        json="{sample}/qc-seq/{sample}.cutadapt.json",
+    params:
+        f_adapter=config["forward_adapter"],
+        r_adapter=config["reverse_adapter"],
+    log:
+        "log/cutadapt.{sample}.txt",
+    threads: 8
+    container:
+        containers["cutadapt"]
+    shell:
+        """
+        cutadapt \
+            -a {params.f_adapter} \
+            -A {params.r_adapter} \
+            --cores={threads} \
+            --compression-level=1 \
+            --minimum-length=20 \
+            --quality-cutoff=20,20 \
+            --output={output.fq1} \
+            --paired-output={output.fq2} \
+            --json={output.json} \
+            <(pigz --decompress --stdout {input.fq1:q}) \
+            <(pigz --decompress --stdout {input.fq2:q}) > {log}
+        """
+
+
+rule fastqc:
+    input:
+        fq1=module_output.forward,
+        fq2=module_output.reverse,
         tmp="tmp",
     output:
-        folder=directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-raw"),
+        folder=directory("{sample}/qc-seq/fastqc"),
     params:
         memory=4096,
     log:
-        "log/fastqc_raw.{sample}.{read_group}.{pair}.txt",
+        "log/fastqc.{sample}.txt",
     threads: 4
     container:
         containers["fastqc"]
@@ -65,135 +87,3 @@ rule fastqc_raw:
             --memory {params.memory} \
             {input.fq1:q} {input.fq2:q} 2> {log}
         """
-
-
-rule cutadapt:
-    """Clip fastq files"""
-    input:
-        fq1=get_forward,
-        fq2=get_reverse,
-    output:
-        fq1=temp("{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz"),
-        fq2=temp("{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz"),
-        json="{sample}/qc-seq/{read_group}/{sample}-{read_group}.cutadapt.json",
-    params:
-        f_adapter=config["forward_adapter"],
-        r_adapter=config["reverse_adapter"],
-    log:
-        "log/cutadapt.{sample}.{read_group}.txt",
-    threads: 8
-    container:
-        containers["cutadapt"]
-    shell:
-        """
-        cutadapt \
-            -a {params.f_adapter} \
-            -A {params.r_adapter} \
-            --cores={threads} \
-            --compression-level=1 \
-            --minimum-length=20 \
-            --quality-cutoff=20,20 \
-            --output={output.fq1} \
-            --paired-output={output.fq2} \
-            --json={output.json} \
-            {input.fq1:q} {input.fq2:q} > {log}
-        """
-
-
-use rule fastqc_raw as fastqc_processed with:
-    input:
-        fq1="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz",
-        fq2="{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz",
-        tmp="tmp",
-    output:
-        folder=directory("{sample}/qc-seq/{read_group}/fastqc-{pair}-processed"),
-    log:
-        "log/fastqc_processed.{sample}.{read_group}.{pair}.txt",
-
-
-rule rg_stats:
-    """Gathers read statistics on the read group level."""
-    input:
-        raw1="{sample}/qc-seq/{read_group}/fastqc-R1-raw",
-        raw2="{sample}/qc-seq/{read_group}/fastqc-R2-raw",
-        proc1="{sample}/qc-seq/{read_group}/fastqc-R1-processed",
-        proc2="{sample}/qc-seq/{read_group}/fastqc-R2-processed",
-        rg_stats_script=srcdir("scripts/gather_rg_stats.py"),
-    output:
-        stats="{sample}/qc-seq/{read_group}/stats.json",
-    log:
-        "log/rg_stats.{sample}.{read_group}.txt",
-    container:
-        containers["crimson"]
-    shell:
-        """
-        python {input.rg_stats_script} \
-            --name {wildcards.read_group} \
-            {input.raw1} {input.raw2} \
-            {input.proc1} {input.proc2} > {output.stats} 2> {log}
-        """
-
-
-rule sample_stats:
-    """Gathers read statistics on the sample level."""
-    input:
-        rg_stats=get_sample_stats,
-        sample_stats_script=srcdir("scripts/gather_sample_stats.py"),
-    output:
-        stats="{sample}/qc-seq/{sample}.seq_stats.json",
-    log:
-        "log/sample_stats.{sample}.txt",
-    container:
-        containers["crimson"]
-    shell:
-        """
-        python {input.sample_stats_script} \
-            {input.rg_stats} > {output.stats} 2> {log}
-        """
-
-
-rule merge_fastqs_r1:
-    """Merges all FASTQ files for a given sample from its read groups."""
-    input:
-        fqs=get_all_trimmed_forward,
-    output:
-        merged="{sample}/qc-seq/{sample}-R1.fq.gz",
-    log:
-        "log/merge_fastqs_r1.{sample}.txt",
-    container:
-        containers["fastqc"]
-    shell:
-        """
-        cp {input.fqs} {output.merged} 2> {log} \
-        || \
-        cat {input.fqs} > {output.merged} 2> {log}
-        """
-
-
-rule merge_fastqs_r2:
-    """Merges all FASTQ files for a given sample from its read groups."""
-    input:
-        fqs=get_all_trimmed_reverse,
-    output:
-        merged="{sample}/qc-seq/{sample}-R2.fq.gz",
-    log:
-        "log/merge_fastqs_r2.{sample}.txt",
-    container:
-        containers["fastqc"]
-    shell:
-        """
-        cp {input.fqs} {output.merged} 2> {log} \
-        || \
-        cat {input.fqs} > {output.merged} 2> {log}
-        """
-
-
-use rule fastqc_raw as fastqc_merged with:
-    input:
-        fq1=module_output.forward,
-        fq2=module_output.reverse,
-        tmp="tmp",
-    output:
-        folder=directory("{sample}/qc-seq/fastqc"),
-    log:
-        "log/fastqc_merged.{sample}.txt",

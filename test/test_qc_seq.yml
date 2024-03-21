@@ -11,35 +11,6 @@
     --config pepfile=test/pep/chrM-trio-subsamples.csv
   stdout:
     contains:
-    # TestSample1 should contain a single readgroup
-    - "TestSample1/qc-seq/rg_1"
-
-    # TestSample2 should contain two readgroups
-    - "TestSample2/qc-seq/rg_1"
-    - "TestSample2/qc-seq/rg_2"
-
-    # TestSample3 should contain three readgroups
-    - "TestSample3/qc-seq/rg_1"
-    - "TestSample3/qc-seq/rg_2"
-    - "TestSample3/qc-seq/rg_3"
-
-    # Cutadapt should run for TestSample3
-    - "TestSample3/qc-seq/rg_1/TestSample3-rg_1-R1.fq.gz"
-    - "TestSample3/qc-seq/rg_1/TestSample3-rg_1-R2.fq.gz"
-    - "TestSample3/qc-seq/rg_2/TestSample3-rg_2-R1.fq.gz"
-    - "TestSample3/qc-seq/rg_2/TestSample3-rg_2-R2.fq.gz"
-    - "TestSample3/qc-seq/rg_3/TestSample3-rg_3-R1.fq.gz"
-    - "TestSample3/qc-seq/rg_3/TestSample3-rg_3-R2.fq.gz"
-
-    # FastQC should be run on the output of cutadapt
-    - "TestSample3/qc-seq/rg_1/fastqc-R1-processed"
-    - "TestSample3/qc-seq/rg_3/fastqc-R2-processed"
-
-    # There should be one stats file per sample/readgroup
-    - "TestSample3/qc-seq/rg_1/stats.json"
-    - "TestSample3/qc-seq/rg_2/stats.json"
-    - "TestSample3/qc-seq/rg_3/stats.json"
-
     # The trimmed fastq files should be merged
     - "TestSample1/qc-seq/TestSample1-R1.fq.gz"
     - "TestSample1/qc-seq/TestSample1-R2.fq.gz"
@@ -47,12 +18,16 @@
     - "TestSample2/qc-seq/TestSample2-R2.fq.gz"
     - "TestSample3/qc-seq/TestSample3-R1.fq.gz"
     - "TestSample3/qc-seq/TestSample3-R2.fq.gz"
-
-    contains_regex:
     # The forward/reverse fastq files from the PEP should be handled correctly
-    - 'fastqc .* --outdir TestSample1.* test/data/fastq/R1.fq.gz test/data/fastq/R2.fq.gz'
-    - 'fastqc .* --outdir TestSample2.* test/data/fastq/R1.fq.gz test/data/fastq/R2.fq.gz'
-    - "fastqc .* --outdir TestSample2.* 'test/data/fastq/SRR8615409 chrM_1.fastq.gz' 'test/data/fastq/SRR8615409 chrM_2.fastq.gz'"
+    contains_regex:
+      - "cutadapt .*TestSample1.*pigz --decompress --stdout test/data/fastq/R1.fq.gz"
+      - "cutadapt .*TestSample1.*pigz --decompress --stdout test/data/fastq/R2.fq.gz"
+
+      - "cutadapt .*TestSample2.*pigz --decompress --stdout test/data/fastq/R1.fq.gz 'test/data/fastq/SRR8615409 chrM_1.fastq.gz'"
+      - "cutadapt .*TestSample2.*pigz --decompress --stdout test/data/fastq/R2.fq.gz 'test/data/fastq/SRR8615409 chrM_2.fastq.gz'"
+
+      - "cutadapt .*TestSample3.*pigz --decompress --stdout test/data/fastq/R1.fq.gz 'test/data/fastq/SRR8615409 chrM_1.fastq.gz' test/data/fastq/SRR8615687_flt3_1.fastq.gz"
+      - "cutadapt .*TestSample3.*pigz --decompress --stdout test/data/fastq/R2.fq.gz 'test/data/fastq/SRR8615409 chrM_2.fastq.gz' test/data/fastq/SRR8615687_flt3_2.fastq.gz"
 
 # Singularity should be available
 - name: test-qc-sanity-singularity
@@ -85,77 +60,22 @@
     # QC pipeline should create output files for TestSample1
     - path: "TestSample1/qc-seq/TestSample1-R1.fq.gz"
     - path: "TestSample1/qc-seq/TestSample1-R2.fq.gz"
-    - path: "TestSample1/qc-seq/rg_1/stats.json"
-    - path: "TestSample1/qc-seq/rg_1"
-    - path: "TestSample1/qc-seq/rg_1/fastqc-R1-processed"
-    - path: "TestSample1/qc-seq/rg_1/fastqc-R2-processed"
-    - path: "TestSample1/qc-seq/rg_1/fastqc-R1-raw"
-    - path: "TestSample1/qc-seq/rg_1/fastqc-R2-raw"
     # QC pipeline should create output files for TestSample2
     - path: "TestSample2/qc-seq/TestSample2-R1.fq.gz"
     - path: "TestSample2/qc-seq/TestSample2-R2.fq.gz"
-    # QC pipeline should discard intermediate output from cutadapt (these are merged later)
-    - path: "TestSample2/qc-seq/rg_1/TestSample2-rg_1-R1.fq.gz"
-      should_exist: false
-    - path: "TestSample2/qc-seq/rg_1/TestSample2-rg_1-R2.fq.gz"
-      should_exist: false
-    - path: "TestSample2/qc-seq/rg_2/TestSample2-rg_2-R1.fq.gz"
-      should_exist: false
-    - path: "TestSample2/qc-seq/rg_2/TestSample2-rg_2-R2.fq.gz"
-      should_exist: false
     # QC pipeline should create output file for TestSample3
     - path: "TestSample3/qc-seq/TestSample3-R1.fq.gz"
     - path: "TestSample3/qc-seq/TestSample3-R2.fq.gz"
-    # QC pipeline should discard intermediate output from cutadapt (these are merged later)
-    - path: "TestSample3/qc-seq/rg_1/TestSample3-rg_1-R1.fq.gz"
-      should_exist: false
-    - path: "TestSample3/qc-seq/rg_2/TestSample3-rg_2-R1.fq.gz"
-      should_exist: false
-    - path: "TestSample3/qc-seq/rg_3/TestSample3-rg_3-R1.fq.gz"
-      should_exist: false
     # Check if all rules write to their specified logfiles
-    - path: "log/fastqc_raw.TestSample3.rg_3.R1.txt"
+    - path: "log/fastqc.TestSample3.txt"
       contains:
-        - "Started analysis of SRR8615687_flt3_1.fastq.gz"
-    - path: "log/cutadapt.TestSample3.rg_3.txt"
+        - "Started analysis of TestSample3-R1.fq.gz"
+    - path: "log/cutadapt.TestSample3.txt"
       contains:
         - "This is cutadapt"
-    - path: "log/fastqc_processed.TestSample3.rg_3.R1.txt"
-      contains:
-        - "Started analysis of TestSample3-rg_3-R1.fq.gz"
     # FastQC output for merged FastQ file
     - path: TestSample1/qc-seq/fastqc/TestSample1-R1_fastqc/fastqc_data.txt
     - path: TestSample1/qc-seq/fastqc/TestSample1-R2_fastqc/fastqc_data.txt
-
-# QC pipeline should detect low quality fastq files
-- name: test-qc-single-low-qual-adapters
-  tags:
-    - functional
-    - qc-seq
-  command: >
-    snakemake -rp
-    --snakefile includes/qc-seq/Snakefile
-    --configfile test/data/config/qc-seq.json
-    --config pepfile=test/pep/low-qual-adapters.csv
-    --cores 1
-    --verbose
-    --use-singularity
-    --singularity-args '--cleanenv --bind /tmp'
-    --singularity-prefix '~/.singularity/cache/snakemake'
-  files:
-    # FastQC summary should exist, and contain the following results
-    - path: "low_qual/qc-seq/rg_1/fastqc-R1-raw/ct_r1_fastqc/summary.txt"
-      contains:
-        - "FAIL\tPer base sequence quality\tct_r1.fq.gz"
-        - "WARN\tPer base N content\tct_r1.fq.gz"
-        - "FAIL\tOverrepresented sequences\tct_r1.fq.gz"
-        - "FAIL\tAdapter Content\tct_r1.fq.gz"
-    - path: "low_qual/qc-seq/rg_1/fastqc-R1-processed/low_qual-rg_1-R1_fastqc/summary.txt"
-      contains:
-        - "PASS\tPer base sequence quality\tlow_qual-rg_1-R1.fq.gz"
-        - "PASS\tPer base N content\tlow_qual-rg_1-R1.fq.gz"
-        - "WARN\tOverrepresented sequences\tlow_qual-rg_1-R1.fq.gz"
-        - "PASS\tAdapter Content\tlow_qual-rg_1-R1.fq.gz"
 
 - name: lint-qc
   tags:
