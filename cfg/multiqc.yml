@@ -1,0 +1,4 @@
+show_analysis_paths: False
+sample_names_replace_regex: True
+sample_names_replace:
+  "(.+) \\| qc-seq \\| (.+).cutadapt.json": "\\1"

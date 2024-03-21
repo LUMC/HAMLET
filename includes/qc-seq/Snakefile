@@ -10,6 +10,7 @@ rule all:
         merged_forward=[module_output.forward(sample) for sample in samples],
         merged_reverse=[module_output.reverse(sample) for sample in samples],
         folder=[f"{wc.sample}/qc-seq/fastqc" for wc in samples],
+        multiqc="multiqc_qc_seq.html",
 
 
 rule mktmp:
@@ -86,4 +87,37 @@ rule fastqc:
             --threads {threads} \
             --memory {params.memory} \
             {input.fq1:q} {input.fq2:q} 2> {log}
+        """
+
+
+rule multiqc:
+    input:
+        stats=module_output.multiqc_files,
+        config=srcdir("../../cfg/multiqc.yml"),
+    params:
+        filelist="multiqc_filelist.txt",
+        depth=2,
+    output:
+        html="multiqc_qc_seq.html",
+    log:
+        "log/multiqc.txt",
+    container:
+        containers["multiqc"]
+    shell:
+        """
+        rm -f {params.filelist}
+
+        for fname in {input.stats}; do
+            echo $fname >> {params.filelist}
+        done
+
+        multiqc \
+        --force \
+        --dirs \
+        --dirs-depth {params.depth} \
+        --fullnames \
+        --fn_as_s_name \
+        --file-list {params.filelist} \
+        --config {input.config} \
+        --filename {output.html} 2> {log}
         """

@@ -76,6 +76,10 @@
     # FastQC output for merged FastQ file
     - path: TestSample1/qc-seq/fastqc/TestSample1-R1_fastqc/fastqc_data.txt
     - path: TestSample1/qc-seq/fastqc/TestSample1-R2_fastqc/fastqc_data.txt
+    - path: "multiqc_qc_seq.html"
+      must_not_contain:
+        - "TestSample1.cutadapt.json"
+        - "qc-seq"
 
 - name: lint-qc
   tags:
