@@ -16,16 +16,15 @@ Breaking changes
 * Remove the JSON output for the qc-seq module (this has been replaced by a
   MultiQC report)
 * Only run FastQC against the final, trimmed FastQ files
-* Remove the "Sequencing Results" section from the report (this has been
-  replaced by a MultiQC report)
 
 Changes
 =======
 * Modified PDF formatting
-  -Add bookmarks under chapter variant
-  -Sort the genes of interest alphabetically
-  -Lock snakefmt version
-* Sort the genes of interest alphabetically
+  * Add bookmarks under chapter variant
+  * Sort the genes of interest alphabetically
+  * Lock snakefmt version
+  * Remove the "Sequencing Results" section from the report (this has been
+    replaced by a MultiQC report)
 
 Updates
 =======
