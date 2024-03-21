@@ -20,6 +20,7 @@ rule all:
     input:
         summary=expand("{sample}/{sample}.summary.json", sample=samples),
         report=expand("{sample}/hamlet_report.{sample}.pdf", sample=samples),
+        multiqc="multiqc_hamlet.html",
 
 
 # Add the PEP configuration to each submodule
@@ -203,4 +204,36 @@ rule generate_html_report:
             --toc-path {input.toc} \
             {input.summary} \
             --html-output {output} 2> {log}
+        """
+
+rule multiqc:
+    input:
+        qc_stats=qc_seq.module_output.multiqc_files,
+        config=srcdir("cfg/multiqc.yml"),
+    params:
+        filelist="multiqc_filelist.txt",
+        depth=2,
+    output:
+        html="multiqc_hamlet.html",
+    log:
+        "log/multiqc.txt",
+    container:
+        containers["multiqc"]
+    shell:
+        """
+        rm -f {params.filelist}
+
+        for fname in {input.qc_stats}; do
+            echo $fname >> {params.filelist}
+        done
+
+        multiqc \
+        --force \
+        --dirs \
+        --dirs-depth {params.depth} \
+        --fullnames \
+        --fn_as_s_name \
+        --file-list {params.filelist} \
+        --config {input.config} \
+        --filename {output.html} 2> {log}
         """

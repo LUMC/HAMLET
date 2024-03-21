@@ -8,6 +8,7 @@ samples = pep.sample_table["sample_name"]
 
 containers = {
     "hamlet-scripts": "docker://quay.io/redmar_van_den_berg/hamlet-scripts:0.3",
+    "multiqc": "docker://quay.io/biocontainers/multiqc:1.21--pyhdfd78af_0",
 }
 
 # The version of HAMLET

@@ -92,7 +92,8 @@
       --singularity-args '--cleanenv --bind /tmp' \
       --singularity-prefix '~/.singularity/cache/snakemake' \
       SRR8615409/hamlet_report.SRR8615409.html \
-      SRR8615409/hamlet_report.SRR8615409.pdf
+      SRR8615409/hamlet_report.SRR8615409.pdf \
+      multiqc_hamlet.html
 
     # Test if the table scripts can still parse the summary.json file
     
@@ -154,6 +155,7 @@
       contains:
         - "sample\tboundary_type\tfuzziness"
         - "SRR8615409\tfuzzy-end\t1"
+    - path: "multiqc_hamlet.html"
 
 
 - name: lint-hamlet
