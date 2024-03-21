@@ -75,6 +75,7 @@ rule cutadapt:
     output:
         fq1=temp("{sample}/qc-seq/{read_group}/{sample}-{read_group}-R1.fq.gz"),
         fq2=temp("{sample}/qc-seq/{read_group}/{sample}-{read_group}-R2.fq.gz"),
+        json="{sample}/qc-seq/{read_group}/{sample}-{read_group}.cutadapt.json",
     params:
         f_adapter=config["forward_adapter"],
         r_adapter=config["reverse_adapter"],
@@ -94,6 +95,7 @@ rule cutadapt:
             --quality-cutoff=20,20 \
             --output={output.fq1} \
             --paired-output={output.fq2} \
+            --json={output.json} \
             {input.fq1:q} {input.fq2:q} > {log}
         """
 

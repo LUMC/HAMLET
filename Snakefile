@@ -128,7 +128,6 @@ rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""
     input:
         idm=config["snv-indels"]["ref_id_mapping"],
-        qc_seq_json=qc_seq.module_output.json,
         fusion_json=fusion.module_output.json,
         snv_indels_json=align.module_output.json,
         itd_json=itd.module_output.json,
@@ -149,8 +148,7 @@ rule create_summary:
             --sample-name {wildcards.sample} \
             --module {input.fusion_json} \
             --module {input.snv_indels_json} \
-            --module {input.itd_json} \
-            --module {input.qc_seq_json} > {output.js} 2>{log}
+            --module {input.itd_json} > {output.js} 2>{log}
         """
 
 

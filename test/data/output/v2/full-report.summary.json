@@ -84,65 +84,6 @@
         ]
       }
     },
-    "qc_seq": {
-      "all_read_groups": {
-        "proc": {
-          "num_reads_r1": 45665,
-          "num_reads_r2": 45665
-        },
-        "raw": {
-          "num_reads_r1": 45675,
-          "num_reads_r2": 45675
-        }
-      },
-      "per_read_group": [
-        {
-          "name": "rg_1",
-          "proc": {
-            "num_reads_r1": 2685,
-            "num_reads_r2": 2685,
-            "pct_gc_r1": 45,
-            "pct_gc_r2": 45
-          },
-          "raw": {
-            "num_reads_r1": 2685,
-            "num_reads_r2": 2685,
-            "pct_gc_r1": 45,
-            "pct_gc_r2": 45
-          }
-        },
-        {
-          "name": "rg_2",
-          "proc": {
-            "num_reads_r1": 25961,
-            "num_reads_r2": 25961,
-            "pct_gc_r1": 42,
-            "pct_gc_r2": 42
-          },
-          "raw": {
-            "num_reads_r1": 25964,
-            "num_reads_r2": 25964,
-            "pct_gc_r1": 42,
-            "pct_gc_r2": 42
-          }
-        },
-        {
-          "name": "rg_3",
-          "proc": {
-            "num_reads_r1": 17019,
-            "num_reads_r2": 17019,
-            "pct_gc_r1": 47,
-            "pct_gc_r2": 47
-          },
-          "raw": {
-            "num_reads_r1": 17026,
-            "num_reads_r2": 17026,
-            "pct_gc_r1": 47,
-            "pct_gc_r2": 47
-          }
-        }
-      ]
-    },
     "snv_indels": {
       "genes": {
         "MT-ATP6": [

@@ -8,8 +8,19 @@ Changelog
 .. that users understand how the changes affect the new version.
 
 **********
-v2.0.6-dev
+v2.1.0-dev
 **********
+
+Breaking changes
+================
+* Remove the JSON output for the qc-seq module (this has been replaced by a
+  MultiQC report)
+* Only run FastQC against the final, trimmed FastQ files
+* Remove the "Sequencing Results" section from the report (this has been
+  replaced by a MultiQC report)
+
+Changes
+=======
 * Update FastQC to 0.12.1
 * Modified PDF formatting
   -Add bookmarks under chapter variant
