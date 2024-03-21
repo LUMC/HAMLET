@@ -21,12 +21,16 @@ Breaking changes
 
 Changes
 =======
-* Update FastQC to 0.12.1
 * Modified PDF formatting
   -Add bookmarks under chapter variant
   -Sort the genes of interest alphabetically
   -Lock snakefmt version
 * Sort the genes of interest alphabetically
+
+Updates
+=======
+* Update FastQC to 0.12.1
+* Update Cutadapt to 4.6
 
 **********
 v2.0.5
