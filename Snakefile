@@ -206,6 +206,7 @@ rule generate_html_report:
             --html-output {output} 2> {log}
         """
 
+
 rule multiqc:
     input:
         qc_stats=qc_seq.module_output.multiqc_files,
