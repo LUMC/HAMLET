@@ -30,6 +30,9 @@ Updates
 =======
 * Update FastQC to 0.12.1
 * Update Cutadapt to 4.6
+* Update snakefmt to 0.10.0 (developer only)
+* Update black to 24.3.0 (developer only)
+
 
 **********
 v2.0.5

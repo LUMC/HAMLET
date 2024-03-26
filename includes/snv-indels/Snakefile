@@ -317,9 +317,11 @@ rule annotate_vars:
         genome_fasta=config["genome_fasta"],
     params:
         online="" if config.get("vep_cache") else "--database",
-        offline=f" --offline --cache_version 108 --everything --merged --dir {config['vep_cache']}"
-        if config.get("vep_cache")
-        else "",
+        offline=(
+            f" --offline --cache_version 108 --everything --merged --dir {config['vep_cache']}"
+            if config.get("vep_cache")
+            else ""
+        ),
         freq_filter=" --af_gnomade --check_frequency" if config.get("vep_cache") else "",
         max_pop_af=0.01,
     output:
