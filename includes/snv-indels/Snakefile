@@ -43,7 +43,7 @@ rule align_vars:
         gtf=config["gtf"],
     output:
         bam=temporary("{sample}/snv-indels/Aligned.sortedByCoord.out.bam"),
-        gene_count="{sample}/snv-indels/ReadsPerGene.out.tab",
+        gene_count="{sample}/snv-indels/{sample}.ReadsPerGene.out.tab",
     params:
         rg_sample=lambda wildcards: wildcards.sample,
         chim_segment=20,
@@ -77,6 +77,9 @@ rule align_vars:
             --quantMode GeneCounts \
             --outBAMsortingBinsN {params.outBAMsortingBinsN} \
             --readFilesIn {input.fq1:q} {input.fq2:q}
+
+        # Rename the count file to include the sample name
+        mv {wildcards.sample}/snv-indels/ReadsPerGene.out.tab {output.gene_count}
         """
 
 
