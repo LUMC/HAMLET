@@ -1,11 +1,6 @@
 include: "common.smk"
 
 
-# Put each sample name in a SimpleNamespace to mimic Snakemake wildcard usage
-# (e.g {wildcards.sample}). This is only used in the 'all' rule.
-samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample_name"]]
-
-
 localrules:
     filter_vep_target,
     filter_vep_high,
@@ -20,6 +15,7 @@ rule all:
         vep_target=[module_output.vep_target(sample) for sample in samples],
         json=[module_output.json(sample) for sample in samples],
         hotspot=[module_output.hotspot(sample) for sample in samples],
+        multiqc="multiqc_snv_indels.html",
 
 
 rule tmpdir:
@@ -463,4 +459,37 @@ rule json_output:
             --insert_stats_path {input.insert_stats} \
             --exon_cov_stats_path {input.exon_cov_stats} \
             --vep_stats_path {input.vep_stats} > {output} 2> {log}
+        """
+
+
+rule multiqc:
+    input:
+        stats=module_output.multiqc_files,
+        config=srcdir("../../cfg/multiqc.yml"),
+    params:
+        filelist="multiqc_filelist.txt",
+        depth=2,
+    output:
+        html="multiqc_snv_indels.html",
+    log:
+        "log/snv_indels.multiqc.txt",
+    container:
+        containers["multiqc"]
+    shell:
+        """
+        rm -f {params.filelist}
+
+        for fname in {input.stats}; do
+            echo $fname >> {params.filelist}
+        done
+
+        multiqc \
+        --force \
+        --dirs \
+        --dirs-depth {params.depth} \
+        --fullnames \
+        --fn_as_s_name \
+        --file-list {params.filelist} \
+        --config {input.config} \
+        --filename {output.html} 2> {log}
         """

@@ -21,6 +21,7 @@
       - "TestSample3/snv-indels/TestSample3.vep.high.txt.gz"
 
       - "TestSample3/snv-indels/TestSample3.hotspot.vcf"
+      - "rule multiqc"
     contains_regex:
       - "STAR .* \"ID:TestSample1\" \"SM:TestSample1\" .* --readFilesIn 'test/data/fastq/SRR8615409 chrM_1.fastq.gz' 'test/data/fastq/SRR8615409 chrM_2.fastq.gz'"
       # Test that params.min_intron_size is used
@@ -117,6 +118,20 @@
     - path: SRR8615409/snv-indels/SRR8615409.vep.target.txt.gz
       contains:
         - "allele_string"
+
+    # Test that file names are set correctly in MultiQC report
+    - path: multiqc_snv_indels.html
+      must_not_contain:
+        - "ReadsPerGene.out.tab"
+        - "Log.final.out"
+        - "aln_stats"
+        - "insert_stats"
+        - "rna_stats"
+        - "vep_stats.txt"
+      contains:
+        - "VEP"
+        - "STAR"
+        - "Picard"
 
 # VEP should switch to offline mode when "vep_cache" is specified
 - name: test-chrM-vep-cache

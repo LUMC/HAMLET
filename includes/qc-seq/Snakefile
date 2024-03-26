@@ -100,7 +100,7 @@ rule multiqc:
     output:
         html="multiqc_qc_seq.html",
     log:
-        "log/multiqc.txt",
+        "log/qc_seq.multiqc.txt",
     container:
         containers["multiqc"]
     shell:

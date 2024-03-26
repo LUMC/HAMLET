@@ -210,6 +210,7 @@ rule generate_html_report:
 rule multiqc:
     input:
         qc_stats=qc_seq.module_output.multiqc_files,
+        snv_indel_stats=align.module_output.multiqc_files,
         config=srcdir("cfg/multiqc.yml"),
     params:
         filelist="multiqc_filelist.txt",
@@ -224,7 +225,7 @@ rule multiqc:
         """
         rm -f {params.filelist}
 
-        for fname in {input.qc_stats}; do
+        for fname in {input.qc_stats} {input.snv_indel_stats}; do
             echo $fname >> {params.filelist}
         done
 

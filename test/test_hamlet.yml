@@ -156,7 +156,10 @@
         - "sample\tboundary_type\tfuzziness"
         - "SRR8615409\tfuzzy-end\t1"
     - path: "multiqc_hamlet.html"
-
+      contains:
+        - "VEP"
+        - "STAR"
+        - "Picard"
 
 - name: lint-hamlet
   tags:
