@@ -15,7 +15,6 @@ Breaking changes
 ================
 * Remove the JSON output for the qc-seq module (this has been replaced by a
   MultiQC report)
-* Only run FastQC against the final, trimmed FastQ files
 * Add sample name to STAR counts table
 
 Changes
