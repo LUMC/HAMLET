@@ -1,4 +1,40 @@
+title: "HAMLET"
+subtitle: "MultiQC report for the HAMLET pipeline"
+intro_text: "This report contains additional quality information on each part of the HAMLET pipeline. This information is too detailed to include in the main HAMLET report, but is very useful to judge the quality of individual samples."
+
+report_header_info:
+  - Pipeline: "https://github.com/LUMC/HAMLET"
+  - Platform: "Illumina RNAseq data"
+
+
 show_analysis_paths: False
+show_analysis_time: False
+
+table_columns_visible:
+  Sequali:
+    sequali_mean_sequence_length: False
+    sequali_duplication_percentage: False
+
+table_columns_placement:
+  Sequali:
+    sequali_total_reads: 100
+    sequali_gc_percentage: 110
+  Cutadapt:
+    percent_trimmed: 120
+  STAR:
+    uniquely_mapped: 130
+    uniquely_mapped_percent: 140
+
+report_section_order:
+  cutadapt:
+    order: 1000
+  sequali:
+    order: 900
+  star:
+    order: 800
+  picard:
+    order: 700
+
 sample_names_replace_regex: True
 sample_names_replace:
   "(.+) \\| qc-seq \\| (.+).cutadapt.json": "\\1"
