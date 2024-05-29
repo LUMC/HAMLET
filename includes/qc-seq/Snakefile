@@ -10,6 +10,7 @@ rule all:
         merged_forward=[module_output.forward(sample) for sample in samples],
         merged_reverse=[module_output.reverse(sample) for sample in samples],
         folder=[f"{wc.sample}/qc-seq/fastqc" for wc in samples],
+        sequali_html=[f"{wc.sample}/qc-seq/sequali/{wc.sample}.html" for wc in samples],
         multiqc="multiqc_qc_seq.html",
 
 
@@ -87,6 +88,32 @@ rule fastqc:
             --threads {threads} \
             --memory {params.memory} \
             {input.fq1:q} {input.fq2:q} 2> {log}
+        """
+
+
+rule sequali:
+    input:
+        fq1=module_output.forward,
+        fq2=module_output.reverse,
+    output:
+        json="{sample}/qc-seq/sequali/{sample}.json",
+        html="{sample}/qc-seq/sequali/{sample}.html",
+    log:
+        stdout="log/sequali.{sample}.out.txt",
+        stderr="log/sequali.{sample}.err.txt",
+    threads: 4
+    container:
+        containers["sequali"]
+    shell:
+        """
+        mkdir -p $(dirname {output.json}) 2> {log.stderr} > {log.stdout}
+
+        sequali \
+            --outdir $(dirname {output.json}) \
+            --json $(basename {output.json}) \
+            --html $(basename {output.html}) \
+            --threads {threads} \
+            {input.fq1} {input.fq2} 2>> {log.stderr} >> {log.stdout}
         """
 
 

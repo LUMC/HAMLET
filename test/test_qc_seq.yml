@@ -18,6 +18,7 @@
     - "TestSample2/qc-seq/TestSample2-R2.fq.gz"
     - "TestSample3/qc-seq/TestSample3-R1.fq.gz"
     - "TestSample3/qc-seq/TestSample3-R2.fq.gz"
+    - "rule sequali"
     # The forward/reverse fastq files from the PEP should be handled correctly
     contains_regex:
       - "cutadapt .*TestSample1.*pigz --decompress --stdout test/data/fastq/R1.fq.gz"
@@ -80,6 +81,10 @@
       must_not_contain:
         - "TestSample1.cutadapt.json"
         - "qc-seq"
+        # Sequali sample names must be renamed
+        - "TestSample1-R1.fq.gz_TestSample1-R2.fq.gz"
+    - path: TestSample1/qc-seq/sequali/TestSample1.json
+    - path: TestSample1/qc-seq/sequali/TestSample1.html
 
 - name: lint-qc
   tags:

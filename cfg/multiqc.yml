@@ -5,3 +5,4 @@ sample_names_replace:
   "(.+) \\| snv-indels \\| (.+).ReadsPerGene.out.tab": "\\1"
   "(.+) \\| snv-indels \\| Log.final.out": "\\1"
   "(.+) \\| snv-indels \\| .*": "\\1"
+  "(.+)-R.*.fq.gz": "\\1"
