@@ -2,7 +2,6 @@ from types import SimpleNamespace
 
 containers = {
     "cutadapt": "docker://quay.io/biocontainers/cutadapt:4.6--py39hf95cd2a_1",
-    "fastqc": "docker://quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0",
     "multiqc": "docker://quay.io/biocontainers/multiqc:1.22.1--pyhdfd78af_0",
     "sequali": "docker://quay.io/biocontainers/sequali:0.9.1--py310h4b81fae_0",
 }

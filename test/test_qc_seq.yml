@@ -67,16 +67,9 @@
     # QC pipeline should create output file for TestSample3
     - path: "TestSample3/qc-seq/TestSample3-R1.fq.gz"
     - path: "TestSample3/qc-seq/TestSample3-R2.fq.gz"
-    # Check if all rules write to their specified logfiles
-    - path: "log/fastqc.TestSample3.txt"
-      contains:
-        - "Started analysis of TestSample3-R1.fq.gz"
     - path: "log/cutadapt.TestSample3.txt"
       contains:
         - "This is cutadapt"
-    # FastQC output for merged FastQ file
-    - path: TestSample1/qc-seq/fastqc/TestSample1-R1_fastqc/fastqc_data.txt
-    - path: TestSample1/qc-seq/fastqc/TestSample1-R2_fastqc/fastqc_data.txt
     - path: "multiqc_qc_seq.html"
       must_not_contain:
         - "TestSample1.cutadapt.json"
