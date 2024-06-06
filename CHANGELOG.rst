@@ -27,6 +27,10 @@ Changes
     replaced by a MultiQC report)
 * Replace FastQC with Sequali
 
+Bugfixes
+========
+* Fix a bug where the trimmed FastQ files are not removed when no longer needed
+
 Updates
 =======
 * Update Cutadapt to 4.6

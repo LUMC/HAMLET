@@ -110,9 +110,9 @@
     # Test log files
     - path: "log/create_summary.SRR8615409.txt"
     # FastQ files should be cleaned up when they are no longer needed
-    - path: SRR8615409/SRR8615409-R1.fq.gz
+    - path: SRR8615409/qc-seq/SRR8615409-R1.fq.gz
       should_exist: false
-    - path: SRR8615409/SRR8615409-R2.fq.gz
+    - path: SRR8615409/qc-seq/SRR8615409-R2.fq.gz
       should_exist: false
     # Test the fusions results
     # We should detect both a BCR::ABL1 and FLT3::FLT3 in the raw fusion results

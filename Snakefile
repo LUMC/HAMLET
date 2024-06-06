@@ -41,15 +41,12 @@ module qc_seq:
 use rule * from qc_seq as qc_seq_*
 
 
-# Make the trimmed, merged FastQ files temporary
-use rule merge_fastqs_r1 from qc_seq as qc_seq_merge_fastqs_r1 with:
+# Make the final trimmed, merged FastQ files from the qc_seq module temporary
+use rule cutadapt from qc_seq as qc_seq_cutadapt with:
     output:
-        merged=temp("{sample}/qc-seq/{sample}-R1.fq.gz"),
-
-
-use rule merge_fastqs_r2 from qc_seq as qc_seq_merge_fastqs_r2 with:
-    output:
-        merged=temp("{sample}/qc-seq/{sample}-R2.fq.gz"),
+        fq1=temp("{sample}/qc-seq/{sample}-R1.fq.gz"),
+        fq2=temp("{sample}/qc-seq/{sample}-R2.fq.gz"),
+        json="{sample}/qc-seq/{sample}.cutadapt.json",
 
 
 module itd:
