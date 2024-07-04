@@ -1,30 +1,11 @@
 include: "common.smk"
 
 
-localrules:
-    mktmp,
-
-
 rule all:
     input:
         merged_forward=[module_output.forward(sample) for sample in samples],
         merged_reverse=[module_output.reverse(sample) for sample in samples],
-        folder=[f"{wc.sample}/qc-seq/fastqc" for wc in samples],
         multiqc="multiqc_qc_seq.html",
-
-
-rule mktmp:
-    """Make a tmp folder for FastQC to use"""
-    output:
-        directory("tmp"),
-    log:
-        "log/mktmp",
-    container:
-        containers["fastqc"]
-    shell:
-        """
-        mkdir -p {output} 2> {log}
-        """
 
 
 rule cutadapt:
@@ -61,32 +42,29 @@ rule cutadapt:
         """
 
 
-rule fastqc:
+rule sequali:
     input:
         fq1=module_output.forward,
         fq2=module_output.reverse,
-        tmp="tmp",
     output:
-        folder=directory("{sample}/qc-seq/fastqc"),
-    params:
-        memory=4096,
+        json="{sample}/qc-seq/sequali/{sample}.json",
+        html="{sample}/qc-seq/sequali/{sample}.html",
     log:
-        "log/fastqc.{sample}.txt",
+        stdout="log/sequali.{sample}.out.txt",
+        stderr="log/sequali.{sample}.err.txt",
     threads: 4
     container:
-        containers["fastqc"]
+        containers["sequali"]
     shell:
         """
-        mkdir -p {output.folder}
+        mkdir -p $(dirname {output.json}) 2> {log.stderr} > {log.stdout}
 
-        fastqc \
-            --outdir {output.folder} \
-            --dir {input.tmp} \
-            --extract \
-            --nogroup \
+        sequali \
+            --outdir $(dirname {output.json}) \
+            --json $(basename {output.json}) \
+            --html $(basename {output.html}) \
             --threads {threads} \
-            --memory {params.memory} \
-            {input.fq1:q} {input.fq2:q} 2> {log}
+            {input.fq1} {input.fq2} 2>> {log.stderr} >> {log.stdout}
         """
 
 

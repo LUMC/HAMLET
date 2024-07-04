@@ -12,7 +12,7 @@ containers = {
     "vep": "docker://quay.io/biocontainers/ensembl-vep:108.2--pl5321h4a94de4_0",
     "star": "docker://quay.io/biocontainers/star:2.7.10b--h9ee0642_0",
     "crimson": "docker://quay.io/biocontainers/crimson:1.1.0--pyh5e36f6f_0",
-    "multiqc": "docker://quay.io/biocontainers/multiqc:1.21--pyhdfd78af_0",
+    "multiqc": "docker://quay.io/biocontainers/multiqc:1.22.1--pyhdfd78af_0",
 }
 
 

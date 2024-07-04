@@ -25,11 +25,16 @@ Changes
   * Lock snakefmt version
   * Remove the "Sequencing Results" section from the report (this has been
     replaced by a MultiQC report)
+* Replace FastQC with Sequali
+
+Bugfixes
+========
+* Fix a bug where the trimmed FastQ files are not removed when no longer needed
 
 Updates
 =======
-* Update FastQC to 0.12.1
 * Update Cutadapt to 4.6
+* Update MultiQC to 1.22
 * Update snakefmt to 0.10.0 (developer only)
 * Update black to 24.3.0 (developer only)
 
