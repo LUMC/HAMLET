@@ -4,6 +4,7 @@ from datetime import datetime as dt
 from pathlib import Path
 from tempfile import NamedTemporaryFile as NTF
 from typing import Optional
+import pdfkit
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -56,6 +57,8 @@ class Report(object):
 
             "header-spacing": "5",
             "footer-spacing": "4",
+            "enable-local-file-access": True,
+            "load-error-handling": "ignore",
         }
         if header_line:
             pdfkit_opts["header-line"] = ""
@@ -187,7 +190,6 @@ class Report(object):
                     fout.write(cov_txt)
                     fout.write(con_txt)
             if pdf:
-                import pdfkit
                 pdfkit.from_string(con_txt, pdf,
                                options=self.pdfkit_opts, css=self.css_fname,
                                toc=toc, cover=cov_fh.name, cover_first=True)

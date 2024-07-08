@@ -23,7 +23,7 @@
           {% set geneloop = loop %}
           {% if geneloop.first %}
           <tr>
-            <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %} rowspan="{{ gene_rows(modules.snv_indels.genes[gene]) }}" class="hl">{{ gene }}</td>
+            <td style="border-bottom: 1px solid #809ebf;" rowspan="{{ gene_rows(modules.snv_indels.genes[gene]) }}" class="hl">{{ gene }}</td>
           {% endif %}
           {% for consequence in item.transcript_consequences %}
               {% if not geneloop.first %}
