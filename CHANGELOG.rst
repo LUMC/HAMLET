@@ -20,6 +20,8 @@ Breaking changes
 Changes
 =======
 * Modified PDF formatting
+*
+  * Change cover image
   * Add bookmarks under chapter variant
   * Sort the genes of interest alphabetically
   * Lock snakefmt version
