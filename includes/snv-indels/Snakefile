@@ -76,6 +76,9 @@ rule align_vars:
 
         # Rename the count file to include the sample name
         mv {wildcards.sample}/snv-indels/ReadsPerGene.out.tab {output.gene_count}
+
+        # Remove temporary files that STAR leaves all over the place
+        rm -rf {wildcards.sample}/snv-indels/_STAR*
         """
 
 

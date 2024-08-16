@@ -19,8 +19,8 @@ Breaking changes
 
 Changes
 =======
+* Automatically remove _STAR temporary folders
 * Modified PDF formatting
-*
   * Change cover image
   * Add bookmarks under chapter variant
   * Sort the genes of interest alphabetically

@@ -133,6 +133,13 @@
         - "STAR"
         - "Picard"
 
+    # Test that we remove the STAR temporary folders
+    - path: SRR8615409/snv-indels/_STARgenome
+      should_exist: False
+    - path: SRR8615409/snv-indels/_STARpass1
+      should_exist: False
+
+
 # VEP should switch to offline mode when "vep_cache" is specified
 - name: test-chrM-vep-cache
   tags:
