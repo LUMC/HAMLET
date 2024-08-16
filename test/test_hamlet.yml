@@ -160,6 +160,9 @@
         - "VEP"
         - "STAR"
         - "Picard"
+    # Test that we remove the temporary folder from snv-indels
+    - path: "snv-indel-tmp"
+      should_exist: False
 
 - name: lint-hamlet
   tags:
