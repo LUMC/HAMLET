@@ -4,9 +4,10 @@
     - dry-run
     - fusion
   command: >
-    snakemake -n
+    snakemake
     --snakefile includes/fusion/Snakefile
-    --printshellcmds
+    --workflow-profile test
+    --dry-run
     --configfile test/data/config/fusion-dummy.json
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
@@ -50,16 +51,11 @@
     bash -c "
     source test/helper.sh
 
-    snakemake -rp
+    snakemake
     --snakefile includes/fusion/Snakefile
+    --workflow-profile test
     --configfile test/data/config/fusion.json
     --config pepfile=test/pep/chrM.csv
-    --cores
-    --notemp
-    --verbose
-    --use-singularity
-    --singularity-args '--cleanenv --bind /tmp'
-    --singularity-prefix '~/.singularity/cache/snakemake'
     "
   files:
     # Should create the arriba output files

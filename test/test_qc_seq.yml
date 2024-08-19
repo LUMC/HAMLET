@@ -4,9 +4,10 @@
     - dry-run
     - qc-seq
   command: >
-    snakemake -n
+    snakemake
     --snakefile includes/qc-seq/Snakefile
-    --printshellcmds
+    --workflow-profile test
+    --dry-run
     --configfile test/data/config/qc-seq.json
     --config pepfile=test/pep/chrM-trio-subsamples.csv
   stdout:
@@ -48,15 +49,11 @@
     - functional
     - qc-seq
   command: >
-    snakemake -rp
+    snakemake
     --snakefile includes/qc-seq/Snakefile
+    --workflow-profile test
     --configfile test/data/config/qc-seq.json
     --config pepfile=test/pep/chrM-trio-subsamples.csv
-    --cores
-    --verbose
-    --use-singularity
-    --singularity-args '--cleanenv --bind /tmp'
-    --singularity-prefix '~/.singularity/cache/snakemake'
   files:
     # QC pipeline should create output files for TestSample1
     - path: "TestSample1/qc-seq/TestSample1-R1.fq.gz"

@@ -4,9 +4,10 @@
     - dry-run
     - itd
   command: >
-    snakemake -n
+    snakemake
     --snakefile includes/itd/Snakefile
-    --printshellcmds
+    --workflow-profile test
+    --dry-run
     --configfile test/data/config/itd.json
     --config pepfile=test/pep/chrM-trio.csv
   stdout:
@@ -52,16 +53,11 @@
     - flt3
     - kmt2a
   command: >
-    snakemake -rp
+    snakemake
     --snakefile includes/itd/Snakefile
+    --workflow-profile test
     --configfile test/data/config/itd.json
     --config pepfile=test/pep/itd.csv
-    --cores
-    --notemp
-    --verbose
-    --use-singularity
-    --singularity-args '--cleanenv --bind /tmp'
-    --singularity-prefix '~/.singularity/cache/snakemake'
   files:
     # ITD pipeline should create a png of the detected repeat events for flt3
     - path: "SRR8615687/itd/SRR8615687.flt3.png"
@@ -123,16 +119,11 @@
     - functional
     - itd
   command: >
-    snakemake -rp
+    snakemake
     --snakefile includes/itd/Snakefile
+    --workflow-profile test
     --configfile test/data/config/itd.json
     --config pepfile=test/pep/chrM.csv
-    --cores
-    --notemp
-    --verbose
-    --use-singularity
-    --singularity-args '--cleanenv --bind /tmp'
-    --singularity-prefix '~/.singularity/cache/snakemake'
   files:
     # ITD pipeline should create the output files for kmt2a
     - path: "SRR8615409/itd/SRR8615409.kmt2a.png"
