@@ -5,3 +5,5 @@ printshellcmds: True
 verbose: True
 reason: True
 cores: 1
+keep-incomplete: True
+keep-going: True
