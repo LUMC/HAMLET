@@ -99,7 +99,7 @@ jobs:
           remove-dotnet: 'true'
           remove-codeql: 'true'
 
-      - uses: actions/checkout@4
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
 
