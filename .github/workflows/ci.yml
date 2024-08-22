@@ -41,7 +41,7 @@ jobs:
       # This is used to invalidate the conda environment every week
       - name: Get year and week (for conda cache)
         id: get-date
-        run: echo "::set-output name=week::$(/bin/date -u '+%Y-w%V')"
+        run: echo "week=$(/bin/date -u '+%Y-w%V')" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Cache conda environment
