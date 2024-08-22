@@ -21,12 +21,12 @@ jobs:
           - scripts
           - docs
     steps:
-      - uses: actions/checkout@v2.3.4 # https://github.com/actions/checkout.
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
 
       - name: Setup Mambaforge
-        uses: conda-incubator/setup-miniconda@v2
+        uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-variant: Mambaforge
           miniforge-version: latest
@@ -34,9 +34,9 @@ jobs:
           use-mamba: true
 
       - name: Install singularity
-        uses: eWaterCycle/setup-singularity@v6
+        uses: eWaterCycle/setup-singularity@v7
         with:
-          singularity-version: 3.6.4
+          singularity-version: 3.7.1
 
       # This is used to invalidate the conda environment every week
       - name: Get year and week (for conda cache)
@@ -46,7 +46,7 @@ jobs:
 
       - name: Cache conda environment
         id: conda-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         env:
           # Increase this value to manually invalidate the cache
           CACHE_NUMBER: 0
@@ -91,7 +91,7 @@ jobs:
           - test-hamlet-chrM
     steps:
       - name: Maximise build space
-        uses: easimon/maximize-build-space@master
+        uses: easimon/maximize-build-space@v10
         with:
           root-reserve-mb: 30720
           swap-size-mb: 1024
@@ -99,12 +99,12 @@ jobs:
           remove-dotnet: 'true'
           remove-codeql: 'true'
 
-      - uses: actions/checkout@v2.3.4 # https://github.com/actions/checkout.
+      - uses: actions/checkout@4
         with:
           submodules: recursive
 
       - name: Setup Mambaforge
-        uses: conda-incubator/setup-miniconda@v2
+        uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-variant: Mambaforge
           miniforge-version: latest
@@ -114,12 +114,12 @@ jobs:
       # This is used to invalidate the conda environment every week
       - name: Get week number
         id: get-date
-        run: echo "::set-output name=week::$(/bin/date -u '+%Y-w%V')"
+        run: echo "week=$(/bin/date -u '+%Y-w%V')" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Cache conda environment
         id: conda-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         env:
           # Increase this value to manually invalidate the cache
           CACHE_NUMBER: 0
@@ -132,9 +132,9 @@ jobs:
         if: steps.conda-cache.outputs.cache-hit != 'true'
 
       - name: Install singularity
-        uses: eWaterCycle/setup-singularity@v6
+        uses: eWaterCycle/setup-singularity@v7
         with:
-          singularity-version: 3.6.4
+          singularity-version: 3.7.1
 
       - name: Cache singularity images
         uses: actions/cache@v3
