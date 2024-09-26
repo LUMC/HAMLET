@@ -1,11 +1,6 @@
 include: "common.smk"
 
 
-# Put each sample name in a SimpleNamespace to mimic Snakemake wildcard usage
-# (e.g {wildcards.sample}). This is only used in the 'all' rule.
-samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample_name"]]
-
-
 rule all:
     input:
         arriba=[module_output.arriba(sample) for sample in samples],

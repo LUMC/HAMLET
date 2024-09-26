@@ -89,3 +89,18 @@
     - sanity
     - fusion
   command: snakefmt --check includes/fusion
+
+- name: test-fusion-sample-with-space
+  tags:
+    - sanity
+    - fusion
+  command: >
+    snakemake
+    --snakefile includes/fusion/Snakefile
+    --workflow-profile test
+    --configfile test/data/config/fusion.json
+    --config pepfile=test/pep/invalid.csv
+  exit_code: 1
+  stderr:
+    contains:
+      - 'RuntimeError: Spaces in samples are not supported ("SRR 8615687")'

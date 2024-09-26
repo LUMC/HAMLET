@@ -96,6 +96,8 @@ cases, this can be a csv file with one line per read-pair, as can be seen
 Any number of samples can be processed in a single execution, and each sample
 may have any number of read pairs, and HAMLET will handle those properly.
 
+**Note that spaces in sample names are not supported**
+
 ## Execution
 If running in a cluster, you may also want to define the resource configurations in another YAML file. Read more about
 this type of configuration on the official [Snakemake

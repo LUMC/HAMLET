@@ -14,6 +14,10 @@ pepfile: config["pepfile"]
 # (e.g {wildcards.sample}). This is only used in the 'all' rule.
 samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample_name"]]
 
+for s in samples:
+    if " " in s.sample:
+        raise RuntimeError(f'Spaces in samples are not supported ("{s.sample}")')
+
 
 def get_input_fastq(sample, pair):
     """Get all fastq files for the specified sample"""

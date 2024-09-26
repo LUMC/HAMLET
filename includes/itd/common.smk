@@ -4,6 +4,15 @@ from types import SimpleNamespace
 pepfile: config["pepfile"]
 
 
+# Put each sample name in a SimpleNamespace to mimic Snakemake wildcard usage
+# (e.g {wildcards.sample}). This is only used in the 'all' rule.
+samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample_name"]]
+
+for s in samples:
+    if " " in s.sample:
+        raise RuntimeError(f'Spaces in samples are not supported ("{s.sample}")')
+
+
 containers = {
     "bwa-0.7.17-samtools-1.3.1-picard-2.9.2": "docker://quay.io/biocontainers/mulled-v2-1c6be8ad49e4dfe8ab70558e8fb200d7b2fd7509:5900b4e68c4051137fffd99165b00e98f810acae-0",
     "rose": "docker://quay.io/redmar_van_den_berg/rose-dt:0.4",

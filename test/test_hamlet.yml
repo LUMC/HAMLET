@@ -170,3 +170,18 @@
     - sanity
     - hamlet
   command: snakefmt --check .
+
+- name: test-sample-with-space
+  tags:
+    - sanity
+    - hamlet
+  command: >
+    snakemake
+    --snakefile Snakefile
+    --workflow-profile test
+    --configfile test/data/config/hamlet-dry.json
+    --config pepfile=test/pep/invalid.csv
+  exit_code: 1
+  stderr:
+    contains:
+      - 'RuntimeError: Spaces in samples are not supported ("SRR 8615687")'

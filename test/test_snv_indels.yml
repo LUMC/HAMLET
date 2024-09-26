@@ -188,3 +188,18 @@
     - sanity
     - snv-indels
   command: snakefmt --check includes/snv-indels/
+
+- name: test-snv-indels-sample-with-space
+  tags:
+    - sanity
+    - snv-indels
+  command: >
+    snakemake
+    --snakefile includes/snv-indels/Snakefile
+    --workflow-profile test
+    --configfile test/data/config/snv-indels.json
+    --config pepfile=test/pep/invalid.csv
+  exit_code: 1
+  stderr:
+    contains:
+      - 'RuntimeError: Spaces in samples are not supported ("SRR 8615687")'

@@ -45,6 +45,7 @@
     contains_regex:
       - "singularity(-ce)? version 3"
 
+
 # ITD pipeline should run successfully and actually create the specified files
 - name: test-itd
   tags:
@@ -165,3 +166,18 @@
     - sanity
     - itd
   command: snakefmt --check includes/itd
+
+- name: test-itd-sample-with-space
+  tags:
+    - sanity
+    - itd
+  command: >
+    snakemake
+    --snakefile includes/itd/Snakefile
+    --workflow-profile test
+    --configfile test/data/config/itd.json
+    --config pepfile=test/pep/invalid.csv
+  exit_code: 1
+  stderr:
+    contains:
+      - 'RuntimeError: Spaces in samples are not supported ("SRR 8615687")'
