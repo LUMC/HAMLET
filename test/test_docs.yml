@@ -6,3 +6,9 @@
   command: make -C docs/ html
   files:
     - path: docs/build/html/genindex.html
+
+- name: test-docs-links
+  tags:
+    - hamlet
+    - docs
+  command: make -C docs/ linkcheck
