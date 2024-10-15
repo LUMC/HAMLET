@@ -25,8 +25,7 @@ Changes
   * Add bookmarks under chapter variant
   * Sort the genes of interest alphabetically
   * Lock snakefmt version
-  * Remove the "Sequencing Results" section from the report (this has been
-    replaced by a MultiQC report)
+  * Remove the "Sequencing Results" section from the report (this has been replaced by a MultiQC report)
 * Replace FastQC with Sequali
 
 Bugfixes
