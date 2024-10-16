@@ -86,6 +86,11 @@ jobs:
       matrix:
         module:
           - qc-seq
+          - snv-indels
+          - itd
+          - fusion
+          - test-hamlet-targetted-RNA
+          - test-hamlet-chrM
     steps:
       - name: Maximise build space
         uses: easimon/maximize-build-space@v10
