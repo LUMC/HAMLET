@@ -4,10 +4,10 @@
 
 project = 'HAMLET'
 copyright = '2018, LUMC'
-author = 'Wibowo Arindrarto, Redmar van den Berg'
+author = 'Wibowo Arindrarto, Redmar van den Berg, Xiaoyun Liu'
 
-release = '2.0'
-version = '2.0.0'
+release = "v2.1.0-dev"
+version = '.'.join(release.split('.')[0:2])
 
 # -- General configuration
 
