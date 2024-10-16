@@ -25,10 +25,9 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup Mambaforge
+      - name: Setup Miniforge
         uses: conda-incubator/setup-miniconda@v3
         with:
-          miniforge-variant: Mambaforge
           miniforge-version: latest
           activate-environment: HAMLET
           use-mamba: true
@@ -103,10 +102,9 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup Mambaforge
+      - name: Setup Miniforge
         uses: conda-incubator/setup-miniconda@v3
         with:
-          miniforge-variant: Mambaforge
           miniforge-version: latest
           activate-environment: HAMLET
           use-mamba: true
