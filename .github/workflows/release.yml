@@ -42,7 +42,7 @@ jobs:
       - name: Package source code
         shell: bash
         run: |
-          find . | grep -v "\.git\|pytest.ini" | tar -czvf HAMLET-${{ env.RELEASE_VERSION }}.tar.gz --files-from -
+          find * | grep -v "\.git\|pytest.ini" | tar -czvf HAMLET-${{ env.RELEASE_VERSION }}.tar.gz --files-from -
 
       - name: Print event context
         env:
