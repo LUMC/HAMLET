@@ -7,8 +7,13 @@ on:
 
 jobs:
   check version:
-    name: Check release version is set correctly in every file
-    run: python3 utilities/check-version ${RELEASE_VERSION}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Check release version is set correctly in every file
+        run: python3 utilities/check-version.py ${RELEASE_VERSION}
 
   run tests:
     uses: ./.github/workflows/ci.yml
