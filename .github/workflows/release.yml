@@ -1,0 +1,80 @@
+name: Publish release on tag creation
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  check version:
+    name: Check release version is set correctly in every file
+    run: python3 utilities/check-version ${RELEASE_VERSION}
+
+  run tests:
+    uses: ./.github/workflows/ci.yml
+    needs: check version
+
+  package:
+    name: Package source files, excluding the pytest.ini and git files
+    runs-on: ubuntu-latest
+    needs: run tests
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Get shortened version of release tag
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+      - name: Package source code
+        shell: bash
+        run: |
+          find . | grep -v "\.git\|pytest.ini" | tar -czvf HAMLET-${{ env.RELEASE_VERSION }}.tar.gz --files-from -
+
+      - name: Print event context
+        env:
+          EVENT_CONTEXT: ${{ toJSON(github.event) }}
+        run: |
+          echo $EVENT_CONTEXT
+
+      - name: Upload archive as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-tar
+          path: HAMLET-${{ env.RELEASE_VERSION }}.tar.gz
+          retention-days: 1
+
+  release:
+      name: Create a release out of the tar archive
+      needs:
+        - version
+        - run tests
+        - package
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+          with:
+            submodules: recursive
+
+        - name: Get shortened version of release tag
+          run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+        - name: Download release tarball
+          uses: actions/download-artifact@v3
+          with:
+            name: release-tar
+
+        - name: Download release binary
+          uses: actions/download-artifact@v3
+          with:
+            name: release-binary
+
+        - name: Create release
+          env:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: |
+            gh release create \
+              ${{ env.RELEASE_VERSION}} \
+              --generate-notes \
+              HAMLET-${{ env.RELEASE_VERSION}}.tar.gz \
