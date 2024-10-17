@@ -4,7 +4,10 @@ import argparse
 import gzip
 import json
 
-from typing import Dict, Set, Tuple, Iterator
+from typing import Any, Dict, Set, Tuple, Iterator
+
+# Type for the frequencies entry from VEP
+FrequenciesType = Dict[str, Dict[str, float]]
 # From most to least severe, taken from the ensembl website
 # https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html
 severity = [
@@ -50,7 +53,7 @@ severity = [
 ]
 
 
-class VEP(dict):
+class VEP(dict[str, Any]):
     """Class to work with VEP objects"""
 
     def filter_transcript_id(self, transcripts: Set[str]) -> None:
@@ -97,7 +100,7 @@ class VEP(dict):
                 self["most_severe_consequence"] = term
                 break
 
-    def extract_frequencies(self) -> Dict[str, float]:
+    def extract_frequencies(self) -> FrequenciesType:
         """
         Extract the population allele frequencies from a VEP record
 
@@ -108,7 +111,7 @@ class VEP(dict):
         - Only one of the colocated_variant entries can have a "frequencies"
             section
         """
-        frequencies = dict()
+        frequencies: FrequenciesType = dict()
         if "colocated_variants" not in self:
             return frequencies
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-from filter_vep import VEP
+from filter_vep import VEP, FrequenciesType
 
 import json
 import pytest
 
-from typing import Dict, Set
+from typing import Any, Dict, Set, List
 
 
 @pytest.fixture
@@ -149,7 +149,7 @@ COLOCATED_VARIANTS = [
 ]
 
 @pytest.mark.parametrize(["vep", "frequencies"], COLOCATED_VARIANTS)
-def test_extract_frequencies(vep: VEP, frequencies: Dict[str, float]) -> None:
+def test_extract_frequencies(vep: VEP, frequencies: FrequenciesType) -> None:
     V = VEP(vep)
     assert V.extract_frequencies() == frequencies
 
@@ -160,7 +160,7 @@ def test_error_extract_multiple_frequencies() -> None:
     WHEN we extract the frequency values
     THEN we get an error
     """
-    data = {
+    data: Dict[str, Any] = {
             "colocated_variants": [
                 {
                     "frequencies": dict()
@@ -180,7 +180,7 @@ def test_error_extract_frequencies_multiple_entries() -> None:
     WHEN we extract the frequency values
     THEN we get an error
     """
-    data = {"colocated_variants": [
+    data: Dict[str, Any] = {"colocated_variants": [
             {"frequencies":
                 {
                     "T": dict(),
