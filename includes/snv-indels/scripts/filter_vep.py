@@ -4,7 +4,7 @@ import argparse
 import gzip
 import json
 
-from typing import Set, Tuple, Iterator
+from typing import Dict, Set, Tuple, Iterator
 # From most to least severe, taken from the ensembl website
 # https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html
 severity = [
@@ -96,6 +96,38 @@ class VEP(dict):
             if term in cons:
                 self["most_severe_consequence"] = term
                 break
+
+    def extract_frequencies(self) -> Dict[str, float]:
+        """
+        Extract the population allele frequencies from a VEP record
+
+        The structure of the VEP record is quite complicated. I've looked at
+        191k VEP entries from HAMLET, and found the following:
+        - Each record has zero or more "colocated_variants" entries
+        - Each colocated_variant entry can have a "frequencies" section
+        - Only one of the colocated_variant entries can have a "frequencies"
+            section
+        """
+        frequencies = dict()
+        if "colocated_variants" not in self:
+            return frequencies
+
+
+        nr_freq_entries = 0
+        for var in self["colocated_variants"]:
+            if "frequencies" in var:
+                nr_freq_entries += 1
+                frequencies = var["frequencies"]
+
+        if nr_freq_entries > 1:
+            msg = "Multiple colocated variants with 'frequencies' entry encountered"
+            raise RuntimeError(msg)
+
+        if len(frequencies) > 1:
+            msg = "'frequencies' entry should only contain a single key"
+            raise RuntimeError(msg)
+
+        return frequencies
 
 
 def read_goi_file(fname: str) -> Tuple[Set[str], Set[str]]:

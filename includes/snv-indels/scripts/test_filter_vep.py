@@ -127,3 +127,68 @@ def test_most_severe_transcript_blacklist(vep: VEP) -> None:
     """Test if most severe consequence is updated"""
     vep.filter_hgvsc_blacklist({"ENTS0123.1:c.40A>C"})
     assert vep["most_severe_consequence"] == "splice_acceptor_variant"
+
+
+COLOCATED_VARIANTS = [
+    # No "colocated_variants" entry
+    (dict(), dict()),
+    # No "frequencies" entry in colocated variants
+    ({"colocated_variants": []}, dict()),
+    # A single frequencies entry
+    (
+        {
+            "colocated_variants": [
+                {
+                    "frequencies": {"T": dict()}
+                }
+            ]
+        },
+
+        {"T": dict()}
+    ),
+]
+
+@pytest.mark.parametrize(["vep", "frequencies"], COLOCATED_VARIANTS)
+def test_extract_frequencies(vep: VEP, frequencies: Dict[str, float]) -> None:
+    V = VEP(vep)
+    assert V.extract_frequencies() == frequencies
+
+
+def test_error_extract_multiple_frequencies() -> None:
+    """
+    GIVEN a VEP record with multiple "frequencies" entries
+    WHEN we extract the frequency values
+    THEN we get an error
+    """
+    data = {
+            "colocated_variants": [
+                {
+                    "frequencies": dict()
+                },
+                {
+                    "frequencies": dict()
+                }
+            ]
+    }
+    V = VEP(data)
+    with pytest.raises(RuntimeError):
+        V.extract_frequencies()
+
+def test_error_extract_frequencies_multiple_entries() -> None:
+    """
+    GIVEN a VEP record with a single "frequencies" entry, which contains multiple keys
+    WHEN we extract the frequency values
+    THEN we get an error
+    """
+    data = {"colocated_variants": [
+            {"frequencies":
+                {
+                    "T": dict(),
+                    "A": dict()
+                }
+            }
+        ]
+    }
+    V = VEP(data)
+    with pytest.raises(RuntimeError):
+        V.extract_frequencies()
