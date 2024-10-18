@@ -69,8 +69,7 @@ class VEP(dict[str, Any]):
         if not consequences:
             return
         tc = self["transcript_consequences"]
-        tc = [x for x in tc if not set(
-            x["consequence_terms"]).isdisjoint(consequences)]
+        tc = [x for x in tc if not set(x["consequence_terms"]).isdisjoint(consequences)]
         self["transcript_consequences"] = tc
         self.update_most_severe()
 
@@ -115,7 +114,6 @@ class VEP(dict[str, Any]):
         if "colocated_variants" not in self:
             return frequencies
 
-
         nr_freq_entries = 0
         for var in self["colocated_variants"]:
             if "frequencies" in var:
@@ -132,9 +130,10 @@ class VEP(dict[str, Any]):
 
         return frequencies
 
-
     @classmethod
-    def _extract_population(self, population: str, frequencies: FrequenciesType) -> float:
+    def _extract_population(
+        self, population: str, frequencies: FrequenciesType
+    ) -> float:
         """
         Extract the frequency from the specified population from the VEP record
 
@@ -153,7 +152,7 @@ class VEP(dict[str, Any]):
 
         # Get the single key from frequencies
         key = next(iter(frequencies))
-        return frequencies[key].get(population,0)
+        return frequencies[key].get(population, 0)
 
     def extract_population_frequency(self, population: str) -> float:
         """
@@ -188,10 +187,10 @@ def get_hotspot(fname: str) -> Set[str]:
     hotspots = set()
     with open(fname) as fin:
         for line in fin:
-            if line.startswith('#'):
+            if line.startswith("#"):
                 continue
             else:
-                hotspots.add(line.strip('\n'))
+                hotspots.add(line.strip("\n"))
     return hotspots
 
 
@@ -199,12 +198,17 @@ def get_blacklist(fname: str) -> Set[str]:
     blacklist = set()
     with open(fname) as fin:
         for line in fin:
-            blacklist.add(line.strip('\n'))
+            blacklist.add(line.strip("\n"))
     return blacklist
 
 
-def main(vep_file: str, goi_file: str, consequences: Set[str],
-         hotspot_file: str, blacklist_file: str) -> None:
+def main(
+    vep_file: str,
+    goi_file: str,
+    consequences: Set[str],
+    hotspot_file: str,
+    blacklist_file: str,
+) -> None:
     # Get genes and transcripts of interest
     goi, toi = read_goi_file(goi_file)
 
@@ -237,12 +241,15 @@ if __name__ == "__main__":
 
     parser.add_argument("vep", help="VEP json output file")
     parser.add_argument("goi", help="Genes of interest")
-    parser.add_argument("--consequences", nargs='*',
-                        type=str, default=list())
+    parser.add_argument("--consequences", nargs="*", type=str, default=list())
     parser.add_argument("--hotspot", help="VCF file with hotspot variants")
-    parser.add_argument("--blacklist", help=(
-                        "File with blacklisted variants, one per line. Format "
-                        "should match the 'hgvsc' field of VEP"))
+    parser.add_argument(
+        "--blacklist",
+        help=(
+            "File with blacklisted variants, one per line. Format "
+            "should match the 'hgvsc' field of VEP"
+        ),
+    )
 
     args = parser.parse_args()
 
