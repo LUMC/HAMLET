@@ -143,7 +143,30 @@ COLOCATED_VARIANTS = [
                 }
             ]
         },
-
+        {"T": dict()}
+    ),
+    # A single frequencies entry in the second colocated variant
+    (
+        {
+            "colocated_variants": [
+                {},
+                {
+                    "frequencies": {"T": dict()}
+                }
+            ]
+        },
+        {"T": dict()}
+    ),
+    # A single frequencies entry in the first colocated variant
+    (
+        {
+            "colocated_variants": [
+                {
+                    "frequencies": {"T": dict()}
+                },
+                {}
+            ]
+        },
         {"T": dict()}
     ),
 ]
@@ -192,3 +215,16 @@ def test_error_extract_frequencies_multiple_entries() -> None:
     V = VEP(data)
     with pytest.raises(RuntimeError):
         V.extract_frequencies()
+
+POPULATION = [
+        ({"T": {"gnomade": 0.5}}, "gnomade", 0.5),
+]
+@pytest.mark.parametrize(["frequencies", "population", "expected"], POPULATION)
+def test_extract_population(frequencies: FrequenciesType, population: str, expected: float) -> None:
+    """
+    GIVEN a VEP frequencies record
+    WHEN we extract the specified population
+    THEN we should get the corresponding population frequency
+    """
+    V = VEP()
+    V._extract_population("gnomAD", frequencies) == expected
