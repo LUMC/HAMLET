@@ -233,3 +233,34 @@ def test_extract_population(frequencies: FrequenciesType, expected: float) -> No
     """
     V = VEP()
     assert V._extract_population("gnomAD", frequencies) == expected
+
+
+def test_extract_population_frequency() -> None:
+    """
+    GIVEN a VEP record
+    WHEN we extract the specified population frequency
+    THEN we should get the corresponding value
+
+    This is an end to end test which relies on
+        VEP_.extract_frequencies
+        VEP._extract_population
+    """
+    data = {
+        "colocated_variants": [
+            # An empty colocated variant
+            dict(),
+            # Another colocated variant with some random annotations
+            {"some": "nonsense"},
+            # The colocated variant which contains the frequencies
+            {
+                "frequencies": {
+                    "T": {
+                        "gnomAD": 0.42
+                    }
+                 }
+            }
+        ]
+    }
+
+    V = VEP(data)
+    assert V.extract_population_frequency("gnomAD") == 0.42

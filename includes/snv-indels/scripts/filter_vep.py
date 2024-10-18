@@ -132,6 +132,7 @@ class VEP(dict[str, Any]):
 
         return frequencies
 
+
     @classmethod
     def _extract_population(self, population: str, frequencies: FrequenciesType) -> float:
         """
@@ -153,6 +154,13 @@ class VEP(dict[str, Any]):
         # Get the single key from frequencies
         key = next(iter(frequencies))
         return frequencies[key].get(population,0)
+
+    def extract_population_frequency(self, population: str) -> float:
+        """
+        Extract the specified population frequency from the VEP record
+        """
+        frequencies = self._extract_frequencies()
+        return self._extract_population(population, frequencies)
 
 
 def read_goi_file(fname: str) -> Tuple[Set[str], Set[str]]:
