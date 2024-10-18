@@ -212,7 +212,7 @@ def main(
     hotspot_file: str,
     blacklist_file: str,
     population: str,
-    frequency: float
+    frequency: float,
 ) -> None:
     # Get genes and transcripts of interest
     goi, toi = read_goi_file(goi_file)
@@ -258,9 +258,23 @@ if __name__ == "__main__":
             "should match the 'hgvsc' field of VEP"
         ),
     )
-    parser.add_argument("--population", help="Population to use for variant frequency", default="gnomAD")
-    parser.add_argument("--frequency", help="Variants with a population frequency above this threshold will be filtered out", default=0.05)
+    parser.add_argument(
+        "--population", help="Population to use for variant frequency", default="gnomAD"
+    )
+    parser.add_argument(
+        "--frequency",
+        help="Variants with a population frequency above this threshold will be filtered out",
+        default=0.05,
+    )
 
     args = parser.parse_args()
 
-    main(args.vep, args.goi, args.consequences, args.hotspot, args.blacklist, args.population, args.frequency)
+    main(
+        args.vep,
+        args.goi,
+        args.consequences,
+        args.hotspot,
+        args.blacklist,
+        args.population,
+        args.frequency,
+    )
