@@ -100,7 +100,7 @@ class VEP(dict[str, Any]):
                 self["most_severe_consequence"] = term
                 break
 
-    def extract_frequencies(self) -> FrequenciesType:
+    def _extract_frequencies(self) -> FrequenciesType:
         """
         Extract the population allele frequencies from a VEP record
 
@@ -127,7 +127,7 @@ class VEP(dict[str, Any]):
             raise RuntimeError(msg)
 
         if len(frequencies) > 1:
-            msg = "'frequencies' entry should only contain a single key"
+            msg = "'frequencies' entry from VEP should only contain a single key"
             raise RuntimeError(msg)
 
         return frequencies
@@ -142,7 +142,17 @@ class VEP(dict[str, Any]):
         TODO write top_level function taht uses extract_frequencies and extract
              population on self
         """
-        return frequencies.get(population, 0)
+        # If frequencies is empty, return 0
+        if not frequencies:
+            return 0
+
+        if len(frequencies) > 1:
+            msg = "'frequencies' entry from VEP should only contain a single key"
+            raise RuntimeError(msg)
+
+        # Get the single key from frequencies
+        key = next(iter(frequencies))
+        return frequencies[key].get(population,0)
 
 
 def read_goi_file(fname: str) -> Tuple[Set[str], Set[str]]:

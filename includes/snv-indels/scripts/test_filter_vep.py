@@ -5,7 +5,7 @@ from filter_vep import VEP, FrequenciesType
 import json
 import pytest
 
-from typing import Any, Dict, Set, List
+from typing import Any, Dict, Set, List, Tuple
 
 
 @pytest.fixture
@@ -129,7 +129,7 @@ def test_most_severe_transcript_blacklist(vep: VEP) -> None:
     assert vep["most_severe_consequence"] == "splice_acceptor_variant"
 
 
-COLOCATED_VARIANTS = [
+COLOCATED_VARIANTS :List[Tuple[Any,Any]]= [
     # No "colocated_variants" entry
     (dict(), dict()),
     # No "frequencies" entry in colocated variants
@@ -174,7 +174,7 @@ COLOCATED_VARIANTS = [
 @pytest.mark.parametrize(["vep", "frequencies"], COLOCATED_VARIANTS)
 def test_extract_frequencies(vep: VEP, frequencies: FrequenciesType) -> None:
     V = VEP(vep)
-    assert V.extract_frequencies() == frequencies
+    assert V._extract_frequencies() == frequencies
 
 
 def test_error_extract_multiple_frequencies() -> None:
@@ -195,7 +195,7 @@ def test_error_extract_multiple_frequencies() -> None:
     }
     V = VEP(data)
     with pytest.raises(RuntimeError):
-        V.extract_frequencies()
+        V._extract_frequencies()
 
 def test_error_extract_frequencies_multiple_entries() -> None:
     """
@@ -214,17 +214,22 @@ def test_error_extract_frequencies_multiple_entries() -> None:
     }
     V = VEP(data)
     with pytest.raises(RuntimeError):
-        V.extract_frequencies()
+        V._extract_frequencies()
 
 POPULATION = [
-        ({"T": {"gnomade": 0.5}}, "gnomade", 0.5),
+        # If frequencies is empty, return 0
+        ({}, 0),
+        # If the specified population is missing, return 0
+        ({"T": {}}, 0),
+        # Otherwise, return the requested population frequency
+        ({"T": {"gnomAD": 0.5}}, 0.5),
 ]
-@pytest.mark.parametrize(["frequencies", "population", "expected"], POPULATION)
-def test_extract_population(frequencies: FrequenciesType, population: str, expected: float) -> None:
+@pytest.mark.parametrize(["frequencies", "expected"], POPULATION)
+def test_extract_population(frequencies: FrequenciesType, expected: float) -> None:
     """
     GIVEN a VEP frequencies record
     WHEN we extract the specified population
     THEN we should get the corresponding population frequency
     """
     V = VEP()
-    V._extract_population("gnomAD", frequencies) == expected
+    assert V._extract_population("gnomAD", frequencies) == expected
