@@ -275,7 +275,7 @@ THRESHOLD = [
     ("Missing", 1, False),
 ]
 @pytest.mark.parametrize(["population", "threshold", "expected"], THRESHOLD)
-def test_above_frequency_threshold(population: str, threshold:float, expected: bool) -> None:
+def test_above_population_threshold(population: str, threshold:float, expected: bool) -> None:
     data = {
         "colocated_variants": [
             # An empty colocated variant
@@ -294,4 +294,4 @@ def test_above_frequency_threshold(population: str, threshold:float, expected: b
     }
     V =VEP(data)
 
-    assert V.above_frequency_threshold(population, threshold) is expected
+    assert V.above_population_threshold(population, threshold) is expected

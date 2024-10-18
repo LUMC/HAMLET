@@ -158,7 +158,7 @@ class VEP(dict[str, Any]):
         frequencies = self._extract_frequencies()
         return self._extract_population(population, frequencies)
 
-    def above_frequency_threshold(self, population: str, threshold: float) -> bool:
+    def above_population_threshold(self, population: str, threshold: float) -> bool:
         """
         Determine if the VEP population frequency is above the specified threshold
         """
@@ -211,6 +211,8 @@ def main(
     consequences: Set[str],
     hotspot_file: str,
     blacklist_file: str,
+    population: str,
+    frequency: float
 ) -> None:
     # Get genes and transcripts of interest
     goi, toi = read_goi_file(goi_file)
@@ -222,6 +224,9 @@ def main(
     blacklist = get_blacklist(blacklist_file) if blacklist_file else set()
 
     for vep in parse_vep_json(vep_file):
+        # Skip variants that are above the specified population frequency
+        if vep.above_population_threshold(population, frequency):
+            continue
         # Filter on transcript of interest
         vep.filter_transcript_id(toi)
         # Filter on consequences of interest
@@ -253,7 +258,9 @@ if __name__ == "__main__":
             "should match the 'hgvsc' field of VEP"
         ),
     )
+    parser.add_argument("--population", help="Population to use for variant frequency", default="gnomAD")
+    parser.add_argument("--frequency", help="Variants with a population frequency above this threshold will be filtered out", default=0.05)
 
     args = parser.parse_args()
 
-    main(args.vep, args.goi, args.consequences, args.hotspot, args.blacklist)
+    main(args.vep, args.goi, args.consequences, args.hotspot, args.blacklist, args.population, args.frequency)
