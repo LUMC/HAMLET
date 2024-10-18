@@ -132,15 +132,10 @@ class VEP(dict[str, Any]):
 
     @classmethod
     def _extract_population(
-        self, population: str, frequencies: FrequenciesType
+        cls, population: str, frequencies: FrequenciesType
     ) -> float:
         """
         Extract the frequency from the specified population from the VEP record
-
-        TODO check that there is only a single key in frequencies
-        TODO make private function
-        TODO write top_level function taht uses extract_frequencies and extract
-             population on self
         """
         # If frequencies is empty, return 0
         if not frequencies:
