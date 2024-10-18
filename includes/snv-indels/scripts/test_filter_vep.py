@@ -264,3 +264,34 @@ def test_extract_population_frequency() -> None:
 
     V = VEP(data)
     assert V.extract_population_frequency("gnomAD") == 0.42
+
+
+THRESHOLD = [
+    ("gnomAD", 0.41999, True),
+    ("gnomAD", 42, False),
+    ("gnomAD", 43, False),
+    # If the population is missing, assume the frequency is 0, which means
+    # nothing is above the threshold
+    ("Missing", 1, False),
+]
+@pytest.mark.parametrize(["population", "threshold", "expected"], THRESHOLD)
+def test_above_frequency_threshold(population: str, threshold:float, expected: bool) -> None:
+    data = {
+        "colocated_variants": [
+            # An empty colocated variant
+            dict(),
+            # Another colocated variant with some random annotations
+            {"some": "nonsense"},
+            # The colocated variant which contains the frequencies
+            {
+                "frequencies": {
+                    "T": {
+                        "gnomAD": 0.42
+                    }
+                 }
+            }
+        ]
+    }
+    V =VEP(data)
+
+    assert V.above_frequency_threshold(population, threshold) is expected
