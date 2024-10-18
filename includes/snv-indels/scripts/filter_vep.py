@@ -149,9 +149,11 @@ class VEP(dict[str, Any]):
         key = next(iter(frequencies))
         return frequencies[key].get(population, 0)
 
-    def extract_population_frequency(self, population: str) -> float:
+    def population_frequency(self, population: str) -> float:
         """
-        Extract the specified population frequency from the VEP record
+        Return the specified population frequency from the VEP record
+
+        Returns 0 if the data is missing
         """
         frequencies = self._extract_frequencies()
         return self._extract_population(population, frequencies)
@@ -160,7 +162,7 @@ class VEP(dict[str, Any]):
         """
         Determine if the VEP population frequency is above the specified threshold
         """
-        return self.extract_population_frequency(population) > threshold
+        return self.population_frequency(population) > threshold
 
 
 def read_goi_file(fname: str) -> Tuple[Set[str], Set[str]]:

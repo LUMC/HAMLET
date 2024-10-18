@@ -263,7 +263,7 @@ def test_extract_population_frequency() -> None:
     }
 
     V = VEP(data)
-    assert V.extract_population_frequency("gnomAD") == 0.42
+    assert V.population_frequency("gnomAD") == 0.42
 
 
 THRESHOLD = [
