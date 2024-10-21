@@ -265,6 +265,7 @@ if __name__ == "__main__":
         "--frequency",
         help="Variants with a population frequency above this threshold will be filtered out",
         default=0.05,
+        type=float,
     )
 
     args = parser.parse_args()
