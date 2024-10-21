@@ -1,0 +1,6 @@
+{
+  "housekeeping": [
+    "MT-ATP8"
+  ],
+  "gtf": "test/data/reference/hamlet-ref.gtf"
+}

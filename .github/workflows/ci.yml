@@ -89,6 +89,7 @@ jobs:
           - snv-indels
           - itd
           - fusion
+          - expression
           - test-hamlet-targetted-RNA
           - test-hamlet-chrM
     steps:
