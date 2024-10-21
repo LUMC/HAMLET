@@ -381,6 +381,8 @@ rule filter_vep:
     params:
         vep_consequences=config["vep_include_consequence"],
         blacklist=f"--blacklist {config['blacklist']}" if "blacklist" in config else "",
+        population="gnomade",
+        max_pop_af=0.05,
     output:
         filtered="{sample}/snv-indels/{sample}.vep.filtered.txt.gz",
     log:
@@ -395,6 +397,8 @@ rule filter_vep:
             {input.ref_id_mapping} \
             --hotspot {input.hotspots} \
             --consequences {params.vep_consequences} \
+            --population {params.population} \
+            --frequency {params.max_pop_af} \
             {params.blacklist} \
             | gzip > {output.filtered} 2> {log}
         """

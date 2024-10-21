@@ -11,6 +11,10 @@ Changelog
 v2.1.1-dev
 **********
 
+Bugfixes
+========
+* Fix a bug where VEP removed rare variants
+
 **********
 v2.1.0
 **********
