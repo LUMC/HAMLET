@@ -1,8 +1,8 @@
 from types import SimpleNamespace
 from scripts import gtf
 
-containers = {
-}
+containers = {}
+
 
 pepfile: config["pepfile"]
 
@@ -42,15 +42,15 @@ def check_housekeeping():
         ensg_to_name = gtf.gene_id_name(fin)
 
     # Create mapping from name to ENSG
-    name_to_ensg = {v:k for k,v in ensg_to_name.items()}
+    name_to_ensg = {v: k for k, v in ensg_to_name.items()}
 
     # Raise an error on unknown genes
     for gene in config["housekeeping"]:
         if gene not in name_to_ensg:
-            msg=f"Unknown housekeeping gene: {gene}"
+            msg = f"Unknown housekeeping gene: {gene}"
             raise RuntimeError(msg)
+
 
 check_housekeeping()
 
-module_output = SimpleNamespace(
-)
+module_output = SimpleNamespace()
