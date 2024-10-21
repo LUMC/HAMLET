@@ -2,7 +2,6 @@ include: "common.smk"
 
 
 localrules:
-    filter_vep_target,
     filter_vep_high,
     final_bamfile,
 
@@ -12,7 +11,6 @@ rule all:
         bam=[module_output.bam(sample) for sample in samples],
         bai=[module_output.bai(sample) for sample in samples],
         vep_high=[module_output.vep_high(sample) for sample in samples],
-        vep_target=[module_output.vep_target(sample) for sample in samples],
         json=[module_output.json(sample) for sample in samples],
         hotspot=[module_output.hotspot(sample) for sample in samples],
         multiqc="multiqc_snv_indels.html",
@@ -370,33 +368,6 @@ rule hotspot_variants:
             -b {input.bed} \
             -header \
             > {output.vcf} 2> {log}
-        """
-
-
-rule filter_vep_target:
-    input:
-        vep="{sample}/snv-indels/{sample}.vep.txt.gz",
-        ref_id_mapping=config["ref_id_mapping"],
-        hotspots="{sample}/snv-indels/{sample}.hotspot.vcf",
-        scr=srcdir("scripts/filter_vep.py"),
-        blacklist=config.get("blacklist", []),
-    output:
-        high="{sample}/snv-indels/{sample}.vep.target.txt.gz",
-    params:
-        blacklist=f"--blacklist {config['blacklist']}" if "blacklist" in config else "",
-    log:
-        "log/filter_vep_target.{sample}.txt",
-    threads: 1
-    container:
-        containers["crimson"]
-    shell:
-        """
-        python3 {input.scr} \
-            {input.vep} \
-            {input.ref_id_mapping} \
-            --hotspot {input.hotspots} \
-            {params.blacklist} \
-            | gzip > {output.high} 2> {log}
         """
 
 

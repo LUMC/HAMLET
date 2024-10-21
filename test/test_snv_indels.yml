@@ -69,7 +69,6 @@
     - path: "SRR8615409/snv-indels/SRR8615409.exon_cov_stats.json"
     - path: "SRR8615409/snv-indels/SRR8615409.aln_stats"
     - path: "SRR8615409/snv-indels/SRR8615409.vep.txt.gz"
-    - path: "SRR8615409/snv-indels/SRR8615409.vep.target.txt.gz"
     - path: "SRR8615409/snv-indels/SRR8615409.vep.high.txt.gz"
       contains:
         - "stop_gained"
@@ -95,7 +94,6 @@
         - "CollectRnaSeqMetrics"
     - path: "log/annotate_vars.SRR8615409.txt"
     - path: "log/filter_vep_high.SRR8615409.txt"
-    - path: "log/filter_vep_target.SRR8615409.txt"
     - path: "SRR8615409/snv-indels/snv-indels-output.json"
     # Test that a STAR counts file is generated
     - path: "SRR8615409/snv-indels/SRR8615409.ReadsPerGene.out.tab"
@@ -110,10 +108,6 @@
       contains:
         - "chrM\t8468"
         - "chrM\t8655"
-    # Test that the targetted VEP output is not empty
-    - path: SRR8615409/snv-indels/SRR8615409.vep.target.txt.gz
-      contains:
-        - "allele_string"
 
     # Test that file names are set correctly in MultiQC report
     - path: multiqc_snv_indels.html
