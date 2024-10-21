@@ -42,8 +42,8 @@ def get_bai_output(wildcards):
     return get_bam_output(wildcards) + ".bai"
 
 
-def get_vep_high(wildcards):
-    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.vep.high.txt.gz"
+def get_filter_vep(wildcards):
+    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.vep.filtered.txt.gz"
 
 
 def get_json(wildcards):
@@ -80,7 +80,7 @@ def multiqc_files():
 module_output = SimpleNamespace(
     bam=get_bam_output,
     bai=get_bai_output,
-    vep_high=get_vep_high,
+    filter_vep=get_filter_vep,
     json=get_json,
     hotspot=get_hotspot,
     multiqc_files=multiqc_files(),

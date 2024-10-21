@@ -14,7 +14,7 @@ HOTSPOTS = [
 @pytest.mark.parametrize(["pos", "hotspot"], HOTSPOTS)
 def test_is_in_hotspot2(workflow_dir, pos, hotspot):
     sample = "SRR8615409"
-    output_file = pathlib.Path(workflow_dir, f"{sample}/snv-indels/{sample}.vep.high.txt.gz")
+    output_file = pathlib.Path(workflow_dir, f"{sample}/snv-indels/{sample}.vep.filtered.txt.gz")
 
     # Read the file, and pick out the line we want based on pos
     with gzip.open(output_file, "rt") as fin:

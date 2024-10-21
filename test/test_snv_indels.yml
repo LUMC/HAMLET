@@ -13,13 +13,13 @@
   stdout:
     contains:
       - "TestSample1/snv-indels/TestSample1.vep.txt.gz"
-      - "TestSample1/snv-indels/TestSample1.vep.high.txt.gz"
+      - "TestSample1/snv-indels/TestSample1.vep.filtered.txt.gz"
 
       - "TestSample2/snv-indels/TestSample2.vep.txt.gz"
-      - "TestSample2/snv-indels/TestSample2.vep.high.txt.gz"
+      - "TestSample2/snv-indels/TestSample2.vep.filtered.txt.gz"
 
       - "TestSample3/snv-indels/TestSample3.vep.txt.gz"
-      - "TestSample3/snv-indels/TestSample3.vep.high.txt.gz"
+      - "TestSample3/snv-indels/TestSample3.vep.filtered.txt.gz"
 
       - "TestSample3/snv-indels/TestSample3.hotspot.vcf"
       - "rule multiqc"
@@ -69,7 +69,7 @@
     - path: "SRR8615409/snv-indels/SRR8615409.exon_cov_stats.json"
     - path: "SRR8615409/snv-indels/SRR8615409.aln_stats"
     - path: "SRR8615409/snv-indels/SRR8615409.vep.txt.gz"
-    - path: "SRR8615409/snv-indels/SRR8615409.vep.high.txt.gz"
+    - path: "SRR8615409/snv-indels/SRR8615409.vep.filtered.txt.gz"
       contains:
         - "stop_gained"
     # Test log files
@@ -93,7 +93,7 @@
       contains:
         - "CollectRnaSeqMetrics"
     - path: "log/annotate_vars.SRR8615409.txt"
-    - path: "log/filter_vep_high.SRR8615409.txt"
+    - path: "log/filter_vep.SRR8615409.txt"
     - path: "SRR8615409/snv-indels/snv-indels-output.json"
     # Test that a STAR counts file is generated
     - path: "SRR8615409/snv-indels/SRR8615409.ReadsPerGene.out.tab"

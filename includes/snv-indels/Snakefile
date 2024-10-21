@@ -2,7 +2,7 @@ include: "common.smk"
 
 
 localrules:
-    filter_vep_high,
+    filter_vep,
     final_bamfile,
 
 
@@ -10,7 +10,7 @@ rule all:
     input:
         bam=[module_output.bam(sample) for sample in samples],
         bai=[module_output.bai(sample) for sample in samples],
-        vep_high=[module_output.vep_high(sample) for sample in samples],
+        filter_vep=[module_output.filter_vep(sample) for sample in samples],
         json=[module_output.json(sample) for sample in samples],
         hotspot=[module_output.hotspot(sample) for sample in samples],
         multiqc="multiqc_snv_indels.html",
@@ -371,7 +371,7 @@ rule hotspot_variants:
         """
 
 
-rule filter_vep_high:
+rule filter_vep:
     input:
         vep="{sample}/snv-indels/{sample}.vep.txt.gz",
         ref_id_mapping=config["ref_id_mapping"],
@@ -382,9 +382,9 @@ rule filter_vep_high:
         vep_consequences=config["vep_include_consequence"],
         blacklist=f"--blacklist {config['blacklist']}" if "blacklist" in config else "",
     output:
-        high="{sample}/snv-indels/{sample}.vep.high.txt.gz",
+        filtered="{sample}/snv-indels/{sample}.vep.filtered.txt.gz",
     log:
-        "log/filter_vep_high.{sample}.txt",
+        "log/filter_vep.{sample}.txt",
     threads: 1
     container:
         containers["crimson"]
@@ -396,14 +396,14 @@ rule filter_vep_high:
             --hotspot {input.hotspots} \
             --consequences {params.vep_consequences} \
             {params.blacklist} \
-            | gzip > {output.high} 2> {log}
+            | gzip > {output.filtered} 2> {log}
         """
 
 
 rule json_output:
     input:
         id_mappings_path=config["ref_id_mapping"],
-        vep_high="{sample}/snv-indels/{sample}.vep.high.txt.gz",
+        filter_vep="{sample}/snv-indels/{sample}.vep.filtered.txt.gz",
         aln_stats="{sample}/snv-indels/{sample}.aln_stats",
         rna_stats="{sample}/snv-indels/{sample}.rna_stats",
         insert_stats="{sample}/snv-indels/{sample}.insert_stats",
@@ -420,7 +420,7 @@ rule json_output:
         """
         python3 {input.src} \
             {input.id_mappings_path} \
-            --vep_txt {input.vep_high} \
+            --vep_txt {input.filter_vep} \
             --aln_stats_path {input.aln_stats} \
             --rna_stats_path {input.rna_stats} \
             --insert_stats_path {input.insert_stats} \
