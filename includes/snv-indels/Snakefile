@@ -403,7 +403,7 @@ rule filter_vep:
 rule json_output:
     input:
         id_mappings_path=config["ref_id_mapping"],
-        filter_vep="{sample}/snv-indels/{sample}.vep.filtered.txt.gz",
+        filter_vep=module_output.filter_vep,
         aln_stats="{sample}/snv-indels/{sample}.aln_stats",
         rna_stats="{sample}/snv-indels/{sample}.rna_stats",
         insert_stats="{sample}/snv-indels/{sample}.insert_stats",
