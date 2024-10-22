@@ -1,1 +1,27 @@
 include: "common.smk"
+
+
+rule all:
+    input:
+        coverage=[module_output.coverage(sample) for sample in samples],
+
+
+rule bed_coverage:
+    input:
+        bam=get_bam,
+        bed=config["bed"],
+        src=srcdir("scripts/coverage.py"),
+    output:
+        coverage="{sample}/expression/coverage.csv",
+    log:
+        "log/bed_coverage.{sample}.txt",
+    threads: 1
+    container:
+        containers["pysam"]
+    shell:
+        """
+        python3 {input.src} \
+            --bed {input.bed} \
+            --bam {input.bam} \
+            > {output.coverage} 2> {log}
+        """

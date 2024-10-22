@@ -3,5 +3,5 @@
     "MT-ATP8"
   ],
   "gtf": "test/data/reference/hamlet-ref.gtf",
-  "bed": "test/data/expression/EVI1.bed"
+  "bed": "test/data/reference/transcripts_chrM.bed"
 }

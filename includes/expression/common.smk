@@ -1,7 +1,9 @@
 from types import SimpleNamespace
 from scripts import gtf
 
-containers = {}
+containers = {
+    "pysam": "docker://quay.io/biocontainers/pysam:0.22.1--py39h61809e1_2",
+}
 
 
 pepfile: config["pepfile"]
@@ -16,27 +18,12 @@ for s in samples:
         raise RuntimeError(f'Spaces in samples are not supported ("{s.sample}")')
 
 
-def get_input_fastq(sample, pair):
-    """Get all fastq files for the specified sample"""
-    fastq = pep.sample_table.loc[sample, pair]
-    # If a single fastq file is specified, we put it in a list
-    if isinstance(fastq, str):
-        fastq = [fastq]
-    return fastq
-
-
-def get_forward_input(wildcards):
-    """Get the input forward fastq file"""
-    return get_input_fastq(wildcards.sample, "R1")
-
-
-def get_reverse_input(wildcards):
-    """Get the input reverse fastq file"""
-    return get_input_fastq(wildcards.sample, "R2")
+def get_bam(wildcards):
+    return pep.sample_table.loc[wildcards.sample, "bam"]
 
 
 def check_housekeeping():
-    """Check if can find each housekeeping gene in the GTF file"""
+    """Check if we can find each housekeeping gene in the GTF file"""
     # Read the mapping from ENSG to gene name
     with open(config["gtf"]) as fin:
         ensg_to_name = gtf.gene_id_name(fin)
@@ -51,6 +38,11 @@ def check_housekeeping():
             raise RuntimeError(msg)
 
 
+## Functions for module outputs ##
+def coverage(wildcards):
+    return f"{wildcards.sample}/expression/coverage.csv"
+
+
 check_housekeeping()
 
-module_output = SimpleNamespace()
+module_output = SimpleNamespace(coverage=coverage)

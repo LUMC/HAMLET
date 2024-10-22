@@ -27,19 +27,24 @@
     contains:
       - "Unknown housekeeping gene: Z"
 
-- name: Test error on duplicate names
+- name: Test running the expression module
   tags:
-    - sanity
+    - functional
     - expression
   command: >
     snakemake
     --snakefile includes/expression/Snakefile
     --workflow-profile test
-    --dry-run
     --configfile test/data/config/expression.json
     --config pepfile=test/pep/expression.csv
-             housekeeping="Z"
-  exit_code: 1
-  stdout:
-    contains:
-      - "Unknown housekeeping gene: Z"
+  exit_code: 0
+  files:
+    - path: SRR8615409/expression/coverage.csv
+      contains:
+        - "MT-ND3,46"
+
+- name: Check formatting of Snakemake files
+  tags:
+    - sanity
+    - expression
+  command: snakefmt --check includes/expression/
