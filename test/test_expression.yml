@@ -42,6 +42,9 @@
     - path: SRR8615409/expression/coverage.csv
       contains:
         - "MT-ND3,46"
+    - path: SRR8615409/expression/coverage.normalized.csv
+      contains:
+        - "MT-ND3,3.5384615384615383"
 
 - name: Check formatting of Snakemake files
   tags:

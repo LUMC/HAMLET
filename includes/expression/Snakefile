@@ -4,6 +4,9 @@ include: "common.smk"
 rule all:
     input:
         coverage=[module_output.coverage(sample) for sample in samples],
+        normalized_expression=[
+            module_output.normalized_expression(sample) for sample in samples
+        ],
 
 
 rule bed_coverage:
@@ -24,4 +27,32 @@ rule bed_coverage:
             --bed {input.bed} \
             --bam {input.bam} \
             > {output.coverage} 2> {log}
+        """
+
+
+rule normalized_coverage:
+    input:
+        coverage=rules.bed_coverage.output.coverage,
+        counts=get_counts,
+        gtf=config["gtf"],
+        src=srcdir("scripts/expression.py"),
+    params:
+        strand=get_strand,
+        housekeeping=config["housekeeping"],
+    output:
+        normalized="{sample}/expression/coverage.normalized.csv",
+    log:
+        "log/normalized_coverage.{sample}.txt",
+    threads: 1
+    container:
+        containers["pysam"]
+    shell:
+        """
+        python3 {input.src} \
+            --coverage {input.coverage} \
+            --counts {input.counts} \
+            --strand {params.strand} \
+            --housekeeping-genes {params.housekeeping} \
+            --gtf {input.gtf} \
+            > {output.normalized} 2> {log}
         """

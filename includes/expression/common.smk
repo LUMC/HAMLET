@@ -18,8 +18,17 @@ for s in samples:
         raise RuntimeError(f'Spaces in samples are not supported ("{s.sample}")')
 
 
+## Input functions ##
 def get_bam(wildcards):
     return pep.sample_table.loc[wildcards.sample, "bam"]
+
+
+def get_counts(wildcards):
+    return pep.sample_table.loc[wildcards.sample, "count"]
+
+
+def get_strand(wildcards):
+    return pep.sample_table.loc[wildcards.sample, "strand"]
 
 
 def check_housekeeping():
@@ -43,6 +52,10 @@ def coverage(wildcards):
     return f"{wildcards.sample}/expression/coverage.csv"
 
 
+def normalized(wildcards):
+    return f"{wildcards.sample}/expression/coverage.normalized.csv"
+
+
 check_housekeeping()
 
-module_output = SimpleNamespace(coverage=coverage)
+module_output = SimpleNamespace(coverage=coverage, normalized_expression=normalized)
