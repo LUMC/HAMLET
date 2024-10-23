@@ -17,4 +17,4 @@ containers = {
 }
 
 # The version of HAMLET
-PIPELINE_VERSION = "v2.1.1"
+PIPELINE_VERSION = "v2.2.0-dev"
