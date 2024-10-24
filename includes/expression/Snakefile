@@ -13,7 +13,8 @@ rule bed_coverage:
     input:
         bam=get_bam,
         bed=config["bed"],
-        src=srcdir("scripts/coverage.py"),
+        src=workflow.source_path("scripts/coverage.py"),
+        gtf_file=workflow.source_path("scripts/gtf.py"),
     output:
         coverage="{sample}/expression/coverage.csv",
     log:
@@ -35,7 +36,7 @@ rule normalized_coverage:
         coverage=rules.bed_coverage.output.coverage,
         counts=get_counts,
         gtf=config["gtf"],
-        src=srcdir("scripts/expression.py"),
+        src=workflow.source_path("scripts/expression.py"),
     params:
         strand=get_strand,
         housekeeping=config["housekeeping"],

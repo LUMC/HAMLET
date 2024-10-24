@@ -41,8 +41,8 @@ rule arriba:
 rule filter_fusions:
     input:
         fusions="{sample}/fusion/arriba/fusions.raw.tsv",
-        to_json=srcdir("scripts/arriba2json.py"),
-        to_tsv=srcdir("scripts/json2arriba.py"),
+        to_json=workflow.source_path("scripts/arriba2json.py"),
+        to_tsv=workflow.source_path("scripts/json2arriba.py"),
         report_genes=config["report_genes"],
     output:
         json="{sample}/fusion/arriba/fusions.json",
@@ -54,8 +54,8 @@ rule filter_fusions:
         containers["arriba"]
     shell:
         """
-        {input.to_json} {input.fusions} --report-genes {input.report_genes} > {output.json} 2> {log}
-        {input.to_tsv} {output.json} > {output.tsv} 2>> {log}
+        python3 {input.to_json} {input.fusions} --report-genes {input.report_genes} > {output.json} 2> {log}
+        python3 {input.to_tsv} {output.json} > {output.tsv} 2>> {log}
         """
 
 
@@ -109,7 +109,7 @@ rule json_output:
     input:
         json="{sample}/fusion/arriba/fusions.json",
         plots="{sample}/fusion/arriba/plots",
-        src=srcdir("scripts/json-output.py"),
+        src=workflow.source_path("scripts/json-output.py"),
     output:
         json="{sample}/fusion/fusion-output.json",
     log:
@@ -119,5 +119,5 @@ rule json_output:
         containers["arriba"]
     shell:
         """
-        {input.src} {input.json} {input.plots} > {output} 2> {log}
+        python3 {input.src} {input.json} {input.plots} > {output} 2> {log}
         """

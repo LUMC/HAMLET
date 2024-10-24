@@ -162,7 +162,7 @@ rule exon_cov:
         bed=".tmp.exon_cov_ref.bed",
         genome=".tmp.genome.txt",
         idm=config["ref_id_mapping"],
-        scr=srcdir("scripts/aggr_exon_cov.py"),
+        scr=workflow.source_path("scripts/aggr_exon_cov.py"),
     output:
         json="{sample}/snv-indels/{sample}.exon_cov_stats.json",
     log:
@@ -376,7 +376,7 @@ rule filter_vep:
         vep="{sample}/snv-indels/{sample}.vep.txt.gz",
         ref_id_mapping=config["ref_id_mapping"],
         hotspots="{sample}/snv-indels/{sample}.hotspot.vcf",
-        scr=srcdir("scripts/filter_vep.py"),
+        scr=workflow.source_path("scripts/filter_vep.py"),
         blacklist=config.get("blacklist", []),
     params:
         vep_consequences=config["vep_include_consequence"],
@@ -413,7 +413,7 @@ rule json_output:
         insert_stats="{sample}/snv-indels/{sample}.insert_stats",
         exon_cov_stats="{sample}/snv-indels/{sample}.exon_cov_stats.json",
         vep_stats="{sample}/snv-indels/{sample}.vep_stats.txt",
-        src=srcdir("scripts/json-output.py"),
+        src=workflow.source_path("scripts/json-output.py"),
     output:
         "{sample}/snv-indels/snv-indels-output.json",
     log:
@@ -436,7 +436,7 @@ rule json_output:
 rule multiqc:
     input:
         stats=module_output.multiqc_files,
-        config=srcdir("../../cfg/multiqc.yml"),
+        config=workflow.source_path("../../cfg/multiqc.yml"),
     params:
         filelist="multiqc_filelist.txt",
         depth=2,

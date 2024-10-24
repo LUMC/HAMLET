@@ -10,6 +10,7 @@ Changelog
 **********
 v2.2.0-dev
 **********
+* Update snakemake to version 8.23. **Important: re-build the conda environment**
 
 **********
 v2.1.1

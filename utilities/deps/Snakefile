@@ -104,7 +104,7 @@ rule rewrite_gtf:
     """ Add the 'chr' prefix to the chromosome names """
     input:
         gtf=rules.download_gtf.output,
-        rewrite=srcdir("scripts/rewrite-gtf.py"),
+        rewrite=workflow.source_path("scripts/rewrite-gtf.py"),
     output:
         gtf=gtf_renamed,
     singularity:
@@ -171,7 +171,7 @@ rule create_refflat:
 rule rewrite_refflat:
     input:
         gtf=rules.create_refflat.output,
-        scr=srcdir("scripts/rewrite-refflat.py"),
+        scr=workflow.source_path("scripts/rewrite-refflat.py"),
     output:
         "ucsc_gencode.refFlat",
     singularity:
@@ -184,7 +184,7 @@ rule rewrite_refflat:
 
 rule create_id_mappings:
     input:
-        srcdir("small-files/id_mappings.tsv"),
+        workflow.source_path("small-files/id_mappings.tsv"),
     output:
         "id_mappings.tsv",
     singularity:
@@ -197,7 +197,7 @@ rule create_id_mappings:
 
 rule create_blacklist:
     input:
-        srcdir("small-files/blacklist.txt"),
+        workflow.source_path("small-files/blacklist.txt"),
     output:
         "blacklist.txt",
     singularity:
@@ -210,7 +210,7 @@ rule create_blacklist:
 
 rule create_call_region:
     input:
-        srcdir("small-files/call_regions.bed"),
+        workflow.source_path("small-files/call_regions.bed"),
     output:
         "call_regions.bed",
     singularity:
@@ -252,7 +252,7 @@ rule create_rRNA_refflat:
 
 rule genome_hotspots:
     input:
-        srcdir("small-files/hotspots_genome.bed"),
+        workflow.source_path("small-files/hotspots_genome.bed"),
     output:
         "hotspots_genome.bed",
     singularity:
@@ -266,7 +266,7 @@ rule genome_hotspots:
 rule create_report_genes:
     input:
         folder="arriba",
-        genes=srcdir("small-files/report_genes.txt"),
+        genes=workflow.source_path("small-files/report_genes.txt"),
     output:
         "arriba/report_genes.txt",
     singularity:
@@ -307,7 +307,7 @@ rule unpack_vep_cache:
 rule copy_itd:
     """All the needed files are in small-files/itd, so we just copy them"""
     input:
-        fasta=srcdir("small-files/itd/itd_genes.fa"),
+        fasta=workflow.source_path("small-files/itd/itd_genes.fa"),
     output:
         itd=directory("itd"),
     singularity:
