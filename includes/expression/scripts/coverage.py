@@ -4,6 +4,17 @@ import argparse
 import pysam
 
 from collections import defaultdict
+from dataclasses import dataclass
+
+@dataclass
+class Bed:
+    """Class for BED records"""
+    chrom: str
+    chromStart: int
+    chromEnd: int
+    name: str
+    score: int
+    strand: str
 
 
 def parse_bed(fname: str):
@@ -12,20 +23,23 @@ def parse_bed(fname: str):
         for line in fin:
             spline = line.strip("\n").split("\t")
 
-            name = spline[3]
-            region = (spline[0], int(spline[1]), int(spline[2]))
+            # To int
+            for field in [1, 2, 4]:
+                spline[field] = int(spline[field])
 
-            yield (name, region)
+            B = Bed(*spline)
+
+            yield B
 
 
-def count_reads(region, bamfile):
+def count_reads(Bed, bamfile):
     """Count the number of reads in region"""
 
     # Store the read name to ensure we don't count forward/reverse double
     names = set()
 
     with pysam.AlignmentFile(bamfile, "rb") as samfile:
-        for read in samfile.fetch(*region):
+        for read in samfile.fetch(contig=Bed.chrom, start=Bed.chromStart, end=Bed.chromEnd):
             names.add(read.qname)
 
     return len(names)
@@ -36,9 +50,9 @@ def main(bed: str, bamfile: str):
     # the counts together
     counts = defaultdict(int)
 
-    for name, region in parse_bed(bed):
-        count = count_reads(region, bamfile)
-        counts[name] += count
+    for Bed in parse_bed(bed):
+        count = count_reads(Bed, bamfile)
+        counts[Bed.name] += count
 
     for name, count in counts.items():
         print(name, count, sep=",")
