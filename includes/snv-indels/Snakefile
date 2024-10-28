@@ -322,7 +322,6 @@ rule annotate_vars:
             if config.get("vep_cache")
             else ""
         ),
-        max_pop_af=0.01,
     output:
         vep="{sample}/snv-indels/{sample}.vep.txt.gz",
         stats="{sample}/snv-indels/{sample}.vep_stats.txt",
@@ -382,7 +381,7 @@ rule filter_vep:
         vep_consequences=config["vep_include_consequence"],
         blacklist=f"--blacklist {config['blacklist']}" if "blacklist" in config else "",
         population="gnomade",
-        max_pop_af=0.05,
+        max_pop_af=0.01,
     output:
         filtered="{sample}/snv-indels/{sample}.vep.filtered.txt.gz",
     log:
