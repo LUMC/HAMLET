@@ -7,9 +7,11 @@ import pysam
 from collections import defaultdict
 from dataclasses import dataclass
 
+
 @dataclass
 class Bed:
     """Class for BED records"""
+
     chrom: str
     chromStart: int
     chromEnd: int
@@ -33,17 +35,35 @@ def parse_bed(fname: str):
             yield B
 
 
-def count_reads(Bed, bamfile):
-    """Count the number of reads in region"""
+def get_reads(Bed, bamfile):
+    """Get reads that are not supplementary or secondary"""
+    with pysam.AlignmentFile(bamfile, "rb") as samfile:
+        for read in samfile.fetch(
+            contig=Bed.chrom, start=Bed.chromStart, end=Bed.chromEnd
+        ):
+            if read.is_supplementary or read.is_secondary:
+                continue
+            yield read
+
+
+def read_names(Bed, bamfile):
+    """Extract the read names in Bed region, per strandedness"""
 
     # Store the read name to ensure we don't count forward/reverse double
-    names = set()
+    by_strand = {"unstranded": set(), "forward": set(), "reverse": set()}
 
-    with pysam.AlignmentFile(bamfile, "rb") as samfile:
-        for read in samfile.fetch(contig=Bed.chrom, start=Bed.chromStart, end=Bed.chromEnd):
-            names.add(read.qname)
+    for read in get_reads(Bed, bamfile):
+        orientation = forward_orientation(read)
+        read_name = read.query_name
+        if orientation == Bed.strand:
+            by_strand["forward"].add(read_name)
+        else:
+            by_strand["reverse"].add(read_name)
 
-    return len(names)
+        # For unstranded, we count both orientations
+        by_strand["unstranded"].add(read_name)
+
+    return by_strand
 
 
 def forward_orientation(read: pysam.AlignedSegment) -> str:
@@ -60,17 +80,25 @@ def forward_orientation(read: pysam.AlignedSegment) -> str:
     msg = f"Unexpected read encountered: {read.query_name}"
     raise RuntimeError(msg)
 
+
 def main(bed: str, bamfile: str):
     # If there are multiple regions in the BED file with the same name, we add
-    # the counts together
-    counts:dict[str,int] = defaultdict(int)
+    # the read names together so we don't count double
+    by_name = defaultdict(
+        lambda: {"unstranded": set(), "forward": set(), "reverse": set()}
+    )
 
     for Bed in parse_bed(bed):
-        count = count_reads(Bed, bamfile)
-        counts[Bed.name] += count
+        names = read_names(Bed, bamfile)
+        for strand in ["unstranded", "forward", "reverse"]:
+            by_name[Bed.name][strand].update(names[strand])
 
-    for name, count in counts.items():
-        print(name, count, sep=",")
+    for name, reads in by_name.items():
+        u = reads["unstranded"]
+        f = reads["forward"]
+        r = reads["reverse"]
+
+        print(name, len(u), len(f), len(r), sep="\t")
 
 
 if __name__ == "__main__":
