@@ -1,7 +1,7 @@
 {
   "housekeeping": [
-    "MT-ATP8"
+    "MT-CO2"
   ],
   "gtf": "test/data/reference/hamlet-ref.gtf",
-  "bed": "test/data/reference/transcripts_chrM.bed"
+  "bed": "test/data/expression/CO2.bed"
 }

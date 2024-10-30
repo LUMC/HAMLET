@@ -41,10 +41,15 @@
   files:
     - path: SRR8615409/expression/coverage.csv
       contains:
-        - "MT-ND3\t46\t25\t21"
+        - "MT-CO2\t282\t158\t124"
+    # Since MT-CO2 was used both as gene of interest and only housekeeping
+    # gene, the normalized expression for every strand must be 1.0
+    # MT-CO2 was chosen specifically so it does not overlap any other
+    # transcripts, which would be taken into account by STAR and give lower
+    # counts
     - path: SRR8615409/expression/coverage.normalized.csv
       contains:
-        - "MT-ND3\t1.9166666666666667\t1.9230769230769231\t1.9090909090909092"
+        - "MT-CO2\t1.0\t1.0\t1.0"
 
 - name: Check formatting of Snakemake files
   tags:
