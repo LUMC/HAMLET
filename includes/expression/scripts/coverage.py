@@ -36,12 +36,12 @@ def parse_bed(fname: str):
 
 
 def get_reads(Bed, bamfile):
-    """Get reads that are not supplementary or secondary"""
+    """Get reads that are not supplementary or secondary or not proper pairs"""
     with pysam.AlignmentFile(bamfile, "rb") as samfile:
         for read in samfile.fetch(
             contig=Bed.chrom, start=Bed.chromStart, end=Bed.chromEnd
         ):
-            if read.is_supplementary or read.is_secondary:
+            if read.is_supplementary or read.is_secondary or not read.is_proper_pair:
                 continue
             yield read
 
