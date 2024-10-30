@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+from typing import Any
 import pysam
 
 from collections import defaultdict
@@ -21,7 +22,7 @@ def parse_bed(fname: str):
     """Parse BED file and yield records"""
     with open(fname) as fin:
         for line in fin:
-            spline = line.strip("\n").split("\t")
+            spline: list[Any] = line.strip("\n").split("\t")
 
             # To int
             for field in [1, 2, 4]:
@@ -45,10 +46,24 @@ def count_reads(Bed, bamfile):
     return len(names)
 
 
+def forward_orientation(read: pysam.AlignedSegment) -> str:
+    """Determine the orientation of the forward read of the pair"""
+    if read.is_read1 and read.is_forward:
+        return "+"
+    elif read.is_read2 and read.is_forward:
+        return "-"
+    elif read.is_read1 and read.is_reverse:
+        return "-"
+    elif read.is_read2 and read.is_reverse:
+        return "+"
+
+    msg = f"Unexpected read encountered: {read.query_name}"
+    raise RuntimeError(msg)
+
 def main(bed: str, bamfile: str):
     # If there are multiple regions in the BED file with the same name, we add
     # the counts together
-    counts = defaultdict(int)
+    counts:dict[str,int] = defaultdict(int)
 
     for Bed in parse_bed(bed):
         count = count_reads(Bed, bamfile)

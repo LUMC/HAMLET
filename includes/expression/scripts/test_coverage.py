@@ -4,6 +4,8 @@ import dataclasses
 
 from typing import Any
 
+from coverage import forward_orientation
+
 
 @dataclasses.dataclass
 class FakeRead():
@@ -53,6 +55,10 @@ def test_true(reads):
 
     # Orientation of the first read of the pair, for the reads in the fixture
     expected = ["+", "-", "-", "+"]
+
+    for e, r in zip(expected, reads):
+        assert forward_orientation(r) == e
+
     print()
     for read in reads:
         print(read)
