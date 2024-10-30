@@ -37,7 +37,6 @@ rule normalized_coverage:
         gtf=config["gtf"],
         src=srcdir("scripts/expression.py"),
     params:
-        strand=get_strand,
         housekeeping=config["housekeeping"],
     output:
         normalized="{sample}/expression/coverage.normalized.csv",
@@ -51,7 +50,6 @@ rule normalized_coverage:
         python3 {input.src} \
             --coverage {input.coverage} \
             --counts {input.counts} \
-            --strand {params.strand} \
             --housekeeping-genes {params.housekeeping} \
             --gtf {input.gtf} \
             > {output.normalized} 2> {log}

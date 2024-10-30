@@ -9,20 +9,15 @@ def get_coverage(fname):
     cov = dict()
     with open(fname) as fin:
         for line in fin:
-            name, coverage = line.strip("\n").split(",")
-            cov[name] = int(coverage)
+            name, *coverage = line.strip("\n").split("\t")
+            cov[name] = [int(x) for x in coverage]
     return cov
 
 
-def get_normalizer_value(fname, strand, genes):
-    # The column to use based on strand
-    columns = {"unstranded": 1, "forward": 2, "reverse": 3}
-
-    # Pick the right column
-    column = columns[strand]
-
-    # Store the counts for the housekeeping genes
+def get_normalizer_values(fname, genes):
+    # Store the counts for the housekeeping genes, for each strand
     expression_counts = list()
+
     with open(fname) as fin:
         # Skip the headers
         for _ in range(4):
@@ -31,12 +26,16 @@ def get_normalizer_value(fname, strand, genes):
         for line in fin:
             spline = line.strip("\n").split("\t")
             ensg = spline[0]
-            expression = int(spline[column])
+            expression = [int(spline[column]) for column in [1, 2, 3]]
             if ensg not in genes:
                 continue
             expression_counts.append(expression)
 
-    return statistics.median(expression_counts)
+    unstranded = statistics.median(row[0] for row in expression_counts)
+    forward = statistics.median(row[1] for row in expression_counts)
+    reverse = statistics.median(row[2] for row in expression_counts)
+
+    return unstranded, forward, reverse
 
 
 def get_names_ensg(fname):
@@ -45,7 +44,7 @@ def get_names_ensg(fname):
     return {v: k for k, v in ensg_to_name.items()}
 
 
-def main(coverage_file, counts_file, strand, housekeeping_genes, gtf_file):
+def main(coverage_file, counts_file, housekeeping_genes, gtf_file):
     # Get the coverage from the bam file
     coverage = get_coverage(coverage_file)
 
@@ -56,10 +55,11 @@ def main(coverage_file, counts_file, strand, housekeeping_genes, gtf_file):
     housekeeping_ensg = [names_to_ensg[x] for x in housekeeping_genes]
 
     # Get the mediant expression of the housekeeping genes
-    median_housekeeping = get_normalizer_value(counts_file, strand, housekeeping_ensg)
+    median_housekeeping = get_normalizer_values(counts_file, housekeeping_ensg)
 
     for gene, cov in coverage.items():
-        print(gene, cov / median_housekeeping, sep=",")
+        norm_values = [count / norm for count, norm in zip(cov, median_housekeeping)]
+        print(gene, *norm_values, sep="\t")
 
 
 if __name__ == "__main__":
@@ -69,7 +69,6 @@ if __name__ == "__main__":
         "--coverage", required=True, help="Coverage file for genes of interest"
     )
     parser.add_argument("--counts", required=True, help="STAR counts file")
-    parser.add_argument("--strand", required=True, help="Strandedness of the sample")
     parser.add_argument(
         "--housekeeping-genes",
         required=True,
@@ -82,4 +81,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    main(args.coverage, args.counts, args.strand, args.housekeeping_genes, args.gtf)
+    main(args.coverage, args.counts, args.housekeeping_genes, args.gtf)
