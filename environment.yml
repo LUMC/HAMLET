@@ -14,3 +14,4 @@ dependencies:
   - black=24.3.0
   - sphinx=7.1.2
   - sphinx-rtd-theme
+  - pysam=0.22
