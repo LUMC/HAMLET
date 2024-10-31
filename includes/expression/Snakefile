@@ -3,11 +3,6 @@ include: "common.smk"
 
 rule all:
     input:
-        coverage=[module_output.coverage(sample) for sample in samples],
-        normalized_expression=[
-            module_output.normalized_expression(sample) for sample in samples
-        ],
-        forward_library="merged_expression_forward_mqc.tsv",
         multiqc="multiqc_expression.html",
 
 
