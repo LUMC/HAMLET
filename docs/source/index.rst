@@ -13,4 +13,5 @@ Contents
     snv-indels
     fusion
     itd
+    expression
     CHANGELOG 
