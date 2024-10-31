@@ -8,6 +8,7 @@ rule all:
             module_output.normalized_expression(sample) for sample in samples
         ],
         forward_library="merged_expression_forward_mqc.tsv",
+        multiqc="multiqc_expression.html",
 
 
 rule bed_coverage:
@@ -91,4 +92,37 @@ rule merge_samples:
             --samples {params.samples} \
             --strand reverse \
             > {output.reverse_} 2>> {log}
+        """
+
+
+rule multiqc:
+    input:
+        stats=module_output.multiqc_files,
+        config=srcdir("../../cfg/multiqc.yml"),
+    params:
+        filelist="multiqc_filelist.txt",
+        depth=2,
+    output:
+        html="multiqc_expression.html",
+    log:
+        "log/expression.multiqc.txt",
+    container:
+        containers["multiqc"]
+    shell:
+        """
+        rm -f {params.filelist}
+
+        for fname in {input.stats}; do
+            echo $fname >> {params.filelist}
+        done
+
+        multiqc \
+        --force \
+        --dirs \
+        --dirs-depth {params.depth} \
+        --fullnames \
+        --fn_as_s_name \
+        --file-list {params.filelist} \
+        --config {input.config} \
+        --filename {output.html} 2> {log}
         """
