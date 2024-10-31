@@ -37,6 +37,17 @@ The output of this module are a JSON file with an overview of the most important
 Configuration
 -------------
 
+Example
+^^^^^^^
+.. literalinclude:: ../../test/data/config/snv-indels.json
+   :language: json
+
+Note that the `vep-cache` entry is missing for this example file, which means
+that the online API of VEP will be used. For the best performance, please
+specify a `vep-cache` folder as well.
+
+Configuration options
+^^^^^^^^^^^^^^^^^^^^^
 .. list-table:: Configuration options
    :header-rows: 1
 
@@ -82,6 +93,9 @@ Configuration
   * - blacklist
     - File of blacklisted variants
     - yes
+  * - vep-cache
+    - Folder containing the VEP cache
+    - no
   * - vep_include_consequence
     - List of `VEP consequences <http://www.ensembl.org/info/genome/variation/prediction/predicted_data.html>_` to report
     - yes

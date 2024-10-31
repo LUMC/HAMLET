@@ -26,8 +26,12 @@ Configuration
 -------------
 The configuration for this module is tailored to the provided reference files, be very careful if you want to modify any of these settings.
 
+.. literalinclude:: ../../test/data/config/itd.json
+   :language: json
+
+Configuration options
+^^^^^^^^^^^^^^^^^^^^^
 .. list-table:: Configuration options
-   :header-rows: 1
 
   * - Option
     - Description

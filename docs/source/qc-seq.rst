@@ -25,6 +25,13 @@ The output of this module are one set of merged FastQ files per sample, as well 
 
 Configuration
 -------------
+Example
+^^^^^^^
+.. literalinclude:: ../../test/data/config/qc-seq.json
+   :language: json
+
+Configuration options
+^^^^^^^^^^^^^^^^^^^^^
 The only configurable option for this module is adapter sequences for
 `cutadapt <https://cutadapt.readthedocs.io/en/stable/>`_ to remove.
 

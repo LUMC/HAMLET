@@ -10,11 +10,13 @@ the user to select the relevant output for their samples.
 
 Tools
 -----
-This module relies on the STAR count files in combination with a set of housekeeping genes to normalize gene expression levels.
+This module relies on the STAR count files in combination with a set of
+housekeeping genes to normalize gene expression levels.
 
 Input
 -----
-The input for this module is one or more pairs of FastQ files per sample, specified in a PEP configuration file, as is shown below.
+The input for this module is one BAM file and one STAR count table
+specified in a PEP configuration file, as is shown below.
 
 .. csv-table:: Example input for the expression module
    :delim: ,
