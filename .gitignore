@@ -49,3 +49,13 @@ Thumbs.db
 
 # ctags #
 tags
+.java/
+.tmp*
+tmp/
+log/
+Downloads/
+*.simg
+105095-*
+cluster-logs/
+multiqc_data*
+multiqc_hamlet_data
