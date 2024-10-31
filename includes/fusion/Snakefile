@@ -54,8 +54,8 @@ rule filter_fusions:
         containers["arriba"]
     shell:
         """
-        {input.to_json} {input.fusions} --report-genes {input.report_genes} > {output.json} 2> {log}
-        {input.to_tsv} {output.json} > {output.tsv} 2>> {log}
+        python3 {input.to_json} {input.fusions} --report-genes {input.report_genes} > {output.json} 2> {log}
+        python3 {input.to_tsv} {output.json} > {output.tsv} 2>> {log}
         """
 
 
@@ -119,5 +119,5 @@ rule json_output:
         containers["arriba"]
     shell:
         """
-        {input.src} {input.json} {input.plots} > {output} 2> {log}
+        python3 {input.src} {input.json} {input.plots} > {output} 2> {log}
         """
