@@ -3,6 +3,7 @@ from scripts import gtf
 
 containers = {
     "pysam": "docker://quay.io/biocontainers/pysam:0.22.1--py39h61809e1_2",
+    "multiqc": "docker://quay.io/biocontainers/multiqc:1.22.1--pyhdfd78af_0",
 }
 
 
@@ -52,6 +53,16 @@ def normalized(wildcards):
     return f"{wildcards.sample}/expression/coverage.normalized.csv"
 
 
+def multiqc_files():
+    unstranded = ("merged_expression_unstranded_mqc.tsv",)
+    forward = ("merged_expression_forward_mqc.tsv",)
+    reverse_ = ("merged_expression_reverse_mqc.tsv",)
+
+    return unstranded + forward + reverse_
+
+
 check_housekeeping()
 
-module_output = SimpleNamespace(coverage=coverage, normalized_expression=normalized)
+module_output = SimpleNamespace(
+    coverage=coverage, normalized_expression=normalized, multiqc_files=multiqc_files()
+)

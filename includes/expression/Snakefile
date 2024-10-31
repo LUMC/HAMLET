@@ -7,6 +7,7 @@ rule all:
         normalized_expression=[
             module_output.normalized_expression(sample) for sample in samples
         ],
+        forward_library="merged_expression_forward_mqc.tsv",
 
 
 rule bed_coverage:
@@ -53,4 +54,41 @@ rule normalized_coverage:
             --housekeeping-genes {params.housekeeping} \
             --gtf {input.gtf} \
             > {output.normalized} 2> {log}
+        """
+
+
+rule merge_samples:
+    input:
+        counts=[module_output.normalized_expression(sample) for sample in samples],
+        src=srcdir("scripts/multiqc.py"),
+    params:
+        samples=[sample.sample for sample in samples],
+    output:
+        unstranded="merged_expression_unstranded_mqc.tsv",
+        forward="merged_expression_forward_mqc.tsv",
+        reverse_="merged_expression_reverse_mqc.tsv",
+    log:
+        "log/merge_samples.txt",
+    threads: 1
+    container:
+        containers["multiqc"]
+    shell:
+        """
+        python3 {input.src} \
+            --counts {input.counts} \
+            --samples {params.samples} \
+            --strand unstranded \
+            > {output.unstranded} 2> {log}
+
+        python3 {input.src} \
+            --counts {input.counts} \
+            --samples {params.samples} \
+            --strand forward \
+            > {output.forward} 2>> {log}
+
+        python3 {input.src} \
+            --counts {input.counts} \
+            --samples {params.samples} \
+            --strand reverse \
+            > {output.reverse_} 2>> {log}
         """
