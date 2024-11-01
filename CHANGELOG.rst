@@ -8,6 +8,12 @@ Changelog
 .. that users understand how the changes affect the new version.
 
 **********
+v2.1.3-dev
+**********
+* Add `pysam` to the conda environment (developer only)
+* Add exon number to variant table
+
+**********
 v2.1.2
 **********
 * Set the maximum population frequency to 1%. This was accidentally set to 5% in v2.1.1
