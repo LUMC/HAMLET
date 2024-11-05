@@ -77,6 +77,24 @@ def test_genes_in_order(workflow_dir):
     assert "MT-ATP8" in genes_of_interest[1].values()
 
 
+@pytest.mark.workflow('test-report')
+def test_chr_g_location_exon(workflow_dir):
+    """Test if chr ID, genomic location and exon info (e.g, (chr2:20000000, exon 1/12)) are shown in table"""
+    report = f"{workflow_dir}/report.html"
+    with open(report) as fin:
+        soup = bs4.BeautifulSoup(fin, features="html.parser")
+
+    # Extract HGVS column
+    variant_table = soup.find('table', id='var-overview')
+    HGVS_with_extra_info = variant_table.find_all('td', class_ = 'hgvs')
+    HGVS_with_extra_info_pattern = r"chr([a-zA-Z0-9]+).*?exon (\d+)"
+    for hgvs in HGVS_with_extra_info:
+        hgvs_text = hgvs.get_text(separator=" <br/> ", strip=True) 
+        import re
+        extra_info = hgvs_text.split("<br/> ")[-1]
+        match = re.search(HGVS_with_extra_info_pattern, extra_info)
+        assert match is not None
+        
 
 @pytest.mark.workflow('test-report')
 def test_fusion_overview(workflow_dir):

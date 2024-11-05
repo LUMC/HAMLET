@@ -230,7 +230,7 @@
             "input": "chrM\t8566\t.\tA\tG\t151\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=27;END=8566;VD=27;AF=1;BIAS=0:2;REFBIAS=0:0;VARBIAS=14:13;PMEAN=28.7;PSTD=1;QUAL=31.8;QSTD=1;SBF=1;ODDRATIO=0;MQ=255;SN=5.75;HIAF=1.0000;ADJAF=0.1111;SHIFT3=0;MSI=1;MSILEN=1;NM=2.9;HICNT=23;HICOV=23;LSEQ=CTTCATTCATTGCCCCCACA;RSEQ=TCCTAGGCCTACCCGCCGCA;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:27:27:0,27:1:0,0:14,13",
             "is_in_hotspot": false,
             "most_severe_consequence": "missense_variant",
-            "seq_region_name": "MT",
+            "seq_region_name": "chrMT",
             "start": 8566,
             "strand": 1,
             "transcript_consequences": [
@@ -335,7 +335,7 @@
             "input": "chrM\t8701\t.\tA\tG\t199\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=48;END=8701;VD=46;AF=0.9583;BIAS=0:2;REFBIAS=0:2;VARBIAS=18:28;PMEAN=27.6;PSTD=1;QUAL=36.2;QSTD=1;SBF=0.52128;ODDRATIO=0;MQ=255;SN=45;HIAF=0.9574;ADJAF=0.0208;SHIFT3=1;MSI=2;MSILEN=1;NM=2.6;HICNT=45;HICOV=47;LSEQ=TAACCTCAAAACAAATGATA;RSEQ=CCATACACAACACTAAAGGA;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:48:46:2,46:0.9583:0,2:18,28",
             "is_in_hotspot": true,
             "most_severe_consequence": "missense_variant",
-            "seq_region_name": "MT",
+            "seq_region_name": "chrMT",
             "start": 8701,
             "strand": 1,
             "transcript_consequences": [
@@ -430,7 +430,7 @@
             "input": "chrM\t8860\t.\tA\tG\t123\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=13;END=8860;VD=13;AF=1;BIAS=0:2;REFBIAS=0:0;VARBIAS=10:3;PMEAN=20.8;PSTD=1;QUAL=33.5;QSTD=1;SBF=1;ODDRATIO=0;MQ=255;SN=5.5;HIAF=1.0000;ADJAF=0.1538;SHIFT3=0;MSI=1;MSILEN=1;NM=2.8;HICNT=11;HICOV=11;LSEQ=CCATCCCCTTATGAGCGGGC;RSEQ=CAGTGATTATAGGCTTTCGC;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:13:13:0,13:1:0,0:10,3",
             "is_in_hotspot": true,
             "most_severe_consequence": "missense_variant",
-            "seq_region_name": "MT",
+            "seq_region_name": "chrMT",
             "start": 8860,
             "strand": 1,
             "transcript_consequences": [
@@ -512,7 +512,7 @@
             "input": "chrM\t8390\t.\tT\tA\t166\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=25;END=8390;VD=25;AF=1;BIAS=0:1;REFBIAS=0:0;VARBIAS=24:1;PMEAN=8.8;PSTD=1;QUAL=35.8;QSTD=1;SBF=1;ODDRATIO=0;MQ=255;SN=24;HIAF=1.0000;ADJAF=0.12;SHIFT3=0;MSI=2;MSILEN=1;NM=4.2;HICNT=24;HICOV=24;LSEQ=CCCAACTAAATACTACCGTA;RSEQ=GGCCCACCATAATTACCCCC;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:25:25:0,25:1:0,0:24,1",
             "is_in_hotspot": true,
             "most_severe_consequence": "stop_gained",
-            "seq_region_name": "MT",
+            "seq_region_name": "chrMT",
             "start": 8390,
             "strand": 1,
             "transcript_consequences": [

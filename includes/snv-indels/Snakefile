@@ -343,6 +343,7 @@ rule annotate_vars:
             --polyphen b \
             --sift b \
             --hgvs \
+            --numbers \
             --stats_file {output.stats} \
             --output_file STDOUT | gzip > {output.vep}\
             2> {log}
