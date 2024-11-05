@@ -245,6 +245,7 @@
                 "consequence_terms": [
                   "missense_variant"
                 ],
+                "exon":"1/1",
                 "gene_id": "ENSG00000198899",
                 "hgvsc": "ENST00000361899.2:c.40A>G",
                 "hgvsp": "ENSP00000354632.2:p.Ile14Val",
@@ -350,6 +351,7 @@
                 "consequence_terms": [
                   "missense_variant"
                 ],
+                "exon":"1/1",
                 "gene_id": "ENSG00000198899",
                 "hgvsc": "ENST00000361899.2:c.175A>G",
                 "hgvsp": "ENSP00000354632.2:p.Thr59Ala",
@@ -445,6 +447,7 @@
                 "consequence_terms": [
                   "missense_variant"
                 ],
+                "exon":"1/1",
                 "gene_id": "ENSG00000198899",
                 "hgvsc": "ENST00000361899.2:c.334A>G",
                 "hgvsp": "ENSP00000354632.2:p.Thr112Ala",
@@ -527,6 +530,7 @@
                 "consequence_terms": [
                   "stop_gained"
                 ],
+                "exon":"1/1",
                 "gene_id": "ENSG00000228253",
                 "hgvsc": "ENST00000361851.1:c.25T>A",
                 "hgvsp": "ENSP00000355265.1:p.Trp9Ter",

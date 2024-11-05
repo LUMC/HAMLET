@@ -78,7 +78,7 @@ def test_genes_in_order(workflow_dir):
 
 
 @pytest.mark.workflow('test-report')
-def test_chr_g_location_exon(workflow_dir):
+def test_chr_location_exon(workflow_dir):
     """Test if chr ID, genomic location and exon info (e.g, (chr2:20000000, exon 1/12)) are shown in table"""
     report = f"{workflow_dir}/report.html"
     with open(report) as fin:
