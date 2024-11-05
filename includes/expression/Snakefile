@@ -4,6 +4,9 @@ include: "common.smk"
 rule all:
     input:
         multiqc="multiqc_expression.html",
+        unstranded=[
+            f"{sample.sample}/expression/seAMLess.unstranded.tsv" for sample in samples
+        ],
 
 
 rule bed_coverage:
@@ -50,6 +53,42 @@ rule normalized_coverage:
             --housekeeping-genes {params.housekeeping} \
             --gtf {input.gtf} \
             > {output.normalized} 2> {log}
+        """
+
+
+rule transform_counts:
+    """Transform the counts table to use with seAMLess"""
+    input:
+        counts=get_counts,
+        src=srcdir("scripts/transform_counts.py"),
+    output:
+        unstranded="{sample}/expression/seAMLess.unstranded.tsv",
+        forward="{sample}/expression/seAMLess.forward.tsv",
+        reverse_="{sample}/expression/seAMLess.reverse.tsv",
+    log:
+        "log/transform_counts.{sample}.txt",
+    threads: 1
+    container:
+        containers["pysam"]
+    shell:
+        """
+        python3 {input.src} \
+            --counts {input.counts} \
+            --strand unstranded \
+            --sample {wildcards.sample} \
+            > {output.unstranded} 2> {log}
+
+        python3 {input.src} \
+            --counts {input.counts} \
+            --strand forward \
+            --sample {wildcards.sample} \
+            > {output.forward} 2>> {log}
+
+        python3 {input.src} \
+            --counts {input.counts} \
+            --strand reverse\
+            --sample {wildcards.sample} \
+            > {output.reverse_} 2>> {log}
         """
 
 

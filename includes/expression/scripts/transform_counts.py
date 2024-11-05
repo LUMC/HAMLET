@@ -22,7 +22,7 @@ def main(countfile, strand, sample):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--count", required=True, help="STAR counts file")
+    parser.add_argument("--counts", required=True, help="STAR counts file")
     parser.add_argument(
         "--strand",
         choices=["unstranded", "forward", "reverse"],
@@ -33,4 +33,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    main(args.count, args.strand, args.sample)
+    main(args.counts, args.strand, args.sample)
