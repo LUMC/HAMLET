@@ -87,7 +87,7 @@ def test_chr_location_exon(workflow_dir):
     # Extract HGVS column
     variant_table = soup.find('table', id='var-overview')
     HGVS_with_extra_info = variant_table.find_all('td', class_ = 'hgvs')
-    HGVS_with_extra_info_pattern = r"chr([a-zA-Z0-9]+).*?exon (\d+)"
+    HGVS_with_extra_info_pattern = r"\w+:\d+, exon \d+/\d+"
     for hgvs in HGVS_with_extra_info:
         hgvs_text = hgvs.get_text(separator=" <br/> ", strip=True) 
         import re
