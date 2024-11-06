@@ -99,7 +99,6 @@ def test_chr_location_exon(workflow_dir):
 @pytest.mark.workflow('test-report')
 def test_fusion_overview(workflow_dir):
     """ Test the content of the fusion overview
-
     """
     report = f"{workflow_dir}/report.html"
     with open(report) as fin:
@@ -107,12 +106,16 @@ def test_fusion_overview(workflow_dir):
 
     # Extract the fusion table
     fusion_table = parse_table(soup.find('table', id='fusion-overview'))
+    row = fusion_table[0]
 
     # Check the headers
-    assert "Split reads 1" in fusion_table[0]
-    assert "Split reads 2" in fusion_table[0]
-    assert "Discordant mates" in fusion_table[0]
-    assert "Confidence" in fusion_table[0]
+    assert "Split reads 1" in row
+    assert "Split reads 2" in row
+    assert "Discordant mates" in row
+    assert "Confidence" in row
+
+    # Check that the breakpoints are in the table
+    assert "(chr22, chr9)" in row["Fusion name"]
 
 
 @pytest.mark.workflow('test-report')
