@@ -117,6 +117,10 @@
     - path: SRR8615409/hamlet_report.SRR8615409.html
       contains:
         - "BCR::ABL"
+        # Test that the chromosomal location of the variant is in the report (Table 7)
+        - "chr13:28034118"
+        # Test that the exon notation of the variant is in the report (Table 7)
+        - "exon 14/24"
       must_not_contain:
         - "FLT3::FLT3"
 
