@@ -8,10 +8,11 @@ Changelog
 .. that users understand how the changes affect the new version.
 
 **********
-v2.1.3-dev
+v2.1.3
 **********
 * Add `pysam` to the conda environment (developer only)
 * Add exon number to variant table
+* Add chromosomes to fusion table
 
 **********
 v2.1.2
