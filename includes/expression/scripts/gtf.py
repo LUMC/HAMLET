@@ -20,7 +20,7 @@ def read_attributes(fin):
         yield d
 
 
-def gene_id_name(fin):
+def gene_id_name(fin) -> dict[str, str]:
     """Return a two-way mapping between gene names and ID's"""
     mapping = dict()
     for record in read_attributes(fin):
@@ -31,7 +31,6 @@ def gene_id_name(fin):
 
 
 if __name__ == "__main__":
-    d = dict()
     with open(sys.argv[1]) as fin:
         mapping = gene_id_name(fin)
     print(json.dumps(mapping, indent=True))

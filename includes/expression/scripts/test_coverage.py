@@ -4,7 +4,7 @@ import dataclasses
 
 from typing import Any
 
-from coverage import forward_orientation
+from coverage import orientation_first
 
 
 @dataclasses.dataclass
@@ -57,7 +57,7 @@ def test_true(reads):
     expected = ["+", "-", "-", "+"]
 
     for e, r in zip(expected, reads):
-        assert forward_orientation(r) == e
+        assert orientation_first(r) == e
 
     print()
     for read in reads:
