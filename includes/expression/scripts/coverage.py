@@ -8,7 +8,7 @@ from statistics import median
 from collections import defaultdict
 from dataclasses import dataclass
 
-from typing import Iterator
+from typing import Iterator, Optional
 from gtf import gene_id_name
 
 
@@ -177,7 +177,7 @@ def main(
     countsfile: str,
     gtffile: str,
     housekeeping: list[str],
-    bedfile: str | None,
+    bedfile: Optional[str],
     genes: list[str],
 ) -> None:
     if not bedfile and not genes:
