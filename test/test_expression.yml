@@ -106,6 +106,24 @@
       contains:
         - "MT-CO2\t1.0\t1.0\t1.0"
 
+# The output files will be empty, but it should not crash
+- name: Test running the expression module without genes of interest or bed
+  tags:
+    - functional
+    - expression
+    - current
+  command: >
+    snakemake
+    --snakefile includes/expression/Snakefile
+    --workflow-profile test
+    --configfile test/data/config/expression.json
+    --config
+      pepfile=test/pep/expression.csv
+  exit_code: 0
+  files:
+    - path: SRR8615409/expression/coverage.csv
+    - path: SRR8615409/expression/coverage.normalized.csv
+
 - name: Check formatting of Snakemake files
   tags:
     - sanity

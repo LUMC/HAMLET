@@ -182,7 +182,6 @@ def main(
     raw: bool,
 ) -> None:
     if not bedfile and not genes:
-        print("Nothing to do")
         exit(0)
 
     coverage: dict[str, Coverage] = dict()
