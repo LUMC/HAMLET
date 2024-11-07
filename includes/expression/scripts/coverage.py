@@ -179,6 +179,7 @@ def main(
     housekeeping: list[str],
     bedfile: Optional[str],
     genes: list[str],
+    raw: bool
 ) -> None:
     if not bedfile and not genes:
         print("Nothing to do")
@@ -199,10 +200,11 @@ def main(
         coverage[gene] = STAR_counts[gene]
 
     # Normalize the coverage
-    for gene in coverage:
-        coverage[gene].unstranded /= normalizer.unstranded
-        coverage[gene].forward /= normalizer.forward
-        coverage[gene].reverse /= normalizer.reverse
+    if not raw:
+        for gene in coverage:
+            coverage[gene].unstranded /= normalizer.unstranded
+            coverage[gene].forward /= normalizer.forward
+            coverage[gene].reverse /= normalizer.reverse
 
     for gene, cov in coverage.items():
         print(gene, cov.unstranded, cov.forward, cov.reverse, sep="\t")
@@ -229,7 +231,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--genes", nargs="+", default=list(), help="List of genes of interest"
     )
+    parser.add_argument('--raw', action='store_true', default=False, help="Do not normalize the expression counts")
 
     args = parser.parse_args()
 
-    main(args.bam, args.counts, args.gtf, args.housekeeping, args.bed, args.genes)
+    main(args.bam, args.counts, args.gtf, args.housekeeping, args.bed, args.genes, args.raw)

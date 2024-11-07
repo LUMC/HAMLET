@@ -43,9 +43,9 @@
     --config pepfile=test/pep/expression.csv
   exit_code: 0
   files:
-    # - path: SRR8615409/expression/coverage.csv
-    #   contains:
-    #     - "MT-CO2\t282\t158\t124"
+    - path: SRR8615409/expression/coverage.csv
+      contains:
+        - "MT-CO2\t282\t158\t124"
     # Test the transformed coverage counts to be used with seAMLess. This will
     # only work if there are at least two samples, so we put the sample in
     # there twice
