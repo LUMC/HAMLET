@@ -8,6 +8,10 @@ Changelog
 .. that users understand how the changes affect the new version.
 
 **********
+v2.2.1-dev
+**********
+
+**********
 v2.1.3
 **********
 * Add `pysam` to the conda environment (developer only)
