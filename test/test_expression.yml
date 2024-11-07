@@ -31,7 +31,7 @@
     contains:
       - "Unknown housekeeping gene: Z"
 
-- name: Test running the expression module
+- name: Test running the expression module with a bed file
   tags:
     - functional
     - expression
@@ -40,7 +40,9 @@
     --snakefile includes/expression/Snakefile
     --workflow-profile test
     --configfile test/data/config/expression.json
-    --config pepfile=test/pep/expression.csv
+    --config
+      pepfile=test/pep/expression.csv
+      bed=test/data/reference/transcripts_chrM.bed
   exit_code: 0
   files:
     - path: SRR8615409/expression/coverage.csv
@@ -77,6 +79,32 @@
     - path: multiqc_expression.html
       contains:
         - "MT-CO2"
+
+- name: Test running the expression module with genes of interest
+  tags:
+    - functional
+    - expression
+  command: >
+    snakemake
+    --snakefile includes/expression/Snakefile
+    --workflow-profile test
+    --configfile test/data/config/expression.json
+    --config
+      pepfile=test/pep/expression.csv
+      genes_of_interest="MT-CO2"
+  exit_code: 0
+  files:
+    - path: SRR8615409/expression/coverage.csv
+      contains:
+        - "MT-CO2\t282\t158\t124"
+    # Since MT-CO2 was used both as gene of interest and only housekeeping
+    # gene, the normalized expression for every strand must be 1.0
+    # MT-CO2 was chosen specifically so it does not overlap any other
+    # transcripts, which would be taken into account by STAR and give lower
+    # counts
+    - path: SRR8615409/expression/coverage.normalized.csv
+      contains:
+        - "MT-CO2\t1.0\t1.0\t1.0"
 
 - name: Check formatting of Snakemake files
   tags:

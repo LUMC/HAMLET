@@ -179,7 +179,7 @@ def main(
     housekeeping: list[str],
     bedfile: Optional[str],
     genes: list[str],
-    raw: bool
+    raw: bool,
 ) -> None:
     if not bedfile and not genes:
         print("Nothing to do")
@@ -227,12 +227,31 @@ if __name__ == "__main__":
     )
 
     # Optional arguments
-    parser.add_argument("--bed", help="BED file with regions of interest")
     parser.add_argument(
-        "--genes", nargs="+", default=list(), help="List of genes of interest"
+        "--bed",
+        nargs="?",
+        default="",
+        const="",
+        help="BED file with regions of interest",
     )
-    parser.add_argument('--raw', action='store_true', default=False, help="Do not normalize the expression counts")
+    parser.add_argument(
+        "--genes", nargs="*", default=list(), help="List of genes of interest"
+    )
+    parser.add_argument(
+        "--raw",
+        action="store_true",
+        default=False,
+        help="Do not normalize the expression counts",
+    )
 
     args = parser.parse_args()
 
-    main(args.bam, args.counts, args.gtf, args.housekeeping, args.bed, args.genes, args.raw)
+    main(
+        args.bam,
+        args.counts,
+        args.gtf,
+        args.housekeeping,
+        args.bed,
+        args.genes,
+        args.raw,
+    )

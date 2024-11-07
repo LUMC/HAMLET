@@ -14,10 +14,11 @@ rule normalized_coverage:
         bam=get_bam,
         counts=get_counts,
         gtf=config["gtf"],
-        bed=config["bed"],
+        bed=config.get("bed", []),
         src=srcdir("scripts/coverage.py"),
     params:
         housekeeping=config["housekeeping"],
+        genes_of_interest=config.get("genes_of_interest", ""),
     output:
         normalized="{sample}/expression/coverage.normalized.csv",
         raw="{sample}/expression/coverage.csv",
@@ -35,6 +36,7 @@ rule normalized_coverage:
             --housekeeping {params.housekeeping} \
             --gtf {input.gtf} \
             --bed {input.bed} \
+            --genes {params.genes_of_interest} \
             > {output.normalized} 2> {log}
 
         # Extract the raw coverage counts
@@ -44,6 +46,7 @@ rule normalized_coverage:
             --housekeeping {params.housekeeping} \
             --gtf {input.gtf} \
             --bed {input.bed} \
+            --genes {params.genes_of_interest} \
             --raw \
             > {output.raw} 2>> {log}
         """

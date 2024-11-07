@@ -2,6 +2,5 @@
   "housekeeping": [
     "MT-CO2"
   ],
-  "gtf": "test/data/reference/hamlet-ref.gtf",
-  "bed": "test/data/reference/transcripts_chrM.bed"
+  "gtf": "test/data/reference/hamlet-ref.gtf"
 }
