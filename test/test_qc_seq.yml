@@ -73,6 +73,10 @@
         - "qc-seq"
         # Sequali sample names must be renamed
         - "TestSample1-R1.fq.gz_TestSample1-R2.fq.gz"
+      # The MultiQC report must contain all relevant sections
+      contains:
+        - "Cutadapt"
+        - "Sequali"
     - path: TestSample1/qc-seq/sequali/TestSample1.json
     - path: TestSample1/qc-seq/sequali/TestSample1.html
 

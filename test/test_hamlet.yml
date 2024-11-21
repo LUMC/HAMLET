@@ -151,6 +151,8 @@
         - "SRR8615409\tfuzzy-end\t1"
     - path: "multiqc_hamlet.html"
       contains:
+        - "Cutadapt"
+        - "Sequali"
         - "VEP"
         - "STAR"
         - "Picard"

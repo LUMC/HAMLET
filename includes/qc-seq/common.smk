@@ -62,6 +62,12 @@ def multiqc_files():
     return cutadapt + sequali
 
 
+def multiqc_modules():
+    """Define which MultiQC modules to run here"""
+    modules = ["cutadapt", "sequali"]
+    return [f" --module {module}" for module in modules]
+
+
 module_output = SimpleNamespace(
     forward=get_forward_output,
     reverse=get_reverse_output,

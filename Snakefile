@@ -212,6 +212,7 @@ rule multiqc:
     params:
         filelist="multiqc_filelist.txt",
         depth=2,
+        modules=multiqc_modules(),
     output:
         html="multiqc_hamlet.html",
     log:
@@ -234,5 +235,6 @@ rule multiqc:
         --fn_as_s_name \
         --file-list {params.filelist} \
         --config {input.config} \
+        {params.modules} \
         --filename {output.html} 2> {log}
         """

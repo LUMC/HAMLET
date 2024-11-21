@@ -77,6 +77,12 @@ def multiqc_files():
     return star_count + star_log + picard_stats + vep_stats
 
 
+def multiqc_modules():
+    """Define which MultiQC modules to run here"""
+    modules = ["star", "picard", "vep"]
+    return [f" --module {module}" for module in modules]
+
+
 module_output = SimpleNamespace(
     bam=get_bam_output,
     bai=get_bai_output,
