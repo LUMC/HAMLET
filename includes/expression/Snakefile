@@ -18,7 +18,7 @@ rule normalized_coverage:
         src=srcdir("scripts/coverage.py"),
     params:
         housekeeping=config["housekeeping"],
-        genes_of_interest=config.get("genes_of_interest", ""),
+        genes_of_interest=config["genes_of_interest"],
     output:
         normalized="{sample}/expression/coverage.normalized.csv",
         raw="{sample}/expression/coverage.csv",

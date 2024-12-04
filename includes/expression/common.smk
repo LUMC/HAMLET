@@ -19,6 +19,30 @@ for s in samples:
         raise RuntimeError(f'Spaces in samples are not supported ("{s.sample}")')
 
 
+def str_to_list(value):
+    """Convert a space separated str to a list"""
+    if value is None:
+        return list()
+    elif isinstance(value, str):
+        return value.split(" ")
+    elif isinstance(value, list):
+        return value
+    else:
+        raise RuntimeError
+
+
+def set_genes_of_interest():
+    """Set the genes of interest to a list, if it is a string"""
+    # Genes of interest is either a list of str, or a string with spaces
+    goi = config.get("genes_of_interest")
+    config["genes_of_interest"] = str_to_list(goi)
+
+
+def set_housekeeping_genes():
+    housekeeping = config.get("housekeeping")
+    config["housekeeping"] = str_to_list(housekeeping)
+
+
 ## Input functions ##
 def get_bam(wildcards):
     return pep.sample_table.loc[wildcards.sample, "bam"]
@@ -44,6 +68,24 @@ def check_housekeeping():
             raise RuntimeError(msg)
 
 
+def check_bed_genes_of_interest():
+    """Check for duplicates genes bed file and genes_of_interest"""
+    if "bed" not in config:
+        return
+
+    # Get the names from the bed file
+    names = list()
+    with open(config["bed"]) as fin:
+        for line in fin:
+            spline = line.strip("\n").split("\t")
+            names.append(spline[3])
+
+    for gene in config["genes_of_interest"]:
+        if gene in names:
+            msg = f"{gene} is specified twice: in the bed file and genes_of_interest"
+            raise RuntimeError(msg)
+
+
 ## Functions for module outputs ##
 def coverage(wildcards):
     return f"{wildcards.sample}/expression/coverage.csv"
@@ -61,7 +103,10 @@ def multiqc_files():
     return unstranded + forward + reverse_
 
 
+set_genes_of_interest()
+set_housekeeping_genes()
 check_housekeeping()
+check_bed_genes_of_interest()
 
 module_output = SimpleNamespace(
     coverage=coverage, normalized_expression=normalized, multiqc_files=multiqc_files()

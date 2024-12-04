@@ -31,6 +31,26 @@
     contains:
       - "Unknown housekeeping gene: Z"
 
+- name: Test error on gene in .bed and genes_of_interest
+  tags:
+    - sanity
+    - expression
+    - current
+  command: >
+    snakemake
+    --snakefile includes/expression/Snakefile
+    --workflow-profile test
+    --dry-run
+    --configfile test/data/config/expression.json
+    --config pepfile=test/pep/expression.csv
+             housekeeping="MT-CO2"
+             bed=test/data/reference/transcripts_chrM.bed
+             genes_of_interest="MT-ND3 MT-ND2"
+  exit_code: 1
+  stdout:
+    contains:
+      - "MT-ND3 is specified twice: in the bed file and genes_of_interest"
+
 - name: Test running the expression module with a bed file
   tags:
     - functional
