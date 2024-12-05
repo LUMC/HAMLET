@@ -52,6 +52,15 @@ def get_counts(wildcards):
     return pep.sample_table.loc[wildcards.sample, "count"]
 
 
+def get_strand(wildcards):
+    try:
+        strand = pep.sample_table.loc[wildcards.sample, "strandedness"]
+    except KeyError:
+        strand = "unstranded"
+    return strand
+
+
+## Check specified settings ##
 def check_housekeeping():
     """Check if we can find each housekeeping gene in the GTF file"""
     # Read the mapping from ENSG to gene name

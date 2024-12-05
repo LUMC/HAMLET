@@ -71,11 +71,11 @@
     # Test the transformed coverage counts to be used with seAMLess. This will
     # only work if there are at least two samples, so we put the sample in
     # there twice
-    - path: SRR8615409/expression/seAMLess.forward.tsv
-    - path: SRR8615409/expression/seAMLess.reverse.tsv
-    - path: SRR8615409/expression/seAMLess.unstranded.tsv
+    - path: SRR8615409/expression/seAMLess.tsv
       contains:
         - "X\tSRR8615409\tSRR8615409"
+        # Unstranded result
+        - "ENSG00000211459\t30\t30"
     # Since MT-CO2 was used both as gene of interest and only housekeeping
     # gene, the normalized expression for every strand must be 1.0
     # MT-CO2 was chosen specifically so it does not overlap any other
