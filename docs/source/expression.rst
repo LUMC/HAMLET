@@ -15,12 +15,20 @@ housekeeping genes to normalize gene expression levels.
 
 Input
 -----
-The input for this module is one BAM file and one STAR count table
+The minimal input for this module is one BAM file and one STAR count table
 specified in a PEP configuration file, as is shown below.
 
 .. csv-table:: Example input for the expression module
    :delim: ,
    :file: ../../test/pep/expression.csv
+
+For more accurate results, it is possible to specify the strandedness of your
+RNA library prep (`unstranded`, `forward` and `reverse`). If strandedness is
+not specified, all samples will be treated as unstranded.
+
+.. csv-table:: Example input for the expression module
+   :delim: ,
+   :file: ../../test/pep/expression_forward.csv
 
 Output
 ------
