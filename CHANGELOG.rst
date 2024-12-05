@@ -10,6 +10,8 @@ Changelog
 **********
 v2.2.1-dev
 **********
+* Add novel module, **expression**, which analyzes gene expression
+  * Add optional input `strandedness` to the sample configuration
 
 **********
 v2.1.3
