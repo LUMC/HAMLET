@@ -35,7 +35,6 @@
   tags:
     - sanity
     - expression
-    - current
   command: >
     snakemake
     --snakefile includes/expression/Snakefile
@@ -74,7 +73,7 @@
     - path: SRR8615409/expression/seAMLess.tsv
       contains:
         - "X\tSRR8615409\tSRR8615409"
-        # Unstranded result
+        # Result for unstranded data
         - "ENSG00000211459\t30\t30"
     # Since MT-CO2 was used both as gene of interest and only housekeeping
     # gene, the normalized expression for every strand must be 1.0
@@ -142,6 +141,45 @@
   files:
     - path: SRR8615409/expression/coverage.csv
     - path: SRR8615409/expression/coverage.normalized.csv
+
+- name: Test running the expression module with a forward stranded sample
+  tags:
+    - functional
+    - expression
+  command: >
+    snakemake
+    --snakefile includes/expression/Snakefile
+    --workflow-profile test
+    --configfile test/data/config/expression.json
+    --config
+      pepfile=test/pep/expression_forward.csv
+  exit_code: 0
+  files:
+    - path: SRR8615409/expression/seAMLess.tsv
+      contains:
+        - "X\tSRR8615409\tSRR8615409"
+        # Results for the forward strand
+        - "ENSG00000211459\t18\t18"
+
+- name: Test running the expression module with a reverse stranded sample
+  tags:
+    - functional
+    - expression
+  command: >
+    snakemake
+    --snakefile includes/expression/Snakefile
+    --workflow-profile test
+    --configfile test/data/config/expression.json
+    --config
+      pepfile=test/pep/expression_reverse.csv
+  exit_code: 0
+  files:
+    - path: SRR8615409/expression/seAMLess.tsv
+      contains:
+        - "X\tSRR8615409\tSRR8615409"
+        # Results for the reverse strand
+        - "ENSG00000211459\t12\t12"
+
 
 - name: Check formatting of Snakemake files
   tags:

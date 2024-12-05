@@ -58,7 +58,7 @@ rule transform_counts:
     output:
         tsv="{sample}/expression/seAMLess.tsv",
     params:
-        strand=get_strand,
+        strandedness=get_strand,
     log:
         "log/transform_counts.{sample}.txt",
     threads: 1
@@ -68,7 +68,7 @@ rule transform_counts:
         """
         python3 {input.src} \
             --counts {input.counts} \
-            --strand {params.strand} \
+            --strand {params.strandedness} \
             --sample {wildcards.sample} \
             > {output.tsv} 2> {log}
         """
