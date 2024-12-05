@@ -54,10 +54,12 @@ def get_counts(wildcards):
 
 def get_strand(wildcards):
     try:
-        strand = pep.sample_table.loc[wildcards.sample, "strandedness"]
+        strandedness = pep.sample_table.loc[wildcards.sample, "strandedness"]
     except KeyError:
-        strand = "unstranded"
-    return strand
+        strandedness = "unstranded"
+    if strandedness is None:
+        raise ValueError("Please specify a strandedness for every sample")
+    return strandedness
 
 
 ## Check specified settings ##
