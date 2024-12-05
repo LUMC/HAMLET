@@ -28,7 +28,7 @@ not specified, all samples will be treated as unstranded.
 
 .. csv-table:: Example input for the expression module
    :delim: ,
-   :file: ../../test/pep/expression_forward.csv
+   :file: ../../test/pep/expression_strandedness.csv
 
 Output
 ------
