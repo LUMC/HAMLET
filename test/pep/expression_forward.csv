@@ -1,2 +1,0 @@
-sample_name,bam,count,strandedness
-SRR8615409,test/data/expression/SRR8615409.bam,test/data/expression/SRR8615409.ReadsPerGene.out.tab,forward

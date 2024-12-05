@@ -1,4 +1,4 @@
-- name: Test dry run of expression module
+- name: Dry run of expression module
   tags:
     - dry-run
     - expression
@@ -31,7 +31,7 @@
     contains:
       - "Unknown housekeeping gene: Z"
 
-- name: Test error on gene in .bed and genes_of_interest
+- name: Test error on duplicate gene
   tags:
     - sanity
     - expression
@@ -50,7 +50,7 @@
     contains:
       - "MT-ND3 is specified twice: in the bed file and genes_of_interest"
 
-- name: Test running the expression module with a bed file
+- name: Run the expression module with a bed file
   tags:
     - functional
     - expression
@@ -95,7 +95,7 @@
       contains:
         - "MT-CO2"
 
-- name: Test running the expression module with genes of interest
+- name: Run the expression module with genes of interest
   tags:
     - functional
     - expression
@@ -122,7 +122,7 @@
         - "MT-CO2\t1.0\t1.0\t1.0"
 
 # The output files will be empty, but it should not crash
-- name: Test running the expression module without genes of interest or bed
+- name: Run the expression module without genes of interest or bed
   tags:
     - functional
     - expression
@@ -138,7 +138,7 @@
     - path: SRR8615409/expression/coverage.csv
     - path: SRR8615409/expression/coverage.normalized.csv
 
-- name: Test running the expression module with a forward stranded sample
+- name: Run the expression module with strandedness specified
   tags:
     - functional
     - expression
@@ -148,45 +148,45 @@
     --workflow-profile test
     --configfile test/data/config/expression.json
     --config
-      pepfile=test/pep/expression_forward.csv
+      pepfile=test/pep/expression_strandedness.csv
       genes_of_interest="MT-RNR1"
   exit_code: 0
   files:
-    - path: SRR8615409/expression/seAMLess.tsv
+    # Test the seamless value for the forward sample
+    - path: SRR8615409-forward/expression/seAMLess.tsv
       contains:
-        - "X\tSRR8615409\tSRR8615409"
+        - "X\tSRR8615409-forward\tSRR8615409-forward"
         # Results for the forward strand
         - "ENSG00000211459\t18\t18"
-    - path: merged_expression_stranded_mqc.tsv
+    # Test the seamless input for the reverse sample
+    - path: SRR8615409-reverse/expression/seAMLess.tsv
       contains:
-        - "id: mqc_expression_stranded"
-        - "Sample\tMT-RNR1"
-        - "SRR8615409\t0.113"
-
-- name: Test running the expression module with a reverse stranded sample
-  tags:
-    - functional
-    - expression
-  command: >
-    snakemake
-    --snakefile includes/expression/Snakefile
-    --workflow-profile test
-    --configfile test/data/config/expression.json
-    --config
-      pepfile=test/pep/expression_reverse.csv
-      genes_of_interest="MT-RNR1"
-  exit_code: 0
-  files:
-    - path: SRR8615409/expression/seAMLess.tsv
-      contains:
-        - "X\tSRR8615409\tSRR8615409"
+        - "X\tSRR8615409-reverse\tSRR8615409-reverse"
         # Results for the reverse strand
         - "ENSG00000211459\t12\t12"
+    # Test the seamless input for the unstranded sample
+    - path: SRR8615409-unstranded/expression/seAMLess.tsv
+      contains:
+        - "X\tSRR8615409-unstranded\tSRR8615409-unstranded"
+        # Results for the reverse strand
+        - "ENSG00000211459\t30\t30"
     - path: merged_expression_stranded_mqc.tsv
       contains:
         - "id: mqc_expression_stranded"
         - "Sample\tMT-RNR1"
-        - "SRR8615409\t0.096"
+        - "SRR8615409-forward\t0.113"
+        - "SRR8615409-reverse\t0.096"
+      must_not_contain:
+        - "SRR8615409-unstranded"
+    # Check the multiqc table for unstranded samples
+    - path: merged_expression_unstranded_mqc.tsv
+      contains:
+        - "id: mqc_expression_unstranded"
+        - "Sample\tMT-RNR1"
+        - "SRR8615409-unstranded\t0.106"
+      must_not_contain:
+        - "SRR8615409-forward"
+        - "SRR8615409-reverse"
 
 
 - name: Check formatting of Snakemake files
