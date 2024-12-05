@@ -6,7 +6,7 @@ report_header_info:
   - Pipeline: "https://github.com/LUMC/HAMLET"
   - Platform: "Illumina RNAseq data"
 
-
+violin_min_threshold_outliers: 200
 show_analysis_paths: False
 show_analysis_time: False
 
