@@ -88,12 +88,10 @@
     - path: merged_expression_unstranded_mqc.tsv
       contains:
         - "id: mqc_expression_unstranded"
+    # Empty file since this sample is unstranded
     - path: merged_expression_forward_mqc.tsv
-      contains:
-        - "id: mqc_expression_forward"
+    # Empty file since this sample is unstranded
     - path: merged_expression_reverse_mqc.tsv
-      contains:
-        - "id: mqc_expression_reverse"
     # Test that we create the multiqc report
     - path: multiqc_expression.html
       contains:
@@ -160,6 +158,9 @@
         - "X\tSRR8615409\tSRR8615409"
         # Results for the forward strand
         - "ENSG00000211459\t18\t18"
+    - path: merged_expression_forward_mqc.tsv
+      contains:
+        - "id: mqc_expression_forward"
 
 - name: Test running the expression module with a reverse stranded sample
   tags:
@@ -179,6 +180,9 @@
         - "X\tSRR8615409\tSRR8615409"
         # Results for the reverse strand
         - "ENSG00000211459\t12\t12"
+    - path: merged_expression_reverse_mqc.tsv
+      contains:
+        - "id: mqc_expression_reverse"
 
 
 - name: Check formatting of Snakemake files

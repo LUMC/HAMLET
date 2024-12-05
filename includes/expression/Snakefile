@@ -80,6 +80,7 @@ rule merge_samples:
         src=srcdir("scripts/multiqc.py"),
     params:
         samples=[sample.sample for sample in samples],
+        strandedness=[get_strand(sample) for sample in samples],
     output:
         unstranded="merged_expression_unstranded_mqc.tsv",
         forward="merged_expression_forward_mqc.tsv",
@@ -94,20 +95,8 @@ rule merge_samples:
         python3 {input.src} \
             --counts {input.counts} \
             --samples {params.samples} \
-            --strand unstranded \
-            > {output.unstranded} 2> {log}
-
-        python3 {input.src} \
-            --counts {input.counts} \
-            --samples {params.samples} \
-            --strand forward \
-            > {output.forward} 2>> {log}
-
-        python3 {input.src} \
-            --counts {input.counts} \
-            --samples {params.samples} \
-            --strand reverse \
-            > {output.reverse_} 2>> {log}
+            --strandedness {params.strandedness}\
+            2> {log}
         """
 
 
