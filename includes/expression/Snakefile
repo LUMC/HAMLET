@@ -5,6 +5,7 @@ rule all:
     input:
         multiqc="multiqc_expression.html",
         seamless=[f"{sample.sample}/expression/seAMLess.tsv" for sample in samples],
+        json=[module_output.json(sample) for sample in samples],
 
 
 rule normalized_coverage:
@@ -71,6 +72,30 @@ rule transform_counts:
             --strand {params.strandedness} \
             --sample {wildcards.sample} \
             > {output.tsv} 2> {log}
+        """
+
+
+rule json_output:
+    input:
+        coverage=module_output.normalized_expression,
+        src=srcdir("scripts/json-output.py"),
+    params:
+        strandedness=get_strand,
+        genes=config["report"],
+    output:
+        "{sample}/expression/expression-output.json",
+    log:
+        "log/expression.{sample}.txt",
+    container:
+        containers["pysam"]
+    shell:
+        """
+        python3 {input.src} \
+            --coverage {input.coverage} \
+            --strandedness {params.strandedness} \
+            --genes {params.genes} \
+            --sample {wildcards.sample} \
+            > {output} 2> {log}
         """
 
 

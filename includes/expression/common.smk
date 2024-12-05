@@ -43,6 +43,11 @@ def set_housekeeping_genes():
     config["housekeeping"] = str_to_list(housekeeping)
 
 
+def set_pdf_report_genes():
+    report_genes = config.get("report")
+    config["report"] = str_to_list(report_genes)
+
+
 ## Input functions ##
 def get_bam(wildcards):
     return pep.sample_table.loc[wildcards.sample, "bam"]
@@ -79,21 +84,35 @@ def check_housekeeping():
             raise RuntimeError(msg)
 
 
-def check_bed_genes_of_interest():
-    """Check for duplicates genes bed file and genes_of_interest"""
+def _bed_names():
+    """Get gene names from the Bed file"""
     if "bed" not in config:
-        return
+        return list()
 
-    # Get the names from the bed file
     names = list()
     with open(config["bed"]) as fin:
         for line in fin:
             spline = line.strip("\n").split("\t")
             names.append(spline[3])
+    return names
+
+
+def check_bed_genes_of_interest():
+    """Check for duplicates genes bed file and genes_of_interest"""
+    # Get the names from the bed file
+    names = _bed_names()
 
     for gene in config["genes_of_interest"]:
         if gene in names:
             msg = f"{gene} is specified twice: in the bed file and genes_of_interest"
+            raise RuntimeError(msg)
+
+
+def check_genes_for_report():
+    quantified_genes = _bed_names() + config["genes_of_interest"]
+    for gene in config["report"]:
+        if gene not in quantified_genes:
+            msg = f"{gene} is specified for the report, but not in genes_of_interest or the bed file"
             raise RuntimeError(msg)
 
 
@@ -113,11 +132,23 @@ def multiqc_files():
     return unstranded + stranded
 
 
+def get_json(wildcards):
+    return f"{wildcards.sample}/expression/expression-output.json"
+
+
+# Set default values, parse specified values
 set_genes_of_interest()
 set_housekeeping_genes()
+set_pdf_report_genes()
+
+# Check the sanity of the reported settings
 check_housekeeping()
 check_bed_genes_of_interest()
+check_genes_for_report()
 
 module_output = SimpleNamespace(
-    coverage=coverage, normalized_expression=normalized, multiqc_files=multiqc_files()
+    coverage=coverage,
+    normalized_expression=normalized,
+    multiqc_files=multiqc_files(),
+    json=get_json,
 )

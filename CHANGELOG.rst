@@ -12,6 +12,7 @@ v2.2.1-dev
 **********
 * Add novel module, **expression**, which analyzes gene expression
   * Add optional input `strandedness` to the sample configuration
+  * Add json output file for the expression module
 
 **********
 v2.1.3

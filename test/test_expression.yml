@@ -13,6 +13,7 @@
     contains:
       - "rule merge_samples"
       - "rule transform_counts"
+      - "rule json_output"
 
 - name: Test error on unknown housekeeping gene
   tags:
@@ -62,6 +63,7 @@
     --config
       pepfile=test/pep/expression.csv
       bed=test/data/reference/transcripts_chrM.bed
+      report="MT-ND4 MT-TH"
   exit_code: 0
   files:
     - path: SRR8615409/expression/coverage.csv
@@ -94,6 +96,10 @@
     - path: multiqc_expression.html
       contains:
         - "MT-CO2"
+    - path: SRR8615409/expression/expression-output.json
+      contains:
+        - "MT-ND4"
+        - "MT-TH"
 
 - name: Run the expression module with genes of interest
   tags:
@@ -106,7 +112,7 @@
     --configfile test/data/config/expression.json
     --config
       pepfile=test/pep/expression.csv
-      genes_of_interest="MT-CO2"
+      genes_of_interest="MT-CO2 MT-ND4 MT-TH"
   exit_code: 0
   files:
     - path: SRR8615409/expression/coverage.csv
@@ -126,6 +132,7 @@
   tags:
     - functional
     - expression
+    - current
   command: >
     snakemake
     --snakefile includes/expression/Snakefile
