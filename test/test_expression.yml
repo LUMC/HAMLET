@@ -151,6 +151,7 @@
     --configfile test/data/config/expression.json
     --config
       pepfile=test/pep/expression_forward.csv
+      genes_of_interest="MT-RNR1"
   exit_code: 0
   files:
     - path: SRR8615409/expression/seAMLess.tsv
@@ -161,6 +162,8 @@
     - path: merged_expression_forward_mqc.tsv
       contains:
         - "id: mqc_expression_forward"
+        - "Sample\tMT-RNR1"
+        - "SRR8615409\t0.113"
 
 - name: Test running the expression module with a reverse stranded sample
   tags:
@@ -173,6 +176,7 @@
     --configfile test/data/config/expression.json
     --config
       pepfile=test/pep/expression_reverse.csv
+      genes_of_interest="MT-RNR1"
   exit_code: 0
   files:
     - path: SRR8615409/expression/seAMLess.tsv
@@ -183,6 +187,8 @@
     - path: merged_expression_reverse_mqc.tsv
       contains:
         - "id: mqc_expression_reverse"
+        - "Sample\tMT-RNR1"
+        - "SRR8615409\t0.096"
 
 
 - name: Check formatting of Snakemake files
