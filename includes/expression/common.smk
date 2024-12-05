@@ -108,10 +108,9 @@ def normalized(wildcards):
 
 def multiqc_files():
     unstranded = ("merged_expression_unstranded_mqc.tsv",)
-    forward = ("merged_expression_forward_mqc.tsv",)
-    reverse_ = ("merged_expression_reverse_mqc.tsv",)
+    stranded = ("merged_expression_stranded_mqc.tsv",)
 
-    return unstranded + forward + reverse_
+    return unstranded + stranded
 
 
 set_genes_of_interest()

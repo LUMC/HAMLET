@@ -1,37 +1,55 @@
 #!/usr/bin/env python3
 
 import argparse
-from collections import defaultdict
 
 
 def read_expression(fname, strand):
+    """Read the expression data from the correct column for the specified strand"""
     columns = {"unstranded": 1, "forward": 2, "reverse": 3}
     column = columns[strand]
+
+    expression = dict()
     with open(fname) as fin:
         for line in fin:
             spline = line.strip("\n").split("\t")
-            yield spline[0], spline[column]
+            gene = spline[0]
+            expression[gene] = spline[column]
+    return expression
+
+
+def read_data(samples, countfiles, strandedness):
+    """Read the data for every sample"""
+    data = dict()
+    for sample, fname, strand in zip(samples, countfiles, strandedness):
+        data[sample] = read_expression(fname, strand)
+    return data
 
 
 def main(samples, countfiles, strandedness):
-    # Group the samples by strand
-    grouped = defaultdict(list)
-    for sample, fname, strand in zip(samples, countfiles, strandedness):
-        grouped[strand].append((sample, fname))
+    # Read all the data
+    data = read_data(samples, countfiles, strandedness)
 
-    for strand in ["unstranded", "forward", "reverse"]:
-        samples = [x[0] for x in grouped[strand]]
-        fnames = [x[1] for x in grouped[strand]]
+    # Group the samples by strandedness
+    unstranded = dict()
+    stranded = dict()
+    for sample, strand in zip(samples, strandedness):
+        if strand == "unstranded":
+            unstranded[sample] = data[sample]
+        elif strand =="forward" or strand == "reverse":
+            stranded[sample] = data[sample]
+        else:
+            raise RuntimeError
 
-        write_multiqc(samples, fnames, strand)
+    write_multiqc(unstranded, "unstranded")
+    write_multiqc(stranded, "stranded")
 
 
-def write_multiqc(samples, countfiles, strand):
+def write_multiqc(data, strand):
     outfile = f"merged_expression_{strand}_mqc.tsv"
 
     with open(outfile, "wt") as fout:
-        # If there are no samples, we don't even write the header
-        if not samples:
+        # If there are no data for this strand, do nothing
+        if not data:
             return
         # Did we already write the gene header?
         gene_header = None
@@ -44,20 +62,14 @@ def write_multiqc(samples, countfiles, strand):
 
         print(multiqc_header, file=fout)
 
-        for sample, fname in zip(samples, countfiles):
-            # Store the normalized expression for each gene per strand
-            expression = dict()
-            for values in read_expression(fname, strand):
-                gene, level = values
-                expression[gene] = level
-
+        for sample, genes in data.items():
             # IF this is the first time, write the header
             if not gene_header:
-                gene_header = list(expression.keys())
+                gene_header = list(genes.keys())
                 print("Sample", *gene_header, sep="\t", file=fout)
 
             print(
-                sample, *(expression[gene] for gene in gene_header), sep="\t", file=fout
+                sample, *(genes[gene] for gene in gene_header), sep="\t", file=fout
             )
 
 
