@@ -78,7 +78,7 @@ def get_snv_indels_config(dirname):
     }
 
 
-def main(dirname):
+def main(dirname, module):
     # Get the absolute path to the root reference folder
     dirname = os.path.abspath(dirname)
 
@@ -88,13 +88,17 @@ def main(dirname):
     config["fusion"] = get_fusion_config(dirname)
     config["snv-indels"] = get_snv_indels_config(dirname)
 
-    print(json.dumps(config, indent=True, sort_keys=True))
+    if module == "hamlet":
+        print(json.dumps(config, indent=True, sort_keys=True))
+    else:
+        print(json.dumps(config[module], indent=True, sort_keys=True))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("reference_dir", help="Path to the reference folder")
+    parser.add_argument("--module", default="hamlet", choices=["hamlet", "snv-indels", "itd", "qc-seq", "fusion"])
 
     args = parser.parse_args()
-    main(args.reference_dir)
+    main(args.reference_dir, args.module)

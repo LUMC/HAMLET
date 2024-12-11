@@ -36,6 +36,7 @@ The output of this module are a JSON file with an overview of the most important
 
 Configuration
 -------------
+You can automatically generate a configuration for the fusion module using the `utilities/create-config.py` script.
 
 Example
 ^^^^^^^

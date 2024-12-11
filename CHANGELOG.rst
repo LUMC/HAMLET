@@ -19,13 +19,18 @@ Breaking changes
 
 Novel module
 ============
-* Add novel module, **expression**, which analyzes gene expression
-  * Add optional input `strandedness` to the sample configuration
-  * Add json output file for the expression module
+* Add novel module, **expression**, which analyzes gene expression.
+  * Add optional input `strandedness` to the sample configuration.
+  * Add json output file for the expression module.
 
 Bugfixes
 ========
-* Fix a rare bug where different modules use the same multiqc file list
+* Fix a rare bug where different modules use the same multiqc file list.
+
+Updates
+=======
+* Add ability to generate configurations for each module using the
+  `utilities/create-config.py` script.
 
 **********
 v2.1.3
