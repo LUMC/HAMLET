@@ -191,3 +191,20 @@
   stderr:
     contains:
       - 'RuntimeError: Spaces in samples are not supported ("SRR 8615687")'
+
+- name: Create HAMLET rule graph
+  tags:
+    - dry-run
+    - hamlet
+  command: >
+    bash -c "
+      snakemake \
+      --dry-run \
+      --snakefile Snakefile \
+      --workflow-profile test \
+      --configfile test/data/config/hamlet-dry.json \
+      --config pepfile=test/pep/chrM-trio.csv \
+      --rulegraph | dot -Tsvg > dag.svg
+    "
+  files:
+    - path: dag.svg
