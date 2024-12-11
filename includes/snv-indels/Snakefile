@@ -29,6 +29,28 @@ rule tmpdir:
         """
 
 
+rule call_regions:
+    """Determine the regions to call from the GTF file"""
+    input:
+        fasta=config["genome_fasta"],
+        gtf=config["gtf"],
+        src=srcdir("scripts/create_bed.sh"),
+    output:
+        # Intermediate files from the bash script
+        chroms=temporary("chroms.txt"),
+        all_genes=temporary("all_genes.bed"),
+        # Final bed file
+        bed=temporary("call_regions.bed"),
+    log:
+        "log/call_regions.txt",
+    container:
+        containers["bedtools-2.27-grep-2.14-gawk-5.0-python-3.7"]
+    shell:
+        """
+        bash {input.src} {input.fasta} {input.gtf} > {output.bed} 2> {log}
+        """
+
+
 rule align_vars:
     input:
         fq1=get_forward,
@@ -188,7 +210,7 @@ rule call_vars:
         bam=module_output.bam,
         bai=module_output.bai,
         ref=config["genome_fasta"],
-        bed=config["bed_variant_call_regions"],
+        bed=rules.call_regions.output.bed,
         tmp=rules.tmpdir.output,
     output:
         vcf="{sample}/snv-indels/{sample}.raw.vcf.gz",

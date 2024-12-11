@@ -81,9 +81,6 @@ Configuration options
   * - bed_variant_hotspots
     - BED file of hotspot regions
     - yes
-  * - bed_variant_call_regions
-    - BED file of regions to call variants
-    - yes
   * - gtf
     - GTF file with transcripts, used by STAR
     - yes

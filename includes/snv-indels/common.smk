@@ -16,6 +16,14 @@ containers = {
 }
 
 
+# Old features that are no longer supported
+if "bed_variant_call_regions" in config:
+    msg = """
+    'bed_variant_call_regions' is no longer supported, regions of interest are
+    determined automatically from the GTF file.
+    """
+    raise DeprecationWarning(msg)
+
 # Put each sample name in a SimpleNamespace to mimic Snakemake wildcard usage
 # (e.g {wildcards.sample}). This is only used in the 'all' rule.
 samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample_name"]]

@@ -53,7 +53,6 @@ rule all:
         ref_id_mapping="id_mappings.tsv",
         rrna_refflat="ucsc_rrna.refFlat",
         blacklist="blacklist.txt",
-        call_regions="call_regions.bed",
         arriba="arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3",
         arriba_report_genes="arriba/report_genes.txt",
 
@@ -200,19 +199,6 @@ rule create_blacklist:
         srcdir("small-files/blacklist.txt"),
     output:
         "blacklist.txt",
-    singularity:
-        containers["hamlet-scripts"]
-    shell:
-        """
-        cp {input} {output}
-        """
-
-
-rule create_call_region:
-    input:
-        srcdir("small-files/call_regions.bed"),
-    output:
-        "call_regions.bed",
     singularity:
         containers["hamlet-scripts"]
     shell:

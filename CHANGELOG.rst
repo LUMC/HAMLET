@@ -10,6 +10,14 @@ Changelog
 **********
 v2.2.1-dev
 **********
+
+Breaking changes
+================
+* The `bed_variant_call_regions` option has been removed, variants are now
+  called for all genes present in the `gtf` file.
+
+Novel module
+============
 * Add novel module, **expression**, which analyzes gene expression
   * Add optional input `strandedness` to the sample configuration
   * Add json output file for the expression module
