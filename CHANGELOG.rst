@@ -22,6 +22,10 @@ Novel module
   * Add optional input `strandedness` to the sample configuration
   * Add json output file for the expression module
 
+Bugfixes
+========
+* Fix a rare bug where different modules use the same multiqc file list
+
 **********
 v2.1.3
 **********

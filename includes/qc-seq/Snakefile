@@ -73,7 +73,7 @@ rule multiqc:
         stats=module_output.multiqc_files,
         config=srcdir("../../cfg/multiqc.yml"),
     params:
-        filelist="multiqc_filelist.txt",
+        filelist="multiqc_filelist_qc_seq.txt",
         depth=2,
         modules=multiqc_modules(),
     output:
