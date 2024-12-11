@@ -15,6 +15,7 @@ Breaking changes
 ================
 * The `bed_variant_call_regions` option has been removed, variants are now
   called for all genes present in the `gtf` file.
+* Add graphviz/`dot` as a dependency (developer only).
 
 Novel module
 ============
