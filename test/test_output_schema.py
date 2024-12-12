@@ -49,6 +49,24 @@ def test_itd_schema(workflow_dir):
     schema_file = pathlib.Path(workflow_dir, "includes/itd/output-schema.json")
     validate_files(output_file, schema_file)
 
+workflows = [
+'Run the expression module with genes of interest',
+'Run the expression module without genes of interest or bed',
+'Run the expression module with a bed file'
+]
+@pytest.mark.workflow(*workflows)
+def test_expression_schema(workflow_dir):
+    sample = "SRR8615409"
+    output_file = pathlib.Path(workflow_dir, f"{sample}/expression/expression-output.json")
+    schema_file = pathlib.Path(workflow_dir, "includes/expression/output-schema.json")
+    validate_files(output_file, schema_file)
+
+@pytest.mark.parametrize("sample", ["SRR8615409-unstranded","SRR8615409-forward","SRR8615409-reverse"])
+@pytest.mark.workflow('Run the expression module with strandedness specified')
+def test_expression_schema_strand(sample, workflow_dir):
+    output_file = pathlib.Path(workflow_dir, f"{sample}/expression/expression-output.json")
+    schema_file = pathlib.Path(workflow_dir, "includes/expression/output-schema.json")
+    validate_files(output_file, schema_file)
 
 if __name__ == '__main__':
     import sys
