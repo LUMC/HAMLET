@@ -77,7 +77,8 @@ rule transform_counts:
 
 rule json_output:
     input:
-        coverage=module_output.normalized_expression,
+        coverage=module_output.coverage,
+        norm_coverage=module_output.normalized_expression,
         src=srcdir("scripts/json-output.py"),
     params:
         strandedness=get_strand,
@@ -92,6 +93,7 @@ rule json_output:
         """
         python3 {input.src} \
             --coverage {input.coverage} \
+            --norm-coverage {input.norm_coverage} \
             --strandedness {params.strandedness} \
             --genes {params.genes} \
             --sample {wildcards.sample} \
