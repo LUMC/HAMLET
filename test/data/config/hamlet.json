@@ -42,5 +42,20 @@
       "protein_altering_variant",
       "missense_variant"
     ]
+  },
+  "expression":{
+    "housekeeping": [
+      "MT-CO2"
+    ],
+    "genes_of_interest": [
+      "MT-ND2",
+      "MT-ND3",
+      "MT-CO2"
+    ],
+    "report": [
+      "MT-ND2",
+      "MT-ND3",
+      "MT-CO2"
+    ]
   }
 }

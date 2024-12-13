@@ -23,6 +23,8 @@
       - "TestSample3/TestSample3.summary.json"
       - "TestSample3/hamlet_report.TestSample3.pdf"
       - "TestSample3/TestSample3.summary.json"
+      # Run the expression module
+      - "rule expression_json_output"
 
     contains_regex:
       # The align_genes rule should use the output of the qc-seq module
@@ -159,6 +161,10 @@
     # Test that we remove the temporary folder from snv-indels
     - path: "snv-indel-tmp"
       should_exist: False
+    # Test the output of the expression module
+    - path: SRR8615409/expression/expression-output.json
+    # Test that we put the expression results in the PDF report
+    # Test that we put the expression results in the MultiQC report
 
 - name: lint-hamlet
   tags:

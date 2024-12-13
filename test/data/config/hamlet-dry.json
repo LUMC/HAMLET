@@ -41,5 +41,9 @@
       "protein_altering_variant",
       "missense_variant"
     ]
+  },
+  "expression": {
+    "gtf": "test/data/reference/hamlet-ref.gtf",
+    "housekeeping": ["MT-CO2"]
   }
 }

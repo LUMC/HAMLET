@@ -62,11 +62,11 @@ def get_hotspot(wildcards):
     return f"{wildcards.sample}/snv-indels/{wildcards.sample}.hotspot.vcf"
 
 
+def get_star_count(wildcards):
+    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.ReadsPerGene.out.tab"
+
 def multiqc_files():
-    star_count = [
-        f"{wildcards.sample}/snv-indels/{wildcards.sample}.ReadsPerGene.out.tab"
-        for wildcards in samples
-    ]
+    star_count = [get_star_count(wildcards) for wildcards in samples]
 
     star_log = [f"{wildcards.sample}/snv-indels/Log.final.out" for wildcards in samples]
 
@@ -94,6 +94,7 @@ def multiqc_modules():
 module_output = SimpleNamespace(
     bam=get_bam_output,
     bai=get_bai_output,
+    counts=get_star_count,
     filter_vep=get_filter_vep,
     json=get_json,
     hotspot=get_hotspot,
