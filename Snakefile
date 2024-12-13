@@ -122,13 +122,16 @@ use rule plot_fusions from fusion as fusion_plot_fusions with:
     container:
         fusion.containers["arriba"]
 
+
 module expression:
     snakefile:
         "includes/expression/Snakefile"
     config:
         config["expression"]
 
+
 use rule * from expression as expression_*
+
 
 # Connect the output of snv-indels to expression
 use rule normalized_coverage from expression as expression_normalized_coverage with:
@@ -139,6 +142,7 @@ use rule normalized_coverage from expression as expression_normalized_coverage w
         gtf=config["expression"]["gtf"],
         bed=config["expression"].get("bed", []),
         src=srcdir("includes/expression/scripts/coverage.py"),
+
 
 rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""
@@ -228,11 +232,12 @@ rule multiqc:
     input:
         qc_stats=qc_seq.module_output.multiqc_files,
         snv_indel_stats=align.module_output.multiqc_files,
+        expression_stats=expression.module_output.multiqc_files,
         config=srcdir("cfg/multiqc.yml"),
     params:
         filelist="multiqc_filelist.txt",
         depth=2,
-        modules=multiqc_modules(),
+        exclude="dedup",
     output:
         html="multiqc_hamlet.html",
     log:
@@ -243,7 +248,7 @@ rule multiqc:
         """
         rm -f {params.filelist}
 
-        for fname in {input.qc_stats} {input.snv_indel_stats}; do
+        for fname in {input.qc_stats} {input.snv_indel_stats} {input.expression_stats}; do
             echo $fname >> {params.filelist}
         done
 
@@ -255,6 +260,6 @@ rule multiqc:
         --fn_as_s_name \
         --file-list {params.filelist} \
         --config {input.config} \
-        {params.modules} \
+        --exclude {params.exclude} \
         --filename {output.html} 2> {log}
         """

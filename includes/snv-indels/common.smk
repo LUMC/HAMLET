@@ -65,6 +65,7 @@ def get_hotspot(wildcards):
 def get_star_count(wildcards):
     return f"{wildcards.sample}/snv-indels/{wildcards.sample}.ReadsPerGene.out.tab"
 
+
 def multiqc_files():
     star_count = [get_star_count(wildcards) for wildcards in samples]
 

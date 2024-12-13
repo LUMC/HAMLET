@@ -158,6 +158,8 @@
         - "VEP"
         - "STAR"
         - "Picard"
+        # Custom MultiQC output from the expression module
+        - "mqc_expression_unstranded"
     # Test that we remove the temporary folder from snv-indels
     - path: "snv-indel-tmp"
       should_exist: False
