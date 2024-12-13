@@ -303,7 +303,7 @@
           "additionalProperties": false,
           "minProperties": 2,
           "properties": {
-            "normalized": {"type": "number"},
+            "normalized": {"type": ["number", "null"]},
             "raw": {"type": "integer"}
           }
         }

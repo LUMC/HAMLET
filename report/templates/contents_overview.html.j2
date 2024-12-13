@@ -100,7 +100,11 @@
   </table>
 </div>
 
-<!-- Include a table for the expression data, if any genes are included -->
+<!--
+  Include a table for the expression data, if any genes are included
+  Note that the normalized expression (results.normalized) can be None, so we
+  have to handle that
+-->
 {% set gene_expression = modules.expression.get('gene-expression') %}
 {% if gene_expression %}
 <div class="keep-together">
@@ -120,7 +124,11 @@
       <tr>
         <td>{{ gene }}</td>
         <td>{{ results.raw }}</td>
-        <td>{{ results.normalized | round(2)}}</td>
+        {% if results.normalized %}
+          <td>{{ results.normalized | round(2) }}</td>
+        {% else %}
+          <td>None</td>
+        {% endif %}
       </tr>
       {% endfor %}
     </tbody>

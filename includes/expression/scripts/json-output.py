@@ -28,9 +28,15 @@ def main(args):
     # Extract the genes of interest
     genes = dict()
     for gene in args.genes:
+        # If all housekeeping genes have 0 expression, the normalized expression is None
+        if norm_coverage[gene] == "None":
+            norm = None
+        else:
+            norm = float(norm_coverage[gene])
+
         genes[gene] = {
             "raw": int(raw_coverage[gene]),
-            "normalized": float(norm_coverage[gene]),
+            "normalized": norm
         }
 
     results["gene-expression"] = genes
