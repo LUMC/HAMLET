@@ -28,9 +28,9 @@ class Bed:
 class Coverage:
     """Class to store coverage information by strand"""
 
-    unstranded: float | None
-    forward: float | None
-    reverse: float | None
+    unstranded: Optional[float]
+    forward: Optional[float]
+    reverse: Optional[float]
 
 
 def parse_bed(fname: str):
