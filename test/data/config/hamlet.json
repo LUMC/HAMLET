@@ -47,6 +47,7 @@
     "housekeeping": [
       "MT-CO2"
     ],
+    "gtf": "test/data/reference/hamlet-ref.gtf",
     "genes_of_interest": [
       "MT-ND2",
       "MT-ND3",
