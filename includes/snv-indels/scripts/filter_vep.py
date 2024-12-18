@@ -107,22 +107,20 @@ class VEP(dict[str, Any]):
         191k VEP entries from HAMLET, and found the following:
         - Each record has zero or more "colocated_variants" entries
         - Each colocated_variant entry can have a "frequencies" section
-        - Only one of the colocated_variant entries can have a "frequencies"
-            section
+        - There can be multiple colocated_variants entries with a "frequencies"
+            section, as long as they are all identical
         """
         frequencies: FrequenciesType = dict()
         if "colocated_variants" not in self:
             return frequencies
 
-        nr_freq_entries = 0
         for var in self["colocated_variants"]:
             if "frequencies" in var:
-                nr_freq_entries += 1
-                frequencies = var["frequencies"]
-
-        if nr_freq_entries > 1:
-            msg = "Multiple colocated variants with 'frequencies' entry encountered"
-            raise RuntimeError(msg)
+                if not frequencies:
+                    frequencies = var["frequencies"]
+                elif var["frequencies"] != frequencies:
+                    msg = "Multiple colocated variants with 'frequencies' entry encountered"
+                    raise RuntimeError(msg)
 
         if len(frequencies) > 1:
             msg = "'frequencies' entry from VEP should only contain a single key"
