@@ -35,6 +35,15 @@ report_section_order:
   picard:
     order: 700
 
+remove_sections:
+  - sequali_sequence_duplication_levels
+  - sequali_top_overrepresented_sequences_read1
+  - sequali_top_overrepresented_sequences_read2
+  - sequali_adapter_content_from_overlap
+  - sift_summary
+  - polyphen_summary
+  - position_in_protein
+
 sample_names_replace_regex: True
 sample_names_replace:
   "(.+) \\| qc-seq \\| (.+).cutadapt.json": "\\1"

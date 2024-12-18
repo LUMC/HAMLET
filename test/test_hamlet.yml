@@ -160,6 +160,15 @@
         - "Picard"
         # Custom MultiQC output from the expression module
         - "mqc_expression_unstranded"
+      # Blacklisted MultiQC sections
+      must_not_contain:
+        - "sequali_sequence_duplication_levels"
+        - "sequali_top_overrepresented_sequences_table_read1"
+        - "sequali_top_overrepresented_sequences_table_read2"
+        - "sift_summary"
+        - "polyphen_summary"
+        - "position_in_protein"
+        - "sequali_adapter_content_from_overlap"
     # Test that we remove the temporary folder from snv-indels
     - path: "snv-indel-tmp"
       should_exist: False
