@@ -111,7 +111,7 @@
   <div class="table-title">
     <p>Table 9 | Gene expression</p>
   </div>
-  <table class="table-wide" style="margin-bottom: 2em; width: 30%;" id="gene-expression">
+  <table class="table-wide" style="margin-bottom: 2em; width: 50%;" id="gene-expression">
     <thead>
       <tr>
         <th>Gene</th>
@@ -123,11 +123,11 @@
       {% for gene, results in gene_expression.items() %}
       <tr>
         <td>{{ gene }}</td>
-        <td>{{ results.raw }}</td>
-        {% if results.normalized %}
-          <td>{{ results.normalized | round(2) }}</td>
+        <td class="text-right">{{ results.raw }}</td>
+        {% if results.normalized is none %}
+          <td class="text-right">None</td>
         {% else %}
-          <td>None</td>
+          <td class="text-right">{{ results.normalized | round(2) }}</td>
         {% endif %}
       </tr>
       {% endfor %}
