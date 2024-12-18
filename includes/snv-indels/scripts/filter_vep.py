@@ -119,11 +119,13 @@ class VEP(dict[str, Any]):
                 if not frequencies:
                     frequencies = var["frequencies"]
                 elif var["frequencies"] != frequencies:
-                    msg = "Multiple colocated variants with 'frequencies' entry encountered"
+                    location = self.location
+                    msg = f"Multiple colocated variants with 'frequencies' entry encountered on {location}"
                     raise RuntimeError(msg)
 
         if len(frequencies) > 1:
-            msg = "'frequencies' entry from VEP should only contain a single key"
+            location = self.location
+            msg = f"'frequencies' entry with multiple keys encountered on {location}"
             raise RuntimeError(msg)
 
         return frequencies
@@ -161,6 +163,18 @@ class VEP(dict[str, Any]):
         Determine if the VEP population frequency is above the specified threshold
         """
         return self.population_frequency(population) > threshold
+
+    @property
+    def location(self) -> str:
+        """
+        Return a representation the location of the VEP record on the genome
+        """
+        input = self.get("input")
+        if input is None:
+            return "unknown location"
+
+        chrom, pos = input.split("\t")[:2]
+        return f"{chrom}:{pos}"
 
 
 def read_goi_file(fname: str) -> Tuple[Set[str], Set[str]]:

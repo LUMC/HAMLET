@@ -26,6 +26,8 @@ Novel module
 Bugfixes
 ========
 * Fix a rare bug where different modules use the same multiqc file list.
+* Fix a bug with filtering VEP records that contain multiple population
+  frequency records for a single variant.
 
 Updates
 =======
