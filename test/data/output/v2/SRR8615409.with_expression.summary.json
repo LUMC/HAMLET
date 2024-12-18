@@ -20,10 +20,89 @@
     "sample_name": "SRR8615409"
   },
   "modules": {
-    "fusion": [],
+    "fusion": [
+      {
+        "breakpoint1": "chr22:23290413",
+        "breakpoint2": "chr9:130854064",
+        "closest_genomic_breakpoint1": null,
+        "closest_genomic_breakpoint2": null,
+        "confidence": "high",
+        "coverage1": 3,
+        "coverage2": 9,
+        "direction1": "downstream",
+        "direction2": "upstream",
+        "discordant_mates": 0,
+        "filters": null,
+        "fusion_transcript": "AGCTTCTCCCTGACATCCGTGGAGCTGCAGATGCTGACCAACTCGTGTGTGAAACTCCAGACTGTCCACAGCATTCCGCTGACCATCAATAAGGAAG___ATGATGAGTCTCCGGGGCTCTATGGGTTTCTGAATGTCATCGTCCACTCAGCCACTGGATTTAAGCAGAGTTCAA|AAGCCCTTCAGCGGCCAGTAGCATCTGACTTTGAGCCTCAGGGTCTGAGTGAAGCCGCTCGTTGGAACTCCAAGGAAAACCTTCTCGCTGGACCCAGTGAAAATGACCCCAACCTTTTCGTTGCACTGTATGATTTTGTGGCCAGTGGAGATAACACTCTAAGCATAACTAAAG___GTGAAAAGCTCCGGG",
+        "gene1": "BCR",
+        "gene2": "ABL1",
+        "gene_id1": "ENSG00000186716",
+        "gene_id2": "ENSG00000097007",
+        "peptide_sequence": "SFSLTSVELQMLTNSCVKLQTVHSIPLTINKEDDESPGLYGFLNVIVHSATGFKQSS|kALQRPVASDFEPQGLSEAARWNSKENLLAGPSENDPNLFVALYDFVASGDNTLSITKGEKLR",
+        "plot": "SRR8615409/fusion/arriba/plots/fusion-1.png",
+        "read_identifiers": [
+          "BCR-ABL1-60",
+          "BCR-ABL1-76",
+          "BCR-ABL1-18",
+          "BCR-ABL1-4"
+        ],
+        "reading_frame": "in-frame",
+        "retained_protein_domains": "Bcr-Abl_oncoprotein_oligomerisation_domain(100%),C2_domain(16%),PH_domain(100%),RhoGEF_domain(100%)|F-actin_binding(100%),Protein_kinase_domain(100%),SH2_domain(100%),SH3_domain(100%)",
+        "site1": "CDS/splice-site",
+        "site2": "CDS/splice-site",
+        "split_reads1": 2,
+        "split_reads2": 2,
+        "strand1(gene/fusion)": "+/+",
+        "strand2(gene/fusion)": "+/+",
+        "tags": "Mitelman",
+        "transcript_id1": "ENST00000305877",
+        "transcript_id2": "ENST00000372348",
+        "type": "translocation"
+      },
+      {
+        "breakpoint1": "chr13:28034118",
+        "breakpoint2": "chr13:28034147",
+        "closest_genomic_breakpoint1": null,
+        "closest_genomic_breakpoint2": null,
+        "confidence": "medium",
+        "coverage1": 2014,
+        "coverage2": 2014,
+        "direction1": "upstream",
+        "direction2": "downstream",
+        "discordant_mates": 0,
+        "filters": {
+          "duplicates": 132,
+          "low_entropy": 9
+        },
+        "fusion_transcript": "TCCTGGTCAAGTGCTGTGCATACAATTCCCTTGGCACATCTTGTGAGACGATCCTTTTAAACTCTCCAG___GCCCCTTCCCTTTCATCCAAGACAACATCTCATTCTATGCAACAATTGGTGTTTGTCTCCTCTTCATTGTCGTTTTAACCCTGCTAATTTGTCACAAGTACAAAAAG___CAATTTAGGTATGAAAGCCAGCTACAGATGGTACAGGTGACCGGCTCCTCAGATAATGAGTACTTCTACGTTGATTTCAGAGAATATGAATATGATC|ACGTTGATTTCAGAGAATATGAATATGATCTCAAATGGGAGTTTCCAAGAGAAAATTTAGAGTTTG___GGAAGGTACTAGGATCAGGTGCTTTTGGAAAAGTGATGA...ATTAGCAAAACAGGAGTCTCAATCCAGGTTGCCGTCAAAATGCTGAAAG___AAAAAGCAGACAGCTCTGAAAGAGAGGCACTCATGTCAGAACTCAAGATGATGACCCAGCTGGGAAGCCACGAGAATATTGTGAACCTGCTGGGGGCGTGCACACTGTCAG___GACCAATTTACTTGATTTTTGAATACTGTTGCTATGGTGATCTTCTCAACTATCTAAGAAGTAAAAGAGAAAAATTTCACAGGACTTGGACAGAGATTTTCAAGGAACACAATTTCAGTTTTT",
+        "gene1": "FLT3",
+        "gene2": "FLT3",
+        "gene_id1": "ENSG00000122025",
+        "gene_id2": "ENSG00000122025",
+        "peptide_sequence": "LVKCCAYNSLGTSCETILLNSPGPFPFIQDNISFYATIGVCLLFIVVLTLLICHKYKKQFRYESQLQMVQVTGSSDNEYFYVDFREYEYD|hVDFREYEYDLKWEFPRENLEFGKVLGSGAFGKVM",
+        "plot": "SRR8615409/fusion/arriba/plots/fusion-2.png",
+        "read_identifiers": [
+          "SRR8615687.47460344",
+          "SRR8615687.47460370",
+          "SRR8615687.47456077"
+        ],
+        "reading_frame": "in-frame",
+        "retained_protein_domains": "Immunoglobulin_domain(100%)|Protein_kinase_domain(100%)",
+        "site1": "CDS",
+        "site2": "CDS",
+        "split_reads1": 224,
+        "split_reads2": 231,
+        "strand1(gene/fusion)": "-/-",
+        "strand2(gene/fusion)": "-/-",
+        "tags": null,
+        "transcript_id1": "ENST00000241453",
+        "transcript_id2": "ENST00000241453",
+        "type": "duplication/ITD"
+      }
+    ],
     "itd": {
       "flt3": {
-        "path": "test-hamlet-chrM/SRR8615409/itd/SRR8615409.flt3.png",
+        "path": "/data/lumc/test/HAMLET-6048/test-hamlet-chrM/SRR8615409/itd/SRR8615409.flt3.png",
         "table": [
           {
             "boundary_type": "fuzzy-end",
@@ -61,7 +140,7 @@
         ]
       },
       "kmt2a": {
-        "path": "test-hamlet-chrM/SRR8615409/itd/SRR8615409.kmt2a.png",
+        "path": "/data/lumc/test/HAMLET-6048/test-hamlet-chrM/SRR8615409/itd/SRR8615409.kmt2a.png",
         "table": [
           {
             "boundary_type": "fuzzy",
@@ -89,34 +168,67 @@
         "MT-ATP6": [
           {
             "FORMAT": {
-              "ABQ": "32",
+              "AD": "0,27",
               "AF": "1",
-              "AD": "23",
-              "ADF": "12",
-              "ADR": "11",
-              "DP": "26",
-              "FREQ": "100%",
-              "GQ": "129",
+              "ALD": "14,13",
+              "DP": "27",
               "GT": "1/1",
-              "PVAL": "1.2146E-13",
-              "RBQ": "0",
-              "RD": "0",
-              "RDF": "0",
-              "RDR": "0",
-              "SDP": "26"
+              "RD": "0,0",
+              "VD": "27"
             },
             "INFO": {
-              "ADP": "26",
-              "HET": "0",
-              "HOM": "1",
-              "NC": "0",
-              "WT": "0"
+              "ADJAF": "0.1111",
+              "AF": "1",
+              "BIAS": "0:2",
+              "DP": "27",
+              "DUPRATE": "0",
+              "END": "8566",
+              "HIAF": "1.0000",
+              "HICNT": "23",
+              "HICOV": "23",
+              "LSEQ": "CTTCATTCATTGCCCCCACA",
+              "MQ": "255",
+              "MSI": "1",
+              "MSILEN": "1",
+              "NM": "2.9",
+              "ODDRATIO": "0",
+              "PMEAN": "28.7",
+              "PSTD": "1",
+              "QSTD": "1",
+              "QUAL": "31.8",
+              "REFBIAS": "0:0",
+              "RSEQ": "TCCTAGGCCTACCCGCCGCA",
+              "SAMPLE": "SRR8615409",
+              "SBF": "1",
+              "SHIFT3": "0",
+              "SN": "5.75",
+              "SPANPAIR": "0",
+              "SPLITREAD": "0",
+              "TYPE": "SNV",
+              "VARBIAS": "14:13",
+              "VD": "27"
             },
             "allele_string": "A/G",
             "assembly_name": "GRCh38",
+            "colocated_variants": [
+              {
+                "allele_string": "A/G",
+                "clin_sig": [
+                  "benign"
+                ],
+                "clin_sig_allele": "G:benign",
+                "end": 8566,
+                "id": "rs3020563",
+                "phenotype_or_disease": 1,
+                "start": 8566,
+                "strand": 1,
+                "variation_id": 384184143
+              }
+            ],
             "end": 8566,
             "id": ".",
-            "input": "chrM\t8566\t.\tA\tG\t.\tPASS\tADP=26;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:129:26:26:0:23:100%:1.2146E-13:0:32:0:0:12:11",
+            "input": "chrM\t8566\t.\tA\tG\t151\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=27;END=8566;VD=27;AF=1;BIAS=0:2;REFBIAS=0:0;VARBIAS=14:13;PMEAN=28.7;PSTD=1;QUAL=31.8;QSTD=1;SBF=1;ODDRATIO=0;MQ=255;SN=5.75;HIAF=1.0000;ADJAF=0.1111;SHIFT3=0;MSI=1;MSILEN=1;NM=2.9;HICNT=23;HICOV=23;LSEQ=CTTCATTCATTGCCCCCACA;RSEQ=TCCTAGGCCTACCCGCCGCA;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:27:27:0,27:1:0,0:14,13",
+            "is_in_hotspot": false,
             "most_severe_consequence": "missense_variant",
             "seq_region_name": "MT",
             "start": 8566,
@@ -147,65 +259,82 @@
                 "strand": 1,
                 "transcript_id": "ENST00000361899",
                 "variant_allele": "G"
-              },
-              {
-                "allele_num": 1,
-                "amino_acids": "I/V",
-                "cdna_end": 40,
-                "cdna_start": 40,
-                "cds_end": 40,
-                "cds_start": 40,
-                "codons": "Atc/Gtc",
-                "consequence_terms": [
-                  "missense_variant"
-                ],
-                "exon": "1/1",
-                "gene_id": "ENSG00000198899",
-                "hgvsc": "ENST00000361899.2:c.40A>G",
-                "hgvsp": "ENSP00000354632.2:p.Ile14Val",
-                "impact": "MODERATE",
-                "polyphen_prediction": "benign",
-                "polyphen_score": 0.005,
-                "protein_end": 14,
-                "protein_start": 14,
-                "sift_prediction": "tolerated",
-                "sift_score": 0.11,
-                "strand": 1,
-                "transcript_id": "ENST00000361899",
-                "variant_allele": "G"
               }
             ]
           },
           {
             "FORMAT": {
-              "ABQ": "41",
-              "AF": "1",
-              "AD": "39",
-              "ADF": "18",
-              "ADR": "21",
-              "DP": "45",
-              "FREQ": "95.12%",
-              "GQ": "206",
+              "AD": "2,46",
+              "AF": "0.958344444444",
+              "ALD": "18,28",
+              "DP": "48",
               "GT": "1/1",
-              "PVAL": "2.1258E-21",
-              "RBQ": "33",
-              "RD": "2",
-              "RDF": "0",
-              "RDR": "2",
-              "SDP": "45"
+              "RD": "0,2",
+              "VD": "46"
             },
             "INFO": {
-              "ADP": "45",
-              "HET": "0",
-              "HOM": "1",
-              "NC": "0",
-              "WT": "0"
+              "ADJAF": "0.0208",
+              "AF": "0.9583",
+              "BIAS": "0:2",
+              "DP": "48",
+              "DUPRATE": "0",
+              "END": "8701",
+              "HIAF": "0.9574",
+              "HICNT": "45",
+              "HICOV": "47",
+              "LSEQ": "TAACCTCAAAACAAATGATA",
+              "MQ": "255",
+              "MSI": "2",
+              "MSILEN": "1",
+              "NM": "2.6",
+              "ODDRATIO": "0",
+              "PMEAN": "27.6",
+              "PSTD": "1",
+              "QSTD": "1",
+              "QUAL": "36.2",
+              "REFBIAS": "0:2",
+              "RSEQ": "CCATACACAACACTAAAGGA",
+              "SAMPLE": "SRR8615409",
+              "SBF": "0.52128",
+              "SHIFT3": "1",
+              "SN": "45",
+              "SPANPAIR": "0",
+              "SPLITREAD": "0",
+              "TYPE": "SNV",
+              "VARBIAS": "18:28",
+              "VD": "46"
             },
             "allele_string": "A/G",
             "assembly_name": "GRCh38",
+            "colocated_variants": [
+              {
+                "allele_string": "COSMIC_MUTATION",
+                "end": 8701,
+                "id": "COSV104419767",
+                "phenotype_or_disease": 1,
+                "somatic": 1,
+                "start": 8701,
+                "strand": 1,
+                "variation_id": 766907668
+              },
+              {
+                "allele_string": "A/C/G",
+                "clin_sig": [
+                  "benign"
+                ],
+                "clin_sig_allele": "G:benign",
+                "end": 8701,
+                "id": "rs2000975",
+                "phenotype_or_disease": 1,
+                "start": 8701,
+                "strand": 1,
+                "variation_id": 384181712
+              }
+            ],
             "end": 8701,
             "id": ".",
-            "input": "chrM\t8701\t.\tA\tG\t.\tPASS\tADP=45;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:206:45:45:2:39:95.12%:2.1258E-21:33:41:0:2:18:21",
+            "input": "chrM\t8701\t.\tA\tG\t199\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=48;END=8701;VD=46;AF=0.9583;BIAS=0:2;REFBIAS=0:2;VARBIAS=18:28;PMEAN=27.6;PSTD=1;QUAL=36.2;QSTD=1;SBF=0.52128;ODDRATIO=0;MQ=255;SN=45;HIAF=0.9574;ADJAF=0.0208;SHIFT3=1;MSI=2;MSILEN=1;NM=2.6;HICNT=45;HICOV=47;LSEQ=TAACCTCAAAACAAATGATA;RSEQ=CCATACACAACACTAAAGGA;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:48:46:2,46:0.9583:0,2:18,28",
+            "is_in_hotspot": true,
             "most_severe_consequence": "missense_variant",
             "seq_region_name": "MT",
             "start": 8701,
@@ -241,34 +370,67 @@
           },
           {
             "FORMAT": {
-              "ABQ": "33",
+              "AD": "0,13",
               "AF": "1",
-              "AD": "12",
-              "ADF": "9",
-              "ADR": "3",
-              "DP": "16",
-              "FREQ": "100%",
-              "GQ": "64",
+              "ALD": "10,3",
+              "DP": "13",
               "GT": "1/1",
-              "PVAL": "3.698E-7",
-              "RBQ": "0",
-              "RD": "0",
-              "RDF": "0",
-              "RDR": "0",
-              "SDP": "16"
+              "RD": "0,0",
+              "VD": "13"
             },
             "INFO": {
-              "ADP": "16",
-              "HET": "0",
-              "HOM": "1",
-              "NC": "0",
-              "WT": "0"
+              "ADJAF": "0.1538",
+              "AF": "1",
+              "BIAS": "0:2",
+              "DP": "13",
+              "DUPRATE": "0",
+              "END": "8860",
+              "HIAF": "1.0000",
+              "HICNT": "11",
+              "HICOV": "11",
+              "LSEQ": "CCATCCCCTTATGAGCGGGC",
+              "MQ": "255",
+              "MSI": "1",
+              "MSILEN": "1",
+              "NM": "2.8",
+              "ODDRATIO": "0",
+              "PMEAN": "20.8",
+              "PSTD": "1",
+              "QSTD": "1",
+              "QUAL": "33.5",
+              "REFBIAS": "0:0",
+              "RSEQ": "CAGTGATTATAGGCTTTCGC",
+              "SAMPLE": "SRR8615409",
+              "SBF": "1",
+              "SHIFT3": "0",
+              "SN": "5.5",
+              "SPANPAIR": "0",
+              "SPLITREAD": "0",
+              "TYPE": "SNV",
+              "VARBIAS": "10:3",
+              "VD": "13"
             },
             "allele_string": "A/G",
             "assembly_name": "GRCh38",
+            "colocated_variants": [
+              {
+                "allele_string": "A/C/G",
+                "clin_sig": [
+                  "benign"
+                ],
+                "clin_sig_allele": "G:benign",
+                "end": 8860,
+                "id": "rs2001031",
+                "phenotype_or_disease": 1,
+                "start": 8860,
+                "strand": 1,
+                "variation_id": 384181850
+              }
+            ],
             "end": 8860,
             "id": ".",
-            "input": "chrM\t8860\t.\tA\tG\t.\tPASS\tADP=16;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:64:16:16:0:12:100%:3.698E-7:0:33:0:0:9:3",
+            "input": "chrM\t8860\t.\tA\tG\t123\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=13;END=8860;VD=13;AF=1;BIAS=0:2;REFBIAS=0:0;VARBIAS=10:3;PMEAN=20.8;PSTD=1;QUAL=33.5;QSTD=1;SBF=1;ODDRATIO=0;MQ=255;SN=5.5;HIAF=1.0000;ADJAF=0.1538;SHIFT3=0;MSI=1;MSILEN=1;NM=2.8;HICNT=11;HICOV=11;LSEQ=CCATCCCCTTATGAGCGGGC;RSEQ=CAGTGATTATAGGCTTTCGC;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:13:13:0,13:1:0,0:10,3",
+            "is_in_hotspot": true,
             "most_severe_consequence": "missense_variant",
             "seq_region_name": "MT",
             "start": 8860,
@@ -306,34 +468,52 @@
         "MT-ATP8": [
           {
             "FORMAT": {
-              "ABQ": "37",
+              "AD": "0,25",
               "AF": "1",
-              "AD": "21",
-              "ADF": "21",
-              "ADR": "0",
-              "DP": "24",
-              "FREQ": "100%",
-              "GQ": "117",
+              "ALD": "24,1",
+              "DP": "25",
               "GT": "1/1",
-              "PVAL": "1.8578E-12",
-              "RBQ": "0",
-              "RD": "0",
-              "RDF": "0",
-              "RDR": "0",
-              "SDP": "24"
+              "RD": "0,0",
+              "VD": "25"
             },
             "INFO": {
-              "ADP": "24",
-              "HET": "0",
-              "HOM": "1",
-              "NC": "0",
-              "WT": "0"
+              "ADJAF": "0.12",
+              "AF": "1",
+              "BIAS": "0:1",
+              "DP": "25",
+              "DUPRATE": "0",
+              "END": "8390",
+              "HIAF": "1.0000",
+              "HICNT": "24",
+              "HICOV": "24",
+              "LSEQ": "CCCAACTAAATACTACCGTA",
+              "MQ": "255",
+              "MSI": "2",
+              "MSILEN": "1",
+              "NM": "4.2",
+              "ODDRATIO": "0",
+              "PMEAN": "8.8",
+              "PSTD": "1",
+              "QSTD": "1",
+              "QUAL": "35.8",
+              "REFBIAS": "0:0",
+              "RSEQ": "GGCCCACCATAATTACCCCC",
+              "SAMPLE": "SRR8615409",
+              "SBF": "1",
+              "SHIFT3": "0",
+              "SN": "24",
+              "SPANPAIR": "0",
+              "SPLITREAD": "0",
+              "TYPE": "SNV",
+              "VARBIAS": "24:1",
+              "VD": "25"
             },
             "allele_string": "T/A",
             "assembly_name": "GRCh38",
             "end": 8390,
             "id": ".",
-            "input": "chrM\t8390\t.\tT\tA\t.\tPASS\tADP=24;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:117:24:24:0:21:100%:1.8578E-12:0:37:0:0:21:0",
+            "input": "chrM\t8390\t.\tT\tA\t166\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=25;END=8390;VD=25;AF=1;BIAS=0:1;REFBIAS=0:0;VARBIAS=24:1;PMEAN=8.8;PSTD=1;QUAL=35.8;QSTD=1;SBF=1;ODDRATIO=0;MQ=255;SN=24;HIAF=1.0000;ADJAF=0.12;SHIFT3=0;MSI=2;MSILEN=1;NM=4.2;HICNT=24;HICOV=24;LSEQ=CCCAACTAAATACTACCGTA;RSEQ=GGCCCACCATAATTACCCCC;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:25:25:0,25:1:0,0:24,1",
+            "is_in_hotspot": true,
             "most_severe_consequence": "stop_gained",
             "seq_region_name": "MT",
             "start": 8390,
@@ -377,7 +557,7 @@
           "pct_aligned_reads_from_total": 100.0,
           "pct_aligned_reads_proper_pairs": 98.87175629936065,
           "pct_chimeras": 0.01147,
-          "rate_indel": 6.8e-05,
+          "rate_indel": 0.000068,
           "rate_mismatch": 0.00532,
           "strand_balance": 0.499624
         },
@@ -564,18 +744,18 @@
         },
         "var": {
           "coding_consequences": {
-            "missense_variant": 10,
+            "missense_variant": 14,
             "stop_gained": 1,
             "synonymous_variant": 36
           },
-          "num_deletions": 1,
-          "num_insertions": 0,
-          "num_snvs": 50,
+          "num_deletions": 0,
+          "num_insertions": 1,
+          "num_snvs": 72,
           "per_chromosome": {
-            "MT": 51
+            "MT": 73
           },
           "polyphen": {
-            "num_benign_variants": 10,
+            "num_benign_variants": 12,
             "num_possibly_damaging_variants": 0,
             "num_probably_damaging_variants": 0,
             "num_unknown_variants": 0
@@ -587,6 +767,20 @@
         }
       }
     },
-    "expression": {}
+    "expression": {
+      "gene-expression": {
+        "MT-ND4": {
+          "normalized": 1.1134751773049645,
+          "raw": 314
+        },
+        "MT-TH": {
+          "normalized": 0.010638297872340425,
+          "raw": 3
+        }
+      },
+      "metadata": {
+        "sample_name": "SRR8615409"
+      }
+    }
   }
 }

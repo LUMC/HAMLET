@@ -4,9 +4,8 @@ include: "common.smk"
 rule all:
     input:
         multiqc="multiqc_expression.html",
-        unstranded=[
-            f"{sample.sample}/expression/seAMLess.unstranded.tsv" for sample in samples
-        ],
+        seamless=[f"{sample.sample}/expression/seAMLess.tsv" for sample in samples],
+        json=[module_output.json(sample) for sample in samples],
 
 
 rule normalized_coverage:
@@ -18,7 +17,7 @@ rule normalized_coverage:
         src=srcdir("scripts/coverage.py"),
     params:
         housekeeping=config["housekeeping"],
-        genes_of_interest=config.get("genes_of_interest", ""),
+        genes_of_interest=config["genes_of_interest"],
     output:
         normalized="{sample}/expression/coverage.normalized.csv",
         raw="{sample}/expression/coverage.csv",
@@ -58,9 +57,9 @@ rule transform_counts:
         counts=get_counts,
         src=srcdir("scripts/transform_counts.py"),
     output:
-        unstranded="{sample}/expression/seAMLess.unstranded.tsv",
-        forward="{sample}/expression/seAMLess.forward.tsv",
-        reverse_="{sample}/expression/seAMLess.reverse.tsv",
+        tsv="{sample}/expression/seAMLess.tsv",
+    params:
+        strandedness=get_strand,
     log:
         "log/transform_counts.{sample}.txt",
     threads: 1
@@ -70,21 +69,35 @@ rule transform_counts:
         """
         python3 {input.src} \
             --counts {input.counts} \
-            --strand unstranded \
+            --strand {params.strandedness} \
             --sample {wildcards.sample} \
-            > {output.unstranded} 2> {log}
+            > {output.tsv} 2> {log}
+        """
 
-        python3 {input.src} \
-            --counts {input.counts} \
-            --strand forward \
-            --sample {wildcards.sample} \
-            > {output.forward} 2>> {log}
 
+rule json_output:
+    input:
+        coverage=module_output.coverage,
+        norm_coverage=module_output.normalized_expression,
+        src=srcdir("scripts/json-output.py"),
+    params:
+        strandedness=get_strand,
+        genes=config["report"],
+    output:
+        "{sample}/expression/expression-output.json",
+    log:
+        "log/expression.{sample}.txt",
+    container:
+        containers["pysam"]
+    shell:
+        """
         python3 {input.src} \
-            --counts {input.counts} \
-            --strand reverse\
+            --coverage {input.coverage} \
+            --norm-coverage {input.norm_coverage} \
+            --strandedness {params.strandedness} \
+            --genes {params.genes} \
             --sample {wildcards.sample} \
-            > {output.reverse_} 2>> {log}
+            > {output} 2> {log}
         """
 
 
@@ -94,10 +107,10 @@ rule merge_samples:
         src=srcdir("scripts/multiqc.py"),
     params:
         samples=[sample.sample for sample in samples],
+        strandedness=[get_strand(sample) for sample in samples],
     output:
         unstranded="merged_expression_unstranded_mqc.tsv",
-        forward="merged_expression_forward_mqc.tsv",
-        reverse_="merged_expression_reverse_mqc.tsv",
+        stranded="merged_expression_stranded_mqc.tsv",
     log:
         "log/merge_samples.txt",
     threads: 1
@@ -108,20 +121,8 @@ rule merge_samples:
         python3 {input.src} \
             --counts {input.counts} \
             --samples {params.samples} \
-            --strand unstranded \
-            > {output.unstranded} 2> {log}
-
-        python3 {input.src} \
-            --counts {input.counts} \
-            --samples {params.samples} \
-            --strand forward \
-            > {output.forward} 2>> {log}
-
-        python3 {input.src} \
-            --counts {input.counts} \
-            --samples {params.samples} \
-            --strand reverse \
-            > {output.reverse_} 2>> {log}
+            --strandedness {params.strandedness}\
+            2> {log}
         """
 
 
@@ -130,7 +131,7 @@ rule multiqc:
         stats=module_output.multiqc_files,
         config=srcdir("../../cfg/multiqc.yml"),
     params:
-        filelist="multiqc_filelist.txt",
+        filelist="multiqc_filelist_expression.txt",
         depth=2,
     output:
         html="multiqc_expression.html",

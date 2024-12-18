@@ -1,4 +1,4 @@
-- name: Test dry run of expression module
+- name: Dry run of expression module
   tags:
     - dry-run
     - expression
@@ -13,6 +13,7 @@
     contains:
       - "rule merge_samples"
       - "rule transform_counts"
+      - "rule json_output"
 
 - name: Test error on unknown housekeeping gene
   tags:
@@ -31,7 +32,26 @@
     contains:
       - "Unknown housekeeping gene: Z"
 
-- name: Test running the expression module with a bed file
+- name: Test error on duplicate gene
+  tags:
+    - sanity
+    - expression
+  command: >
+    snakemake
+    --snakefile includes/expression/Snakefile
+    --workflow-profile test
+    --dry-run
+    --configfile test/data/config/expression.json
+    --config pepfile=test/pep/expression.csv
+             housekeeping="MT-CO2"
+             bed=test/data/reference/transcripts_chrM.bed
+             genes_of_interest="MT-ND3 MT-ND2"
+  exit_code: 1
+  stdout:
+    contains:
+      - "MT-ND3 is specified twice: in the bed file and genes_of_interest"
+
+- name: Run the expression module with a bed file
   tags:
     - functional
     - expression
@@ -43,6 +63,7 @@
     --config
       pepfile=test/pep/expression.csv
       bed=test/data/reference/transcripts_chrM.bed
+      report="MT-ND4 MT-TH"
   exit_code: 0
   files:
     - path: SRR8615409/expression/coverage.csv
@@ -51,11 +72,11 @@
     # Test the transformed coverage counts to be used with seAMLess. This will
     # only work if there are at least two samples, so we put the sample in
     # there twice
-    - path: SRR8615409/expression/seAMLess.forward.tsv
-    - path: SRR8615409/expression/seAMLess.reverse.tsv
-    - path: SRR8615409/expression/seAMLess.unstranded.tsv
+    - path: SRR8615409/expression/seAMLess.tsv
       contains:
         - "X\tSRR8615409\tSRR8615409"
+        # Result for unstranded data
+        - "ENSG00000211459\t30\t30"
     # Since MT-CO2 was used both as gene of interest and only housekeeping
     # gene, the normalized expression for every strand must be 1.0
     # MT-CO2 was chosen specifically so it does not overlap any other
@@ -69,18 +90,18 @@
     - path: merged_expression_unstranded_mqc.tsv
       contains:
         - "id: mqc_expression_unstranded"
-    - path: merged_expression_forward_mqc.tsv
-      contains:
-        - "id: mqc_expression_forward"
-    - path: merged_expression_reverse_mqc.tsv
-      contains:
-        - "id: mqc_expression_reverse"
+    # Empty file since this sample is unstranded
+    - path: merged_expression_stranded_mqc.tsv
     # Test that we create the multiqc report
     - path: multiqc_expression.html
       contains:
         - "MT-CO2"
+    - path: SRR8615409/expression/expression-output.json
+      contains:
+        - "MT-ND4"
+        - "MT-TH"
 
-- name: Test running the expression module with genes of interest
+- name: Run the expression module with genes of interest
   tags:
     - functional
     - expression
@@ -91,7 +112,7 @@
     --configfile test/data/config/expression.json
     --config
       pepfile=test/pep/expression.csv
-      genes_of_interest="MT-CO2"
+      genes_of_interest="MT-CO2 MT-ND4 MT-TH"
   exit_code: 0
   files:
     - path: SRR8615409/expression/coverage.csv
@@ -107,7 +128,7 @@
         - "MT-CO2\t1.0\t1.0\t1.0"
 
 # The output files will be empty, but it should not crash
-- name: Test running the expression module without genes of interest or bed
+- name: Run the expression module without genes of interest or bed
   tags:
     - functional
     - expression
@@ -122,6 +143,57 @@
   files:
     - path: SRR8615409/expression/coverage.csv
     - path: SRR8615409/expression/coverage.normalized.csv
+
+- name: Run the expression module with strandedness specified
+  tags:
+    - functional
+    - expression
+  command: >
+    snakemake
+    --snakefile includes/expression/Snakefile
+    --workflow-profile test
+    --configfile test/data/config/expression.json
+    --config
+      pepfile=test/pep/expression_strandedness.csv
+      genes_of_interest="MT-RNR1"
+  exit_code: 0
+  files:
+    # Test the seamless value for the forward sample
+    - path: SRR8615409-forward/expression/seAMLess.tsv
+      contains:
+        - "X\tSRR8615409-forward\tSRR8615409-forward"
+        # Results for the forward strand
+        - "ENSG00000211459\t18\t18"
+    # Test the seamless input for the reverse sample
+    - path: SRR8615409-reverse/expression/seAMLess.tsv
+      contains:
+        - "X\tSRR8615409-reverse\tSRR8615409-reverse"
+        # Results for the reverse strand
+        - "ENSG00000211459\t12\t12"
+    # Test the seamless input for the unstranded sample
+    - path: SRR8615409-unstranded/expression/seAMLess.tsv
+      contains:
+        - "X\tSRR8615409-unstranded\tSRR8615409-unstranded"
+        # Results for the reverse strand
+        - "ENSG00000211459\t30\t30"
+    - path: merged_expression_stranded_mqc.tsv
+      contains:
+        - "id: mqc_expression_stranded"
+        - "Sample\tMT-RNR1"
+        - "SRR8615409-forward\t0.113"
+        - "SRR8615409-reverse\t0.096"
+      must_not_contain:
+        - "SRR8615409-unstranded"
+    # Check the multiqc table for unstranded samples
+    - path: merged_expression_unstranded_mqc.tsv
+      contains:
+        - "id: mqc_expression_unstranded"
+        - "Sample\tMT-RNR1"
+        - "SRR8615409-unstranded\t0.106"
+      must_not_contain:
+        - "SRR8615409-forward"
+        - "SRR8615409-reverse"
+
 
 - name: Check formatting of Snakemake files
   tags:

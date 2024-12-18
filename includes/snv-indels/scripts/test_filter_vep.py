@@ -52,7 +52,7 @@ def test_filter_consequence_term(vep: VEP, consequences: Set[str],
     """Test filtering by consequence_term"""
     assert len(vep["transcript_consequences"]) == 3
     vep.filter_consequence_term(consequences)
-    vep["transcript_consequences"][0] == gene
+    assert vep["transcript_consequences"][0]["gene_id"] == gene
 
 
 def test_filter_consequence_emtpy(vep: VEP) -> None:
@@ -82,9 +82,9 @@ def test_vep_of_interest_one_transcript(vep: VEP) -> None:
 
     # Test that only gene3 is left
     assert len(cons) == 1
-    cons[0]["gene_id"] == "gene3"
-    cons[0]["transcript_id"] == "transcript"
-    cons[0]["consequence_terms"] == ["stop_gained"]
+    assert cons[0]["gene_id"] == "gene3"
+    assert cons[0]["transcript_id"] == "transcript3"
+    assert cons[0]["consequence_terms"] == ["inframe_insertion","stop_gained"]
 
     # Test that we set the most severe consequence for transcript3
     assert vep["most_severe_consequence"] == "stop_gained"
@@ -169,6 +169,20 @@ COLOCATED_VARIANTS :List[Tuple[Any,Any]]= [
         },
         {"T": dict()}
     ),
+    # Multiple identical frequencies entries
+    (
+        {
+            "colocated_variants": [
+                {
+                    "frequencies": {"T": {"af": 0.5}}
+                },
+                {
+                    "frequencies": {"T": {"af": 0.5}}
+                }
+            ]
+        },
+        {"T": {"af": 0.5}}
+    ),
 ]
 
 @pytest.mark.parametrize(["vep", "frequencies"], COLOCATED_VARIANTS)
@@ -179,17 +193,17 @@ def test_extract_frequencies(vep: VEP, frequencies: FrequenciesType) -> None:
 
 def test_error_extract_multiple_frequencies() -> None:
     """
-    GIVEN a VEP record with multiple "frequencies" entries
+    GIVEN a VEP record with multiple differing "frequencies" entries
     WHEN we extract the frequency values
     THEN we get an error
     """
     data: Dict[str, Any] = {
             "colocated_variants": [
                 {
-                    "frequencies": dict()
+                    "frequencies": {"af": 0.9}
                 },
                 {
-                    "frequencies": dict()
+                    "frequencies": {"af": 0.8}
                 }
             ]
     }

@@ -11,6 +11,29 @@ Changelog
 v2.2.1-dev
 **********
 
+Breaking changes
+================
+* The `bed_variant_call_regions` option has been removed, variants are now
+  called for all genes present in the `gtf` file.
+* Add graphviz/`dot` as a dependency (developer only).
+
+Novel module
+============
+* Add novel module, **expression**, which analyzes gene expression.
+  * Add optional input `strandedness` to the sample configuration.
+  * Add json output file for the expression module.
+
+Bugfixes
+========
+* Fix a rare bug where different modules use the same multiqc file list.
+* Fix a bug with filtering VEP records that contain multiple population
+  frequency records for a single variant.
+
+Updates
+=======
+* Add ability to generate configurations for each module using the
+  `utilities/create-config.py` script.
+
 **********
 v2.1.3
 **********

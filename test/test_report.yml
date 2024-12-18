@@ -1,4 +1,5 @@
-# Test generating the report in html format
+# Test generating the report in html format, with no specified expression genes
+# to include
 - name: test-report
   tags:
     - hamlet
@@ -9,6 +10,24 @@
     test/data/output/v2/SRR8615409.vardict.summary.json
   files:
     - path: report.html
+      contains:
+        # The first table with exon coverage information should be Table 9
+        - "Table 9 | Exon statistics of transcript ENST00000361899"
+
+- name: Test report expression genes
+  tags:
+    - hamlet
+    - report
+  command: >
+    python3 scripts/generate_report.py
+    --html-output report.html
+    test/data/output/v2/SRR8615409.with_expression.summary.json
+  files:
+    - path: report.html
+      contains:
+        # The first table with exon coverage information should be Table 10,
+        # since we include the table with gene expression levels
+        - "Table 10 | Exon statistics of transcript ENST00000361899"
 
 # Test generating a fully nested report
 - name: test-full-report

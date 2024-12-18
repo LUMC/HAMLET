@@ -14,6 +14,13 @@ fusion_partners = ['ABL', 'AFDN', 'AFF1', 'BCOR', 'BCR', 'CBFA2T3', 'CBFB',
         'RUNX1', 'RUNX1T1', 'STAT3B', 'STAT5B', 'TBL1XR1', 'TET1', 'ZBTB16',
         'KMD5A', 'NSD1']
 
+housekeeping_genes = [
+    'INTS11', 'USP33', 'EXOSC10', 'CNOT11', 'CIAO1', 'ERCC3', 'CREB1',
+    'NDUFA10', 'REV1', 'STAMBP', 'OCIAD1', 'MAP3K7', 'RARS2', 'TBP', 'TMED4',
+    'HNRNPA2B1', 'MAPKAPK5', 'PPHLN1', 'ZNF384', 'PSME3IP1', 'RANBP3', 'EWSR1',
+    'PEX26'
+]
+
 def get_qc_config():
     return {"forward_adapter": "AGATCGGAAGAG", "reverse_adapter": "AGATCGGAAGAG"}
 
@@ -61,7 +68,6 @@ def get_snv_indels_config(dirname):
         "ref_id_mapping": join("id_mappings.tsv"),
         "rrna_refflat": join("ucsc_rrna.refFlat"),
         "bed_variant_hotspots": join("hotspots_genome.bed"),
-        "bed_variant_call_regions": join("call_regions.bed"),
         "gtf": get_gtf(dirname),
         "annotation_refflat": join("ucsc_gencode.refFlat"),
         "blacklist": join("blacklist.txt"),
@@ -78,8 +84,15 @@ def get_snv_indels_config(dirname):
         ],
     }
 
+def get_expression_config(dirname):
+    d = {
+        "housekeeping": housekeeping_genes,
+        "gtf": get_gtf(dirname),
+    }
+    return d
 
-def main(dirname):
+
+def main(dirname, module):
     # Get the absolute path to the root reference folder
     dirname = os.path.abspath(dirname)
 
@@ -88,14 +101,19 @@ def main(dirname):
     config["itd"] = get_itd_config(dirname)
     config["fusion"] = get_fusion_config(dirname)
     config["snv-indels"] = get_snv_indels_config(dirname)
+    config["expression"] = get_expression_config(dirname)
 
-    print(json.dumps(config, indent=True, sort_keys=True))
+    if module == "hamlet":
+        print(json.dumps(config, indent=True, sort_keys=True))
+    else:
+        print(json.dumps(config[module], indent=True, sort_keys=True))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("reference_dir", help="Path to the reference folder")
+    parser.add_argument("--module", default="hamlet", choices=["hamlet", "snv-indels", "itd", "qc-seq", "fusion", "expression"])
 
     args = parser.parse_args()
-    main(args.reference_dir)
+    main(args.reference_dir, args.module)

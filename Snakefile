@@ -28,6 +28,7 @@ config["qc-seq"]["pepfile"] = config["pepfile"]
 config["snv-indels"]["pepfile"] = config["pepfile"]
 config["itd"]["pepfile"] = config["pepfile"]
 config["fusion"]["pepfile"] = config["pepfile"]
+config["expression"]["pepfile"] = config["pepfile"]
 
 
 # Define HAMLET modules
@@ -122,6 +123,27 @@ use rule plot_fusions from fusion as fusion_plot_fusions with:
         fusion.containers["arriba"]
 
 
+module expression:
+    snakefile:
+        "includes/expression/Snakefile"
+    config:
+        config["expression"]
+
+
+use rule * from expression as expression_*
+
+
+# Connect the output of snv-indels to expression
+use rule normalized_coverage from expression as expression_normalized_coverage with:
+    input:
+        bam=align.module_output.bam,
+        bai=align.module_output.bai,
+        counts=align.module_output.counts,
+        gtf=config["expression"]["gtf"],
+        bed=config["expression"].get("bed", []),
+        src=srcdir("includes/expression/scripts/coverage.py"),
+
+
 rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""
     input:
@@ -129,6 +151,7 @@ rule create_summary:
         fusion_json=fusion.module_output.json,
         snv_indels_json=align.module_output.json,
         itd_json=itd.module_output.json,
+        expression_json=expression.module_output.json,
         scr=srcdir("scripts/create_summary.py"),
     params:
         pipeline_ver=PIPELINE_VERSION,
@@ -146,6 +169,7 @@ rule create_summary:
             --sample-name {wildcards.sample} \
             --module {input.fusion_json} \
             --module {input.snv_indels_json} \
+            --module {input.expression_json} \
             --module {input.itd_json} > {output.js} 2>{log}
         """
 
@@ -208,11 +232,12 @@ rule multiqc:
     input:
         qc_stats=qc_seq.module_output.multiqc_files,
         snv_indel_stats=align.module_output.multiqc_files,
+        expression_stats=expression.module_output.multiqc_files,
         config=srcdir("cfg/multiqc.yml"),
     params:
         filelist="multiqc_filelist.txt",
         depth=2,
-        modules=multiqc_modules(),
+        exclude="dedup",
     output:
         html="multiqc_hamlet.html",
     log:
@@ -223,7 +248,7 @@ rule multiqc:
         """
         rm -f {params.filelist}
 
-        for fname in {input.qc_stats} {input.snv_indel_stats}; do
+        for fname in {input.qc_stats} {input.snv_indel_stats} {input.expression_stats}; do
             echo $fname >> {params.filelist}
         done
 
@@ -235,6 +260,6 @@ rule multiqc:
         --fn_as_s_name \
         --file-list {params.filelist} \
         --config {input.config} \
-        {params.modules} \
+        --exclude {params.exclude} \
         --filename {output.html} 2> {log}
         """

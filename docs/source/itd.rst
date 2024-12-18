@@ -25,6 +25,7 @@ The output of this module are a JSON file with an overview of the most important
 Configuration
 -------------
 The configuration for this module is tailored to the provided reference files, be very careful if you want to modify any of these settings.
+You can automatically generate a configuration for the fusion module using the `utilities/create-config.py` script.
 
 .. literalinclude:: ../../test/data/config/itd.json
    :language: json

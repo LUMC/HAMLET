@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Schema of the output from the expression module for HAMLET",
+  "definitions": {
+    "expression": {
+      "description": "Top level object for the json output of the expression module",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 2,
+      "properties": {
+        "metadata": { "$ref": "#/definitions/metadata" },
+        "gene-expression": { "$ref": "#/definitions/gene-expression" }
+      }
+    },
+    "metadata": {
+      "description": "Metadata entry for the expression module",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "sample_name": { "type": "string" }
+      }
+    },
+    "gene-expression": {
+      "description": "Gene expression values for the genes of interest",
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/single_gene"}
+    },
+    "single_gene": {
+      "description": "Gene expression object for a single gene",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 2,
+      "properties": {
+        "normalized": {"type": "number"},
+        "raw": {"type": "integer"}
+      }
+    }
+  },
+  "additionalProperties": false,
+  "minProperties": 1,
+  "type": "object",
+  "properties": {
+    "expression": { "$ref": "#/definitions/expression" }
+  }
+}

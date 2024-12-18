@@ -205,3 +205,31 @@ def test_full_variant_overview_vardict(workflow_dir):
 
     # The allele frequency should be given in percentage: 100%, not 1
     assert row["Allele frequency"] == '100.0%'
+
+@pytest.mark.workflow('Test report expression genes')
+def test_variant_overview(workflow_dir):
+    """ Test the content of the variant overview
+
+    The structure of the data that gets put in the variant overview is quite
+    complex.
+    - Every gene can have zero or more variants
+    - Every variant can overlap zero or more transcripts of interest
+
+    This test ensures that the the gene name spans the apropriate number of
+    columns in the variant table.
+    """
+    report = f"{workflow_dir}/report.html"
+    with open(report) as fin:
+        soup = bs4.BeautifulSoup(fin, features="html.parser")
+
+    # Extract the variant table
+    expression_table = soup.find('table', id='gene-expression')
+    table = parse_table(expression_table)
+
+    # First row
+    expected = {'Gene': 'MT-ND4', 'Raw count': '314', 'Normalized expression': '1.11'}
+    assert table[0] == expected
+
+    # Second row
+    expected = {'Gene': 'MT-TH', 'Raw count': '3', 'Normalized expression': '0.01'}
+    assert table[1] == expected

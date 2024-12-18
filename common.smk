@@ -18,9 +18,3 @@ containers = {
 
 # The version of HAMLET
 PIPELINE_VERSION = "v2.2.1-dev"
-
-
-def multiqc_modules():
-    """Define which MultiQC modules to run here"""
-    modules = ["cutadapt", "sequali", "star", "picard", "vep"]
-    return [f" --module {module}" for module in modules]

@@ -107,25 +107,25 @@ class VEP(dict[str, Any]):
         191k VEP entries from HAMLET, and found the following:
         - Each record has zero or more "colocated_variants" entries
         - Each colocated_variant entry can have a "frequencies" section
-        - Only one of the colocated_variant entries can have a "frequencies"
-            section
+        - There can be multiple colocated_variants entries with a "frequencies"
+            section, as long as they are all identical
         """
         frequencies: FrequenciesType = dict()
         if "colocated_variants" not in self:
             return frequencies
 
-        nr_freq_entries = 0
         for var in self["colocated_variants"]:
             if "frequencies" in var:
-                nr_freq_entries += 1
-                frequencies = var["frequencies"]
-
-        if nr_freq_entries > 1:
-            msg = "Multiple colocated variants with 'frequencies' entry encountered"
-            raise RuntimeError(msg)
+                if not frequencies:
+                    frequencies = var["frequencies"]
+                elif var["frequencies"] != frequencies:
+                    location = self.location
+                    msg = f"Multiple colocated variants with 'frequencies' entry encountered on {location}"
+                    raise RuntimeError(msg)
 
         if len(frequencies) > 1:
-            msg = "'frequencies' entry from VEP should only contain a single key"
+            location = self.location
+            msg = f"'frequencies' entry with multiple keys encountered on {location}"
             raise RuntimeError(msg)
 
         return frequencies
@@ -163,6 +163,18 @@ class VEP(dict[str, Any]):
         Determine if the VEP population frequency is above the specified threshold
         """
         return self.population_frequency(population) > threshold
+
+    @property
+    def location(self) -> str:
+        """
+        Return a representation the location of the VEP record on the genome
+        """
+        input = self.get("input")
+        if input is None:
+            return "unknown location"
+
+        chrom, pos = input.split("\t")[:2]
+        return f"{chrom}:{pos}"
 
 
 def read_goi_file(fname: str) -> Tuple[Set[str], Set[str]]:

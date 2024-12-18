@@ -25,6 +25,8 @@ The output of this module are one set of merged FastQ files per sample, as well 
 
 Configuration
 -------------
+You can automatically generate a configuration for the fusion module using the `utilities/create-config.py` script.
+
 Example
 ^^^^^^^
 .. literalinclude:: ../../test/data/config/qc-seq.json

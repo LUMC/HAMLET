@@ -28,9 +28,9 @@ class Bed:
 class Coverage:
     """Class to store coverage information by strand"""
 
-    unstranded: float
-    forward: float
-    reverse: float
+    unstranded: Optional[float]
+    forward: Optional[float]
+    reverse: Optional[float]
 
 
 def parse_bed(fname: str):
@@ -201,9 +201,19 @@ def main(
     # Normalize the coverage
     if not raw:
         for gene in coverage:
-            coverage[gene].unstranded /= normalizer.unstranded
-            coverage[gene].forward /= normalizer.forward
-            coverage[gene].reverse /= normalizer.reverse
+            # If all housekeeping genes have 0 expression, we set the value to None
+            try:
+                coverage[gene].unstranded /= normalizer.unstranded
+            except ZeroDivisionError:
+                coverage[gene].unstranded = None
+            try:
+                coverage[gene].forward /= normalizer.forward
+            except ZeroDivisionError:
+                coverage[gene].forward = None
+            try:
+                coverage[gene].reverse /= normalizer.reverse
+            except ZeroDivisionError:
+                coverage[gene].reverse = None
 
     for gene, cov in coverage.items():
         print(gene, cov.unstranded, cov.forward, cov.reverse, sep="\t")

@@ -31,11 +31,12 @@
     "modules": {
       "type": "object",
       "additionalProperties": false,
-      "minProperties": 3,
+      "minProperties": 4,
       "properties": {
         "fusion": { "$ref": "#/definitions/modules/fusion" },
         "itd": { "$ref": "#/definitions/modules/itd" },
-        "snv_indels": { "$ref": "#/definitions/modules/snv_indels" }
+        "snv_indels": { "$ref": "#/definitions/modules/snv_indels" },
+        "expression": { "$ref": "#/definitions/modules/expression" }
       },
       "fusion": {
         "type": "array"
@@ -271,6 +272,39 @@
                 "num_tolerated_variants": { "type": "integer" }
               }
             }
+          }
+        }
+      },
+      "expression": {
+        "description": "Top level object for the json output of the expression module",
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 2,
+        "properties": {
+          "metadata": { "$ref": "#/definitions/modules/expression/metadata" },
+          "gene-expression": { "$ref": "#/definitions/modules/expression/gene-expression" }
+        },
+        "metadata": {
+          "description": "Metadata entry for the expression module",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "properties": {
+            "sample_name": { "type": "string" }
+          }
+        },
+        "gene-expression": {
+          "description": "Gene expression values for the genes of interest",
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/modules/expression/single_gene"}
+        },
+        "single_gene": {
+          "description": "Gene expression object for a single gene",
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 2,
+          "properties": {
+            "normalized": {"type": ["number", "null"]},
+            "raw": {"type": "integer"}
           }
         }
       }

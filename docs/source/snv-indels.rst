@@ -36,6 +36,7 @@ The output of this module are a JSON file with an overview of the most important
 
 Configuration
 -------------
+You can automatically generate a configuration for the fusion module using the `utilities/create-config.py` script.
 
 Example
 ^^^^^^^
@@ -80,9 +81,6 @@ Configuration options
     - yes
   * - bed_variant_hotspots
     - BED file of hotspot regions
-    - yes
-  * - bed_variant_call_regions
-    - BED file of regions to call variants
     - yes
   * - gtf
     - GTF file with transcripts, used by STAR

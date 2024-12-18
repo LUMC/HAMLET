@@ -23,6 +23,7 @@
 
       - "TestSample3/snv-indels/TestSample3.hotspot.vcf"
       - "rule multiqc"
+      - "rule call_regions"
     contains_regex:
       - "STAR .* \"ID:TestSample1\" \"SM:TestSample1\" .* --readFilesIn 'test/data/fastq/SRR8615409 chrM_1.fastq.gz' 'test/data/fastq/SRR8615409 chrM_2.fastq.gz'"
       # Test that params.min_intron_size is used
@@ -53,6 +54,7 @@
     snakemake \
       --snakefile includes/snv-indels/Snakefile \
       --workflow-profile test \
+      --notemp \
       --configfile test/data/config/snv-indels.json \
       --config pepfile=test/pep/chrM.csv
     "
@@ -108,6 +110,11 @@
       contains:
         - "chrM\t8468"
         - "chrM\t8655"
+    # Test that we generate the call regions file
+    - path: "call_regions.bed"
+      contains:
+        # Region for MT-TF
+        - "chrM\t576\t3304"
 
     # Test that file names are set correctly in MultiQC report
     - path: multiqc_snv_indels.html
