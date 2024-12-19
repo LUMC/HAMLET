@@ -8,7 +8,7 @@ Changelog
 .. that users understand how the changes affect the new version.
 
 **********
-v2.2.1-dev
+v2.2.1
 **********
 
 Breaking changes
@@ -16,6 +16,9 @@ Breaking changes
 * The `bed_variant_call_regions` option has been removed, variants are now
   called for all genes present in the `gtf` file.
 * Add graphviz/`dot` as a dependency (developer only).
+* Please create a new HAMLET configuration file with `create-config.py` script.
+* To use the latest hotspot regions and artifact blacklist, please recreate the
+  HAMLET reference data.
 
 Novel module
 ============
@@ -25,14 +28,17 @@ Novel module
 
 Bugfixes
 ========
-* Fix a rare bug where different modules use the same multiqc file list.
-* Fix a bug with filtering VEP records that contain multiple population
+* Fix a rare bug where different modules use the same MultiQC file list.
+* Fix a bug with filtering VEP records that contain multiple population.
   frequency records for a single variant.
 
 Updates
 =======
 * Add ability to generate configurations for each module using the
   `utilities/create-config.py` script.
+* Update the hotspot regions reference file.
+* Update the blacklist of known artifacts.
+* Remove various superfluous plots from the MultiQC report.
 
 **********
 v2.1.3
