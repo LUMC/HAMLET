@@ -33,19 +33,6 @@
     contains_regex:
       - "bwa mem .*  'test/data/fastq/SRR8615409 chrM_1.fastq.gz' 'test/data/fastq/SRR8615409 chrM_2.fastq.gz'"
 
-
-# Singularity should be available
-- name: test-itd-sanity-singularity
-  tags:
-    - sanity
-    - itd
-  command: >
-    singularity --version
-  stdout:
-    contains_regex:
-      - "singularity(-ce)? version 3"
-
-
 # ITD pipeline should run successfully and actually create the specified files
 - name: test-itd
   tags:

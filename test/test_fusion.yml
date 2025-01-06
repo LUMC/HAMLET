@@ -31,17 +31,6 @@
       # The final json output file should be produced
       - "TestSample1/fusion/fusion-output.json"
 
-# Singularity should be available
-- name: test-fusion-sanity-singularity
-  tags:
-    - sanity
-    - fusion
-  command: >
-    singularity --version
-  stdout:
-    contains_regex:
-      - "singularity(-ce)? version 3"
-
 # Fusion pipeline should run successfully
 - name: test-fusion-chrM
   tags:

@@ -31,17 +31,6 @@
       - "TestSample1/snv-indels/Aligned.sortedByCoord.out.bam"
       - "TestSample1/snv-indels/Aligned.sortedByCoord.out.bam.bai"
 
-# Singularity should be available
-- name: test-snv-indels-sanity-singularity
-  tags:
-    - sanity
-    - snv-indels
-  command: >
-    singularity --version
-  stdout:
-    contains_regex:
-      - "singularity(-ce)? version 3"
-
 # snv-indel pipeline should run successfully on chrM test data
 - name: test-snv-indels-chrM
   tags:

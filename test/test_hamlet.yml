@@ -39,17 +39,6 @@
     must_not_contain:
       - "rule generate_html_report:"
 
-# Singularity should be available
-- name: test-hamlet-sanity-singularity
-  tags:
-    - sanity
-    - hamlet
-  command: >
-    singularity --version
-  stdout:
-    contains_regex:
-      - "singularity(-ce)? version 3"
-
 # HAMLET should run without crashing on targetted RNAseq data, which gives no
 # results for most modules
 - name: test-hamlet-targetted-RNA

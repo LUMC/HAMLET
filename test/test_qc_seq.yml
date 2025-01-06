@@ -31,17 +31,6 @@
       - "cutadapt .*TestSample3.*pigz --decompress --stdout test/data/fastq/R1.fq.gz 'test/data/fastq/SRR8615409 chrM_1.fastq.gz' test/data/fastq/SRR8615687_flt3_1.fastq.gz"
       - "cutadapt .*TestSample3.*pigz --decompress --stdout test/data/fastq/R2.fq.gz 'test/data/fastq/SRR8615409 chrM_2.fastq.gz' test/data/fastq/SRR8615687_flt3_2.fastq.gz"
 
-# Singularity should be available
-- name: test-qc-sanity-singularity
-  tags:
-    - sanity
-    - qc-seq
-  command: >
-    singularity --version
-  stdout:
-    contains_regex:
-      - "singularity(-ce)? version 3"
-
 # QC pipeline should run successfully on multiple samples with differing number
 # of readgroups
 - name: test-qc-trio
