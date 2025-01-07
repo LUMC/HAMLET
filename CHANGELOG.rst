@@ -23,8 +23,8 @@ Breaking changes
 Novel module
 ============
 * Add novel module, **expression**, which analyzes gene expression.
-  * Add optional input `strandedness` to the sample configuration.
-  * Add json output file for the expression module.
+    * Add optional input `strandedness` to the sample configuration.
+    * Add json output file for the expression module.
 
 Bugfixes
 ========
@@ -74,11 +74,10 @@ Changes
 =======
 * Automatically remove _STAR temporary folders
 * Modified PDF formatting
-  * Change cover image
-  * Add bookmarks under chapter variant
-  * Sort the genes of interest alphabetically
-  * Lock snakefmt version
-  * Remove the "Sequencing Results" section from the report (this has been replaced by a MultiQC report)
+    * Change cover image
+    * Add bookmarks under chapter variant
+    * Sort the genes of interest alphabetically
+    * Remove the "Sequencing Results" section from the report (this has been replaced by a MultiQC report)
 * Replace FastQC with Sequali
 
 Bugfixes
