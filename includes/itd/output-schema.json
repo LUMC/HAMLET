@@ -5,10 +5,18 @@
     "itd": {
       "type": "object",
       "additionalProperties": false,
-      "minProperties": 2,
+      "minProperties": 3,
       "properties": {
         "flt3": { "$ref": "#/definitions/itd/result" },
-        "kmt2a": { "$ref": "#/definitions/itd/result" }
+        "kmt2a": { "$ref": "#/definitions/itd/result" },
+        "metadata": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": false,
+          "properties": {
+            "sample_name": { "type": "string"}
+          }
+        }
       },
       "result": {
         "type": "object",

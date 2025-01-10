@@ -166,5 +166,6 @@ rule json_output:
             {input.flt3_csv} \
             {input.flt3_plot} \
             {input.kmt2a_csv} \
-            {input.kmt2a_plot} > {output} 2> {log}
+            {input.kmt2a_plot} \
+            --sample {wildcards.sample} > {output} 2> {log}
         """
