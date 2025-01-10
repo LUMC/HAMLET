@@ -271,7 +271,10 @@ rule aln_stats:
             VALIDATION_STRINGENCY=LENIENT \
             R={input.ref} \
             I={input.bam} \
+            USE_JDK_DEFLATER=true \
+            USE_JDK_INFLATER=true \
             O={output.stats} 2> {log}
+
         """
 
 
@@ -296,6 +299,8 @@ rule insert_stats:
             R={input.ref} \
             I={input.bam} \
             O={output.stats} \
+            USE_JDK_DEFLATER=true \
+            USE_JDK_INFLATER=true \
             H={output.histo} 2> {log}
         """
 
@@ -328,6 +333,8 @@ rule rna_stats:
              ASSUME_SORTED=true \
              CHART_OUTPUT={output.histo} \
              I={input.bam} \
+             USE_JDK_DEFLATER=true \
+             USE_JDK_INFLATER=true \
              O={output.stats} 2> {log}
         """
 

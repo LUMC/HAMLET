@@ -10,6 +10,7 @@ Changelog
 **********
 v2.2.2-dev
 **********
+* Fix a bug with the Java runtime environment for Picard
 
 **********
 v2.2.1
