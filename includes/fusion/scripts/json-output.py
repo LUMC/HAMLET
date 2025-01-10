@@ -29,13 +29,22 @@ def main(args):
 
         fusion["plot"] = os.path.abspath(plot)
 
-    print(json.dumps({"fusion": results}, sort_keys=True, indent=2))
+    data = {
+        "fusion": {
+            "events": results,
+            "metadata": {
+                "sample_name": args.sample
+            }
+        }
+    }
+    print(json.dumps(data, sort_keys=True, indent=2))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('arriba', help='Arriba output converted to JSON')
     parser.add_argument('plots', help='Arriba fusion plots')
+    parser.add_argument("--sample")
 
     args = parser.parse_args()
     main(args)

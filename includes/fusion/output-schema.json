@@ -2,22 +2,42 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Schema of the output from the fusion module for HAMLET",
   "definitions": {
-    "event": {
+    "fusion": {
       "type": "object",
+      "additionalProperties": false,
+      "minProperties": 2,
       "properties": {
-        "gene1": { "type": "string" },
-        "gene2": { "type": "string" },
-        "discordant_mates": { "type": "integer"},
-        "split_reads1": { "type": "integer" },
-        "split_reads2": { "type": "integer" },
-        "coverage1":  { "type": "integer" },
-        "coverage2":  { "type": "integer" }
+        "events": {
+          "type": "array",
+          "item": { "$ref": "#definitions/fusion/event"}
+        },
+        "metadata": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": false,
+          "properties": {
+            "sample_name": { "type": "string"}
+          }
+        }
+      },
+      "event": {
+        "type": "object",
+        "properties": {
+          "gene1": { "type": "string" },
+          "gene2": { "type": "string" },
+          "discordant_mates": { "type": "integer"},
+          "split_reads1": { "type": "integer" },
+          "split_reads2": { "type": "integer" },
+          "coverage1":  { "type": "integer" },
+          "coverage2":  { "type": "integer" }
+        }
       }
     }
   },
+  "additionalProperties": false,
+  "minProperties": 1,
   "type": "object",
-  "fusion": {
-    "type": "array",
-    "item": { "$ref": "#definitions/event" }
+  "properties": {
+    "fusion": { "$ref": "#/definitions/fusion"}
   }
 }

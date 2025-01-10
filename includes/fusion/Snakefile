@@ -119,5 +119,8 @@ rule json_output:
         containers["arriba"]
     shell:
         """
-        python3 {input.src} {input.json} {input.plots} > {output} 2> {log}
+        python3 {input.src} \
+          {input.json} \
+          {input.plots} \
+          --sample {wildcards.sample} > {output} 2> {log}
         """
