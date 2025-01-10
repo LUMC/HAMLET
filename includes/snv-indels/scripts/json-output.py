@@ -269,7 +269,7 @@ def get_format(vcf):
 
 def main(id_mappings_path, vep_txt,
          aln_stats_path, rna_stats_path,
-         insert_stats_path, exon_cov_stats_path, vep_stats_path):
+         insert_stats_path, exon_cov_stats_path, vep_stats_path, sample_name):
     """Helper script for combining multiple stats files into one JSON."""
     with open(id_mappings_path) as fin:
         idm = parse_idm(fin)
@@ -282,6 +282,9 @@ def main(id_mappings_path, vep_txt,
                 "cov": process_exon_cov_stats(exon_cov_stats_path, idm) if exon_cov_stats_path else dict(),
                 "ins": process_insert_stats(insert_stats_path) if insert_stats_path else dict(),
                 "var": process_var_stats(vep_stats_path) if vep_stats_path else dict()
+            },
+            "metadata": {
+                "sample_name": sample_name
             }
         },
     }
@@ -302,6 +305,7 @@ if __name__ == "__main__":
     parser.add_argument("--insert_stats_path")
     parser.add_argument("--exon_cov_stats_path")
     parser.add_argument("--vep_stats_path")
+    parser.add_argument("--sample")
 
     args = parser.parse_args()
     main(
@@ -310,6 +314,8 @@ if __name__ == "__main__":
         args.aln_stats_path,
         args.rna_stats_path,
         args.insert_stats_path,
-        args.exon_cov_stats_path,args.vep_stats_path
+        args.exon_cov_stats_path,
+        args.vep_stats_path,
+        args.sample,
     )
 

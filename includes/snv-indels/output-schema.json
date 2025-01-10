@@ -5,10 +5,18 @@
     "snv_indels": {
       "type": "object",
       "additionalProperties": false,
-      "minProperties": 2,
+      "minProperties": 3,
       "properties": {
         "genes": { "$ref": "#/definitions/snv_indels/genes" },
-        "stats": { "$ref": "#/definitions/snv_indels/stats" }
+        "stats": { "$ref": "#/definitions/snv_indels/stats" },
+        "metadata": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": false,
+          "properties": {
+            "sample_name": { "type": "string"}
+          }
+        }
       },
       "genes": {
         "type": "object",

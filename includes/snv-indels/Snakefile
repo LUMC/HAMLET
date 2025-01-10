@@ -458,6 +458,7 @@ rule json_output:
             --rna_stats_path {input.rna_stats} \
             --insert_stats_path {input.insert_stats} \
             --exon_cov_stats_path {input.exon_cov_stats} \
+            --sample {wildcards.sample} \
             --vep_stats_path {input.vep_stats} > {output} 2> {log}
         """
 
