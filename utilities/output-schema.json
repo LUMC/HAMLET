@@ -39,15 +39,51 @@
         "expression": { "$ref": "#/definitions/modules/expression" }
       },
       "fusion": {
-        "type": "array"
-      },
-      "itd": {
         "type": "object",
         "additionalProperties": false,
         "minProperties": 2,
         "properties": {
+          "events": {
+            "type": "array",
+            "item": { "$ref": "#definitions/modules/fusion/event"}
+          },
+          "metadata": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": false,
+            "properties": {
+              "sample_name": { "type": "string"}
+            }
+          }
+        },
+        "event": {
+          "type": "object",
+          "properties": {
+            "gene1": { "type": "string" },
+            "gene2": { "type": "string" },
+            "discordant_mates": { "type": "integer"},
+            "split_reads1": { "type": "integer" },
+            "split_reads2": { "type": "integer" },
+            "coverage1":  { "type": "integer" },
+            "coverage2":  { "type": "integer" }
+          }
+        }
+      },
+      "itd": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 3,
+        "properties": {
           "flt3": { "$ref": "#/definitions/modules/itd/result" },
-          "kmt2a": { "$ref": "#/definitions/modules/itd/result" }
+          "kmt2a": { "$ref": "#/definitions/modules/itd/result" },
+          "metadata": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": false,
+            "properties": {
+              "sample_name": { "type": "string"}
+            }
+          }
         },
         "result": {
           "type": "object",
@@ -88,7 +124,15 @@
         "minProperties": 2,
         "properties": {
           "genes": { "$ref": "#/definitions/modules/snv_indels/genes" },
-          "stats": { "$ref": "#/definitions/modules/snv_indels/stats" }
+          "stats": { "$ref": "#/definitions/modules/snv_indels/stats" },
+          "metadata": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": false,
+            "properties": {
+              "sample_name": { "type": "string"}
+            }
+          }
         },
         "genes": {
           "type": "object",
@@ -272,6 +316,14 @@
                 "num_tolerated_variants": { "type": "integer" }
               }
             }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": false,
+          "properties": {
+            "sample_name": { "type": "string"}
           }
         }
       },

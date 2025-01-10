@@ -60,7 +60,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for item in modules.fusion %}
+      {% for item in modules.fusion.events %}
       <tr>
         <td>{{ item.gene1}}::{{ item.gene2}} <br/> ({{ item.breakpoint1.split(':')[0] }}, {{ item.breakpoint2.split(':')[0]}})</td>
         <td>{{ item.type }}</td>

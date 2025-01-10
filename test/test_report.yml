@@ -13,6 +13,7 @@
       contains:
         # The first table with exon coverage information should be Table 9
         - "Table 9 | Exon statistics of transcript ENST00000361899"
+        - "SRR8615409/fusion/arriba/plots/fusion-1.png"
 
 - name: Test report expression genes
   tags:

@@ -102,7 +102,7 @@ def print_fusion_table(json_files):
             data = json.load(fin)
 
         if "modules" in data: # HAMLET 2.0
-            fusions = data["modules"]["fusion"]
+            fusions = data["modules"]["fusion"]["events"]
         elif "results" in data: # HAMLET 1.0
             fusions = data["results"]["fusion"]["tables"]["intersection"]["top20"]
 
