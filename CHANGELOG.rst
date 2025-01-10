@@ -8,8 +8,9 @@ Changelog
 .. that users understand how the changes affect the new version.
 
 **********
-v2.2.2-dev
+v2.3.1-dev
 **********
+* **Breaking change**: Update the json output format
 * Fix a bug with the Java runtime environment for Picard
 
 **********
