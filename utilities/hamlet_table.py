@@ -29,7 +29,7 @@ def print_variant_table(json_files):
                     values = parse_variant(sample, gene, variant)
                     # Copy over hgvs
                     for field in ["hgvsc", "hgvsp", "impact"]:
-                        values[field] = transcript_consequence[field]
+                        values[field] = transcript_consequence.get(field, '')
                     # Copy over consequence terms
                     values["consequence_terms"] = ",".join(transcript_consequence["consequence_terms"])
                     # Throw out the 'input' field, since that is just the VCF
@@ -82,15 +82,23 @@ def print_variant_table(json_files):
         # Next print every variant line
         for var_line in parse(sample, genes):
             if header is None:
-                header = list(var_line.keys())
+                header = get_fields(var_line)
                 print(*header, sep="\t")
             else:
-                current_keys = list(var_line.keys())
+                current_keys = get_fields(var_line)
                 if current_keys != header:
-                    msg = f"{current_keys}\n{dynamic_keys}\n do not match!"
+                    msg = f"\n{current_keys}\n{header}\n do not match!"
                     raise RuntimeError(msg)
             print(*(var_line[field] for field in header), sep="\t")
 
+def get_fields(var_line):
+    fields = list(var_line.keys())
+    # minimised is not set for every variant, so we remove it
+    try:
+        fields.remove('minimised')
+    except ValueError:
+        pass
+    return fields
 
 def print_fusion_table(json_files):
     """Print fusion table"""
