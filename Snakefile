@@ -141,7 +141,7 @@ use rule normalized_coverage from expression as expression_normalized_coverage w
         counts=align.module_output.counts,
         gtf=config["expression"]["gtf"],
         bed=config["expression"].get("bed", []),
-        src=srcdir("includes/expression/scripts/coverage.py"),
+        src=workflow.source_path("includes/expression/scripts/coverage.py"),
 
 
 rule create_summary:
@@ -152,7 +152,7 @@ rule create_summary:
         snv_indels_json=align.module_output.json,
         itd_json=itd.module_output.json,
         expression_json=expression.module_output.json,
-        scr=srcdir("scripts/create_summary.py"),
+        scr=workflow.source_path("scripts/create_summary.py"),
     params:
         pipeline_ver=PIPELINE_VERSION,
     output:
@@ -178,11 +178,12 @@ rule generate_report:
     """Generates a PDF report of the essential results."""
     input:
         summary=rules.create_summary.output.js,
-        css=srcdir("report/assets/style.css"),
-        templates=srcdir("report/templates"),
-        imgs=srcdir("report/assets/img"),
-        toc=srcdir("report/assets/toc.xsl"),
-        scr=srcdir("scripts/generate_report.py"),
+        css=workflow.source_path("report/assets/style.css"),
+        toc=workflow.source_path("report/assets/toc.xsl"),
+        scr=workflow.source_path("scripts/generate_report.py"),
+    params:
+        templates="report/templates",
+        imgs="report/assets/img",
     output:
         "{sample}/hamlet_report.{sample}.pdf",
     log:
@@ -192,8 +193,8 @@ rule generate_report:
     shell:
         """
         python3 {input.scr} \
-            --templates-dir {input.templates} \
-            --imgs-dir {input.imgs} \
+            --templates-dir {params.templates} \
+            --imgs-dir {params.imgs} \
             --css-path {input.css} \
             --toc-path {input.toc} \
             {input.summary} \
@@ -205,11 +206,12 @@ rule generate_html_report:
     """Generates a HTML report of the essential results, used for testing only"""
     input:
         summary=rules.create_summary.output.js,
-        css=srcdir("report/assets/style.css"),
-        templates=srcdir("report/templates"),
-        imgs=srcdir("report/assets/img"),
-        toc=srcdir("report/assets/toc.xsl"),
-        scr=srcdir("scripts/generate_report.py"),
+        css=workflow.source_path("report/assets/style.css"),
+        toc=workflow.source_path("report/assets/toc.xsl"),
+        scr=workflow.source_path("scripts/generate_report.py"),
+    params:
+        templates="report/templates",
+        imgs="report/assets/img",
     output:
         "{sample}/hamlet_report.{sample}.html",
     log:
@@ -219,8 +221,8 @@ rule generate_html_report:
     shell:
         """
         python3 {input.scr} \
-            --templates-dir {input.templates} \
-            --imgs-dir {input.imgs} \
+            --templates-dir {params.templates} \
+            --imgs-dir {params.imgs} \
             --css-path {input.css} \
             --toc-path {input.toc} \
             {input.summary} \
@@ -233,7 +235,7 @@ rule multiqc:
         qc_stats=qc_seq.module_output.multiqc_files,
         snv_indel_stats=align.module_output.multiqc_files,
         expression_stats=expression.module_output.multiqc_files,
-        config=srcdir("cfg/multiqc.yml"),
+        config=workflow.source_path("cfg/multiqc.yml"),
     params:
         filelist="multiqc_filelist.txt",
         depth=2,

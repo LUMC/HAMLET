@@ -71,7 +71,7 @@ rule sequali:
 rule multiqc:
     input:
         stats=module_output.multiqc_files,
-        config=srcdir("../../cfg/multiqc.yml"),
+        config=workflow.source_path("../../cfg/multiqc.yml"),
     params:
         filelist="multiqc_filelist_qc_seq.txt",
         depth=2,

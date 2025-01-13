@@ -6,13 +6,13 @@ channels:
   - bioconda
   - conda-forge
 dependencies:
-  - bs4=4.11
-  - peppy>=0.35
-  - pytest-workflow>=1.6.0
-  - snakemake-minimal=7.32
-  - snakefmt=0.10.0
+  - bs4=4.12
+  - peppy=0.40.7
+  - pytest-workflow=2.1.0
+  - snakemake-minimal=8.24.1
+  - snakefmt=0.10.2
+  - sphinx=8.1.3
+  - sphinx-rtd-theme=3.0.0
   - black=24.3.0
-  - sphinx=7.1.2
-  - sphinx-rtd-theme
   - pysam=0.22
   - graphviz

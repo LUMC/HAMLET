@@ -11,6 +11,7 @@ Changelog
 v2.3.1-dev
 **********
 * **Breaking change**: Update the json output format
+* **Breaking change**: Update snakemake to version 8.23
 * Fix a bug with the Java runtime environment for Picard
 
 **********

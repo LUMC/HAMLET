@@ -1,9 +1,8 @@
 use-singularity: True
-singularity-args: '--cleanenv --bind /tmp'
+singularity-args: '--cleanenv --bind /tmp,/home'
 singularity-prefix: '~/.singularity/cache/snakemake'
 printshellcmds: True
 verbose: True
-reason: True
 cores: 1
 keep-incomplete: True
 keep-going: True

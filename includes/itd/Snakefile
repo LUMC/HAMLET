@@ -153,7 +153,7 @@ rule json_output:
         flt3_plot="{sample}/itd/{sample}.flt3.png",
         kmt2a_csv="{sample}/itd/{sample}.kmt2a.csv",
         kmt2a_plot="{sample}/itd/{sample}.kmt2a.png",
-        src=srcdir("scripts/json-output.py"),
+        src=workflow.source_path("scripts/json-output.py"),
     output:
         "{sample}/itd/itd-output.json",
     log:

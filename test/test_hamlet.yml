@@ -205,7 +205,6 @@
   command: >
     bash -c "
       snakemake \
-      --dry-run \
       --snakefile Snakefile \
       --workflow-profile test \
       --configfile test/data/config/hamlet-dry.json \

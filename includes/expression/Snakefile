@@ -14,7 +14,9 @@ rule normalized_coverage:
         counts=get_counts,
         gtf=config["gtf"],
         bed=config.get("bed", []),
-        src=srcdir("scripts/coverage.py"),
+        src=workflow.source_path("scripts/coverage.py"),
+        # Needed to localize the gtf script to the cache
+        utils=workflow.source_path("scripts/gtf.py"),
     params:
         housekeeping=config["housekeeping"],
         genes_of_interest=config["genes_of_interest"],
@@ -55,7 +57,7 @@ rule transform_counts:
     """Transform the counts table to use with seAMLess"""
     input:
         counts=get_counts,
-        src=srcdir("scripts/transform_counts.py"),
+        src=workflow.source_path("scripts/transform_counts.py"),
     output:
         tsv="{sample}/expression/seAMLess.tsv",
     params:
@@ -79,7 +81,7 @@ rule json_output:
     input:
         coverage=module_output.coverage,
         norm_coverage=module_output.normalized_expression,
-        src=srcdir("scripts/json-output.py"),
+        src=workflow.source_path("scripts/json-output.py"),
     params:
         strandedness=get_strand,
         genes=config["report"],
@@ -104,7 +106,7 @@ rule json_output:
 rule merge_samples:
     input:
         counts=[module_output.normalized_expression(sample) for sample in samples],
-        src=srcdir("scripts/multiqc.py"),
+        src=workflow.source_path("scripts/multiqc.py"),
     params:
         samples=[sample.sample for sample in samples],
         strandedness=[get_strand(sample) for sample in samples],
@@ -129,7 +131,7 @@ rule merge_samples:
 rule multiqc:
     input:
         stats=module_output.multiqc_files,
-        config=srcdir("../../cfg/multiqc.yml"),
+        config=workflow.source_path("../../cfg/multiqc.yml"),
     params:
         filelist="multiqc_filelist_expression.txt",
         depth=2,

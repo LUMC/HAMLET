@@ -39,9 +39,7 @@
   command: >
     snakemake -n
     --snakefile utilities/deps/Snakefile
-    --reason
-    --printshellcmds
-    --verbose
+    --workflow-profile test
   stdout:
     contains:
       - rule arriba_database
