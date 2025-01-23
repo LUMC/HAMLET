@@ -29,7 +29,7 @@
       # Test that params.min_intron_size is used
       - "STAR .* --alignIntronMin 50"
       - "TestSample1/snv-indels/Aligned.sortedByCoord.out.bam"
-      - "TestSample1/snv-indels/Aligned.sortedByCoord.out.bam.bai"
+      - "TestSample1/snv-indels/TestSample1.bam.bai"
 
 # snv-indel pipeline should run successfully on chrM test data
 - name: test-snv-indels-chrM
