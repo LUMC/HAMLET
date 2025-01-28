@@ -25,6 +25,9 @@
       - "TestSample3/TestSample3.summary.json"
       # Run the expression module
       - "rule expression_json_output"
+      # Test that we pass all the report files for the PDF report
+      # To prevent issues with Snakemakes stupid caching
+      - "report/assets/img/lumc-logo.jpg"
 
     contains_regex:
       # The align_genes rule should use the output of the qc-seq module

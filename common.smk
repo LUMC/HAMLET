@@ -16,5 +16,26 @@ containers = {
     "multiqc": "docker://quay.io/biocontainers/multiqc:1.22.1--pyhdfd78af_0",
 }
 
+
+def list_files(folder) -> list[str]:
+    """Recursively list all files in folder"""
+    files = list()
+
+    for item in os.listdir(folder):
+        path = os.path.join(folder, item)
+        if os.path.isfile(path):
+            files.append(path)
+        elif os.path.isdir(path):
+            files += list_files(path)
+        else:
+            msg = f"Unknown path: {path=}"
+            raise RuntimeError(msg)
+    return files
+
+
+def report_files(wildcards):
+    return list_files("report")
+
+
 # The version of HAMLET
 PIPELINE_VERSION = "v2.3.1-dev"

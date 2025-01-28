@@ -181,6 +181,8 @@ rule generate_report:
         css=workflow.source_path("report/assets/style.css"),
         toc=workflow.source_path("report/assets/toc.xsl"),
         scr=workflow.source_path("scripts/generate_report.py"),
+        # Ensure all report files are localised to the stupid Snakemake cache
+        report_files=report_files,
     params:
         templates="report/templates",
         imgs="report/assets/img",
