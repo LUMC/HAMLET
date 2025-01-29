@@ -225,7 +225,7 @@ rule call_vars:
         strandbias="log/strandbias.{sample}.txt",
         var2vcf="log/var2vcf.{sample}.txt",
         gzip="log/gzip.{sample}.txt",
-    threads: 3
+    threads: 8
     container:
         containers["vardict"]
     shell:
@@ -241,6 +241,7 @@ rule call_vars:
             -S {params.bed_start} \
             -E {params.bed_end} \
             -g {params.bed_gene} \
+            -th {threads} \
             --verbose \
             {input.bed} 2> {log.vardict} \
             |
