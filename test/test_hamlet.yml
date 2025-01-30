@@ -52,11 +52,14 @@
     bash -c "
     source test/helper.sh
 
+    mkdir tmpdir-hamlet;
+    mv Snakefile common.smk includes scripts report cfg tmpdir-hamlet
+
     snakemake \
-      --snakefile Snakefile \
+      --snakefile tmpdir-hamlet/Snakefile \
       --workflow-profile test \
       --configfile test/data/config/hamlet.json \
-      --config pepfile=test/pep/targetted.csv \
+      --config pepfile=test/pep/targetted.csv
     "
     - path: MO1-RNAseq-1-16714/hamlet_report.SRR8615409.pdf
     - path: "log/generate_report.MO1-RNAseq-1-16714.txt"
