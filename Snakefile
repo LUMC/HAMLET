@@ -183,9 +183,6 @@ rule generate_report:
         scr=workflow.source_path("scripts/generate_report.py"),
         # Ensure all report files are localised to the stupid Snakemake cache
         report_files=report_files,
-    params:
-        templates="report/templates",
-        imgs="report/assets/img",
     output:
         "{sample}/hamlet_report.{sample}.pdf",
     log:
@@ -194,9 +191,15 @@ rule generate_report:
         containers["hamlet-scripts"]
     shell:
         """
+        # Find the cached location of the report folder
+        css={input.css}
+        report=${{css%assets/style.css}}
+        templates="${{report}}templates"
+        imgs="${{report}}imgs"
+
         python3 {input.scr} \
-            --templates-dir {params.templates} \
-            --imgs-dir {params.imgs} \
+            --templates-dir ${{templates}} \
+            --imgs-dir ${{imgs}} \
             --css-path {input.css} \
             --toc-path {input.toc} \
             {input.summary} \
@@ -211,9 +214,8 @@ rule generate_html_report:
         css=workflow.source_path("report/assets/style.css"),
         toc=workflow.source_path("report/assets/toc.xsl"),
         scr=workflow.source_path("scripts/generate_report.py"),
-    params:
-        templates="report/templates",
-        imgs="report/assets/img",
+        # Ensure all report files are localised to the stupid Snakemake cache
+        report_files=report_files,
     output:
         "{sample}/hamlet_report.{sample}.html",
     log:
@@ -222,9 +224,15 @@ rule generate_html_report:
         containers["hamlet-scripts"]
     shell:
         """
+        # Find the cached location of the report folder
+        css={input.css}
+        report=${{css%assets/style.css}}
+        templates="${{report}}templates"
+        imgs="${{report}}imgs"
+
         python3 {input.scr} \
-            --templates-dir {params.templates} \
-            --imgs-dir {params.imgs} \
+            --templates-dir ${{templates}} \
+            --imgs-dir ${{imgs}} \
             --css-path {input.css} \
             --toc-path {input.toc} \
             {input.summary} \

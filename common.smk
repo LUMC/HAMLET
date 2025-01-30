@@ -17,24 +17,26 @@ containers = {
 }
 
 
-def list_files(folder) -> list[str]:
-    """Recursively list all files in folder"""
-    files = list()
-
-    for item in os.listdir(folder):
-        path = os.path.join(folder, item)
-        if os.path.isfile(path):
-            files.append(path)
-        elif os.path.isdir(path):
-            files += list_files(path)
-        else:
-            msg = f"Unknown path: {path=}"
-            raise RuntimeError(msg)
-    return files
-
-
 def report_files(wildcards):
-    return list_files("report")
+    files = [
+        "report/templates/contents_about.html.j2",
+        "report/templates/contents_aln.html.j2",
+        "report/templates/contents_basic.html.j2",
+        "report/templates/contents_fusion.html.j2",
+        "report/templates/contents_var.html.j2",
+        "report/templates/cover.html.j2",
+        "report/templates/contents.html.j2",
+        "report/templates/contents_itd.html.j2",
+        "report/templates/contents_rna.html.j2",
+        "report/templates/contents_overview.html.j2",
+        "report/assets/style.css",
+        "report/assets/toc.xsl",
+        "report/assets/img/hamlet-logo.jpg",
+        "report/assets/img/lumc-logo.jpg",
+        "report/assets/img/Myeloblast_logo.png",
+    ]
+
+    return [workflow.source_path(fname) for fname in files]
 
 
 # The version of HAMLET
