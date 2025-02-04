@@ -62,7 +62,7 @@
     - path: "SRR8615409/snv-indels/SRR8615409.vep.txt.gz"
     - path: "SRR8615409/snv-indels/SRR8615409.vep.filtered.txt.gz"
       contains:
-        - "stop_gained"
+        - "missense_variant"
     # Test log files
     - path: "SRR8615409/snv-indels/Log.final.out"
       contains:
@@ -140,9 +140,7 @@
     --config pepfile=test/pep/chrM.csv
   stdout:
     contains_regex:
-      - 'vep .* --offline'
-    must_not_contain_regex:
-      - 'vep .* --database'
+      - 'flags="--offline'
 
 # Test if a blacklist variant file is passed to filter-vep script
 - name: test-chrM-variant-blacklist

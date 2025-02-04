@@ -345,13 +345,9 @@ rule annotate_vars:
     input:
         vcf="{sample}/snv-indels/{sample}.raw.vcf.gz",
         genome_fasta=config["genome_fasta"],
+        gtf=config["gtf"],
     params:
-        online="" if config.get("vep_cache") else "--database",
-        offline=(
-            f" --offline --cache_version 108 --everything --merged --dir {config['vep_cache']}"
-            if config.get("vep_cache")
-            else ""
-        ),
+        vep_cache=config.get("vep_cache", ""),
     output:
         vep="{sample}/snv-indels/{sample}.vep.txt.gz",
         stats="{sample}/snv-indels/{sample}.vep_stats.txt",
@@ -362,20 +358,39 @@ rule annotate_vars:
         containers["vep"]
     shell:
         """
+
+        # Run from the GTF file if the vep_cache is not defined
+        if [ -z "{params.vep_cache}" ]; then
+
+          # Prepare the GTF file for use by VEP
+          gtf={wildcards.sample}/snv-indels/vep.gtf
+          grep -v "#" {input.gtf} | sort -k1,1 -k4,4n -k5,5n -t$'\t' | bgzip -c > ${{gtf}}.gz
+          tabix ${{gtf}}.gz
+
+          flags="--gtf ${{gtf}}.gz"
+        else
+          flags="--offline --dir {params.vep_cache}"
+        fi
+
         vep \
             -i {input.vcf} \
             --fasta {input.genome_fasta} \
-            {params.online} \
-            {params.offline} \
+            ${{flags}} \
+            --verbose \
             --fork {threads} \
-            --allele_number --stats_text --json --force_overwrite --assembly GRCh38 \
+            --allele_number \
+            --stats_text \
+            --json \
+            --force_overwrite \
             --format vcf \
             --polyphen b \
             --sift b \
             --hgvs \
             --numbers \
+            --merged \
+            --everything \
             --stats_file {output.stats} \
-            --output_file STDOUT | gzip > {output.vep}\
+            --output_file STDOUT | gzip > {output.vep} \
             2> {log}
         """
 
