@@ -14,6 +14,7 @@ v2.3.1-dev
 * **Breaking change**: Update Snakemake to version 8
 * Fix a bug with the Java runtime environment for Picard
 * Fix a bug with caching of report assets introduced in snakemake 8
+* Fix a bug with structural variants missing effect prediction
 * Run VarDict job with 8 threads
 * Run VEP with either vep_cache or just the gtf/fasta files as database
 

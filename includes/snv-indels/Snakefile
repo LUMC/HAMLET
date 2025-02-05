@@ -220,6 +220,7 @@ rule call_vars:
         bed_start=2,
         bed_end=3,
         bed_gene=4,
+        min_sv_len=10_000_000,
     log:
         vardict="log/vardict.{sample}.txt",
         strandbias="log/strandbias.{sample}.txt",
@@ -241,6 +242,7 @@ rule call_vars:
             -S {params.bed_start} \
             -E {params.bed_end} \
             -g {params.bed_gene} \
+            -L {params.min_sv_len} \
             -th {threads} \
             --verbose \
             {input.bed} 2> {log.vardict} \
