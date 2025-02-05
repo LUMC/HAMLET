@@ -17,6 +17,7 @@ v2.3.1-dev
 * Fix a bug with structural variants missing effect prediction
 * Run VarDict job with 8 threads
 * Run VEP with either vep_cache or just the gtf/fasta files as database
+* Update picard from 2.27.4 to 3.3.0
 
 **********
 v2.2.1
