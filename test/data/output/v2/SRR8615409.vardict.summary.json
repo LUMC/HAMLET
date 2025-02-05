@@ -363,6 +363,7 @@
                 "gene_id": "ENSG00000198899",
                 "hgvsc": "ENST00000361899.2:c.175A>G",
                 "hgvsp": "ENSP00000354632.2:p.Thr59Ala",
+                "hgvsg": "chrM:g.8701A>G",
                 "impact": "MODERATE",
                 "polyphen_prediction": "benign",
                 "polyphen_score": 0.005,
