@@ -79,22 +79,27 @@ def test_genes_in_order(workflow_dir):
 
 @pytest.mark.workflow('test-report')
 def test_chr_location_exon(workflow_dir):
-    """Test if chr ID, genomic location and exon info (e.g, (chr2:20000000, exon 1/12)) are shown in table"""
+    """Test if the genomic HGVS and exons are in the table"""
     report = f"{workflow_dir}/report.html"
     with open(report) as fin:
         soup = bs4.BeautifulSoup(fin, features="html.parser")
 
-    # Extract HGVS column
-    variant_table = soup.find('table', id='var-overview')
-    HGVS_with_extra_info = variant_table.find_all('td', class_ = 'hgvs')
-    HGVS_with_extra_info_pattern = r"\w+:\d+, exon \d+/\d+"
-    for hgvs in HGVS_with_extra_info:
-        hgvs_text = hgvs.get_text(separator=" <br/> ", strip=True) 
-        import re
-        extra_info = hgvs_text.split("<br/> ")[-1]
-        match = re.search(HGVS_with_extra_info_pattern, extra_info)
-        assert match is not None
-        
+    # Get rows from the table, accounting for rowspan
+    rows = get_rows(soup.find('table', id='var-overview'))
+
+    # The genomic HGVS is in the second row
+    next(rows)
+    row = next(rows)
+
+    # Convert into a dictionary
+    header = "gene hgvs database VAF hotspot exon ref alt total".split()
+    data = {k:v for k, v in zip(header, row)}
+
+    # Test that the genomic HGVS is in the table
+    assert "chrM:g.8701A>G" in data["hgvs"]
+    # Test that the exon number is in the table
+    assert data["exon"] == "1/1"
+
 
 @pytest.mark.workflow('test-report')
 def test_fusion_overview(workflow_dir):
