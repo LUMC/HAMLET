@@ -115,9 +115,9 @@
       contains:
         - "BCR::ABL"
         # Test that the chromosomal location of the variant is in the report (Table 7)
-        - "chr13:28034118"
+        - "chr13:g.28034118_28034147dup"
         # Test that the exon notation of the variant is in the report (Table 7)
-        - "exon 14/24"
+        - "14/24"
       must_not_contain:
         - "FLT3::FLT3"
 
