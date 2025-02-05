@@ -72,7 +72,7 @@ def multiqc_files():
     star_log = [f"{wildcards.sample}/snv-indels/Log.final.out" for wildcards in samples]
 
     picard_stats = list()
-    for tool in ["rna_stats", "aln_stats", "insert_stats"]:
+    for tool in ["rna_metrics", "alignment_summary_metrics", "insert_size_metrics"]:
         picard_stats += [
             f"{wildcards.sample}/snv-indels/{wildcards.sample}.{tool}"
             for wildcards in samples

@@ -58,7 +58,7 @@
         - "outSAMattrRGline +ID:SRR8615409"
     - path: "SRR8615409/snv-indels/SRR8615409.ReadsPerGene.out.tab"
     - path: "SRR8615409/snv-indels/SRR8615409.exon_cov_stats.json"
-    - path: "SRR8615409/snv-indels/SRR8615409.aln_stats"
+    - path: "SRR8615409/snv-indels/SRR8615409.alignment_summary_metrics"
     - path: "SRR8615409/snv-indels/SRR8615409.vep.txt.gz"
     - path: "SRR8615409/snv-indels/SRR8615409.vep.filtered.txt.gz"
       contains:
@@ -74,15 +74,11 @@
     - path: "log/vardict.SRR8615409.txt"
       contains:
         - "TIME: Getting REF"
-    - path: "log/aln_stats.SRR8615409.txt"
+    - path: "log/picard_metrics.SRR8615409.txt"
       contains:
         - "CollectAlignmentSummaryMetrics"
-    - path: "log/insert_stats.SRR8615409.txt"
-      contains:
         - "CollectInsertSizeMetrics"
-    - path: "log/rna_stats.SRR8615409.txt"
-      contains:
-        - "CollectRnaSeqMetrics"
+        - "RnaSeqMetrics"
     - path: "log/annotate_vars.SRR8615409.txt"
     - path: "log/filter_vep.SRR8615409.txt"
     - path: "SRR8615409/snv-indels/snv-indels-output.json"

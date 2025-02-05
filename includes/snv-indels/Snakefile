@@ -255,61 +255,7 @@ rule call_vars:
         """
 
 
-rule aln_stats:
-    input:
-        bam=module_output.bam,
-        bai=module_output.bai,
-        ref=config["genome_fasta"],
-        ref_dict=config["genome_dict"],
-    output:
-        stats="{sample}/snv-indels/{sample}.aln_stats",
-    log:
-        "log/aln_stats.{sample}.txt",
-    threads: 1
-    container:
-        containers["picard"]
-    shell:
-        """
-        picard -Xmx4G CollectAlignmentSummaryMetrics \
-            VALIDATION_STRINGENCY=LENIENT \
-            R={input.ref} \
-            I={input.bam} \
-            USE_JDK_DEFLATER=true \
-            USE_JDK_INFLATER=true \
-            O={output.stats} 2> {log}
-
-        """
-
-
-rule insert_stats:
-    input:
-        bam=module_output.bam,
-        bai=module_output.bai,
-        ref=config["genome_fasta"],
-        ref_dict=config["genome_dict"],
-    output:
-        stats="{sample}/snv-indels/{sample}.insert_stats",
-        histo="{sample}/snv-indels/{sample}.insert_stats.pdf",
-    log:
-        "log/insert_stats.{sample}.txt",
-    threads: 1
-    container:
-        containers["picard"]
-    shell:
-        """
-        picard -Xmx4G CollectInsertSizeMetrics \
-            VALIDATION_STRINGENCY=LENIENT \
-            R={input.ref} \
-            I={input.bam} \
-            O={output.stats} \
-            USE_JDK_DEFLATER=true \
-            USE_JDK_INFLATER=true \
-            H={output.histo} 2> {log}
-        """
-
-
-rule rna_stats:
-    """Note: if no reads overlap the annotation_refflat, no output is produced"""
+rule picard_metrics:
     input:
         bam=module_output.bam,
         bai=module_output.bai,
@@ -318,27 +264,30 @@ rule rna_stats:
         ref_rrna=config["rrna_refflat"],
         annot=config["annotation_refflat"],
     output:
-        stats="{sample}/snv-indels/{sample}.rna_stats",
-        histo="{sample}/snv-indels/{sample}.rna_stats.pdf",
+        alignment="{sample}/snv-indels/{sample}.alignment_summary_metrics",
+        rna_seq="{sample}/snv-indels/{sample}.rna_metrics",
+        insert_size="{sample}/snv-indels/{sample}.insert_size_metrics",
     log:
-        "log/rna_stats.{sample}.txt",
+        "log/picard_metrics.{sample}.txt",
     threads: 1
     container:
         containers["picard"]
     shell:
         """
-        picard -Xmx4G CollectRnaSeqMetrics \
-             VALIDATION_STRINGENCY=LENIENT \
-             R={input.ref} \
-             REF_FLAT={input.annot} \
-             RIBOSOMAL_INTERVALS={input.ref_rrna} \
-             STRAND_SPECIFICITY=NONE \
-             ASSUME_SORTED=true \
-             CHART_OUTPUT={output.histo} \
-             I={input.bam} \
-             USE_JDK_DEFLATER=true \
-             USE_JDK_INFLATER=true \
-             O={output.stats} 2> {log}
+        picard -Xmx4G CollectMultipleMetrics \
+            PROGRAM=null \
+            PROGRAM=CollectAlignmentSummaryMetrics \
+            PROGRAM=CollectInsertSizeMetrics \
+            PROGRAM=RnaSeqMetrics \
+            VALIDATION_STRINGENCY=LENIENT \
+            R={input.ref} \
+            I={input.bam} \
+            REF_FLAT={input.annot} \
+            INTERVALS={input.ref_rrna} \
+            USE_JDK_DEFLATER=true \
+            USE_JDK_INFLATER=true \
+            O={wildcards.sample}/snv-indels/{wildcards.sample} 2> {log}
+
         """
 
 
@@ -456,9 +405,9 @@ rule json_output:
     input:
         id_mappings_path=config["ref_id_mapping"],
         filter_vep=module_output.filter_vep,
-        aln_stats="{sample}/snv-indels/{sample}.aln_stats",
-        rna_stats="{sample}/snv-indels/{sample}.rna_stats",
-        insert_stats="{sample}/snv-indels/{sample}.insert_stats",
+        aln_stats="{sample}/snv-indels/{sample}.alignment_summary_metrics",
+        rna_stats="{sample}/snv-indels/{sample}.rna_metrics",
+        insert_stats="{sample}/snv-indels/{sample}.insert_size_metrics",
         exon_cov_stats="{sample}/snv-indels/{sample}.exon_cov_stats.json",
         vep_stats="{sample}/snv-indels/{sample}.vep_stats.txt",
         src=workflow.source_path("scripts/json-output.py"),
