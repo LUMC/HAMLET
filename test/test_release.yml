@@ -1,0 +1,4 @@
+- name: test-docs-links
+  tags:
+    - release
+  command: make -C docs/ linkcheck
