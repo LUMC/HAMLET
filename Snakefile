@@ -9,7 +9,7 @@ localrules:
     create_summary,
     fusion_arriba_to_json,
     generate_report,
-    itd_detect_itd_ftl3,
+    itd_detect_itd_flt3,
     itd_detect_itd_kmt2a,
     itd_json_output,
     itd_plot_itd_flt3,
