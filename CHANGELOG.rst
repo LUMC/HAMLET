@@ -19,6 +19,7 @@ v2.3.1-dev
 * Run VEP with either vep_cache or just the gtf/fasta files as database
 * Update picard from 2.27.4 to 3.3.0
 * Update cutadapt from 4.6 to 5.0
+* Update sequali from 0.9.1 to 0.12.0
 
 **********
 v2.2.1
