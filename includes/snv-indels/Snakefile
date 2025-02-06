@@ -283,7 +283,7 @@ rule picard_metrics:
             R={input.ref} \
             I={input.bam} \
             REF_FLAT={input.annot} \
-            INTERVALS={input.ref_rrna} \
+            EXTRA_ARGUMENT="RnaSeqMetrics::RIBOSOMAL_INTERVALS={input.ref_rrna}" \
             USE_JDK_DEFLATER=true \
             USE_JDK_INFLATER=true \
             O={wildcards.sample}/snv-indels/{wildcards.sample} 2> {log}
