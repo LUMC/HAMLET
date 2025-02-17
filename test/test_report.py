@@ -204,7 +204,7 @@ def test_full_variant_overview_vardict(workflow_dir):
 
     # Check the first row
     row = parse_table(variant_table)[0]
-    assert row["Ref/Alt (Total)"] == '0/27 (27)'
+    assert row["Ref/Alt(Total)"] == '0/27(27)'
 
     # The allele frequency should be given in percentage: 100%, not 1
     assert row["Allele frequency"] == '100.0%'

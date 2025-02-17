@@ -12,7 +12,7 @@
         <th>Database identifiers</th>
         <th>Allele frequency</th>
         <th>Hotspot/<br/>Exon</th>
-        <th>Ref/Alt (Total)</th>
+        <th>Ref/Alt<br/>(Total)</th>
       </tr>
     </thead>
     <tbody>
@@ -31,7 +31,7 @@
               <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}><small>{{ database_identifiers(item) | join(" ") }}</small></td>
               <td{% if loop.last %} style="border-bottom: 1px solid #809ebf;"{% endif %}>{{ (item.FORMAT.AF | float * 100) | round(2) }}%</td>
               <td{% if loop.last %} style="border-bottom: 1px solid #809ebf text-align: center;"{% endif %}>{{ "yes" if item.is_in_hotspot else "no" }}<br/>{{ consequence.exon }}</td>
-              <td{% if loop.last %} style="border-bottom: 2px solid #809ebf;{% endif %} white-space: nowrap">{{ ref_AD(item) }}/{{ alt_AD(item) | join(", ") }} ({{ item.FORMAT.DP }})</td>
+              <td{% if loop.last %} style="border-bottom: 2px solid #809ebf;{% endif %} white-space: nowrap">{{ ref_AD(item) }}/{{ alt_AD(item) | join(", ") }}<br/>({{ item.FORMAT.DP }})</td>
             </tr>
           {% endfor %}
         {% endfor %}
