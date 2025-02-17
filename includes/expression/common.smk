@@ -3,7 +3,7 @@ from scripts import gtf
 
 containers = {
     "pysam": "docker://quay.io/biocontainers/pysam:0.22.1--py39h61809e1_2",
-    "multiqc": "docker://quay.io/biocontainers/multiqc:1.22.1--pyhdfd78af_0",
+    "multiqc": "docker://quay.io/biocontainers/multiqc:1.27.1--pyhdfd78af_0",
 }
 
 
