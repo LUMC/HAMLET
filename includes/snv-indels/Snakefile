@@ -132,6 +132,10 @@ rule final_bamfile:
         containers["picard"]
     shell:
         """
+        # Sleep 10 seconds as a workaround for a bug in Snakemake
+        # See https://github.com/snakemake/snakemake/issues/3261
+        sleep 10;
+
         ln {input.bam} {output.bam} 2> {log}
         ln {input.bai} {output.bai} 2>> {log}
         """
