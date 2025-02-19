@@ -58,7 +58,7 @@ rule align_vars:
         index=config["star_index"],
         gtf=config["gtf"],
     output:
-        bam=temporary("{sample}/snv-indels/Aligned.sortedByCoord.out.bam"),
+        bam="{sample}/snv-indels/{sample}.bam",
         gene_count="{sample}/snv-indels/{sample}.ReadsPerGene.out.tab",
     params:
         rg_sample=lambda wildcards: wildcards.sample,
@@ -97,6 +97,9 @@ rule align_vars:
         # Rename the count file to include the sample name
         mv {wildcards.sample}/snv-indels/ReadsPerGene.out.tab {output.gene_count}
 
+        # Rename the bam file
+        mv {wildcards.sample}/snv-indels/Aligned.sortedByCoord.out.bam {output.bam}
+
         # Remove temporary files that STAR leaves all over the place
         rm -rf {wildcards.sample}/snv-indels/_STAR*
         """
@@ -104,10 +107,10 @@ rule align_vars:
 
 rule index_bamfile:
     input:
-        bam="{sample}/snv-indels/Aligned.sortedByCoord.out.bam",
+        bam="{sample}/snv-indels/{sample}.bam",
         tmp=rules.tmpdir.output,
     output:
-        bai=temporary("{sample}/snv-indels/Aligned.sortedByCoord.out.bam.bai"),
+        bai="{sample}/snv-indels/{sample}.bam.bai",
     log:
         "log/index_bamfile.{sample}.txt",
     container:
@@ -115,29 +118,6 @@ rule index_bamfile:
     shell:
         """
         samtools index {input.bam} 2> {log}
-        """
-
-
-rule final_bamfile:
-    """Create the final bam file"""
-    input:
-        bam="{sample}/snv-indels/Aligned.sortedByCoord.out.bam",
-        bai="{sample}/snv-indels/Aligned.sortedByCoord.out.bam.bai",
-    output:
-        bam="{sample}/snv-indels/{sample}.bam",
-        bai="{sample}/snv-indels/{sample}.bam.bai",
-    log:
-        "log/final_bamfile.{sample}.txt",
-    container:
-        containers["picard"]
-    shell:
-        """
-        # Sleep 10 seconds as a workaround for a bug in Snakemake
-        # See https://github.com/snakemake/snakemake/issues/3261
-        sleep 10;
-
-        cp {input.bam} {output.bam} 2> {log}
-        cp {input.bai} {output.bai} 2>> {log}
         """
 
 
