@@ -324,7 +324,7 @@ rule annotate_vars:
 
           flags="--gtf ${{gtf}}.gz"
         else
-          flags="--offline --dir {params.vep_cache} --hgvsg_use_accession"
+          flags="--offline --dir {params.vep_cache}"
         fi
 
         vep \
