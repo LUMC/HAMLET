@@ -37,6 +37,7 @@ report_section_order:
 
 remove_sections:
   - sequali_sequence_duplication_levels
+  - sequali_sequence_counts
   - sequali_top_overrepresented_sequences_read1
   - sequali_top_overrepresented_sequences_read2
   - sequali_adapter_content_from_overlap
