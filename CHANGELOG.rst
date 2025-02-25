@@ -22,7 +22,6 @@ v2.3.1-dev
 * Update sequali from 0.9.1 to 0.12.0
 * Update star from 2.7.10b to 2.7.11b
 * Update MultiQC to 1.27.1
-* Exclude sequali duplication metrics from the MultiQC report
 
 **********
 v2.2.1
