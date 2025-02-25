@@ -35,6 +35,7 @@ rule call_regions:
         fasta=config["genome_fasta"],
         gtf=config["gtf"],
         src=workflow.source_path("scripts/create_bed.sh"),
+        sort_bed=workflow.source_path("scripts/sort_bed.py"),
     output:
         # Intermediate files from the bash script
         chroms=temporary("chroms.txt"),
@@ -47,7 +48,8 @@ rule call_regions:
         containers["bedtools-2.27-grep-2.14-gawk-5.0-python-3.7"]
     shell:
         """
-        bash {input.src} {input.fasta} {input.gtf} > {output.bed} 2> {log}
+        bash {input.src} {input.fasta} {input.gtf} 2> {log} |
+        python {input.sort_bed} > {output.bed} 2>> {log}
         """
 
 

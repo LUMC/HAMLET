@@ -15,7 +15,8 @@ v2.3.1-dev
 * Fix a bug with the Java runtime environment for Picard
 * Fix a bug with caching of report assets introduced in snakemake 8
 * Fix a bug with structural variants missing effect prediction
-* Run VarDict job with 8 threads
+* Speed up VarDict by running with 8 threads
+* Speed up VarDict by sorting the call_regions.bed file
 * Run VEP with either vep_cache or just the gtf/fasta files as database
 * Update picard from 2.27.4 to 3.3.0
 * Update cutadapt from 4.6 to 5.0
