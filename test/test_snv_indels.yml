@@ -72,8 +72,6 @@
     - path: "log/exon_cov_ref.txt"
     - path: "log/exon_cov.SRR8615409.txt"
     - path: "log/vardict.SRR8615409.txt"
-      contains:
-        - "TIME: Getting REF"
     - path: "log/picard_metrics.SRR8615409.txt"
       contains:
         - "CollectAlignmentSummaryMetrics"

@@ -228,7 +228,6 @@ rule call_vars:
             -g {params.bed_gene} \
             -L {params.min_sv_len} \
             -th {threads} \
-            --verbose \
             {input.bed} 2> {log.vardict} \
             |
         teststrandbias.R 2> {log.strandbias} \
