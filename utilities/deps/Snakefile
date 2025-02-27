@@ -310,15 +310,15 @@ rule copy_itd:
 
 
 rule copy_expression_bed:
-        """Copy the small bed file with MECOM regions to quantify"""
-        input:
-            bed=workflow.source_path("small-files/expression.bed"),
-        output:
-            bed="expression/regions.bed",
-        singularity:
-            containers["hamlet-scripts"]
-        shell:
-            """
+    """Copy the small bed file with MECOM regions to quantify"""
+    input:
+        bed=workflow.source_path("small-files/expression.bed"),
+    output:
+        bed="expression/regions.bed",
+    singularity:
+        containers["hamlet-scripts"]
+    shell:
+        """
         dir=$(dirname {output.bed})
 
         mkdir -p ${{dir}}
