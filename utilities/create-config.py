@@ -88,6 +88,8 @@ def get_expression_config(dirname):
     d = {
         "housekeeping": housekeeping_genes,
         "gtf": get_gtf(dirname),
+        "bed": f"{dirname}/expression/regions.bed",
+        "report": ["MECOM-206-e1", "MECOM-220-e15-e16"]
     }
     return d
 
