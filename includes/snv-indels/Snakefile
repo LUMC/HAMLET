@@ -201,7 +201,7 @@ rule call_vars:
     output:
         vcf="{sample}/snv-indels/{sample}.raw.vcf.gz",
     params:
-        min_af=0.05,
+        min_af=config.get("variant_allele_frequency", 0.05),
         bed_chrom=1,
         bed_start=2,
         bed_end=3,

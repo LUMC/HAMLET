@@ -97,3 +97,6 @@ Configuration options
   * - vep_include_consequence
     - List of `VEP consequences <http://www.ensembl.org/info/genome/variation/prediction/predicted_data.html>_` to report
     - yes
+  * - variant_allele_frequency
+    - Minimum variant allele frequency in the sample to call a variant
+    - no (default=0.05)
