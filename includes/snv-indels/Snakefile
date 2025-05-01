@@ -374,15 +374,28 @@ rule filter_vep:
         containers["crimson"]
     shell:
         """
-        python3 {input.scr} \
-            {input.vep} \
-            {input.ref_id_mapping} \
+
+        # Make a pipe to enable reading the file with or without filtering
+        # based on the blacklist
+
+        readonly PIPE=$(mktemp -u)
+        mkfifo $PIPE
+
+        if [ -z "{params.blacklist}" ]; then
+            zcat {input.vep} > $PIPE &
+        else
+            zgrep -vf {params.blacklist} > $PIPE &
+        fi
+
+        cat $PIPE | python3 {input.scr} \
+            --vep - \
+            --goi {input.ref_id_mapping} \
             --hotspot {input.hotspots} \
             --consequences {params.vep_consequences} \
             --population {params.population} \
             --frequency {params.max_pop_af} \
-            {params.blacklist} \
-            | gzip > {output.filtered} 2> {log}
+            {params.blacklist} 2>>{log} \
+            | gzip > {output.filtered} 2>> {log}
         """
 
 
