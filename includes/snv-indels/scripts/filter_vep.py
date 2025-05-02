@@ -192,10 +192,11 @@ def read_goi_file(fname: str) -> Tuple[Set[str], Set[str]]:
     return goi, toi
 
 
-def parse_vep_json(fin: TextIO) -> Iterator[VEP]:
+def parse_vep_json(vep_file: str) -> Iterator[VEP]:
     """Parse the VEP 'json' output file, each line contains a JSON entry"""
-    for line in fin:
-        yield VEP(json.loads(line))
+    with open(vep_file) as fin:
+        for line in fin:
+            yield VEP(json.loads(line))
 
 
 def get_hotspot(fname: str) -> Set[str]:
@@ -259,7 +260,7 @@ if __name__ == "__main__":
         "Extract genes (and transcript) of interest from VEP output"
     )
 
-    parser.add_argument("--vep", type=argparse.FileType("r"), default=sys.stdin, help="VEP json output file")
+    parser.add_argument("--vep", help="VEP json output file")
     parser.add_argument("--goi", help="Genes of interest")
     parser.add_argument("--consequences", nargs="*", type=str, default=list())
     parser.add_argument("--hotspot", help="VCF file with hotspot variants")

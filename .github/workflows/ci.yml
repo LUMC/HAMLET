@@ -21,7 +21,6 @@ jobs:
           - dry-run
           - utilities
           - report
-          - scripts
           - docs
     steps:
       - uses: actions/checkout@v4

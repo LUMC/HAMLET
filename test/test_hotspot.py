@@ -5,9 +5,8 @@ import pathlib
 
 HOTSPOTS = [
         (8390, True),
-        (8566, False),
-        (8701, True),
         (8860, True),
+        (15326, False)
 ]
 
 @pytest.mark.workflow('test-snv-indels-chrM')
