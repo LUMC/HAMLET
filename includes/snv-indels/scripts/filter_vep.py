@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-import sys
 import argparse
-import gzip
 import json
 
-from typing import Any, Dict, Set, TextIO, Tuple, Iterator
+from filter_variants import Variant, Criterion
+from typing import Any, Dict, Set, Tuple, Iterator
 
 # Type for the frequencies entry from VEP
 FrequenciesType = Dict[str, Dict[str, float]]
@@ -53,9 +52,19 @@ severity = [
     "intergenic_variant",
 ]
 
-
 class VEP(dict[str, Any]):
     """Class to work with VEP objects"""
+
+    def filter_criterion(self, criteria: list[Criterion]) -> None:
+        filtered = list()
+        for tc in self.get("transcript_consequences", list()):
+            variant = Variant(tc["hgvsc"], tc["consequence_terms"])
+            for crit in criteria:
+                if crit.match(variant):
+                    filtered.append(tc)
+                    break
+        self["transcript_consequences"] = filtered
+        self.update_most_severe()
 
     def filter_transcript_id(self, transcripts: Set[str]) -> None:
         """Filter transcript consequences by transcript_id"""

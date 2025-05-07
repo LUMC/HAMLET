@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from filter_vep import VEP, FrequenciesType
+from filter_variants import Criterion
 
 import json
 import pytest
@@ -17,9 +18,9 @@ def vep() -> VEP:
 
 # transcripts, transcript_consequences lenght
 FILTER_TRANSCRIPTS = [
-        ({"transcript1"}, 1),
-        ({"transcript1", "transcript2"}, 2),
-        ({"transcript9"}, 0),
+        ({"ENTS0123.1"}, 1),
+        ({"ENTS0123.1", "ENTS0124.1"}, 2),
+        ({"ENST999.9"}, 0),
 ]
 
 # consequence_terms, first gene_id
@@ -33,8 +34,9 @@ FILTER_CONSEQUENCE = [
 def test_filter_transcript_id(vep: VEP, transcripts: Set[str],
                               length: int) -> None:
     """Test filtering by transcript_id"""
+    criteria = [Criterion(id) for id in transcripts]
     assert len(vep["transcript_consequences"]) == 3
-    vep.filter_transcript_id(transcripts)
+    vep.filter_criterion(criteria)
     assert len(vep["transcript_consequences"]) == length
 
 

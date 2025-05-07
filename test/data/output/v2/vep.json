@@ -20,6 +20,7 @@
       },
       { "gene_id": "gene3",
         "transcript_id": "transcript3",
+        "hgvsc": "ENTS0125.1:c.40A>C",
         "consequence_terms": [
           "inframe_insertion",
           "stop_gained"
