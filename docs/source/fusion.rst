@@ -5,7 +5,7 @@ fusion
 Tools
 -----
 This module uses the bam file from `STAR <https://github.com/alexdobin/STAR>`_ to
-call fusion events with `Arriba <https://arriba.readthedocs.io/en/latest/>`_.
+call fusion events with `Arriba <https://github.com/suhrig/arriba/wiki/01-Home>`_.
 
 The fusion events are filtered based on the `blacklist` from Arriba itself. Only fusions where at least one of the involved genes is in `report_genes` will be included in the final output.
 
