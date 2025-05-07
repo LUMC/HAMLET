@@ -74,15 +74,6 @@ class VEP(dict[str, Any]):
         self["transcript_consequences"] = tc
         self.update_most_severe()
 
-    def filter_hgvsc_blacklist(self, blacklist: Set[str]) -> None:
-        """Filter transcript consequences by hgvsc field"""
-        if not blacklist:
-            return
-        tc = self["transcript_consequences"]
-        tc = [x for x in tc if not x.get("hgvsc") in blacklist]
-        self["transcript_consequences"] = tc
-        self.update_most_severe()
-
     def update_most_severe(self) -> None:
         """The most severe consequence for all genes and transcript is stored
         at the top level of the VEP object. After filtering the transcript
@@ -210,20 +201,11 @@ def get_hotspot(fname: str) -> Set[str]:
     return hotspots
 
 
-def get_blacklist(fname: str) -> Set[str]:
-    blacklist = set()
-    with open(fname) as fin:
-        for line in fin:
-            blacklist.add(line.strip("\n"))
-    return blacklist
-
-
 def main(
     vep_file: str,
     goi_file: str,
     consequences: Set[str],
     hotspot_file: str,
-    blacklist_file: str,
     population: str,
     frequency: float,
 ) -> None:
@@ -232,9 +214,6 @@ def main(
 
     # Get the hotspot mutations
     hotspot = get_hotspot(hotspot_file) if hotspot_file else set()
-
-    # Get the blacklisted variant
-    blacklist = get_blacklist(blacklist_file) if blacklist_file else set()
 
     for vep in parse_vep_json(vep_file):
         # Skip variants that are above the specified population frequency
@@ -246,8 +225,6 @@ def main(
         vep.filter_consequence_term(consequences)
         # Add is_in_hotspot field
         vep["is_in_hotspot"] = vep["input"] in hotspot
-        # Filter on hgvsc blacklist
-        vep.filter_hgvsc_blacklist(blacklist)
 
         # If there is no consequence of interest left
         if not vep["transcript_consequences"]:
@@ -265,13 +242,6 @@ if __name__ == "__main__":
     parser.add_argument("--consequences", nargs="*", type=str, default=list())
     parser.add_argument("--hotspot", help="VCF file with hotspot variants")
     parser.add_argument(
-        "--blacklist",
-        help=(
-            "File with blacklisted variants, one per line. Format "
-            "should match the 'hgvsc' field of VEP"
-        ),
-    )
-    parser.add_argument(
         "--population", help="Population to use for variant frequency", default="gnomAD"
     )
     parser.add_argument(
@@ -288,7 +258,6 @@ if __name__ == "__main__":
         args.goi,
         args.consequences,
         args.hotspot,
-        args.blacklist,
         args.population,
         args.frequency,
     )
