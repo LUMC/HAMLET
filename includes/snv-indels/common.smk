@@ -13,6 +13,7 @@ containers = {
     "star": "docker://quay.io/biocontainers/star:2.7.11b--h5ca1c30_5",
     "crimson": "docker://quay.io/biocontainers/crimson:1.1.0--pyh5e36f6f_0",
     "multiqc": "docker://quay.io/biocontainers/multiqc:1.27.1--pyhdfd78af_0",
+    "mutalyzer": "docker://quay.io/biocontainers/mutalyzer_hgvs_parser:0.3.8--pyh7e72e81_0",
 }
 
 

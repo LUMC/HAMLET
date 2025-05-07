@@ -2,7 +2,6 @@ include: "common.smk"
 
 
 localrules:
-    filter_vep,
     final_bamfile,
 
 
@@ -359,6 +358,7 @@ rule filter_vep:
         ref_id_mapping=config["ref_id_mapping"],
         hotspots="{sample}/snv-indels/{sample}.hotspot.vcf",
         scr=workflow.source_path("scripts/filter_vep.py"),
+        filter=workflow.source_path("scripts/filter_variants.py"),
         blacklist=config.get("blacklist", []),
     params:
         vep_consequences=config["vep_include_consequence"],
@@ -370,7 +370,7 @@ rule filter_vep:
         "log/filter_vep.{sample}.txt",
     threads: 1
     container:
-        containers["crimson"]
+        containers["mutalyzer"]
     shell:
         """
         set -e
