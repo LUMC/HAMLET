@@ -10,6 +10,7 @@ Changelog
 **********
 v2.3.1-dev
 **********
+* **Breaking change**: Removed `bed_variant_hotspots` in favor or `annotation_criteria`
 * **Breaking change**: Variants are now filtered using the `filter_criteria` file
 * **Breaking change**: Add `mutalyzer_hgvs_parser` to the conda environment
 * **Breaking change**: Update the json output format
