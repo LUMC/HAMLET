@@ -10,6 +10,7 @@ Changelog
 **********
 v2.3.1-dev
 **********
+* **Breaking change**: Add `mutalyzer_hgvs_parser` to the conda environment
 * **Breaking change**: Update the json output format
 * **Breaking change**: Update Snakemake to version 8
 * Fix a bug with the Java runtime environment for Picard
