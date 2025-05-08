@@ -11,7 +11,6 @@ rule all:
         bai=[module_output.bai(sample) for sample in samples],
         filter_vep=[module_output.filter_vep(sample) for sample in samples],
         json=[module_output.json(sample) for sample in samples],
-        hotspot=[module_output.hotspot(sample) for sample in samples],
         multiqc="multiqc_snv_indels.html",
 
 
@@ -331,32 +330,10 @@ rule annotate_vars:
         """
 
 
-rule hotspot_variants:
-    input:
-        vcf="{sample}/snv-indels/{sample}.raw.vcf.gz",
-        bed=config["bed_variant_hotspots"],
-    output:
-        vcf="{sample}/snv-indels/{sample}.hotspot.vcf",
-    log:
-        "log/hotspot_variants.{sample}.txt",
-    threads: 1
-    container:
-        containers["bedtools-2.27-grep-2.14-gawk-5.0-python-3.7"]
-    shell:
-        """
-        bedtools intersect \
-            -a {input.vcf} \
-            -b {input.bed} \
-            -header \
-            > {output.vcf} 2> {log}
-        """
-
-
 rule filter_vep:
     input:
         vep="{sample}/snv-indels/{sample}.vep.txt.gz",
         filter_criteria=config["filter_criteria"],
-        hotspots="{sample}/snv-indels/{sample}.hotspot.vcf",
         scr=workflow.source_path("scripts/filter_vep.py"),
         filter=workflow.source_path("scripts/filter_vep.py"),
         blacklist=config.get("blacklist", []),
@@ -390,7 +367,6 @@ rule filter_vep:
         python3 {input.scr} \
             --vep $VEP \
             --criteria {input.filter_criteria} \
-            --hotspot {input.hotspots} \
             --population {params.population} \
             --frequency {params.max_pop_af} 2>>{log} \
             | gzip > {output.filtered} 2>> {log}

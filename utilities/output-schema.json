@@ -151,8 +151,7 @@
             "start": { "type": "integer" },
             "genotype": { "type": "string" },
             "transcript_consequences": { "type": "array", "minItems": 1},
-            "Existing_variation": { "type": "array", "items": { "type": "string" }},
-            "is_in_hotspot": { "type": "boolean" }
+            "Existing_variation": { "type": "array", "items": { "type": "string" }}
           }
         },
         "stats": {

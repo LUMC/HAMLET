@@ -59,10 +59,6 @@ def get_json(wildcards):
     return f"{wildcards.sample}/snv-indels/snv-indels-output.json"
 
 
-def get_hotspot(wildcards):
-    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.hotspot.vcf"
-
-
 def get_star_count(wildcards):
     return f"{wildcards.sample}/snv-indels/{wildcards.sample}.ReadsPerGene.out.tab"
 
@@ -99,6 +95,5 @@ module_output = SimpleNamespace(
     counts=get_star_count,
     filter_vep=get_filter_vep,
     json=get_json,
-    hotspot=get_hotspot,
     multiqc_files=multiqc_files(),
 )

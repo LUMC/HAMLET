@@ -44,7 +44,6 @@ rule all:
         fai=reference_fai,
         fasta_dict=reference_dict,
         refflat="ucsc_gencode.refFlat",
-        bed_variant_hotspots="hotspots_genome.bed",
         vep_cache="homo_sapiens_merged",
         expression_gtf=gtf_renamed,
         itd_folder="itd",
@@ -248,19 +247,6 @@ rule create_rRNA_refflat:
             print join "\t", (@F[0,1,2,3], $1)
         ' | \
         sort -k1V -k2n -k3n >> {output.refflat}
-        """
-
-
-rule genome_hotspots:
-    input:
-        workflow.source_path("small-files/hotspots_genome.bed"),
-    output:
-        "hotspots_genome.bed",
-    singularity:
-        containers["hamlet-scripts"]
-    shell:
-        """
-        cp {input} {output}
         """
 
 

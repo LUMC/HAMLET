@@ -6,7 +6,7 @@ The `snv-indels` module is responsible for aligning the reads to the reference, 
 Tools
 -----
 This module uses `STAR <https://github.com/alexdobin/STAR>`_ to align the reads to the reference using twopass mode.`VarDict <https://github.com/AstraZeneca-NGS/VarDictJava>`_ is used to call variants, which are annotated using `VEP <https://www.ensembl.org/info/docs/tools/vep/index.html>`_.
-For each variant, this module determines if it is located inside one of the defined `bed_variant_hotspots`.
+Variants are filtered based on the criteria defined in `filter_criteria`, and annotated based on `annotation_criteria`.
 
 The variants annotated by VEP are then filtered based on a number of different criteria:
 
@@ -32,7 +32,6 @@ The output of this module are a JSON file with an overview of the most important
 * A .bam and .bai per sample, which contain the aligned reads.
 * A VEP output file (`vep_high`), which contains the final set of filtered variants.
 * A VEP output file (`vep_target`), which contains the variants on the transcripts of interest. These variants have not been filtered on `vep_include_consequence` terms.
-* A VCF file that only contains those variants that fall in one of the `bed_variant_hotspots` regions.
 
 Configuration
 -------------
@@ -79,11 +78,11 @@ Configuration options
   * - filter_criteria
     - Criteria file to filter variants
     - yes
+  * - annotation_criteria
+    - Criteria file to annotate variants
+    - yes
   * - rrna_refflat
     - File of rRNA transcripts
-    - yes
-  * - bed_variant_hotspots
-    - BED file of hotspot regions
     - yes
   * - gtf
     - GTF file with transcripts, used by STAR

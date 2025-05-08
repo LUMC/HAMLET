@@ -68,7 +68,6 @@ def get_snv_indels_config(dirname):
         "ref_id_mapping": join("id_mappings.tsv"),
         "filter_criteria": join("filter_criteria.tsv"),
         "rrna_refflat": join("ucsc_rrna.refFlat"),
-        "bed_variant_hotspots": join("hotspots_genome.bed"),
         "gtf": get_gtf(dirname),
         "annotation_refflat": join("ucsc_gencode.refFlat"),
         "blacklist": join("blacklist.txt"),

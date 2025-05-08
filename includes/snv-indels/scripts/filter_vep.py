@@ -415,29 +415,14 @@ def parse_vep_json(vep_file: str) -> Iterator[VEP]:
             yield VEP(json.loads(line))
 
 
-def get_hotspot(fname: str) -> Set[str]:
-    hotspots = set()
-    with open(fname) as fin:
-        for line in fin:
-            if line.startswith("#"):
-                continue
-            else:
-                hotspots.add(line.strip("\n"))
-    return hotspots
-
-
 def main(
     vep_file: str,
     criteria_file: str,
-    hotspot_file: str,
     population: str,
     frequency: float,
 ) -> None:
     # Get genes and transcripts of interest
     criteria = read_criteria_file(criteria_file)
-
-    # Get the hotspot mutations
-    hotspot = get_hotspot(hotspot_file) if hotspot_file else set()
 
     for vep in parse_vep_json(vep_file):
         # Skip variants that are above the specified population frequency
@@ -445,8 +430,6 @@ def main(
             continue
         # Filter transcripts based on criteria
         vep.filter_criteria(criteria)
-        # Add is_in_hotspot field
-        vep["is_in_hotspot"] = vep["input"] in hotspot
 
         # If there is no consequence of interest left
         if not vep["transcript_consequences"]:
@@ -461,7 +444,6 @@ if __name__ == "__main__":
 
     parser.add_argument("--vep", help="VEP json output file")
     parser.add_argument("--criteria", help="File with criteria")
-    parser.add_argument("--hotspot", help="VCF file with hotspot variants")
     parser.add_argument(
         "--population", help="Population to use for variant frequency", default="gnomAD"
     )
@@ -477,7 +459,6 @@ if __name__ == "__main__":
     main(
         args.vep,
         args.criteria,
-        args.hotspot,
         args.population,
         args.frequency,
     )

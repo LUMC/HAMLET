@@ -4,23 +4,23 @@ import pytest
 import pathlib
 
 HOTSPOTS = [
-        (8390, True),
-        (8860, True),
-        (15326, False)
+        (8390),
+        (8860),
 ]
 
 @pytest.mark.workflow('test-snv-indels-chrM')
-@pytest.mark.parametrize(["pos", "hotspot"], HOTSPOTS)
-def test_is_in_hotspot2(workflow_dir, pos, hotspot):
+@pytest.mark.parametrize("pos", HOTSPOTS)
+def test_annotation(workflow_dir, pos):
     sample = "SRR8615409"
-    output_file = pathlib.Path(workflow_dir, f"{sample}/snv-indels/{sample}.vep.filtered.txt.gz")
+    output_file = pathlib.Path(workflow_dir, f"{sample}/snv-indels/{sample}.vep.annotated.txt.gz")
 
     # Read the file, and pick out the line we want based on pos
     with gzip.open(output_file, "rt") as fin:
         for line in fin:
             d = json.loads(line)
             if d["start"] == pos:
-                assert d["is_in_hotspot"] == hotspot
+                ts = d["transcript_consequences"][0]
+                assert ts["annotation"] == "Hotspot"
                 break
         else:
             raise RuntimeError(f"Position {pos} not found in {output_file}")
