@@ -76,6 +76,9 @@ Configuration options
   * - ref_id_mapping
     - File of transcripts of interest
     - yes
+  * - filter_criteria
+    - Criteria file to filter variants
+    - yes
   * - rrna_refflat
     - File of rRNA transcripts
     - yes
