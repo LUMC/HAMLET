@@ -55,7 +55,7 @@ severity = [
 class VEP(dict[str, Any]):
     """Class to work with VEP objects"""
 
-    def filter_criterion(self, criteria: list[Criterion]) -> None:
+    def filter_criteria(self, criteria: list[Criterion]) -> None:
         filtered = list()
         for tc in self.get("transcript_consequences", list()):
             variant = Variant(tc["hgvsc"], tc["consequence_terms"])

@@ -16,40 +16,24 @@ def vep() -> VEP:
     return VEP(js[0])
 
 
-# transcripts, gene as readout
-FILTER_TRANSCRIPTS = [
-        ({"ENTS0123.1"}, ["gene1"]),
-        ({"ENTS0123.1", "ENTS0124.1"}, ["gene1", "gene2"]),
-        ({"ENST999.9"}, []),
+CRITERIA= [
+        # Criteria, readout of gene names
+        ([Criterion("ENTS0123.1")], ["gene1"]),
+        ([Criterion("ENTS0123.1"), Criterion("ENTS0124.1")], ["gene1", "gene2"]),
+        ([Criterion("ENST999.9")], []),
+        ([Criterion("ENTS0123.1", consequence="transcript_ablation")], ["gene1"]),
+        ([Criterion("ENTS0125.1", consequence="stop_gained")], ["gene3"]),
+        ([Criterion("ENTS0125.1", consequence="inframe_insertion")], ["gene3"]),
 ]
 
-# consequence_terms, first gene_id
-FILTER_CONSEQUENCE = [
-        (Criterion("ENTS0123.1", consequence="transcript_ablation"), "gene1"),
-        (Criterion("ENTS0125.1", consequence="stop_gained"), "gene3"),
-        (Criterion("ENTS0125.1", consequence="inframe_insertion"), "gene3"),
-]
-
-@pytest.mark.parametrize(["transcripts", "readout"], FILTER_TRANSCRIPTS)
-def test_filter_transcript_id(vep: VEP, transcripts: Set[str],
-                              readout: list[str]) -> None:
-    """Test filtering by transcript_id"""
-    criteria = [Criterion(id) for id in transcripts]
-    assert len(vep["transcript_consequences"]) == 3
-    vep.filter_criterion(criteria)
-    # Determine the genes that are left after filtering
-    genes = [tc["gene_id"] for tc in vep["transcript_consequences"]]
-    assert genes == readout
-
-
-@pytest.mark.parametrize(["criterion", "readout"], FILTER_CONSEQUENCE)
-def test_filter_consequence_term(vep: VEP, criterion: Criterion,
-                                 readout: str) -> None:
+@pytest.mark.parametrize(["criteria", "readout"], CRITERIA)
+def test_filter_criteria(vep: VEP, criteria: list[Criterion],
+                                 readout: list[str]) -> None:
     """Test filtering by consequence_term"""
     assert len(vep["transcript_consequences"]) == 3
-    vep.filter_criterion([criterion])
-    assert len(vep["transcript_consequences"]) == 1
-    assert vep["transcript_consequences"][0]["gene_id"] == readout
+    vep.filter_criteria(criteria)
+    genes = [tc["gene_id"] for tc in vep["transcript_consequences"]]
+    assert genes == readout
 
 
 def test_filter_consequence_emtpy(vep: VEP) -> None:
