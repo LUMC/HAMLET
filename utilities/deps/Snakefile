@@ -195,6 +195,7 @@ rule create_id_mappings:
         cp {input} {output}
         """
 
+
 rule create_criteria_file:
     input:
         workflow.source_path("small-files/filter_criteria.tsv"),
