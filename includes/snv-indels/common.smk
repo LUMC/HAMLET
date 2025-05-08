@@ -52,7 +52,7 @@ def get_bai_output(wildcards):
 
 
 def get_filter_vep(wildcards):
-    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.vep.filtered.txt.gz"
+    return f"{wildcards.sample}/snv-indels/{wildcards.sample}.vep.annotated.txt.gz"
 
 
 def get_json(wildcards):

@@ -358,13 +358,13 @@ rule filter_vep:
         filter_criteria=config["filter_criteria"],
         hotspots="{sample}/snv-indels/{sample}.hotspot.vcf",
         scr=workflow.source_path("scripts/filter_vep.py"),
-        filter=workflow.source_path("scripts/filter_variants.py"),
+        filter=workflow.source_path("scripts/filter_vep.py"),
         blacklist=config.get("blacklist", []),
     params:
         population="gnomade",
         max_pop_af=0.01,
     output:
-        filtered="{sample}/snv-indels/{sample}.vep.filtered.txt.gz",
+        filtered=temporary("{sample}/snv-indels/{sample}.vep.filtered.txt.gz"),
     log:
         "log/filter_vep.{sample}.txt",
     threads: 1
@@ -394,6 +394,36 @@ rule filter_vep:
             --population {params.population} \
             --frequency {params.max_pop_af} 2>>{log} \
             | gzip > {output.filtered} 2>> {log}
+        """
+
+
+rule annotate_vep:
+    input:
+        vep="{sample}/snv-indels/{sample}.vep.filtered.txt.gz",
+        annotation_criteria=config["annotation_criteria"],
+        scr=workflow.source_path("scripts/annotate_vep.py"),
+        filter=workflow.source_path("scripts/filter_vep.py"),
+    output:
+        annotated="{sample}/snv-indels/{sample}.vep.annotated.txt.gz",
+    log:
+        "log/annotate_vep.{sample}.txt",
+    threads: 1
+    container:
+        containers["mutalyzer"]
+    shell:
+        """
+        set -e
+        set -o pipefail
+
+        readonly VEP=$(mktemp -u)
+        mkfifo $VEP
+
+        zcat {input.vep} > $VEP &
+
+        python3 {input.scr} \
+            --vep $VEP \
+            --annotations {input.annotation_criteria} 2>>{log} \
+            | gzip > {output.annotated} 2>> {log}
         """
 
 
