@@ -36,27 +36,25 @@ def test_filter_criteria(vep: VEP, criteria: list[Criterion],
     assert genes == readout
 
 
-def test_filter_consequence_emtpy(vep: VEP) -> None:
-    """Test that we get an empty list if no consequence matches"""
-    vep.filter_consequence_term({"no_such_consequence"})
+def test_filter_criteria_no_match(vep: VEP) -> None:
+    """Test that we get an empty list if no criteria matches"""
+    vep.filter_criteria([Criterion("no_such_transcript")])
     assert not vep["transcript_consequences"]
 
 
-def test_filter_consequence_none(vep: VEP) -> None:
-    """Check that we filter nothing if the consequences are empty"""
-    before = vep["transcript_consequences"]
-    vep.filter_consequence_term(set())
-    after = vep["transcript_consequences"]
-    assert before == after
+def test_filter_no_criteria(vep: VEP) -> None:
+    """Check that we filter nothing if there are no criteria"""
+    vep.filter_criteria([])
+    assert not vep["transcript_consequences"]
 
 
 def test_vep_of_interest_one_transcript(vep: VEP) -> None:
     """Test rewriting the VEP object when there is a single transcript of
     interest"""
-    transcripts = {"transcript3"}
+    c = Criterion("ENTS0125.1")
 
     # Restrict to transcript of interest
-    vep.filter_transcript_id(transcripts)
+    vep.filter_criteria([c])
 
     # Get the consequences after rewriting the VEP obejct
     cons = vep["transcript_consequences"]
@@ -90,8 +88,8 @@ def test_no_transcript_consequence() -> None:
     """Test there are no crashes on empty VEP objects"""
     # Create an empty VEP object
     empty = VEP(dict())
-    transcripts = {"transcript1"}
-    empty.filter_transcript_id(transcripts)
+    c = Criterion("ENTS0123.1")
+    empty.filter_criteria([c])
     empty.update_most_severe()
 
 

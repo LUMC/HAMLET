@@ -66,23 +66,6 @@ class VEP(dict[str, Any]):
         self["transcript_consequences"] = filtered
         self.update_most_severe()
 
-    def filter_transcript_id(self, transcripts: Set[str]) -> None:
-        """Filter transcript consequences by transcript_id"""
-        tc = self.get("transcript_consequences", list())
-        tc = [x for x in tc if x["transcript_id"] in transcripts]
-        self["transcript_consequences"] = tc
-        self.update_most_severe()
-
-    def filter_consequence_term(self, consequences: Set[str]) -> None:
-        """Filter transcript consequences by consequence_term"""
-        # If there are not consequences to filter on, we do nothing
-        if not consequences:
-            return
-        tc = self["transcript_consequences"]
-        tc = [x for x in tc if not set(x["consequence_terms"]).isdisjoint(consequences)]
-        self["transcript_consequences"] = tc
-        self.update_most_severe()
-
     def update_most_severe(self) -> None:
         """The most severe consequence for all genes and transcript is stored
         at the top level of the VEP object. After filtering the transcript
@@ -228,10 +211,7 @@ def main(
         # Skip variants that are above the specified population frequency
         if vep.above_population_threshold(population, frequency):
             continue
-        # Filter on transcript of interest
-        vep.filter_transcript_id(toi)
-        # Filter on consequences of interest
-        vep.filter_consequence_term(consequences)
+        # TODO filter on criteria
         # Add is_in_hotspot field
         vep["is_in_hotspot"] = vep["input"] in hotspot
 
