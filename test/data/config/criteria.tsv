@@ -1,0 +1,26 @@
+transcript_id	consequence	start	end
+ENST00000361851.1	stop_gained		
+ENST00000361851.1	frameshift_variant		
+ENST00000361851.1	stop_lost		
+ENST00000361851.1	start_lost		
+ENST00000361851.1	inframe_insertion		
+ENST00000361851.1	inframe_deletion		
+ENST00000361851.1	protein_altering_variant		
+ENST00000361851.1	missense_variant		
+ENST00000361899.1	stop_gained		
+ENST00000361899.1	frameshift_variant		
+ENST00000361899.1	stop_lost		
+ENST00000361899.1	start_lost		
+ENST00000361899.1	inframe_insertion		
+ENST00000361899.1	inframe_deletion		
+ENST00000361899.1	protein_altering_variant		
+ENST00000361899.1	missense_variant		
+ENST00000361789.1	stop_gained		
+ENST00000361789.1	frameshift_variant		
+ENST00000361789.1	stop_lost		
+ENST00000361789.1	start_lost		
+ENST00000361789.1	inframe_insertion		
+ENST00000361789.1	inframe_deletion		
+ENST00000361789.1	protein_altering_variant		
+ENST00000361789.1	missense_variant		
+ENST00000241453.1	inframe_insertion

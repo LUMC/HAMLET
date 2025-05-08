@@ -2,9 +2,12 @@
 
 import argparse
 import json
+from itertools import zip_longest
+
+
 
 from filter_variants import Variant, Criterion
-from typing import Any, Dict, Set, Tuple, Iterator
+from typing import Any, Dict, Set, Iterator
 
 # Type for the frequencies entry from VEP
 FrequenciesType = Dict[str, Dict[str, float]]
@@ -58,7 +61,11 @@ class VEP(dict[str, Any]):
     def filter_criteria(self, criteria: list[Criterion]) -> None:
         filtered = list()
         for tc in self.get("transcript_consequences", list()):
-            variant = Variant(tc["hgvsc"], tc["consequence_terms"])
+            hgvsc = tc.get("hgvsc")
+            if hgvsc is None:
+                continue
+
+            variant = Variant(hgvsc, tc["consequence_terms"])
             for crit in criteria:
                 if crit.match(variant):
                     filtered.append(tc)
@@ -161,18 +168,38 @@ class VEP(dict[str, Any]):
         return f"{chrom}:{pos}"
 
 
-def read_goi_file(fname: str) -> Tuple[Set[str], Set[str]]:
-    goi = set()
-    toi = set()
-    with open(fname) as fin:
-        header = next(fin).strip("\n").split("\t")
+def read_criteria_file(criteria_file):
+    """Read the criterions file"""
+    criteria = list()
+
+    header = None
+    with open(criteria_file) as fin:
         for line in fin:
-            d = {k: v for k, v in zip(header, line.strip("\n").split("\t"))}
-            # There is only a single goi
-            goi.add(d["GOI_ID"])
-            # There can be multiple toi's
-            toi.update(d["TOI_IDS"].split(","))
-    return goi, toi
+            if line.startswith('#'):
+                continue
+
+            spline = line.strip("\n").split("\t")
+            if header is None:
+                header = spline
+                continue
+
+            # Read into dict, convert '' to None
+            d = {k:v if v else None for k,v in zip_longest(header,spline)}
+
+            # Check that at least the transcript id is set
+            transcript_id = d.get("transcript_id")
+            assert transcript_id is not None
+
+            c = Criterion(
+                identifier=transcript_id,
+                coordinate="c",
+                consequence=d["consequence"],
+                start=d["start"],
+                end=d["end"]
+            )
+
+            criteria.append(c)
+    return criteria
 
 
 def parse_vep_json(vep_file: str) -> Iterator[VEP]:
@@ -195,14 +222,13 @@ def get_hotspot(fname: str) -> Set[str]:
 
 def main(
     vep_file: str,
-    goi_file: str,
-    consequences: Set[str],
+    criteria_file: str,
     hotspot_file: str,
     population: str,
     frequency: float,
 ) -> None:
     # Get genes and transcripts of interest
-    goi, toi = read_goi_file(goi_file)
+    criteria = read_criteria_file(criteria_file)
 
     # Get the hotspot mutations
     hotspot = get_hotspot(hotspot_file) if hotspot_file else set()
@@ -211,7 +237,8 @@ def main(
         # Skip variants that are above the specified population frequency
         if vep.above_population_threshold(population, frequency):
             continue
-        # TODO filter on criteria
+        # Filter transcripts based on criteria
+        vep.filter_criteria(criteria)
         # Add is_in_hotspot field
         vep["is_in_hotspot"] = vep["input"] in hotspot
 
@@ -227,8 +254,7 @@ if __name__ == "__main__":
     )
 
     parser.add_argument("--vep", help="VEP json output file")
-    parser.add_argument("--goi", help="Genes of interest")
-    parser.add_argument("--consequences", nargs="*", type=str, default=list())
+    parser.add_argument("--criteria", help="File with criteria")
     parser.add_argument("--hotspot", help="VCF file with hotspot variants")
     parser.add_argument(
         "--population", help="Population to use for variant frequency", default="gnomAD"
@@ -244,8 +270,7 @@ if __name__ == "__main__":
 
     main(
         args.vep,
-        args.goi,
-        args.consequences,
+        args.criteria,
         args.hotspot,
         args.population,
         args.frequency,

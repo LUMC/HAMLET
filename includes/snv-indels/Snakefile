@@ -355,13 +355,12 @@ rule hotspot_variants:
 rule filter_vep:
     input:
         vep="{sample}/snv-indels/{sample}.vep.txt.gz",
-        ref_id_mapping=config["ref_id_mapping"],
+        filter_criteria=config["filter_criteria"],
         hotspots="{sample}/snv-indels/{sample}.hotspot.vcf",
         scr=workflow.source_path("scripts/filter_vep.py"),
         filter=workflow.source_path("scripts/filter_variants.py"),
         blacklist=config.get("blacklist", []),
     params:
-        vep_consequences=config["vep_include_consequence"],
         population="gnomade",
         max_pop_af=0.01,
     output:
@@ -390,9 +389,8 @@ rule filter_vep:
 
         python3 {input.scr} \
             --vep $VEP \
-            --goi {input.ref_id_mapping} \
+            --criteria {input.filter_criteria} \
             --hotspot {input.hotspots} \
-            --consequences {params.vep_consequences} \
             --population {params.population} \
             --frequency {params.max_pop_af} 2>>{log} \
             | gzip > {output.filtered} 2>> {log}

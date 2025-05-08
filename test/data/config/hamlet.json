@@ -27,21 +27,12 @@
     "genome_dict": "test/data/reference/hamlet-ref.dict",
     "star_index": "test/data/reference/hamlet-star",
     "ref_id_mapping": "test/data/reference/id_mappings.tsv",
+    "filter_criteria": "test/data/config/criteria.tsv",
     "rrna_refflat": "test/data/reference/ucsc_rrna.refFlat",
     "bed_variant_hotspots": "test/data/reference/hotspots_genome.bed",
     "gtf": "test/data/reference/hamlet-ref.gtf",
     "annotation_refflat": "test/data/reference/hamlet-ref.refFlat",
-    "blacklist": "test/data/blacklist.txt",
-    "vep_include_consequence": [
-      "stop_gained",
-      "frameshift_variant",
-      "stop_lost",
-      "start_lost",
-      "inframe_insertion",
-      "inframe_deletion",
-      "protein_altering_variant",
-      "missense_variant"
-    ]
+    "blacklist": "test/data/blacklist.txt"
   },
   "expression":{
     "housekeeping": [
