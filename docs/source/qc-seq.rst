@@ -38,7 +38,8 @@ The only configurable option for this module is adapter sequences for
 `cutadapt <https://cutadapt.readthedocs.io/en/stable/>`_ to remove.
 
 .. list-table:: Configuration options
-   :header-rows: 1
+  :widths: 25 80 20
+  :header-rows: 1
 
   * - Option
     - Description

@@ -5,7 +5,7 @@ The `snv-indels` module is responsible for aligning the reads to the reference, 
 
 Tools
 -----
-This module uses `STAR <https://github.com/alexdobin/STAR>`_ to align the reads to the reference using twopass mode.`VarDict <https://github.com/AstraZeneca-NGS/VarDictJava>`_ is used to call variants, which are annotated using `VEP <https://www.ensembl.org/info/docs/tools/vep/index.html>`_.
+This module uses `STAR <https://github.com/alexdobin/STAR>`_ to align the reads to the reference using twopass mode. `VarDict <https://github.com/AstraZeneca-NGS/VarDictJava>`_ is used to call variants, which are annotated using `VEP <https://www.ensembl.org/info/docs/tools/vep/index.html>`_.
 Variants are filtered based on the criteria defined in `filter_criteria`, and annotated based on `annotation_criteria`.
 
 The variants annotated by VEP are then filtered based on a number of different criteria:
@@ -49,7 +49,8 @@ specify a `vep-cache` folder as well.
 Configuration options
 ^^^^^^^^^^^^^^^^^^^^^
 .. list-table:: Configuration options
-   :header-rows: 1
+  :widths: 30 80 15
+  :header-rows: 1
 
   * - Option
     - Description
@@ -97,8 +98,10 @@ Configuration options
     - Folder containing the VEP cache
     - no
   * - vep_include_consequence
-    - List of `VEP consequences <http://www.ensembl.org/info/genome/variation/prediction/predicted_data.html>_` to report
+    - List of VEP consequences to report
     - yes
   * - variant_allele_frequency
     - Minimum variant allele frequency in the sample to call a variant
-    - no (default=0.05)
+
+      (default=0.05)
+    - no 
