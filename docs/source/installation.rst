@@ -10,10 +10,13 @@ You can download and unpack the latest HAMLET release from the `HAMLET release p
 
    git clone git@github.com:LUMC/HAMLET.git
 
+   # Alternatively, via https
+   https://github.com/LUMC/HAMLET.git
+
 
 Setup the environment
 =====================
-The dependencies required for running the pipeline are listed in the provided `environment.yml` file. To use it, first make sure that you have Conda installed on your system. Then, navigate to the HAMLET folder and set up the Conda virtual environment.
+The dependencies required for running the pipeline are listed in the provided `environment.yml` file. To use it, first make sure that you have `Conda <https://docs.conda.io/en/latest/miniconda.html>`_ installed on your system. Then, navigate to the HAMLET folder and set up the Conda virtual environment.
 
 .. code:: bash
    
@@ -59,5 +62,13 @@ HAMLET comes with a test suite for almost every part of the pipeline, which can 
    # Test if HAMLET can parse the example configurations
    pytest --kwd --tag dry-run
 
-   # Actually run the HAMLET pipeline and test all output files are correct
+   # Only run the HAMLET pipeline on the most complete example data, and
+   # investigate the output files.
+   # - SRR8615409/hamlet_report.SRR8615409.pdf, the PDF report
+   # - multiqc_hamlet.html, MultiQC report for all samples
+   # - SRR8615409.summary.json, detailed JSON file
+   pytest --kwd --tag test-hamlet-chrM
+
+   # Run the HAMLET pipeline for all tests
    pytest --kwd --tag functional
+
