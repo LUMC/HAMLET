@@ -10,6 +10,7 @@ Changelog
 **********
 v2.3.1-dev
 **********
+
 * **Breaking change**: Removed `bed_variant_hotspots` in favor or `annotation_criteria`
 * **Breaking change**: Variants are now filtered using the `filter_criteria` file
 * **Breaking change**: Add `mutalyzer_hgvs_parser` to the conda environment
@@ -32,34 +33,20 @@ v2.3.1-dev
 v2.2.1
 **********
 
-Breaking changes
-================
-* The `bed_variant_call_regions` option has been removed, variants are now
+* **Breaking change**: The `bed_variant_call_regions` option has been removed, variants are now
   called for all genes present in the `gtf` file.
-* Add graphviz/`dot` as a dependency (developer only).
-* Please create a new HAMLET configuration file with `create-config.py` script.
-* To use the latest hotspot regions and artifact blacklist, please recreate the
-  HAMLET reference data.
-
-Novel module
-============
-* Add novel module, **expression**, which analyzes gene expression.
-    * Add optional input `strandedness` to the sample configuration.
-    * Add json output file for the expression module.
-
-Bugfixes
-========
+* **Breaking change**: Add graphviz/`dot` as a dependency (developer only).
 * Fix a rare bug where different modules use the same MultiQC file list.
 * Fix a bug with filtering VEP records that contain multiple population.
   frequency records for a single variant.
-
-Updates
-=======
 * Add ability to generate configurations for each module using the
   `utilities/create-config.py` script.
 * Update the hotspot regions reference file.
 * Update the blacklist of known artifacts.
 * Remove various superfluous plots from the MultiQC report.
+* Add **expression** module
+    * Add optional input `strandedness` to the sample configuration.
+    * Add json output file for the expression module.
 
 **********
 v2.1.3
@@ -71,52 +58,39 @@ v2.1.3
 **********
 v2.1.2
 **********
-* Set the maximum population frequency to 1%. This was accidentally set to 5% in v2.1.1
+* Fix a bug with the maximum population frequency, this was accidentally set to
+  5% (it is now 1%)
 
 **********
 v2.1.1
 **********
-
-Bugfixes
-========
 * Fix a bug where VEP removed rare variants
 
 **********
 v2.1.0
 **********
 
-Breaking changes
-================
-* Remove the JSON output for the qc-seq module (this has been replaced by a
-  MultiQC report)
-* Add sample name to STAR counts table
-
-Changes
-=======
+* **Breaking change**: Remove the JSON output for the qc-seq module (this has
+  been replaced by a MultiQC report)
+* **Breaking change**: Add sample name to STAR counts table * Fix a bug where
+  the trimmed FastQ files are not removed when no longer needed
 * Automatically remove _STAR temporary folders
-* Modified PDF formatting
-    * Change cover image
-    * Add bookmarks under chapter variant
-    * Sort the genes of interest alphabetically
-    * Remove the "Sequencing Results" section from the report (this has been replaced by a MultiQC report)
+* Change PDF report cover image
+* Change PDF report to add bookmarks under chapter variant
+* Change PDF report to sort the genes of interest alphabetically
+* Change PDF report to remove the "Sequencing Results" section (this has been
+  replaced by a MultiQC report)
 * Replace FastQC with Sequali
-
-Bugfixes
-========
-* Fix a bug where the trimmed FastQ files are not removed when no longer needed
-
-Updates
-=======
 * Update Cutadapt to 4.6
 * Update MultiQC to 1.22
 * Update snakefmt to 0.10.0 (developer only)
 * Update black to 24.3.0 (developer only)
 
-
 **********
 v2.0.5
 **********
-* Increase space for the HGVS description in "Results Overview" table
+* Change PDF report to increase space for the HGVS description in "Results
+  Overview" table
 
 **********
 v2.0.4
@@ -127,9 +101,8 @@ v2.0.4
 v2.0.3
 **********
 
-Bugfixes
-========
-* Fix a bug where long HGVS descriptions make the "Results Overview" table overflow the page
+* Fix a bug where long HGVS descriptions make the "Results Overview" table
+  overflow the page
 
 **********
 v2.0.2
@@ -140,21 +113,14 @@ v2.0.2
 v2.0.1
 **********
 
-Bugfixes
-========
 * Update version number in HAMLET report
 
 **********
 v2.0.0
 **********
 
-Bugfixes
-========
-* Fix a bug with inconsistent config setting 'blacklist' in snv*indels
+* Fix a bug with inconsistent config setting 'blacklist' in snv-indels
 * Fix a bug where unmapped reads are not included in STAR output file
-
-Tool changes
-============
 * Replace StarFusion and FusionCatcher with Arriba
 * Replace VarScan variant caller with VarDict
 * Replace GSNAP aligner with STAR
@@ -168,14 +134,12 @@ Tool updates
 
 Speed improvements
 ==================
+* **Breaking change**: Deprecate option `fusion-partners`, in favour of
+  `report_genes`, which points to a list of fusion genes to report
+* Change PDF report to remove the run name
+* Change PDF report to remove variants plots
+* Change PDF report to show allele frequency as a percentage
 * Use multiple threads for Cutadapt, and reduce the compression of output files
-
-Changes
-=======
-* Remove run name from the report
-* Deprecate option `fusion*partners`, in favour of `report_genes`, which points
-  to a list of fusion genes to report
-* Show allele frequency as a percentage in the pfd report
 * Add additional genes of interest
     - SRSF2
     - SF3B1
@@ -190,8 +154,7 @@ Changes
 * Add support for variant blacklist in VEP hgvsc format
 * Add script to generate a configuration file
 * Add pipeline to generate reference files
-* Add per*module configuration options
+* Add per-module configuration options
 * Add support for PEP sample configuration
 * Add support for Snakemake 7.8.5
-* Remove variants plots
 * Use MANE select transcript for all genes
