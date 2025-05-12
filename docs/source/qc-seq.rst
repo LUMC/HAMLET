@@ -1,7 +1,7 @@
 qc-seq module
 =============
 
-The `qc-seq` module is responsible for removing adapter sequences and low
+The ``qc-seq`` module is responsible for removing adapter sequences and low
 quality reads, and generating read-level statistics. It also merges the FastQ
 files per sample, so they can be used by the other modules. Every set of FastQ
 files can be analysed in parallel.
@@ -25,7 +25,7 @@ The output of this module are one set of merged FastQ files per sample, as well 
 
 Configuration
 -------------
-You can automatically generate a configuration for the fusion module using the `utilities/create-config.py` script.
+You can automatically generate a configuration for the fusion module using the ``utilities/create-config.py`` script.
 
 Example
 ^^^^^^^

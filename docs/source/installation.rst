@@ -16,7 +16,7 @@ You can download and unpack the latest HAMLET release from the `HAMLET release p
 
 Setup the environment
 =====================
-The dependencies required for running the pipeline are listed in the provided `environment.yml` file. To use it, first make sure that you have `Conda <https://docs.conda.io/en/latest/miniconda.html>`_ installed on your system. Then, navigate to the HAMLET folder and set up the Conda virtual environment.
+The dependencies required for running the pipeline are listed in the provided ``environment.yml`` file. To use it, first make sure that you have `Conda <https://docs.conda.io/en/latest/miniconda.html>`_ installed on your system. Then, navigate to the HAMLET folder and set up the Conda virtual environment.
 
 .. code:: bash
    

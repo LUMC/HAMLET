@@ -5,9 +5,9 @@ Usage
 
 Input files
 ===========
-HAMLET requires two separate input files. Firstly, a `json` file that contains
+HAMLET requires two separate input files. Firstly, a ``json`` file that contains
 the settings and reference files for the pipeline, which can be generated with
-the `utilities/create-config.py` script.
+the ``utilities/create-config.py`` script.
 
 Secondly, HAMLET requires a `Portable Encapsulated
 Project <http://pep.databio.org/en/2.1.0/>`_ configuration that specifies the
@@ -30,11 +30,11 @@ If running in a cluster, you may also want to define the resource
 configurations in another YAML file. Read more about this type of configuration
 on the official `Snakemake documentation
 <https://snakemake.readthedocs.io/en/stable/snakefiles/configuration.html#cluster-configuration>`_.
-For this file, let's call it `config-cluster.yml`
+For this file, let's call it ``config-cluster.yml``
 
 Run locally
 -----------
-To run HAMLET on your local PC, supply the configuration file `config.json` and the sample sheet, as well as the flags which indicate to Snakemake that singularity should be used.
+To run HAMLET on your local PC, supply the configuration file ``config.json`` and the sample sheet, as well as the flags which indicate to Snakemake that singularity should be used.
 
 .. code:: bash
 
@@ -88,9 +88,9 @@ of the HAMLET folder. This way, the temporary Snakemake files are written
 elsewhere and does not pollute the repository.
 
 Inside each sample directory, there will be a PDF report called
-`hamlet_report.{sample_name}.pdf` which contains the overview of the essential
+``hamlet_report.{sample_name}.pdf`` which contains the overview of the essential
 results. The same data is also present in the JSON file called
-`{sample_name}.summary.json`.
+``{sample_name}.summary.json``.
 
 HAMLET will also run `MultiQC <https://docs.seqera.io/multiqc>`_ and generate a
 single html output file which contains quality control metrics for every
@@ -101,11 +101,11 @@ Grouping results from multiple samples
 --------------------------------------
 
 If you analysed multiple samples using HAMLET, you can generate an overview of
-multiple samples using the `utilities/hamlet_table.py` script, rather than
+multiple samples using the ``utilities/hamlet_table.py`` script, rather than
 relying on individual PDF files. This script uses the
-`{sample_name}.summary.json` files which are generated as part of the default
-HAMLET output. Simply specify the results you are interested in (`variant`,
-`fusion` or `itd`) as shown below.
+``{sample_name}.summary.json`` files which are generated as part of the default
+HAMLET output. Simply specify the results you are interested in (``variant``,
+``fusion`` or ``itd``) as shown below.
 
 .. code:: bash
 

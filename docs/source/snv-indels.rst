@@ -1,19 +1,19 @@
 snv-indels module
 =================
 
-The `snv-indels` module is responsible for aligning the reads to the reference, and calling variants. The bam and count files produced by this module are used in the fusion and gene expression modules.
+The ``snv-indels`` module is responsible for aligning the reads to the reference, and calling variants. The bam and count files produced by this module are used in the fusion and gene expression modules.
 
 Tools
 -----
 This module uses `STAR <https://github.com/alexdobin/STAR>`_ to align the reads to the reference using twopass mode. `VarDict <https://github.com/AstraZeneca-NGS/VarDictJava>`_ is used to call variants, which are annotated using `VEP <https://www.ensembl.org/info/docs/tools/vep/index.html>`_.
-Variants are filtered based on the criteria defined in `filter_criteria`, and annotated based on `annotation_criteria`.
+Variants are filtered based on the criteria defined in ``filter_criteria``, and annotated based on ``annotation_criteria``.
 
 The variants annotated by VEP are then filtered based on a number of different criteria:
 
-1. Variants that are present on the `blacklist` are excluded.
-2. Only variants that are present on one of the specified transcripts in `ref_id_mapping` are included.
-3. Only variants that match one of the consequences defined in `vep_include_consequence` are included.
-4. Variant that have a population frequency of more than 1% in the `gnomADe` population are excluded.
+1. Variants that are present on the ``blacklist`` are excluded.
+2. Only variants that are present on one of the specified transcripts in ``ref_id_mapping`` are included.
+3. Only variants that match one of the consequences defined in ``vep_include_consequence`` are included.
+4. Variant that have a population frequency of more than 1% in the ``gnomADe`` population are excluded.
 
 Picard is used to generate various alignment statistics.
 
@@ -30,21 +30,21 @@ Output
 The output of this module are a JSON file with an overview of the most important results, as well as a number of other output files:
 
 * A .bam and .bai per sample, which contain the aligned reads.
-* A VEP output file (`vep_high`), which contains the final set of filtered variants.
-* A VEP output file (`vep_target`), which contains the variants on the transcripts of interest. These variants have not been filtered on `vep_include_consequence` terms.
+* A VEP output file (``vep_high``), which contains the final set of filtered variants.
+* A VEP output file (``vep_target``), which contains the variants on the transcripts of interest. These variants have not been filtered on ``vep_include_consequence`` terms.
 
 Configuration
 -------------
-You can automatically generate a configuration for the fusion module using the `utilities/create-config.py` script.
+You can automatically generate a configuration for the fusion module using the ``utilities/create-config.py`` script.
 
 Example
 ^^^^^^^
 .. literalinclude:: ../../test/data/config/snv-indels.json
    :language: json
 
-Note that the `vep-cache` entry is missing for this example file, which means
+Note that the ``vep-cache`` entry is missing for this example file, which means
 that the online API of VEP will be used. For the best performance, please
-specify a `vep-cache` folder as well.
+specify a ``vep-cache`` folder as well.
 
 Configuration options
 ^^^^^^^^^^^^^^^^^^^^^

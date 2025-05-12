@@ -1,7 +1,7 @@
 expression module
 =================
 
-The `expression` module is responsible for determining gene expression levels
+The ``expression`` module is responsible for determining gene expression levels
 from STAR bam and count files. For the highest accuracy the strandedness of the
 library preparation can be specified. By default, the module assumes the data
 is unstranded.
@@ -24,7 +24,7 @@ specified in a PEP configuration file, as is shown below.
    :file: ../../test/pep/expression.csv
 
 For more accurate results, it is possible to specify the strandedness of your
-RNA library prep (`unstranded`, `forward` and `reverse`). If strandedness is
+RNA library prep (``unstranded``, ``forward`` and ``reverse``). If strandedness is
 not specified, all samples will be treated as unstranded.
 
 .. csv-table:: Sample configuration with strandedness
@@ -34,15 +34,15 @@ not specified, all samples will be treated as unstranded.
 Output
 ------
 
-* The genes specified under the `report` section of the configuration will be
+* The genes specified under the ``report`` section of the configuration will be
   included in the HAMLET pdf repor.
-* All genes from the `bed` file and the `genes_of_interest` will be included in
+* All genes from the ``bed`` file and the ``genes_of_interest`` will be included in
   the MultiQC report. Stranded (forward and reverse) and unstranded samples
   will be listed separately, since their values cannot be compared directly.
 
 Configuration
 -------------
-The following options are available for the `expression` module
+The following options are available for the ``expression`` module
 
 
 Configuration options

@@ -1,7 +1,7 @@
 itd module
 ==========
 
-The `itd` module is responsible for finding Internal Tandem Duplications in select genes, specifically *FLT3* and *KMT2A*.
+The ``itd`` module is responsible for finding Internal Tandem Duplications in select genes, specifically *FLT3* and *KMT2A*.
 
 Tools
 -----
@@ -25,7 +25,7 @@ The output of this module are a JSON file with an overview of the most important
 Configuration
 -------------
 The configuration for this module is tailored to the provided reference files, be very careful if you want to modify any of these settings.
-You can automatically generate a configuration for the fusion module using the `utilities/create-config.py` script.
+You can automatically generate a configuration for the fusion module using the ``utilities/create-config.py`` script.
 
 .. literalinclude:: ../../test/data/config/itd.json
    :language: json
