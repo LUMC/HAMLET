@@ -37,9 +37,9 @@ def read_criteria_file(criteria_file: str) -> OrderedDict:
                 start=d["start"],
                 end=d["end"],
             )
-            comment = d.get("comment", "")
+            annotation = d.get("annotation", "")
 
-            annotations[c] = comment
+            annotations[c] = annotation
 
     return annotations
 
@@ -59,9 +59,9 @@ def main(vep_file: str, annotations_file: str):
             if hgvsc is None:
                 continue
             variant = Variant(hgvsc, transcript["consequence_terms"])
-            for crit, comment in criteria.items():
+            for crit, annotation in criteria.items():
                 if crit.match(variant):
-                    transcript["annotation"] = comment
+                    transcript["annotation"] = annotation
                     break
         print(json.dumps(vep, sort_keys=True))
 
