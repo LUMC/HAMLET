@@ -37,7 +37,8 @@ Example
 Configuration options
 ^^^^^^^^^^^^^^^^^^^^^
 .. list-table:: Configuration options
-   :header-rows: 1
+  :widths: 30 80 15
+  :header-rows: 1
 
   * - Option
     - Description
