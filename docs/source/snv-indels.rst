@@ -1,7 +1,7 @@
-snv-indels
-==========
+snv-indels module
+=================
 
-The `snv-indels` module is responsible for aligning the reads to the reference, and calling SNVs and insertions/deletion.
+The `snv-indels` module is responsible for aligning the reads to the reference, and calling variants. The bam and count files produced by this module are used in the fusion and gene expression modules.
 
 Tools
 -----

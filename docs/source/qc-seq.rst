@@ -1,5 +1,5 @@
-qc-seq
-======
+qc-seq module
+=============
 
 The `qc-seq` module is responsible for removing adapter sequences and low
 quality reads, and generating read-level statistics. It also merges the FastQ

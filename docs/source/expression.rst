@@ -1,5 +1,5 @@
-expression
-==========
+expression module
+=================
 
 The `expression` module is responsible for determining gene expression levels
 from STAR bam and count files. For the highest accuracy the strandedness of the

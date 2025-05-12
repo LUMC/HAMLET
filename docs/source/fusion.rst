@@ -1,6 +1,7 @@
-fusion
-======
+fusion module
+=============
 
+This module uses Arriba to call fusion genes, based on the BAM file produced in the snv-indels modules.
 
 Tools
 -----

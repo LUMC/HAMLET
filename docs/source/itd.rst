@@ -1,5 +1,5 @@
-itd
-===
+itd module
+==========
 
 The `itd` module is responsible for finding Internal Tandem Duplications in select genes, specifically *FLT3* and *KMT2A*.
 
