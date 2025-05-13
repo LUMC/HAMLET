@@ -182,6 +182,6 @@ jobs:
 
             gh release create \
               ${{ env.RELEASE_VERSION}} \
-              --notes release-notes.rst \
+              --notes-file release-notes.rst \
               HAMLET-${{ env.RELEASE_VERSION}}.tar.gz \
               HAMLET-${{ env.RELEASE_VERSION }}.pdf
