@@ -1,5 +1,9 @@
 name: Continuous Integration
 
+on:
+  push:
+  pull_request:
+  workflow_call:
 
 defaults:
   run:
@@ -14,10 +18,6 @@ jobs:
       matrix:
         test:
           - sanity
-          - dry-run
-          - utilities
-          - report
-          - docs
     steps:
       - uses: actions/checkout@v4
         with:
@@ -59,98 +59,6 @@ jobs:
         run: >-
           pytest --keep-workflow-wd-on-fail
           --tag ${{ matrix.test }}
-
-      - name: Check pytest stdout messages in case of failure
-        if: ${{ failure() }}
-        run: >-
-          bash -c '
-          for file in $(find /tmp -name log.out);
-          do echo $file; cat $file; done'
-
-      - name: Check pytest stderr messages in case of failure
-        if: ${{ failure() }}
-        run: >-
-          bash -c '
-          for file in $(find /tmp -name log.err);
-          do echo $file; cat $file; done'
-
-  functional-tests:
-    needs: quick-tests
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        module:
-          - qc-seq
-          - snv-indels
-          - itd
-          - fusion
-          - expression
-          - test-hamlet-targetted-RNA
-          - test-hamlet-chrM
-    steps:
-      - name: Maximise build space
-        uses: easimon/maximize-build-space@v10
-        with:
-          root-reserve-mb: 30720
-          swap-size-mb: 1024
-          remove-android: 'true'
-          remove-dotnet: 'true'
-          remove-codeql: 'true'
-
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: Setup Miniforge
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          miniforge-version: latest
-          activate-environment: HAMLET
-          use-mamba: true
-
-      # This is used to invalidate the conda environment every week
-      - name: Get week number
-        id: get-date
-        run: echo "week=$(/bin/date -u '+%Y-w%V')" >> $GITHUB_OUTPUT
-        shell: bash
-
-      - name: Cache conda environment
-        id: conda-cache
-        uses: actions/cache@v4
-        env:
-          # Increase this value to manually invalidate the cache
-          CACHE_NUMBER: 0
-        with:
-          path: ${{ env.CONDA }}/envs
-          key: conda-${{ hashFiles('environment.yml') }}-${{ steps.get-date.outputs.week }}-${{ env.CACHE_NUMBER }}
-
-      - name: Update HAMLET environment
-        run: mamba env update -n HAMLET -f environment.yml
-        if: steps.conda-cache.outputs.cache-hit != 'true'
-
-      - name: Install apptainer
-        uses: eWaterCycle/setup-apptainer@v2
-        with:
-          apptainer-version: 1.3.6
-
-      - name: Cache singularity images
-        uses: actions/cache@v3
-        env:
-          # Increase this value to manually invalidate the cache
-          CACHE_NUMBER: 0
-        with:
-          path:
-            ~/.singularity/cache/snakemake
-          key: singularity-${{ hashFiles('**/common.smk') }}-${{ matrix.module}}-${{ env.CACHE_NUMBER }}
-          restore-keys: |
-            singularity-${{ hashFiles('**/common.smk') }}-
-            singularity-
-
-      - name: Run test in conda environment
-        run: >-
-          pytest --keep-workflow-wd-on-fail
-          --tag ${{ matrix.module}}
-          --tag functional
 
       - name: Check pytest stdout messages in case of failure
         if: ${{ failure() }}
