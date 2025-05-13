@@ -7,7 +7,7 @@ def get_changelog_version() -> str:
     with open(changelog) as fin:
         for line in fin:
             # The next line holds the version number
-            if line.startswith('**********'):
+            if line.startswith('******'):
                 changelog_version = next(fin).strip('\n')
                 return changelog_version
     return ""

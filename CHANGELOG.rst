@@ -7,9 +7,9 @@ Changelog
 ..  This document is user facing. Please word the changes in such a way
 .. that users understand how the changes affect the new version.
 
-**********
-v2.3.1-dev
-**********
+******
+v2.3.1
+******
 
 * **Breaking change**: Removed ``bed_variant_hotspots`` in favor or ``annotation_criteria``
 * **Breaking change**: Variants are now filtered using the ``filter_criteria`` file
@@ -22,7 +22,7 @@ v2.3.1-dev
 * Add an option to specify ``variant_allele_frequency`` for snv-indels
 * Speed up VarDict by running with 8 threads
 * Speed up VarDict by sorting the call_regions.bed file
-* Run VEP with either vep_cache or just the gtf/fasta files as database
+* Run VEP with either ``vep_cache`` or just the gtf/fasta files as database
 * Update picard from 2.27.4 to 3.3.0
 * Update cutadapt from 4.6 to 5.0
 * Update sequali from 0.9.1 to 0.12.0
