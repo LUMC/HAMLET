@@ -12,7 +12,7 @@ the ``utilities/create-config.py`` script.
 Secondly, HAMLET requires a `Portable Encapsulated
 Project <http://pep.databio.org/en/2.1.0/>`_ configuration that specifies the
 samples and their associated gzipped, paired-end mRNA-seq files. For simple use
-cases, this can be a csv file with one line per read-pair, as can be seen below.
+cases, this can be a ``CSV`` file with one line per read-pair, as can be seen below.
 
 .. csv-table:: Example sample specification for HAMLET
    :delim: ,
@@ -26,58 +26,47 @@ may have any number of read pairs, and HAMLET will handle those properly.
 Execution
 =========
 
-If running in a cluster, you may also want to define the resource
-configurations in another YAML file. Read more about this type of configuration
-on the official `Snakemake documentation
-<https://snakemake.readthedocs.io/en/stable/snakefiles/configuration.html#cluster-configuration>`_.
-For this file, let's call it ``config-cluster.yml``
+To run the HAMLET pipeline, you need to supply the input files, as well as a
+`Snakemake profile
+<https://snakemake.readthedocs.io/en/stable/executing/cli.html#profiles>`_,
+which configures Snakemake to run the HAMLET pipeline. The example profile,
+located in ``HAMLET/cfg/config.v8+.yaml`` is shown below.
 
-Run locally
------------
-To run HAMLET on your local PC, supply the configuration file ``config.json`` and the sample sheet, as well as the flags which indicate to Snakemake that singularity should be used.
+Snakemake profile
+-----------------
+.. literalinclude:: ../../cfg/config.v8+.yaml
+   :language: yaml
+
+Please consult the `Snakemake documentation
+<https://snakemake.readthedocs.io/en/stable/executing/cli.html#>`_ for an
+explanation of all settings.
+
+Make sure to modify the Singularity settings to your specific situation. In
+particular, the `--bind` directive determines which parts of the file system
+will be visible to HAMLET. In the example, only ``/home`` and ``/tmp`` will be
+visible. Make sure that the locations of HAMLET itself, the HAMLET-data as well
+as the samples are included here, or HAMLET will not be able to find the
+required files.
+
+Since HAMLET includes many tools, the singularity cache will grow to multiple
+gigabytes. If you have limited space in your home folder, modify
+``singularity-prefix`` to a location with more available space.
+
+The resource requirements will depend on the characteristics of your samples.
+The example configuration is based on poly-A captured RNAseq, with up to 200
+million reads per sample.
+
+Running HAMLET
+--------------
+Since all settings can be set in the Snakemake profile, the actual command to
+run HAMLET is quite simple.
 
 .. code:: bash
 
-  $ snakemake -s Snakefile \
+  $ snakemake -s HAMLET/Snakefile \
+      --profile HAMLET/cfg \
       --configfile config.json \
-      --config pepfile=sample_sheet.csv \
-      --cluster-config config-cluster.yml \
-      --rerun-incomplete \
-      --use-singularity \
-      --singularity-args ' --containall' \
-      # ... other flags
-
-.. list-table:: Configuration options
-  :widths: 25 80 20
-  :header-rows: 1
-
-  * - Option
-    - Description
-    - Required
-  * - --configfile
-    - The configuration file for HAMLET
-    - yes
-  * - --config pepfile
-    - A PEP configuration file that contains all samples (can be CSV)
-    - yes
-  * - --use-singularity
-    - Use Singularity or Apptainer to fetch all required dependencies
-    - yes
-  * - --singularity-args
-    - Arguments to pass to singularity. Use --bind to specify which folders on
-      your system should be accessible inside the container. This should at
-      least be the folders where your samples and reference files are located
-    - yes
-  * - --cluster-config
-    - A cluster configuration file
-    - no
-  * - --rerun-incomplete
-    - Re-run jobs if the output appears incomplete
-    - no
-
-Run on Slurm cluster
---------------------
-
+      --config pepfile=sample_sheet.csv
 
 Output files
 ============

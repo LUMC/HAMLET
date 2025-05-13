@@ -1,0 +1,51 @@
+# Cluster configuration settings
+executor: slurm
+jobs: 1000
+retries: 0
+latency-wait: 120
+max-jobs-per-second: 30
+
+# Singularity settings
+use-singularity: true
+singularity-args: '--containall --bind /home,/tmp'
+singularity-prefix: '~/.singularity/cache/snakemake'
+
+# Other settings
+printshellcmds: true
+rerun-incomplete: true
+
+# Resource requirements
+default-resources:
+  cpus_per_task: 1
+  mem: 8G
+  runtime: 480 # Runtime in minutes
+
+set-resources:
+  qc_seq_cutadapt:
+    cpus_per_task: 8
+
+  align_align_vars:
+    mem: 100G 
+    cpus_per_task: 8
+    runtime: 2880
+
+  align_exon_cov:
+    mem: 120G
+    cpus_per_task: 1
+
+  align_call_vars:
+    mem: 120G
+    cpus_per_task: 11
+    runtime: 2880
+
+  align_annotate_vars:
+    cpus_per_task: 8
+
+  fusion_arriba:
+    mem: 80G
+    cpus_per_task: 1
+    runtime: 60
+
+  itd_align_reads:
+    cpus_per_task: 3
+    runtime: 1440
