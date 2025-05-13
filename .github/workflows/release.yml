@@ -178,8 +178,10 @@ jobs:
           env:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           run: |
+            python3 utilities/release-notes.py CHANGELOG.rst ${{ env.RELEASE_VERSION }} > release-notes.rst
+
             gh release create \
               ${{ env.RELEASE_VERSION}} \
-              --generate-notes \
+              --notes release-notes.rst \
               HAMLET-${{ env.RELEASE_VERSION}}.tar.gz \
               HAMLET-${{ env.RELEASE_VERSION }}.pdf

@@ -6,7 +6,7 @@ project = 'HAMLET'
 copyright = '2018, LUMC'
 author = 'Wibowo Arindrarto, Redmar van den Berg, Xiaoyun Liu'
 
-release = "v2.3.2-dev"
+release = "v2.3.2"
 version = '.'.join(release.split('.')[0:2])
 
 # -- General configuration
