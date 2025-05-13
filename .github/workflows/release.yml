@@ -51,6 +51,26 @@ jobs:
       - name: Install LaTeX
         run: sudo apt install -y latexmk texlive-latex-base
 
+      # This is used to invalidate the conda environment every week
+      - name: Get year and week (for conda cache)
+        id: get-date
+        run: echo "week=$(/bin/date -u '+%Y-w%V')" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Cache conda environment
+        id: conda-cache
+        uses: actions/cache@v4
+        env:
+          # Increase this value to manually invalidate the cache
+          CACHE_NUMBER: 0
+        with:
+          path: ${{ env.CONDA }}/envs
+          key: conda-${{ hashFiles('environment.yml') }}-${{ steps.get-date.outputs.week }}-${{ env.CACHE_NUMBER }}
+
+      - name: Update HAMLET environment
+        run: mamba env update -n HAMLET -f environment.yml
+        if: steps.conda-cache.outputs.cache-hit != 'true'
+
       - name: Build the documentation
         run: make --directory docs latexpdf
 
