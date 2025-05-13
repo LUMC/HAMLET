@@ -7,11 +7,6 @@ import re
 def main(changelog_file, version):
     changes = changelog_by_release(changelog_file)
 
-    # Print the version
-    print(version)
-    print("=" * len(version))
-    print()
-
     for change in changes.get(version, list()):
         print(change)
 
