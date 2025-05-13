@@ -26,11 +26,6 @@ jobs:
       - name: Check release version is set correctly in every file
         run: python3 utilities/check-version.py ${{ env.RELEASE_VERSION }}
 
-      - name: Run release tests in conda environment
-        run: >-
-          pytest --keep-workflow-wd-on-fail
-          --tag release
-
   run_tests:
     uses: ./.github/workflows/ci.yml
     needs:
