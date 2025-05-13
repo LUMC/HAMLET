@@ -61,7 +61,7 @@ jobs:
           --tag ${{ matrix.test }}
 
       - name: Install LaTeX
-        run: sudo apt install -y latexmk texlive-latex-base
+        run: sudo apt install  --no-install-recommends -y latexmk texlive-latex-base texlive-latex-recommended tex-gyre texlive-latex-extra
 
       - name: Get shortened version of release tag
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
