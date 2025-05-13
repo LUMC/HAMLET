@@ -71,6 +71,9 @@ jobs:
         run: mamba env update -n HAMLET -f environment.yml
         if: steps.conda-cache.outputs.cache-hit != 'true'
 
+      - name: Print the environment
+        run: env
+
       - name: Build the documentation
         run: make --directory docs latexpdf
 
