@@ -119,9 +119,12 @@ jobs:
         - name: Download release tarball
           uses: actions/download-artifact@v4
           with:
-            name:
-              - release-tar
-              - documentation
+            name: release-tar
+
+        - name: Download documentation
+          uses: actions/download-artifact@v4
+          with:
+            name: documentation
 
         - name: Create release
           env:
