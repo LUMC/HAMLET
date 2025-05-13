@@ -33,13 +33,14 @@ jobs:
 
   documentation:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test:
+          - sanity
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
-
-      - name: Install LaTeX
-        run: sudo apt install -y latexmk texlive-latex-base
 
       - name: Setup Miniforge
         uses: conda-incubator/setup-miniconda@v3
@@ -48,8 +49,10 @@ jobs:
           activate-environment: HAMLET
           use-mamba: true
 
-      - name: Get shortened version of release tag
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Install apptainer
+        uses: eWaterCycle/setup-apptainer@v2
+        with:
+          apptainer-version: 1.3.6
 
       # This is used to invalidate the conda environment every week
       - name: Get year and week (for conda cache)
@@ -70,6 +73,17 @@ jobs:
       - name: Update HAMLET environment
         run: mamba env update -n HAMLET -f environment.yml
         if: steps.conda-cache.outputs.cache-hit != 'true'
+
+      - name: Run test in conda environment
+        run: >-
+          pytest --keep-workflow-wd-on-fail
+          --tag ${{ matrix.test }}
+
+      - name: Install LaTeX
+        run: sudo apt install -y latexmk texlive-latex-base
+
+      - name: Get shortened version of release tag
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - name: Print the environment
         run: env
