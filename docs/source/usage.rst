@@ -10,7 +10,7 @@ the settings and reference files for the pipeline, which can be generated with
 the ``utilities/create-config.py`` script.
 
 Secondly, HAMLET requires a `Portable Encapsulated
-Project <http://pep.databio.org/en/2.1.0/>`_ configuration that specifies the
+Project <http://pep.databio.org>`_ configuration that specifies the
 samples and their associated gzipped, paired-end mRNA-seq files. For simple use
 cases, this can be a ``CSV`` file with one line per read-pair, as can be seen below.
 
