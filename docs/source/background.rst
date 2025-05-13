@@ -10,4 +10,4 @@ In addition to the raw output files for each sample, HAMLET also generates a PDF
 
 Citation
 ========
-If you use HAMLET in your research, please cite the [HAMLET publication](https://www.nature.com/articles/s41375-020-0762-8).
+If you use HAMLET in your research, please cite the `HAMLET publication <https://www.nature.com/articles/s41375-020-0762-8>`_.

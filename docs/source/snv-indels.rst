@@ -5,7 +5,7 @@ The ``snv-indels`` module is responsible for aligning the reads to the reference
 
 Tools
 -----
-This module uses `STAR <https://github.com/alexdobin/STAR>`_ to align the reads to the reference using twopass mode. `VarDict <https://github.com/AstraZeneca-NGS/VarDictJava>`_ is used to call variants, which are annotated using `VEP <https://www.ensembl.org/info/docs/tools/vep/index.html>`_.
+This module uses `STAR <https://github.com/alexdobin/STAR>`_ to align the reads to the reference using two-pass mode. `VarDict <https://github.com/AstraZeneca-NGS/VarDictJava>`_ is used to call variants, which are annotated using `VEP <https://www.ensembl.org/info/docs/tools/vep/index.html>`_.
 Variants are filtered based on the criteria defined in ``filter_criteria``, and annotated based on ``annotation_criteria``.
 
 The variants annotated by VEP are then filtered based on a number of different criteria:

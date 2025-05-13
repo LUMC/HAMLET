@@ -35,7 +35,7 @@ Output
 ------
 
 * The genes specified under the ``report`` section of the configuration will be
-  included in the HAMLET pdf repor.
+  included in the HAMLET pdf report.
 * All genes from the ``bed`` file and the ``genes_of_interest`` will be included in
   the MultiQC report. Stranded (forward and reverse) and unstranded samples
   will be listed separately, since their values cannot be compared directly.

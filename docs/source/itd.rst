@@ -5,7 +5,7 @@ The ``itd`` module is responsible for finding Internal Tandem Duplications in se
 
 Tools
 -----
-First, this module uses `bwa <https://github.com/lh3/bwa>`_ to align the trimmed reads to a custom reference, which contains the transcript sequence of *FLT3* and *KMT2A*. Next, a custom tool, `rose-dt <https://git.lumc.nl/hem/rose-dt>`_, is used to detect and visualise Internal Tandem Duplications, using evindence from soft-clipped reads.
+First, this module uses `bwa <https://github.com/lh3/bwa>`_ to align the trimmed reads to a custom reference, which contains the transcript sequence of *FLT3* and *KMT2A*. Next, a custom tool, `rose-dt <https://git.lumc.nl/hem/rose-dt>`_, is used to detect and visualise Internal Tandem Duplications, using evidence from soft-clipped reads.
 
 Input
 -----
