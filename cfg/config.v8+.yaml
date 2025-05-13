@@ -7,7 +7,7 @@ max-jobs-per-second: 30
 
 # Singularity settings
 use-singularity: true
-singularity-args: '--containall --bind /home,/tmp'
+singularity-args: '--containall --cleanenv --bind /home,/tmp'
 singularity-prefix: '~/.singularity/cache/snakemake'
 
 # Other settings
