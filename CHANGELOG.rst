@@ -7,9 +7,9 @@ Changelog
 ..  This document is user facing. Please word the changes in such a way
 .. that users understand how the changes affect the new version.
 
-******
+**********
 v2.2.2
-******
+**********
 
 * **Breaking change**: Removed ``bed_variant_hotspots`` in favor or ``annotation_criteria``
 * **Breaking change**: Variants are now filtered using the ``filter_criteria`` file
