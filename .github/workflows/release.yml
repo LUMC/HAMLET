@@ -102,13 +102,13 @@ jobs:
         run: make --directory docs latexpdf
 
       - name: Rename documentation
-        run: mv docs/build/latex/hamlet.pdf HAMLET-${{ env.RELEASE_VERSION }}.pdf
+        run: mv docs/build/latex/hamlet.pdf HAMLET-manual-${{ env.RELEASE_VERSION }}.pdf
 
       - name: Upload documentation as artifact
         uses: actions/upload-artifact@v4
         with:
           name: documentation
-          path: HAMLET-${{ env.RELEASE_VERSION }}.pdf
+          path: HAMLET-manual-${{ env.RELEASE_VERSION }}.pdf
           retention-days: 1
 
   run_tests:
@@ -174,14 +174,26 @@ jobs:
           with:
             name: documentation
 
+        - name: Download example HAMLET report
+          uses: actions/download-artifact@v4
+          with:
+            name: hamlet-report
+
+        - name: Download example MultiQC report
+          uses: actions/download-artifact@v4
+          with:
+            name: multiqc-report
+
         - name: Create release
           env:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           run: |
-            python3 utilities/release-notes.py CHANGELOG.rst ${{ env.RELEASE_VERSION }} > release-notes.rst
+            python3 utilities/release_notes.py CHANGELOG.rst ${{ env.RELEASE_VERSION }} > release-notes.rst
 
             gh release create \
               ${{ env.RELEASE_VERSION}} \
               --notes-file release-notes.rst \
               HAMLET-${{ env.RELEASE_VERSION}}.tar.gz \
-              HAMLET-${{ env.RELEASE_VERSION }}.pdf
+              HAMLET-manual-${{ env.RELEASE_VERSION }}.pdf \
+              HAMLET-example-report.pdf \
+              HAMLET-example-MultiQC.html

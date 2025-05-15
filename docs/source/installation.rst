@@ -41,13 +41,12 @@ HAMLET uses a large number of reference files, in total around 90GB in size. The
    
    # Generate the reference files
    snakemake \
-    --snakefile utilities/deps/Snakefile \
-    --use-singularity \
-    --singularity-args '--cleanenv --bind /tmp' \
+    --snakefile HAMLET/utilities/deps/Snakefile \
+    --profile HAMLET/cfg \
     --directory HAMLET-data
 
   # Create a HAMLET configuration file
-  python3 utilities/create-config.py HAMLET-data
+  python3 HAMLET/utilities/create-config.py HAMLET-data
 
 
 Run the test suite

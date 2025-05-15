@@ -7,6 +7,20 @@ Changelog
 ..  This document is user facing. Please word the changes in such a way
 .. that users understand how the changes affect the new version.
 
+**********
+v2.3.4-dev
+**********
+
+
+******
+v2.3.3
+******
+
+* Add script to update HAMLET version (developer)
+* Rename the PDF manual in the release bundle
+* Add example HAMLET report to the release bundle
+* Add example MultiQC report to the release bundle
+
 ******
 v2.3.2
 ******
@@ -35,9 +49,9 @@ v2.3.1
 * Update star from 2.7.10b to 2.7.11b
 * Update MultiQC to 1.27.1
 
-**********
+******
 v2.2.1
-**********
+******
 
 * **Breaking change**: The ``bed_variant_call_regions`` option has been removed, variants are now
   called for all genes present in the ``gtf`` file.
@@ -54,27 +68,30 @@ v2.2.1
     * Add optional input ``strandedness`` to the sample configuration.
     * Add json output file for the expression module.
 
-**********
+******
 v2.1.3
-**********
+******
+
 * Add ``pysam`` to the conda environment (developer only)
 * Add exon number to variant table
 * Add chromosomes to fusion table
 
-**********
+******
 v2.1.2
-**********
+******
+
 * Fix a bug with the maximum population frequency, this was accidentally set to
   5% (it is now 1%)
 
-**********
+******
 v2.1.1
-**********
+******
+
 * Fix a bug where VEP removed rare variants
 
-**********
+******
 v2.1.0
-**********
+******
 
 * **Breaking change**: Remove the JSON output for the qc-seq module (this has
   been replaced by a MultiQC report)
@@ -92,38 +109,41 @@ v2.1.0
 * Update snakefmt to 0.10.0 (developer only)
 * Update black to 24.3.0 (developer only)
 
-**********
+******
 v2.0.5
-**********
+******
+
 * Change PDF report to increase space for the HGVS description in "Results
   Overview" table
 
-**********
+******
 v2.0.4
-**********
+******
+
 * Automatically check the release tag is set correctly
 
-**********
+******
 v2.0.3
-**********
+******
 
 * Fix a bug where long HGVS descriptions make the "Results Overview" table
   overflow the page
 
-**********
+******
 v2.0.2
-**********
+******
+
 * Include the sample name in the final BAM file
 
-**********
+******
 v2.0.1
-**********
+******
 
 * Update version number in HAMLET report
 
-**********
+******
 v2.0.0
-**********
+******
 
 * **Breaking change**: Deprecate option ``fusion-partners``, in favour of
   ``report_genes``, which points to a list of fusion genes to report
@@ -158,3 +178,4 @@ v2.0.0
 * Add support for PEP sample configuration
 * Add support for Snakemake 7.8.5
 * Use MANE select transcript for all genes
+
