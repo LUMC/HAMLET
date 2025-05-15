@@ -12,7 +12,9 @@ v2.3.3-dev
 **********
 
 * Add script to update HAMLET version (developer)
-* Rename the PDF manual
+* Rename the PDF manual in the release bundle
+* Add example HAMLET report to the release bundle
+* Add example MultiQC report to the release bundle
 
 ******
 v2.3.2
