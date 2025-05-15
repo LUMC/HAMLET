@@ -152,7 +152,7 @@ jobs:
 
       - name: Run test in conda environment
         run: >-
-          pytest --keep-workflow-wd-on-fail
+          pytest --keep-workflow-wd
           --tag ${{ matrix.module}}
           --tag functional
 
