@@ -5,6 +5,7 @@ name: HAMLET
 channels:
   - bioconda
   - conda-forge
+  - defaults
 dependencies:
   - bs4=4.12
   - peppy=0.40.7
