@@ -54,40 +54,47 @@ def set_version_changelog(new_version) -> None:
             else:
                 file_start.append(line.strip("\n"))
 
-    write = functools.partial(print, end='\n')
-    # Write the start of the file
-    for line in file_start:
-        write(line)
+    with open(changelog, 'wt') as fout:
+        write = functools.partial(print, end='\n', file=fout)
+        # Write the start of the file
+        for line in file_start:
+            write(line)
 
-    # Write the updated changelog
-    for version, changes in new.items():
-        write("*"*len(version))
-        write(version)
-        write("*"*len(version))
-        write()
-        for change in changes:
-            write(change)
-        write()
+        # Write the updated changelog
+        for version, changes in new.items():
+            write("*"*len(version))
+            write(version)
+            write("*"*len(version))
+            write()
+            for change in changes:
+                write(change)
+            write()
 
 
-def get_hamlet_version() -> str:
+def set_version_hamlet(version):
     hamlet = "common.smk"
     with open(hamlet) as fin:
-        for line in fin:
+        lines = fin.readlines()
+    with open(hamlet, 'wt') as fout:
+        write = functools.partial(print, end='\n', file=fout)
+        for line in lines:
             if line.startswith("PIPELINE_VERSION"):
-                hamlet_version = line.split('"')[1]
-                return hamlet_version
-    return ""
+                write(f'PIPELINE_VERSION = "{version}"')
+            else:
+                write(line, end='')
 
 
-def get_doc_version() -> str:
+def set_version_docs(version) -> str:
     config = "docs/source/conf.py"
     with open(config) as fin:
-        for line in fin:
+        lines = fin.readlines()
+    with open(config, 'wt') as fout:
+        write = functools.partial(print, end='\n', file=fout)
+        for line in lines:
             if line.startswith("release = "):
-                doc_version = line.split('"')[1]
-                return doc_version
-    return ""
+                write(f'release = "{version}"')
+            else:
+                write(line, end='')
 
 
 if __name__ == "__main__":
@@ -95,6 +102,5 @@ if __name__ == "__main__":
     version: str = sys.argv[1]
 
     set_version_changelog(version)
-    exit()
-    set_version_hamlet()
-    set_version_docs()
+    set_version_hamlet(version)
+    set_version_docs(version)
