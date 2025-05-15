@@ -2,6 +2,7 @@
 
 import argparse
 import re
+from collections import OrderedDict
 
 
 def main(changelog_file, version):
@@ -17,7 +18,7 @@ def is_header(line):
 
 
 def changelog_by_release(changelog_file):
-    results = dict()
+    results = OrderedDict()
 
     # Previous release, for when we reach the end of the changes
     prev_release = None

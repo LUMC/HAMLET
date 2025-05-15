@@ -178,7 +178,7 @@ jobs:
           env:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           run: |
-            python3 utilities/release-notes.py CHANGELOG.rst ${{ env.RELEASE_VERSION }} > release-notes.rst
+            python3 utilities/release_notes.py CHANGELOG.rst ${{ env.RELEASE_VERSION }} > release-notes.rst
 
             gh release create \
               ${{ env.RELEASE_VERSION}} \
