@@ -4,7 +4,9 @@ include: "common.smk"
 rule all:
     input:
         multiqc="multiqc_expression.html",
-        seamless=[f"{sample.sample}/expression/seAMLess.tsv" for sample in samples],
+        expression_by_strand=[
+            f"{sample.sample}/expression/by_strand.tsv" for sample in samples
+        ],
         json=[module_output.json(sample) for sample in samples],
 
 
@@ -59,7 +61,7 @@ rule transform_counts:
         counts=get_counts,
         src=workflow.source_path("scripts/transform_counts.py"),
     output:
-        tsv="{sample}/expression/seAMLess.tsv",
+        tsv="{sample}/expression/by_strand.tsv",
     params:
         strandedness=get_strand,
     log:

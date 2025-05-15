@@ -55,6 +55,7 @@
   tags:
     - functional
     - expression
+    - current
   command: >
     snakemake
     --snakefile includes/expression/Snakefile
@@ -72,11 +73,12 @@
     # Test the transformed coverage counts to be used with seAMLess. This will
     # only work if there are at least two samples, so we put the sample in
     # there twice
-    - path: SRR8615409/expression/seAMLess.tsv
+    - path: SRR8615409/expression/by_strand.tsv
+      must_not_contain:
+        - "SRR8615409"
       contains:
-        - "X\tSRR8615409\tSRR8615409"
         # Result for unstranded data
-        - "ENSG00000211459\t30\t30"
+        - "ENSG00000211459\t30"
     # Since MT-CO2 was used both as gene of interest and only housekeeping
     # gene, the normalized expression for every strand must be 1.0
     # MT-CO2 was chosen specifically so it does not overlap any other
@@ -159,23 +161,20 @@
   exit_code: 0
   files:
     # Test the seamless value for the forward sample
-    - path: SRR8615409-forward/expression/seAMLess.tsv
+    - path: SRR8615409-forward/expression/by_strand.tsv
       contains:
-        - "X\tSRR8615409-forward\tSRR8615409-forward"
         # Results for the forward strand
-        - "ENSG00000211459\t18\t18"
+        - "ENSG00000211459\t18"
     # Test the seamless input for the reverse sample
-    - path: SRR8615409-reverse/expression/seAMLess.tsv
+    - path: SRR8615409-reverse/expression/by_strand.tsv
       contains:
-        - "X\tSRR8615409-reverse\tSRR8615409-reverse"
         # Results for the reverse strand
-        - "ENSG00000211459\t12\t12"
+        - "ENSG00000211459\t12"
     # Test the seamless input for the unstranded sample
-    - path: SRR8615409-unstranded/expression/seAMLess.tsv
+    - path: SRR8615409-unstranded/expression/by_strand.tsv
       contains:
-        - "X\tSRR8615409-unstranded\tSRR8615409-unstranded"
         # Results for the reverse strand
-        - "ENSG00000211459\t30\t30"
+        - "ENSG00000211459\t30"
     - path: merged_expression_stranded_mqc.tsv
       contains:
         - "id: mqc_expression_stranded"

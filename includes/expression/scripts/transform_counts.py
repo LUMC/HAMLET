@@ -2,8 +2,6 @@ import argparse
 
 
 def main(countfile, strand, sample):
-    # Print the header
-    print("X", sample, sample, sep="\t")
     columns = {"unstranded": 1, "forward": 2, "reverse": 3}
     # Select the column for the specified strand
     column = columns[strand]
@@ -12,11 +10,11 @@ def main(countfile, strand, sample):
         for _ in range(4):
             next(fin)
 
-        for i, line in enumerate(fin, 1):
+        for line in fin:
             spline = line.strip("\n").split("\t")
             gene = spline[0]
             counts = spline[column]
-            print(i, gene, counts, counts, sep="\t")
+            print(gene, counts, sep="\t")
 
 
 if __name__ == "__main__":
