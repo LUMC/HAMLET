@@ -63,7 +63,8 @@ run HAMLET is quite simple.
 
 .. code:: bash
 
-  $ snakemake -s HAMLET/Snakefile \
+  $ snakemake \
+      --snakefile HAMLET/Snakefile \
       --profile HAMLET/cfg \
       --configfile config.json \
       --config pepfile=sample_sheet.csv
