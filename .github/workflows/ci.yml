@@ -156,7 +156,7 @@ jobs:
           --tag ${{ matrix.module}}
           --tag functional
 
-      -name: Rename HAMLET PDF and MultiQC report
+      - name: Rename HAMLET PDF and MultiQC report
        run: |
          mv /tmp/pytest_workflow_*/test-hamlet-chrM/SRR8615409/hamlet_report.SRR8615409.pdf HAMLET-example-report.pdf
          mv /tmp/pytest_workflow_*/test-hamlet-chrM/multiqc_hamlet.html HAMLET-example-MultiQC.html
