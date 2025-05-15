@@ -24,6 +24,13 @@ def test_unset_dev(changelog):
     assert next(iter(new)) == "v1.0"
     assert len(new) == 2
 
+def test_set_existing_version(changelog):
+    new = set_version(changelog, "v1.0-dev")
+    latest_version, changes = next(iter(new.items()))
+
+    assert latest_version == "v1.0-dev"
+    assert changes == ["changes"]
+
 def set_version(changelog: OrderedDict, version: str) -> OrderedDict:
     """Set version of the ordered dict
 
@@ -32,7 +39,11 @@ def set_version(changelog: OrderedDict, version: str) -> OrderedDict:
     new = copy.deepcopy(changelog)
 
     latest_version = next(iter(changelog))
-    if latest_version == f"{version}-dev":
+
+    # If the version is already set, we do nothing
+    if latest_version == version:
+        pass
+    elif latest_version == f"{version}-dev":
         dev_version, changes = new.popitem(last=False)
         new[version] = changes
     else:
