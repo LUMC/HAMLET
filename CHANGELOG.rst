@@ -12,6 +12,7 @@ v2.3.3-dev
 **********
 
 * Add script to update HAMLET version (developer)
+* Rename the PDF manual
 
 ******
 v2.3.2
