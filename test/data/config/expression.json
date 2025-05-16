@@ -2,5 +2,7 @@
   "housekeeping": [
     "MT-CO2"
   ],
-  "gtf": "test/data/reference/hamlet-ref.gtf"
+  "gtf": "test/data/reference/hamlet-ref.gtf",
+  "seamless_ref": "test/data/seAMLess/seAMLess_expression_reference.csv",
+  "seamless_meta": "test/data/seAMLess/seAMLess_expression_metadata.csv"
 }

@@ -8,6 +8,10 @@ rule all:
             f"{sample.sample}/expression/by_strand.tsv" for sample in samples
         ],
         json=[module_output.json(sample) for sample in samples],
+        deconvolution=[
+            f"{sample.sample}/expression/seAMLess/deconvolution.csv"
+            for sample in samples
+        ],
 
 
 rule normalized_coverage:
@@ -76,6 +80,34 @@ rule transform_counts:
             --strand {params.strandedness} \
             --sample {wildcards.sample} \
             > {output.tsv} 2> {log}
+        """
+
+
+rule seamless:
+    """Determine cell composition"""
+    input:
+        counts=rules.transform_counts.output.tsv,
+        ref=config["seamless_ref"],
+        meta=config["seamless_meta"],
+        src=workflow.source_path("scripts/seAMLessWrapper.R"),
+    output:
+        deconvolution="{sample}/expression/seAMLess/deconvolution.csv",
+        venetoclax="{sample}/expression/seAMLess/venetoclax_resistance.csv",
+    log:
+        "log/seamless.{sample}.txt",
+    threads: 1
+    container:
+        containers["seamless"]
+    shell:
+        """
+        outdir=$(dirname {output.deconvolution})
+        Rscript {input.src} \
+            --exprs-ref {input.ref} \
+            --meta-ref {input.meta} \
+            --outdir $outdir \
+            --counts {input.counts} \
+            --sample-name={wildcards.sample} \
+            --verbose 2> {log}
         """
 
 
