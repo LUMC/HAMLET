@@ -13,6 +13,7 @@ v2.3.4-dev
 
 * Determine cell type composition using seAMLess
 * Add section for gene expression to the PDF report
+* Add seAMLess cell type composition to PDF and MultiQC report
 
 ******
 v2.3.3
