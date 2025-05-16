@@ -138,6 +138,7 @@ rule json_output:
 rule merge_samples:
     input:
         counts=[module_output.normalized_expression(sample) for sample in samples],
+        sample_json=[module_output.json(sample) for sample in samples],
         src=workflow.source_path("scripts/multiqc.py"),
     params:
         samples=[sample.sample for sample in samples],
@@ -145,6 +146,7 @@ rule merge_samples:
     output:
         unstranded="merged_expression_unstranded_mqc.tsv",
         stranded="merged_expression_stranded_mqc.tsv",
+        cell_types="merged_expression_cell_types_mqc.tsv",
     log:
         "log/merge_samples.txt",
     threads: 1
@@ -154,6 +156,7 @@ rule merge_samples:
         """
         python3 {input.src} \
             --counts {input.counts} \
+            --sample-json {input.sample_json} \
             --samples {params.samples} \
             --strandedness {params.strandedness}\
             2> {log}

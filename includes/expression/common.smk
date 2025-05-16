@@ -129,8 +129,9 @@ def normalized(wildcards):
 def multiqc_files():
     unstranded = ("merged_expression_unstranded_mqc.tsv",)
     stranded = ("merged_expression_stranded_mqc.tsv",)
+    cell_types = ("merged_expression_cell_types_mqc.tsv",)
 
-    return unstranded + stranded
+    return unstranded + stranded + cell_types
 
 
 def get_json(wildcards):

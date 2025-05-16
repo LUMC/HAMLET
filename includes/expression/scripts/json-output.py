@@ -17,14 +17,14 @@ def parse_deconvolution(fname):
 
 def main(args):
     """ Create json output of expression results """
-    
+
     # Create results dictionary
     results = {
             "metadata": {
                 "sample_name": args.sample
             },
     }
-    
+
     # Read the normalized expression for the specified strand
     raw_coverage = read_expression(args.coverage, args.strandedness)
     norm_coverage = read_expression(args.norm_coverage, args.strandedness)

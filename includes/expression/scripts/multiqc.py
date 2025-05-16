@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import json
 
 
 def read_expression(fname, strand):
@@ -24,8 +25,39 @@ def read_data(samples, countfiles, strandedness):
         data[sample] = read_expression(fname, strand)
     return data
 
+def write_cell_types(sample_json):
+    outfile="merged_expression_cell_types_mqc.tsv"
+    url="https://github.com/eonurk/seAMLess>seAMLess"
 
-def main(samples, countfiles, strandedness):
+    with open(outfile, "wt") as fout:
+        multiqc_header = f"""# plot_type: "table"
+# id: mqc_expression_cell_types
+# section_name: Cell type composition
+# description: Estimated cell type composition based on <a href={url}>seAMLess</a>."""
+
+        print(multiqc_header, file=fout)
+        header = None
+
+        for fname in sample_json:
+            with open(fname) as fin:
+                js = json.load(fin)
+
+            # First time
+            if header is None:
+                header = list(js["expression"]["cell-types"].keys())
+                header.insert(0, "Sample")
+                print(*header, sep='\t', file=fout)
+
+            # Get the cell type data
+            data = js["expression"]["cell-types"]
+            # Add the sample
+            sample = js["expression"]["metadata"]["sample_name"]
+            data["Sample"] = sample
+
+            # Print
+            print(*(data[field] for field in header), sep="\t", file=fout)
+
+def main(samples, countfiles, strandedness, sample_json):
     # Read all the data
     data = read_data(samples, countfiles, strandedness)
 
@@ -42,6 +74,7 @@ def main(samples, countfiles, strandedness):
 
     write_multiqc(unstranded, "unstranded")
     write_multiqc(stranded, "stranded")
+    write_cell_types(sample_json)
 
 
 def write_multiqc(data, strand):
@@ -89,6 +122,12 @@ if __name__ == "__main__":
         nargs="+",
         choices=["unstranded", "forward", "reverse"],
     )
+    parser.add_argument(
+        "--sample-json",
+        required=True,
+        nargs="+",
+        help="Per sample expression json files"
+    )
 
     args = parser.parse_args()
 
@@ -100,4 +139,4 @@ if __name__ == "__main__":
         )
         raise RuntimeError(msg)
 
-    main(args.samples, args.counts, args.strandedness)
+    main(args.samples, args.counts, args.strandedness, args.sample_json)

@@ -103,6 +103,9 @@
     - path: multiqc_expression.html
       contains:
         - "MT-CO2"
+      # Test for seAMLess output in html
+      contains:
+        - "CD14 Mono"
     - path: SRR8615409/expression/expression-output.json
       contains:
         - "MT-ND4"
