@@ -144,6 +144,12 @@ use rule normalized_coverage from expression as expression_normalized_coverage w
         src=workflow.source_path("includes/expression/scripts/coverage.py"),
 
 
+use rule transform_counts from expression as expression_transform_counts with:
+    input:
+        counts=align.module_output.counts,
+        src=workflow.source_path("includes/expression/scripts/transform_counts.py"),
+
+
 rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""
     input:

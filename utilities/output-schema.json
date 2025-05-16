@@ -333,7 +333,8 @@
         "minProperties": 2,
         "properties": {
           "metadata": { "$ref": "#/definitions/modules/expression/metadata" },
-          "gene-expression": { "$ref": "#/definitions/modules/expression/gene-expression" }
+          "gene-expression": { "$ref": "#/definitions/modules/expression/gene-expression" },
+          "cell-types": { "$ref": "#/definitions/modules/expression/cell-types" }
         },
         "metadata": {
           "description": "Metadata entry for the expression module",
@@ -347,6 +348,11 @@
           "description": "Gene expression values for the genes of interest",
           "type": "object",
           "additionalProperties": { "$ref": "#/definitions/modules/expression/single_gene"}
+        },
+        "cell-types": {
+          "description": "Cell composition of the sample",
+          "type": "object",
+          "additionalProperties": {"type": "number"}
         },
         "single_gene": {
           "description": "Gene expression object for a single gene",

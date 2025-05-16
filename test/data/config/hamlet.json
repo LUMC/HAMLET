@@ -48,6 +48,8 @@
       "MT-ND2",
       "MT-ND3",
       "MT-CO2"
-    ]
+    ],
+    "seamless_ref": "test/data/seAMLess/seAMLess_expression_reference.csv",
+    "seamless_meta": "test/data/seAMLess/seAMLess_expression_metadata.csv"
   }
 }

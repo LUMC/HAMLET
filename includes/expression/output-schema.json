@@ -5,11 +5,12 @@
     "expression": {
       "description": "Top level object for the json output of the expression module",
       "type": "object",
-      "additionalProperties": false,
+     "additionalProperties": false,
       "minProperties": 2,
       "properties": {
         "metadata": { "$ref": "#/definitions/metadata" },
-        "gene-expression": { "$ref": "#/definitions/gene-expression" }
+        "gene-expression": { "$ref": "#/definitions/gene-expression" },
+        "cell-types": { "$ref": "#/definitions/cell-types" }
       }
     },
     "metadata": {
@@ -34,6 +35,11 @@
         "normalized": {"type": "number"},
         "raw": {"type": "integer"}
       }
+    },
+    "cell-types": {
+      "description": "Cell composition of the sample",
+      "type": "object",
+      "additionalProperties": {"type": "number"}
     }
   },
   "additionalProperties": false,

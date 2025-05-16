@@ -2,14 +2,18 @@
 
 import json
 import argparse
-import os
 
 from multiqc import read_expression
 
-def fusion_results(fname):
-    # Initialise the results dictionary
+def parse_deconvolution(fname):
     with open(fname) as fin:
-        return json.load(fin)
+        header = next(fin).strip("\n").replace('"','').split(',')[1:]
+        data = next(fin).strip("\n").split(",")
+        data = [float(x) for x in data[1:]]
+
+        assert len(data) == len(header)
+        d = {k:v for k, v in zip(header, data)}
+    return d
 
 def main(args):
     """ Create json output of expression results """
@@ -40,6 +44,7 @@ def main(args):
         }
 
     results["gene-expression"] = genes
+    results["cell-types"] = parse_deconvolution(args.deconvolution)
     print(json.dumps({"expression": results}, sort_keys=True, indent=2))
 
 
@@ -50,6 +55,7 @@ if __name__ == "__main__":
     parser.add_argument('--sample', help = 'Sample name')
     parser.add_argument('--strandedness', help='Strandedness of the sample')
     parser.add_argument('--genes', nargs='*', default=list(), help='genes to include')
+    parser.add_argument('--deconvolution', help="seAMLess deconvolution results")
 
     args = parser.parse_args()
     main(args)

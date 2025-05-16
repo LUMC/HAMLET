@@ -107,6 +107,9 @@
       contains:
         - "MT-ND4"
         - "MT-TH"
+        # Output from seAMLess
+        - "cell-types"
+        - "CD14 Mono"
 
 - name: Run the expression module with genes of interest
   tags:
