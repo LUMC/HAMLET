@@ -1,12 +1,7 @@
 {% set stats = modules.snv_indels.stats %}
 {% set total_vars = stats.var.num_snvs + stats.var.num_insertions + stats.var.num_deletions %}
 
-<!-- Increase the table counter if we have included gene expression results -->
-{% if modules.expression.get('gene-expression') %}
-  {% set vars = {'figure_idx': 1, 'table_idx': 10} %}
-{% else %}
-  {% set vars = {'figure_idx': 1, 'table_idx': 9} %}
-{% endif %}
+{% set vars = {'figure_idx': 1, 'table_idx': 9} %}
 
 <h1>Variant Calling Results</h1>
 {% for gene in stats.cov %}

@@ -28,9 +28,6 @@
   files:
     - path: report.html
       contains:
-        # The first table with exon coverage information should be Table 10,
-        # since we include the table with gene expression levels
-        - "Table 10 | Exon statistics of transcript ENST00000361899"
         # The HGVSc and HGVSp variants should be in the report
         - "ENST00000361899.2:c.40A>G"
         - "ENSP00000354632.2:p.Ile14Val"

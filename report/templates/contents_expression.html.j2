@@ -1,0 +1,55 @@
+{% set table_idx = metadata.genes_of_interest|num_tids + 8 %}
+<h1>Expression Analysis Results</h1>
+
+<div class="keep-together">
+  <div class="table-title">
+    <p>Table {{ table_idx + 1}} | Cell type composition</p>
+  </div>
+  <table class="table-wide" style="margin-bottom: 2em; width: 25%;" id="cell-types">
+    <thead>
+      <tr>
+        <th class="text-right">Cell type</th>
+        <th class="text-right">Percentage</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for gene, expression in modules.expression.get('cell-types').items() %}
+      <tr>
+        <td>{{ gene }}</td>
+        <td class="text-right">{{ (expression*100) | round(2) }}%</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% set gene_expression = modules.expression.get('gene-expression') %}
+{% if gene_expression %}
+<div class="keep-together">
+  <div class="table-title">
+    <p>Table {{ table_idx + 2}} | Gene expression</p>
+  </div>
+  <table class="table-wide" style="margin-bottom: 2em; width: 50%;" id="gene-expression">
+    <thead>
+      <tr>
+        <th>Gene</th>
+        <th class="text-right">Raw count</th>
+        <th class="text-right">Normalized expression</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for gene, results in gene_expression.items() %}
+      <tr>
+        <td>{{ gene }}</td>
+        <td class="text-right">{{ results.raw }}</td>
+        {% if results.normalized is none %}
+          <td class="text-right">None</td>
+        {% else %}
+          <td class="text-right">{{ results.normalized | round(2) }}</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}

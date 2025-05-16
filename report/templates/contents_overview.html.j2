@@ -95,39 +95,3 @@
     </tbody>
   </table>
 </div>
-
-<!--
-  Include a table for the expression data, if any genes are included
-  Note that the normalized expression (results.normalized) can be None, so we
-  have to handle that
--->
-{% set gene_expression = modules.expression.get('gene-expression') %}
-{% if gene_expression %}
-<div class="keep-together">
-  <div class="table-title">
-    <p>Table 9 | Gene expression</p>
-  </div>
-  <table class="table-wide" style="margin-bottom: 2em; width: 50%;" id="gene-expression">
-    <thead>
-      <tr>
-        <th>Gene</th>
-        <th class="text-right">Raw count</th>
-        <th class="text-right">Normalized expression</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for gene, results in gene_expression.items() %}
-      <tr>
-        <td>{{ gene }}</td>
-        <td class="text-right">{{ results.raw }}</td>
-        {% if results.normalized is none %}
-          <td class="text-right">None</td>
-        {% else %}
-          <td class="text-right">{{ results.normalized | round(2) }}</td>
-        {% endif %}
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-{% endif %}
