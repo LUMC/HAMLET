@@ -11,6 +11,7 @@ Changelog
 v2.3.4-dev
 **********
 
+* Determine cell type composition using seAMLess
 
 ******
 v2.3.3
