@@ -118,15 +118,18 @@
         # Region for MT-TF
         - "chrM\t576\t3304"
 
-    # Test that file names are set correctly in MultiQC report
     - path: multiqc_snv_indels.html
       must_not_contain:
+        # Test that file names are set correctly in MultiQC report
         - "ReadsPerGene.out.tab"
         - "Log.final.out"
         - "aln_stats"
         - "insert_stats"
         - "rna_stats"
         - "vep_stats.txt"
+        # If the library is unstranded (or strand not set), do not include
+        # Strand Mapping in the MultiQC report
+        - "RnaSeqMetrics Strand Mapping"
       contains:
         - "VEP"
         - "STAR"
@@ -137,6 +140,33 @@
       should_exist: False
     - path: SRR8615409/snv-indels/_STARpass1
       should_exist: False
+
+- name: test-snv-indels-stranded
+  tags:
+    - functional
+    - snv-indels
+  command: >
+    bash -c "
+    source test/helper.sh
+
+    snakemake \
+      --snakefile includes/snv-indels/Snakefile \
+      --workflow-profile test \
+      --notemp \
+      --configfile test/data/config/snv-indels.json \
+      --config pepfile=test/pep/targetted.csv \
+        blacklist=test/data/blacklist.txt
+    "
+  files:
+    - path: multiqc_snv_indels.html
+      contains:
+        # Test that MultiQC contains a section on de strandedness
+      - "RnaSeqMetrics Strand Mapping"
+    - path: multiqc_snv_indels_data/picard_rnaseqmetrics_strand_plot.txt
+      contains:
+        # Test that most reads are the correct strand (sample is reverse stranded)
+        - "Sample\tCorrect\tIncorrect"
+        - "MO1-RNAseq-1-16714\t155.0\t5.0"
 
 # VEP should switch to offline mode when "vep_cache" is specified
 - name: test-chrM-vep-cache

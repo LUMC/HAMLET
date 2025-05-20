@@ -246,6 +246,8 @@ rule picard_metrics:
         ref_dict=config["genome_dict"],
         ref_rrna=config["rrna_refflat"],
         annot=config["annotation_refflat"],
+    params:
+        strand=get_strand_picard,
     output:
         alignment="{sample}/snv-indels/{sample}.alignment_summary_metrics",
         rna_seq="{sample}/snv-indels/{sample}.rna_metrics",
@@ -267,6 +269,7 @@ rule picard_metrics:
             I={input.bam} \
             REF_FLAT={input.annot} \
             EXTRA_ARGUMENT="RnaSeqMetrics::RIBOSOMAL_INTERVALS={input.ref_rrna}" \
+            EXTRA_ARGUMENT="RnaSeqMetrics::STRAND_SPECIFICITY={params.strand}" \
             USE_JDK_DEFLATER=true \
             USE_JDK_INFLATER=true \
             O={wildcards.sample}/snv-indels/{wildcards.sample} 2> {log}

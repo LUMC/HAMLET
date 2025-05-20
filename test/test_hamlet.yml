@@ -63,6 +63,15 @@
     "
     - path: MO1-RNAseq-1-16714/hamlet_report.SRR8615409.pdf
     - path: "log/generate_report.MO1-RNAseq-1-16714.txt"
+    - path: multiqc_hamlet.html
+      contains:
+        # Test that MultiQC contains a section on de strandedness
+      - "RnaSeqMetrics Strand Mapping"
+    - path: multiqc_hamlet_data/picard_rnaseqmetrics_strand_plot.txt
+      contains:
+        # Test that most reads are the correct strand (sample is reverse stranded)
+        - "Sample\tCorrect\tIncorrect"
+        - "MO1-RNAseq-1-16714\t155.0\t5.0"
 
 # HAMLET pipeline should run successfully with default settings
 - name: test-hamlet-chrM
@@ -155,8 +164,8 @@
         - "Picard"
         # Custom MultiQC output from the expression module
         - "mqc_expression_unstranded"
-      # Blacklisted MultiQC sections
       must_not_contain:
+        # Blacklisted MultiQC sections
         - "sequali_sequence_duplication_levels"
         - "sequali_sequence_counts"
         - "sequali_top_overrepresented_sequences_table_read1"
@@ -165,6 +174,9 @@
         - "sift_summary"
         - "polyphen_summary"
         - "position_in_protein"
+        # strandedness was not specified for the samples, so this sections
+        # should not be in the MultiQC Report
+        - "RnaSeqMetrics Strand Mapping"
     # Test that we remove the temporary folder from snv-indels
     - path: "snv-indel-tmp"
       should_exist: False

@@ -42,6 +42,27 @@ def get_reverse(wildcards):
     return pep.sample_table.loc[wildcards.sample, "R2"]
 
 
+def get_strand(wildcards):
+    try:
+        strandedness = pep.sample_table.loc[wildcards.sample, "strandedness"]
+    except KeyError:
+        strandedness = "unstranded"
+    if strandedness is None:
+        raise ValueError("Please specify a strandedness for every sample")
+    return strandedness
+
+
+def get_strand_picard(wildcards):
+    strand = get_strand(wildcards)
+
+    mapping = {
+        "unstranded": "NONE",
+        "forward": "FIRST_READ_TRANSCRIPTION_STRAND",
+        "reverse": "SECOND_READ_TRANSCRIPTION_STRAND",
+    }
+    return mapping[strand]
+
+
 ## Functions for module outputs ##
 def get_bam_output(wildcards):
     return f"{wildcards.sample}/snv-indels/{wildcards.sample}.bam"
