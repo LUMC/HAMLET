@@ -102,7 +102,30 @@ rule seamless:
             --meta-ref {input.meta} \
             --outdir $outdir \
             --counts {input.counts} \
-            --sample-name={wildcards.sample} \
+            --sample-name {wildcards.sample} \
+            --verbose 2> {log}
+        """
+
+
+rule amlmapr:
+    """Predict the subtype of the sample using AMLmapR """
+    input:
+        counts="{sample}/expression/by_strand.tsv",
+        src=workflow.source_path("scripts/AMLmapR_wrapper.R"),
+    output:
+        clusters="{sample}/expression/AMLmapR/aml_cluster_predictions.csv",
+    log:
+        "log/amlmapr.{sample}.txt",
+    threads: 1
+    container:
+        containers["amlmapr"]
+    shell:
+        """
+        outdir=$(dirname {output.clusters})
+        Rscript {input.src} \
+            --counts {input.counts} \
+            --outdir $outdir \
+            --sample-name {wildcards.sample} \
             --verbose 2> {log}
         """
 
@@ -113,6 +136,7 @@ rule json_output:
         norm_coverage=module_output.normalized_expression,
         src=workflow.source_path("scripts/json-output.py"),
         deconvolution=rules.seamless.output.deconvolution,
+        subtypes=rules.amlmapr.output.clusters,
     params:
         strandedness=get_strand,
         genes=config["report"],

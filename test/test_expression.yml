@@ -15,6 +15,7 @@
       - "rule transform_counts"
       - "rule json_output"
       - "rule seamless"
+      - "rule amlmapr"
 
 - name: Test error on unknown housekeeping gene
   tags:
@@ -92,6 +93,10 @@
     - path: SRR8615409/expression/seAMLess/deconvolution.csv
       contains:
         - "CD14 Mono"
+    # Test the AMLmapR output
+    - path: SRR8615409/expression/AMLmapR/aml_cluster_predictions.csv
+      contains:
+        - "AML.MRC.1."
     # Test that the merged expression files are created, for unstranded,
     # forward and reverse libraries
     - path: merged_expression_unstranded_mqc.tsv
