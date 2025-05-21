@@ -334,6 +334,7 @@
         "properties": {
           "metadata": { "$ref": "#/definitions/modules/expression/metadata" },
           "gene-expression": { "$ref": "#/definitions/modules/expression/gene-expression" },
+          "subtype": { "$ref": "#/definitions/modules/expression/subtype" },
           "cell-types": { "$ref": "#/definitions/modules/expression/cell-types" }
         },
         "metadata": {
@@ -353,6 +354,10 @@
           "description": "Cell composition of the sample",
           "type": "object",
           "additionalProperties": {"type": "number"}
+        },
+        "subtype": {
+          "descrition": "Predicted AML subtype of the sample",
+          "type": "object"
         },
         "single_gene": {
           "description": "Gene expression object for a single gene",

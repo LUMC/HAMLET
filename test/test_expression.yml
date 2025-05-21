@@ -57,7 +57,6 @@
   tags:
     - functional
     - expression
-    - current
   command: >
     snakemake
     --snakefile includes/expression/Snakefile
@@ -121,6 +120,8 @@
         # Output from seAMLess
         - "cell-types"
         - "CD14 Mono"
+        # Output from AMLmapR
+        - "RUNX1..RUNX1T1"
 
 - name: Run the expression module with genes of interest
   tags:

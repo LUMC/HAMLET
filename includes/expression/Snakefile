@@ -136,7 +136,7 @@ rule json_output:
         norm_coverage=module_output.normalized_expression,
         src=workflow.source_path("scripts/json-output.py"),
         deconvolution=rules.seamless.output.deconvolution,
-        subtypes=rules.amlmapr.output.clusters,
+        subtype=rules.amlmapr.output.clusters,
     params:
         strandedness=get_strand,
         genes=config["report"],
@@ -154,6 +154,7 @@ rule json_output:
             --strandedness {params.strandedness} \
             --genes {params.genes} \
             --deconvolution {input.deconvolution} \
+            --subtype {input.subtype} \
             --sample {wildcards.sample} \
             > {output} 2> {log}
         """

@@ -15,6 +15,7 @@ v2.3.4-dev
 * Add section for gene expression to the PDF report
 * Add seAMLess cell type composition to PDF and MultiQC report
 * Add Picard Strand Mapping statistics to the MultiQC report
+* Add AML subtype prediction with AMLmapR
 
 ******
 v2.3.3

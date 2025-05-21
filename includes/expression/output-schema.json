@@ -10,6 +10,7 @@
       "properties": {
         "metadata": { "$ref": "#/definitions/metadata" },
         "gene-expression": { "$ref": "#/definitions/gene-expression" },
+        "subtype": { "$ref": "#/definitions/subtype" },
         "cell-types": { "$ref": "#/definitions/cell-types" }
       }
     },
@@ -40,6 +41,10 @@
       "description": "Cell composition of the sample",
       "type": "object",
       "additionalProperties": {"type": "number"}
+    },
+    "subtype": {
+      "descrition": "Predicted AML subtype of the sample",
+      "type": "object"
     }
   },
   "additionalProperties": false,

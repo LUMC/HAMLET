@@ -15,6 +15,26 @@ def parse_deconvolution(fname):
         d = {k:v for k, v in zip(header, data)}
     return d
 
+def parse_amlmapr(fname):
+    with open(fname) as fin:
+        header = next(fin).strip("\n").replace('"','').split(",")
+        data = next(fin).strip("\n").replace('"','').split(",")
+
+    fix_type = []
+
+    # Convert to float
+    for x in data:
+        try:
+            value = float(x)
+        except ValueError:
+            value = x
+        fix_type.append(value)
+    # Convert to boolean
+    fix_type[-2] = (fix_type[-2] == "TRUE")
+
+    assert len(header) == len(fix_type)
+    return {k:v for k, v in zip(header, fix_type)}
+
 def main(args):
     """ Create json output of expression results """
 
@@ -45,6 +65,7 @@ def main(args):
 
     results["gene-expression"] = genes
     results["cell-types"] = parse_deconvolution(args.deconvolution)
+    results["subtype"] = parse_amlmapr(args.subtype)
     print(json.dumps({"expression": results}, sort_keys=True, indent=2))
 
 
@@ -56,6 +77,7 @@ if __name__ == "__main__":
     parser.add_argument('--strandedness', help='Strandedness of the sample')
     parser.add_argument('--genes', nargs='*', default=list(), help='genes to include')
     parser.add_argument('--deconvolution', help="seAMLess deconvolution results")
+    parser.add_argument('--subtype', help="AMLmapR subtype prediction results")
 
     args = parser.parse_args()
     main(args)
