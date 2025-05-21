@@ -10,6 +10,7 @@ suppressPackageStartupMessages({
   library(optparse)
   library(seAMLess)
   library(Biobase)
+  library(ggplot2)
 })
 
 
@@ -240,3 +241,12 @@ out_veno   <- file.path(opts$o, "venetoclax_resistance.csv")
 # write them out
 write.csv(deconv,  out_deconv, row.names = TRUE)
 write.csv(veno_res, out_veno,   row.names = TRUE)
+
+# Create a plot of the cell types
+png(file.path(opts$o, "cell-types.png"))
+
+tibble::enframe(deconv[1,]) |>
+ggplot(aes(name, value *100, fill = name)) +
+geom_bar(stat = "identity") + ylab("Cell type composition (%)") +
+guides(x = guide_axis(angle = 90)) + theme_minimal() + labs(fill = "Cell Types") + theme_bw(base_size = 16) + theme(legend.position = "none") + xlab("")
+dev.off()
