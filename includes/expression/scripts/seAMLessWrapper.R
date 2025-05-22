@@ -1,9 +1,6 @@
 #!/usr/bin/env Rscript
 
 # seAMLess Analysis Pipeline
-# Refactored for command-line usage and professional structure
-
-
 
 
 suppressPackageStartupMessages({
@@ -157,10 +154,21 @@ if (is.null(opts$c) || is.null(opts$o)) {
   print_help(parser)
   stop("Both --counts and --outdir must be provided.", call. = FALSE)
 }
+
 # If custom reference is provided, both exprs-ref and meta-ref must be set
 use_custom_ref <- !is.null(opts$e)
-if (use_custom_ref && is.null(opts$m)) {
-  stop("--meta-ref must be provided when --exprs-ref is specified.", call. = FALSE)
+if (use_custom_ref) {
+  ext <- tolower(tools::file_ext(opts$e))
+  if (ext == "rda") {
+    # .rda needs no meta-ref
+    require_meta <- FALSE
+  } else {
+    # CSV needs meta-ref
+    require_meta <- TRUE
+  }
+  if (require_meta && is.null(opts$m)) {
+    stop("--meta-ref must be provided when --exprs-ref points to a CSV file.", call. = FALSE)
+  }
 }
 
 # Create output directory if it doesn't exist
@@ -168,22 +176,37 @@ if (!dir.exists(opts$o)) {
   dir.create(opts$o, recursive = TRUE)
 }
 
+
+
 # Load or default reference data
 if (use_custom_ref) {
-  verbose_print("Loading reference expression: ", opts$e, verbose = opts$verbose)
-  exprs_ref <- read.csv(opts$e, header = TRUE, row.names = 1)
-  exprs_ref <- data.matrix(exprs_ref)
-  colnames(exprs_ref) <- sub("^X", "", colnames(exprs_ref))
+  ext <- tolower(tools::file_ext(opts$e))
+  if (ext == "rda") {
+    verbose_print("Loading reference from RDA: ", opts$e)
+    tmp <- new.env()
+    load(opts$e, envir = tmp)
+    if (!exists("scRef", envir = tmp)) {
+      stop("The .rda file does not contain an object named 'scRef'.", call. = FALSE)
+    }
+    ref_sub <- tmp$scRef
 
-  verbose_print("Loading reference metadata: ", opts$m, verbose = opts$verbose)
-  meta_ref <- read.csv(opts$m, header = TRUE, row.names = 1)
+  } else {
+    verbose_print("Loading reference expression (CSV): ", opts$e)
+    exprs_ref <- read.csv(opts$e, header = TRUE, row.names = 1)
+    exprs_ref <- data.matrix(exprs_ref)
+    colnames(exprs_ref) <- sub("^X", "", colnames(exprs_ref))
 
-  ref_sub <- ExpressionSet(
-    assayData = exprs_ref,
-    phenoData = AnnotatedDataFrame(meta_ref)
-  )
+    verbose_print("Loading reference metadata (CSV): ", opts$m)
+    meta_ref <- read.csv(opts$m, header = TRUE, row.names = 1)
+
+    ref_sub <- ExpressionSet(
+      assayData   = exprs_ref,
+      phenoData   = AnnotatedDataFrame(meta_ref)
+    )
+  }
+
 } else {
-  verbose_print("Using built-in single-cell reference: seAMLessData::scRef", verbose = opts$verbose)
+  verbose_print("Using built-in single-cell reference: seAMLessData::scRef")
   suppressPackageStartupMessages(library(seAMLessData))
   ref_sub <- seAMLessData::scRef
 }
