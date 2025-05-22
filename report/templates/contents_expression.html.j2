@@ -2,32 +2,17 @@
 <h1>Expression Analysis Results</h1>
 
 <div class="keep-together">
-  <div class="table-title">
-    <p>Table {{ table_idx + 1}} | Cell type composition</p>
-  </div>
-  <table class="table-wide" style="margin-bottom: 2em; width: 25%;" id="cell-types">
-    <thead>
-      <tr>
-        <th class="text-right">Cell type</th>
-        <th class="text-right">Percentage</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for gene, expression in modules.expression.get('cell-types').get('data').items() %}
-      <tr>
-        <td>{{ gene }}</td>
-        <td class="text-right">{{ (expression*100) | round(2) }}%</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <h2> Cell type composition </h2>
+  <figure>
+    <img src="{{ modules.expression.get('cell-types').get('plot') }}"></img>
+  </figure>
 </div>
 
 {% set gene_expression = modules.expression.get('gene-expression') %}
 {% if gene_expression %}
 <div class="keep-together">
   <div class="table-title">
-    <p>Table {{ table_idx + 2}} | Gene expression</p>
+    <p>Table {{ table_idx + 1}} | Gene expression</p>
   </div>
   <table class="table-wide" style="margin-bottom: 2em; width: 50%;" id="gene-expression">
     <thead>

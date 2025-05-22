@@ -127,6 +127,8 @@
         - "chr13:g.28034118_28034147dup"
         # Test that the exon notation of the variant is in the report (Table 7)
         - "14/24"
+        # Test that we have the link to the seAMLess bar chart in the report
+        - "cell-types.png"
       must_not_contain:
         - "FLT3::FLT3"
 

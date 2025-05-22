@@ -780,28 +780,31 @@
     },
     "expression": {
       "cell-types": {
-        "ASDC": 0.0,
-        "B Cells": 0.546573188005553,
-        "BaEoMa": 0.0,
-        "CD14 Mono": 0.0,
-        "CD16 Mono": 0.0,
-        "CLP": 0.0,
-        "EMP": 0.0,
-        "Early Eryth": 0.0,
-        "GMP": 0.0,
-        "HSC": 0.0,
-        "LMPP": 0.0,
-        "Late Eryth": 0.0,
-        "NK Cells": 0.0,
-        "Plasma": 0.0,
-        "Prog Mk": 0.0,
-        "T Cells": 0.453426811994447,
-        "cDC": 0.0,
-        "pDC": 0.0,
-        "pre B": 0.0,
-        "pre-mDC": 0.0,
-        "pre-pDC": 0.0,
-        "pro B": 0.0
+        "data": {
+          "ASDC": 0.0,
+          "B Cells": 0.546573188005553,
+          "BaEoMa": 0.0,
+          "CD14 Mono": 0.0,
+          "CD16 Mono": 0.0,
+          "CLP": 0.0,
+          "EMP": 0.0,
+          "Early Eryth": 0.0,
+          "GMP": 0.0,
+          "HSC": 0.0,
+          "LMPP": 0.0,
+          "Late Eryth": 0.0,
+          "NK Cells": 0.0,
+          "Plasma": 0.0,
+          "Prog Mk": 0.0,
+          "T Cells": 0.453426811994447,
+          "cDC": 0.0,
+          "pDC": 0.0,
+          "pre B": 0.0,
+          "pre-mDC": 0.0,
+          "pre-pDC": 0.0,
+          "pro B": 0.0
+        },
+        "plot": "report/assets/img/lumc-logo.jpg"
       }
     }
   }
