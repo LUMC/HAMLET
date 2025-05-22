@@ -29,6 +29,8 @@
         # The HGVSc and HGVSp variants should be in the report
         - "ENST00000361899.2:c.40A>G"
         - "ENSP00000354632.2:p.Ile14Val"
+        # Contains the AMLmapR prediction
+        - "NotClassified"
 
 # Test generating a fully nested report
 - name: test-full-report

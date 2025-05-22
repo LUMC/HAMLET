@@ -805,6 +805,28 @@
           "pro B": 0.0
         },
         "plot": "report/assets/img/lumc-logo.jpg"
+      },
+      "subtype": {
+        "AML.MRC.1.": 0.0,
+        "AML.MRC.2.": 0.0,
+        "AML.MRC.3.": 0.0,
+        "AML.MRC.4.": 0.0,
+        "AML.MRC.5.": 0.0,
+        "CBFB..MYH11": 0.0,
+        "CEBPA": 0.0,
+        "KMT2A.1.": 0.0,
+        "KMT2A.2.": 0.0,
+        "NPM1.1.": 0.0,
+        "NPM1.2.": 0.0,
+        "NPM1.3.": 0.0,
+        "NPM1.4.": 0.0,
+        "NPM1.5.": 0.0,
+        "NUP98": 0.0,
+        "PML..RARA": 0.0,
+        "RUNX1..RUNX1T1": 0.0,
+        "pass_cutoff": false,
+        "prediction": "NotClassified",
+        "sample_id": "SRR8615409"
       }
     }
   }
