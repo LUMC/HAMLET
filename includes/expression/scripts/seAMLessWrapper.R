@@ -1,8 +1,6 @@
 #!/usr/bin/env Rscript
 
 # seAMLess Analysis Pipeline
-# Refactored for command-line usage and professional structure
-
 
 
 
@@ -136,9 +134,11 @@ seAMLess_modified <- function(mat,
 # Define command-line options
 option_list <- list(
   make_option(c("-e", "--exprs-ref"), type = "character", default = NULL,
-              help = "Path to reference expression CSV (genes x samples). If not provided, uses built-in seAMLessData::scRef.", metavar = "file"),
+              help = "Path to reference expression CSV (genes x samples) or .rda (must contain 'scRef'). If not provided, tries to downloads seAMLessData::scRef.", 
+              metavar = "file"),
   make_option(c("-m", "--meta-ref"), type = "character", default = NULL,
-              help = "Path to reference metadata CSV (samples x features). Required if --exprs-ref is provided.", metavar = "file"),
+              help = "Path to reference metadata CSV (samples x features). Required if --exprs-ref is a CSV.", 
+              metavar = "file"),
   make_option(c("-c", "--counts"), type = "character", action = "append", default = NULL,
               help = "STAR count file(s) to process (can specify multiple)", metavar = "file"),
   make_option(c("-o", "--outdir"), type = "character", default = NULL,
@@ -152,38 +152,67 @@ option_list <- list(
 parser <- OptionParser(option_list = option_list)
 opts <- parse_args(parser)
 
-# Validate inputs
-if (is.null(opts$c) || is.null(opts$o)) {
+# Basic validation
+if (is.null(opts$counts) || is.null(opts$outdir)) {
   print_help(parser)
   stop("Both --counts and --outdir must be provided.", call. = FALSE)
 }
-# If custom reference is provided, both exprs-ref and meta-ref must be set
-use_custom_ref <- !is.null(opts$e)
-if (use_custom_ref && is.null(opts$m)) {
-  stop("--meta-ref must be provided when --exprs-ref is specified.", call. = FALSE)
+
+# If custom reference provided, check extension
+use_custom_ref <- !is.null(opts$exprs_ref)
+if (use_custom_ref) {
+  ext <- tolower(tools::file_ext(opts$exprs_ref))
+  if (ext == "rda") {
+    # .rda needs no meta-ref
+    require_meta <- FALSE
+  } else {
+    # CSV needs meta-ref
+    require_meta <- TRUE
+  }
+  if (require_meta && is.null(opts$meta_ref)) {
+    stop("--meta-ref must be provided when --exprs-ref points to a CSV file.", call. = FALSE)
+  }
 }
 
 # Create output directory if it doesn't exist
-if (!dir.exists(opts$o)) {
-  dir.create(opts$o, recursive = TRUE)
+if (!dir.exists(opts$outdir)) {
+  dir.create(opts$outdir, recursive = TRUE)
+}
+
+# Helper for verbose messaging
+verbose_print <- function(...) {
+  if (opts$verbose) message(paste0(...))
 }
 
 # Load or default reference data
 if (use_custom_ref) {
-  verbose_print("Loading reference expression: ", opts$e, verbose = opts$verbose)
-  exprs_ref <- read.csv(opts$e, header = TRUE, row.names = 1)
-  exprs_ref <- data.matrix(exprs_ref)
-  colnames(exprs_ref) <- sub("^X", "", colnames(exprs_ref))
+  ext <- tolower(tools::file_ext(opts$exprs_ref))
+  if (ext == "rda") {
+    verbose_print("Loading reference from RDA: ", opts$exprs_ref)
+    tmp <- new.env()
+    load(opts$exprs_ref, envir = tmp)
+    if (!exists("scRef", envir = tmp)) {
+      stop("The .rda file does not contain an object named 'scRef'.", call. = FALSE)
+    }
+    ref_sub <- tmp$scRef
 
-  verbose_print("Loading reference metadata: ", opts$m, verbose = opts$verbose)
-  meta_ref <- read.csv(opts$m, header = TRUE, row.names = 1)
+  } else {
+    verbose_print("Loading reference expression (CSV): ", opts$exprs_ref)
+    exprs_ref <- read.csv(opts$exprs_ref, header = TRUE, row.names = 1)
+    exprs_ref <- data.matrix(exprs_ref)
+    colnames(exprs_ref) <- sub("^X", "", colnames(exprs_ref))
 
-  ref_sub <- ExpressionSet(
-    assayData = exprs_ref,
-    phenoData = AnnotatedDataFrame(meta_ref)
-  )
+    verbose_print("Loading reference metadata (CSV): ", opts$meta_ref)
+    meta_ref <- read.csv(opts$meta_ref, header = TRUE, row.names = 1)
+
+    ref_sub <- ExpressionSet(
+      assayData   = exprs_ref,
+      phenoData   = AnnotatedDataFrame(meta_ref)
+    )
+  }
+
 } else {
-  verbose_print("Using built-in single-cell reference: seAMLessData::scRef", verbose = opts$verbose)
+  verbose_print("Using built-in single-cell reference: seAMLessData::scRef")
   suppressPackageStartupMessages(library(seAMLessData))
   ref_sub <- seAMLessData::scRef
 }
@@ -250,3 +279,5 @@ ggplot(aes(name, value *100, fill = name)) +
 geom_bar(stat = "identity") + ylab("Cell type composition (%)") +
 guides(x = guide_axis(angle = 90)) + theme_minimal() + labs(fill = "Cell Types") + theme_bw(base_size = 16) + theme(legend.position = "none") + xlab("")
 dev.off()
+
+
