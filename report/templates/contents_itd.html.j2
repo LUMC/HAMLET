@@ -1,16 +1,10 @@
 <h1>ITD/PTD Detection Results</h1>
 
-{% if modules.fusion.intersected %}
-    {% set figure_idx = metadata.genes_of_interest|length + 1 + 1 + 1 %}
-{% else %}
-    {% set figure_idx = metadata.genes_of_interest|length + 1 + 1 %}
-{% endif %}
-
 <div class="keep-together">
   <h2 style="margin-bottom: -.5em;">FLT3 ITD</h2>
   <figure>
     <img src="{{ modules.itd.flt3.path }}"></img>
-    <figcaption>Figure {{ figure_idx }} | FLT3 ITD detection results</figcaption>
+    <figcaption>FLT3 ITD detection results</figcaption>
   </figure>
 </div>
 
@@ -18,7 +12,7 @@
   <h2 style="margin-bottom: -.5em;">KMT2A PTD</h2>
   <figure>
     <img src="{{ modules.itd.kmt2a.path }}"></img>
-    <figcaption>Figure {{ figure_idx + 1 }} | KMT2A PTD detection results</figcaption>
+    <figcaption>KMT2A PTD detection results</figcaption>
   </figure>
 </div>
 

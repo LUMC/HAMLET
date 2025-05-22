@@ -11,8 +11,6 @@
   files:
     - path: report.html
       contains:
-        # The first table with exon coverage information should be Table 9
-        - "Table 9 | Exon statistics of transcript ENST00000361899"
         - "SRR8615409/fusion/arriba/plots/fusion-1.png"
         # Test that we include the genomic HGVS description in the report
         - "chrM:g.8701A>G"

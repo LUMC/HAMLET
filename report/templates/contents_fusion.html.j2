@@ -1,8 +1,5 @@
 <h1>Fusion Detection Results</h1>
 
-{% set figure_idx = metadata.genes_of_interest|length + 1 %}
-{% set table_idx = metadata.genes_of_interest|num_tids + 14 %}
-
 {% for fusion in modules.fusion.events %}
 <div class="keep-together">
   <h2 style="margin-bottom: -.5em;">{{ fusion.gene1 }}::{{ fusion.gene2}}</h2>
