@@ -1,16 +1,13 @@
 {% set stats = modules.snv_indels.stats %}
 {% set total_vars = stats.var.num_snvs + stats.var.num_insertions + stats.var.num_deletions %}
 
-{% set vars = {'figure_idx': 1, 'table_idx': 9} %}
-
 <h1>Variant Calling Results</h1>
 {% for gene in stats.cov %}
   {% for tid, exons in stats.cov[gene].items() %}
   <div class="keep-together">
     <h2 style="margin-bottom: -.5em;">{{ gene }}</h2>
     <div class="table-title">
-      <p>Table {{ vars['table_idx'] }} | Exon statistics of transcript {{ tid }} ({{ gene }})</p>
-      {% if vars.update({'table_idx': vars['table_idx'] + 1}) %} {% endif %}
+      <p>Exon statistics of transcript {{ tid }} ({{ gene }})</p>
     </div>
     <table class="table-wide"{%if not loop.last %} style="margin-bottom: 2em;"{% endif %}>
       <thead>
