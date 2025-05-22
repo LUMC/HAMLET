@@ -16,6 +16,7 @@ v2.3.4-dev
 * Add seAMLess cell type composition to PDF and MultiQC report
 * Add Picard Strand Mapping statistics to the MultiQC report
 * Add AML subtype prediction with AMLmapR
+* Remote table and figure numbers from the PDF report
 
 ******
 v2.3.3
