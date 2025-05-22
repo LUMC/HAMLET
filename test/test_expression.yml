@@ -92,6 +92,7 @@
     - path: SRR8615409/expression/seAMLess/deconvolution.csv
       contains:
         - "CD14 Mono"
+    - path: SRR8615409/expression/seAMLess/cell-types.png
     # Test the AMLmapR output
     - path: SRR8615409/expression/AMLmapR/aml_cluster_predictions.csv
       contains:
@@ -120,6 +121,7 @@
         # Output from seAMLess
         - "cell-types"
         - "CD14 Mono"
+        - "cell-types.png"
         # Output from AMLmapR
         - "RUNX1..RUNX1T1"
 

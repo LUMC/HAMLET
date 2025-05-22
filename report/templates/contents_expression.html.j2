@@ -13,7 +13,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for gene, expression in modules.expression.get('cell-types').items() %}
+      {% for gene, expression in modules.expression.get('cell-types').get('data').items() %}
       <tr>
         <td>{{ gene }}</td>
         <td class="text-right">{{ (expression*100) | round(2) }}%</td>

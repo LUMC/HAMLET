@@ -2,6 +2,7 @@
 
 import json
 import argparse
+from pathlib import Path
 
 from multiqc import read_expression
 
@@ -64,7 +65,9 @@ def main(args):
         }
 
     results["gene-expression"] = genes
-    results["cell-types"] = parse_deconvolution(args.deconvolution)
+    results["cell-types"] = dict()
+    results["cell-types"]["data"] = parse_deconvolution(args.deconvolution)
+    results["cell-types"]["plot"] = str(Path(args.cell_types).resolve())
     results["subtype"] = parse_amlmapr(args.subtype)
     print(json.dumps({"expression": results}, sort_keys=True, indent=2))
 
@@ -77,6 +80,7 @@ if __name__ == "__main__":
     parser.add_argument('--strandedness', help='Strandedness of the sample')
     parser.add_argument('--genes', nargs='*', default=list(), help='genes to include')
     parser.add_argument('--deconvolution', help="seAMLess deconvolution results")
+    parser.add_argument('--cell-types', help="seAMLess cell type bar chart")
     parser.add_argument('--subtype', help="AMLmapR subtype prediction results")
 
     args = parser.parse_args()

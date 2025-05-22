@@ -89,6 +89,7 @@ rule seamless:
     output:
         deconvolution="{sample}/expression/seAMLess/deconvolution.csv",
         venetoclax="{sample}/expression/seAMLess/venetoclax_resistance.csv",
+        cell_types_plot="{sample}/expression/seAMLess/cell-types.png",
     log:
         "log/seamless.{sample}.txt",
     threads: 1
@@ -136,6 +137,7 @@ rule json_output:
         norm_coverage=module_output.normalized_expression,
         src=workflow.source_path("scripts/json-output.py"),
         deconvolution=rules.seamless.output.deconvolution,
+        cell_types_plot=rules.seamless.output.cell_types_plot,
         subtype=rules.amlmapr.output.clusters,
     params:
         strandedness=get_strand,
@@ -154,6 +156,7 @@ rule json_output:
             --strandedness {params.strandedness} \
             --genes {params.genes} \
             --deconvolution {input.deconvolution} \
+            --cell-types {input.cell_types_plot} \
             --subtype {input.subtype} \
             --sample {wildcards.sample} \
             > {output} 2> {log}

@@ -40,7 +40,20 @@
     "cell-types": {
       "description": "Cell composition of the sample",
       "type": "object",
-      "additionalProperties": {"type": "number"}
+      "additionalProperties": false,
+      "minProperties": 2,
+      "properties": {
+        "data": {
+          "type": "object",
+          "items": { "$ref": "#/definitions/cell_type_data"}
+        },
+        "plot": {"type": "string"}
+      }
+    },
+    "cell_type_data": {
+      "description": "Cell type proportions from seAMLess",
+      "type": "object",
+      "additionalProperties": { "type": "number"}
     },
     "subtype": {
       "descrition": "Predicted AML subtype of the sample",
