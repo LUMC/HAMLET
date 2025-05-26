@@ -13,6 +13,7 @@ containers = {
     "picard": "docker://quay.io/biocontainers/picard:2.27.4--hdfd78af_0",
     "vep": "docker://quay.io/biocontainers/ensembl-vep:108.2--pl5321h4a94de4_0",
     "zip": "docker://lumc/zip:3.0",
+    "seamless": "docker://quay.io/biocontainers/r-seamless:0.1.1--r44h3121a25_1",
 }
 
 VEP_RELEASE = 108
@@ -56,6 +57,7 @@ rule all:
         arriba="arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3",
         arriba_report_genes="arriba/report_genes.txt",
         expression_bed="expression/regions.bed",
+        seamless="expression/seamless_meta.csv",
 
 
 rule download_reference:
@@ -98,6 +100,44 @@ rule download_gtf:
         wget {params} &&
         gunzip {output}.gz
         """
+
+
+rule download_seamless_data:
+    output:
+        seamless=temporary("expression/seAMLessData_0.1.0.tar.gz"),
+    params:
+        url="https://eonurk.github.io/drat/src/contrib/seAMLessData_0.1.0.tar.gz",
+    singularity:
+        containers["hamlet-scripts"]
+    shell:
+        """
+        mkdir -p $(dirname {output.seamless})
+        wget {params.url} \
+          --output-document {output.seamless}
+        """
+
+
+rule split_seamless:
+    input:
+        seamless="expression/seAMLessData_0.1.0.tar.gz",
+        src=workflow.source_path("scripts/split_rda.R"),
+    output:
+        expression="expression/seamless_expr.csv",
+        metadata="expression/seamless_meta.csv",
+        rda=temporary("seAMLessData/data/scRef.rda"),
+    singularity:
+        containers["seamless"]
+    shell:
+        """
+      # Extract the rda file
+      tar -xvkf {input.seamless} {output.rda}
+
+      # Split the .rda file
+      Rscript {input.src} \
+        {output.rda} \
+        {output.expression} \
+        {output.metadata}
+      """
 
 
 rule rewrite_gtf:

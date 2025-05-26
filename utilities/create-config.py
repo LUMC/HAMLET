@@ -90,6 +90,8 @@ def get_expression_config(dirname):
         "housekeeping": housekeeping_genes,
         "gtf": get_gtf(dirname),
         "bed": f"{dirname}/expression/regions.bed",
+        "seamless_ref": f"{dirname}/expression/seamless_expr.csv",
+        "seamless_meta": f"{dirname}/expression/seamless_meta.csv",
         "report": ["MECOM-206-e1", "MECOM-220-e15-e16"]
     }
     return d

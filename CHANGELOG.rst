@@ -17,6 +17,7 @@ v2.3.4-dev
 * Add Picard Strand Mapping statistics to the MultiQC report
 * Add AML subtype prediction with AMLmapR
 * Remote table and figure numbers from the PDF report
+* Add seAMLess reference files to HAMLET-data
 
 ******
 v2.3.3

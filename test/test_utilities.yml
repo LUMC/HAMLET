@@ -44,3 +44,4 @@
   stdout:
     contains:
       - rule arriba_database
+      - rule split_seamless
