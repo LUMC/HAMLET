@@ -339,17 +339,19 @@ rule copy_itd:
     """All the needed files are in small-files/itd, so we just copy them"""
     input:
         fasta=workflow.source_path("small-files/itd/itd_genes.fa"),
+        index_files=[
+            workflow.source_path(f"small-files/itd/itd_genes.fa.{ext}")
+            for ext in ["amb", "ann", "bwt", "pac", "sa"]
+        ],
     output:
         itd=directory("itd"),
     singularity:
         containers["hamlet-scripts"]
     shell:
         """
-        in_dir=$(dirname {input.fasta})
-
         mkdir -p {output.itd}
 
-        cp -v $in_dir/* {output.itd}
+        cp -v {input} {output.itd}
         """
 
 

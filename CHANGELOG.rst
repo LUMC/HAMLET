@@ -19,6 +19,7 @@ v2.3.4-dev
 * Remote table and figure numbers from the PDF report
 * Add seAMLess reference files to HAMLET-data
 * Add hotspot criteria file to HAMLET-data
+* Fix a bug in the dependency pipeline introduced by Snakemake 8
 
 ******
 v2.3.3
