@@ -1,13 +1,15 @@
 import os
 
+
 localrules:
-  copy_itd,
-  copy_expression_bed,
-  copy_arriba_database,
-  copy_id_mappings,
-  copy_blacklist,
-  copy_report_genes,
-  copy_criteria_files,
+    copy_itd,
+    copy_expression_bed,
+    copy_arriba_database,
+    copy_id_mappings,
+    copy_blacklist,
+    copy_report_genes,
+    copy_criteria_files,
+
 
 containers = {
     "arriba": "docker://quay.io/biocontainers/arriba:2.4.0--h0033a41_2",
