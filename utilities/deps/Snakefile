@@ -52,6 +52,7 @@ rule all:
         star_index="star-index",
         ref_id_mapping="id_mappings.tsv",
         filter_criteria="filter_criteria.tsv",
+        hotspot_criteria="hotspot_criteria.tsv",
         rrna_refflat="ucsc_rrna.refFlat",
         blacklist="blacklist.txt",
         arriba="arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3",
@@ -235,16 +236,19 @@ rule create_id_mappings:
         """
 
 
-rule create_criteria_file:
+rule create_criteria_files:
     input:
-        workflow.source_path("small-files/filter_criteria.tsv"),
+        filter=workflow.source_path("small-files/filter_criteria.tsv"),
+        hotspot=workflow.source_path("small-files/hotspot_criteria.tsv"),
     output:
-        "filter_criteria.tsv",
+        filter="filter_criteria.tsv",
+        hotspot="hotspot_criteria.tsv",
     singularity:
         containers["hamlet-scripts"]
     shell:
         """
-        cp {input} {output}
+        cp {input.filter} {output.filter}
+        cp {input.hotspot} {output.hotspot}
         """
 
 

@@ -18,6 +18,7 @@ v2.3.4-dev
 * Add AML subtype prediction with AMLmapR
 * Remote table and figure numbers from the PDF report
 * Add seAMLess reference files to HAMLET-data
+* Add hotspot criteria file to HAMLET-data
 
 ******
 v2.3.3
