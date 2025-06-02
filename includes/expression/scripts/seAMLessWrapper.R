@@ -192,7 +192,7 @@ if (use_custom_ref) {
 
   } else {
     verbose_print("Loading reference expression (CSV): ", opts$e)
-    exprs_ref <- read.csv(opts$e, header = TRUE, row.names = 1)
+    exprs_ref <- read.csv(opts$e, header = TRUE, row.names = 1, check.names = FALSE)
     exprs_ref <- data.matrix(exprs_ref)
     colnames(exprs_ref) <- sub("^X", "", colnames(exprs_ref))
 
