@@ -43,5 +43,5 @@
     --workflow-profile test
   stdout:
     contains:
-      - rule arriba_database
+      - rule copy_arriba_database
       - rule split_seamless

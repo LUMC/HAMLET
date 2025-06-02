@@ -1,8 +1,14 @@
 import os
 
-# TODO
-# - remove scrdir
-# - add option to specify output folder
+localrules:
+  copy_itd,
+  copy_expression_bed,
+  copy_arriba_database,
+  copy_id_mappings,
+  copy_blacklist,
+  copy_report_genes,
+  copy_criteria_files,
+
 containers = {
     "arriba": "docker://quay.io/biocontainers/arriba:2.4.0--h0033a41_2",
     "hamlet-scripts": "docker://lumc/hamlet-scripts:0.3",
@@ -223,7 +229,7 @@ rule rewrite_refflat:
         """
 
 
-rule create_id_mappings:
+rule copy_id_mappings:
     input:
         workflow.source_path("small-files/id_mappings.tsv"),
     output:
@@ -236,7 +242,7 @@ rule create_id_mappings:
         """
 
 
-rule create_criteria_files:
+rule copy_criteria_files:
     input:
         filter=workflow.source_path("small-files/filter_criteria.tsv"),
         hotspot=workflow.source_path("small-files/hotspot_criteria.tsv"),
@@ -252,7 +258,7 @@ rule create_criteria_files:
         """
 
 
-rule create_blacklist:
+rule copy_blacklist:
     input:
         workflow.source_path("small-files/blacklist.txt"),
     output:
@@ -294,7 +300,7 @@ rule create_rRNA_refflat:
         """
 
 
-rule create_report_genes:
+rule copy_report_genes:
     input:
         folder="arriba",
         genes=workflow.source_path("small-files/report_genes.txt"),
@@ -373,7 +379,7 @@ rule copy_expression_bed:
         """
 
 
-rule arriba_database:
+rule copy_arriba_database:
     output:
         folder=directory("arriba"),
         blacklist="arriba/blacklist_hg38_GRCh38_v2.4.0.tsv.gz",
