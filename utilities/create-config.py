@@ -67,6 +67,7 @@ def get_snv_indels_config(dirname):
         "star_index": join("star-index"),
         "ref_id_mapping": join("id_mappings.tsv"),
         "filter_criteria": join("filter_criteria.tsv"),
+        "annotation_criteria": join("hotspot_criteria.tsv"),
         "rrna_refflat": join("ucsc_rrna.refFlat"),
         "gtf": get_gtf(dirname),
         "annotation_refflat": join("ucsc_gencode.refFlat"),
