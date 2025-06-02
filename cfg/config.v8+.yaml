@@ -49,3 +49,6 @@ set-resources:
   itd_align_reads:
     cpus_per_task: 3
     runtime: 1440
+
+  create_star_index:
+    mem: 60G
