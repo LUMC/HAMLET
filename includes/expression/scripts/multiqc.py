@@ -27,7 +27,7 @@ def read_data(samples, countfiles, strandedness):
 
 def write_cell_types(sample_json):
     outfile="merged_expression_cell_types_mqc.tsv"
-    url="https://github.com/eonurk/seAMLess>seAMLess"
+    url="https://github.com/eonurk/seAMLess"
 
     with open(outfile, "wt") as fout:
         multiqc_header = f"""# plot_type: "table"
