@@ -113,6 +113,9 @@
         - "Estimated cell type composition"
         # Test for seAMLess output in html
         - "CD14 Mono"
+      must_not_contain:
+        # Test that the plot is not part of the MultiQC data
+        - "cell-types.png"
 
     - path: SRR8615409/expression/expression-output.json
       contains:

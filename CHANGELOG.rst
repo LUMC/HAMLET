@@ -20,6 +20,7 @@ v2.3.4-dev
 * Add seAMLess reference files to HAMLET-data
 * Add hotspot criteria file to HAMLET-data
 * Fix a bug in the dependency pipeline introduced by Snakemake 8
+* Fix a bug with the cell type composition in MultiQC
 
 ******
 v2.3.3

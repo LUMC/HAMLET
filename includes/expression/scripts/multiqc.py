@@ -44,12 +44,12 @@ def write_cell_types(sample_json):
 
             # First time
             if header is None:
-                header = list(js["expression"]["cell-types"].keys())
+                header = list(js["expression"]["cell-types"]["data"].keys())
                 header.insert(0, "Sample")
                 print(*header, sep='\t', file=fout)
 
             # Get the cell type data
-            data = js["expression"]["cell-types"]
+            data = js["expression"]["cell-types"]["data"]
             # Add the sample
             sample = js["expression"]["metadata"]["sample_name"]
             data["Sample"] = sample
