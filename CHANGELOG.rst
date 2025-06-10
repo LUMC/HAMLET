@@ -7,20 +7,20 @@ Changelog
 ..  This document is user facing. Please word the changes in such a way
 .. that users understand how the changes affect the new version.
 
-**********
-v2.3.4-dev
-**********
+******
+v2.4.0
+******
 
-* Determine cell type composition using seAMLess
+* Fix a bug in the dependency pipeline introduced by Snakemake 8
+* Fix a bug with the cell type composition in MultiQC
+* Add seAMLess to determine cell type composition
 * Add section for gene expression to the PDF report
 * Add seAMLess cell type composition to PDF and MultiQC report
 * Add Picard Strand Mapping statistics to the MultiQC report
 * Add AML subtype prediction with AMLmapR
-* Remote table and figure numbers from the PDF report
 * Add seAMLess reference files to HAMLET-data
 * Add hotspot criteria file to HAMLET-data
-* Fix a bug in the dependency pipeline introduced by Snakemake 8
-* Fix a bug with the cell type composition in MultiQC
+* Remove table and figure numbers from the PDF report
 
 ******
 v2.3.3
