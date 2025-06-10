@@ -19,6 +19,9 @@ type composition of the sample, as well as the resistance to Venetoclax. Please
 see `Karakaslar et al. <https://www.nature.com/articles/s41698-024-00596-9>`_
 for details.
 
+`AMLmapR <https://github.com/jeppeseverens/AMLmapR>`_ is used to predict the AML subtype, see `Severens et al. <https://www.nature.com/articles/s41375-024-02137-6>`_ for
+details.
+
 Input
 -----
 The minimal input for this module is one BAM file and one STAR count table
@@ -49,7 +52,7 @@ Output
   the MultiQC report. Stranded (forward and reverse) and unstranded samples
   will be listed separately, since their values cannot be compared directly.
 * The cell type composition for each sample wil be included in the HAMLET pdf
-  report. In addition, and overview of the composition of all samples is
+  report. In addition, an overview of the composition of all samples is
   included in the MultiQC report.
 
 Note that the overexpression and cell type composition results can be exported
