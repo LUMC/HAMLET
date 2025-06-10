@@ -14,9 +14,8 @@ defined in ``filter_criteria``, and annotated based on ``annotation_criteria``.
 The variants annotated by VEP are then filtered based on a number of different criteria:
 
 1. Variants that are present on the ``blacklist`` are excluded.
-2. Only variants that are present on one of the specified transcripts in ``ref_id_mapping`` are included.
-3. Only variants that match one of the consequences defined in ``vep_include_consequence`` are included.
-4. Variant that have a population frequency of more than 1% in the ``gnomADe`` population are excluded.
+2. Only variants that match at least one criteria in ``filter_criteria`` are included.
+3. Variant that have a population frequency of more than 1% in the ``gnomADe`` population are excluded.
 
 Picard is used to generate various alignment statistics.
 
@@ -33,8 +32,8 @@ Output
 The output of this module are a JSON file with an overview of the most important results, as well as a number of other output files:
 
 * A .bam and .bai per sample, which contain the aligned reads.
-* A VEP output file (``vep_high``), which contains the final set of filtered variants.
-* A VEP output file (``vep_target``), which contains the variants on the transcripts of interest. These variants have not been filtered on ``vep_include_consequence`` terms.
+* The filtered VEP output file (``filter_vep``), which contains the final set of filtered and annotated variants.
+* The ``counts`` file produced by STAR, which contains the coverage per gene.
 
 Configuration
 -------------
@@ -46,7 +45,7 @@ Example
    :language: json
 
 Note that the ``vep-cache`` entry is missing for this example file, which means
-that the online API of VEP will be used. For the best performance, please
+that VEP will be run with only the ``fasta`` and ``gtf`` files as input. For the best performance, please
 specify a ``vep-cache`` folder as well.
 
 Configuration options
@@ -58,12 +57,6 @@ Configuration options
   * - Option
     - Description
     - Required
-  * - forward_adapter
-    - The forward adapter sequence
-    - yes
-  * - reverse_adapter
-    - The reverse adapter sequence
-    - yes
   * - genome_fasta
     - Reference genome, in FASTA format
     - yes
@@ -96,15 +89,29 @@ Configuration options
     - yes
   * - blacklist
     - File of blacklisted variants
-    - yes
+    - no
   * - vep-cache
     - Folder containing the VEP cache
     - no
-  * - vep_include_consequence
-    - List of VEP consequences to report
-    - yes
   * - variant_allele_frequency
     - Minimum variant allele frequency in the sample to call a variant
-
       (default=0.05)
-    - no 
+    - no
+
+Filter and annotation criteria
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+HAMLET include the ability to specify separate filter criteria for every
+transcript, based on the position and the VEP consequence of the variant. The
+criteria are used both the filter which variants will be part of the output
+(``filter_criteria``), and also annotate the identified variants
+(``annotation_criteria``).
+
+The required columns are ``transcript_id``, ``consequence``, ``start`` and ``end``. For annotation variants, the ``annotation`` column is used. Every column except for ``transcript_id`` can be empty.
+
+.. csv-table:: Example ``filter_criteria`` file, from the HAMLET tests
+  :delim: U+0009
+  :file: ../../test/data/config/filter_criteria.tsv
+
+.. csv-table:: Example ``annotation_criteria`` file, from the HAMLET tests
+  :delim: U+0009
+  :file: ../../test/data/config/annotation_criteria.tsv
