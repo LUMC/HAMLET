@@ -7,6 +7,12 @@ Changelog
 ..  This document is user facing. Please word the changes in such a way
 .. that users understand how the changes affect the new version.
 
+**********
+v2.4.1-dev
+**********
+* Allow every module to run with the full HAMLET configuration
+
+
 ******
 v2.4.0
 ******

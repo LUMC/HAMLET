@@ -31,6 +31,38 @@
       - "cutadapt .*TestSample3.*pigz --decompress --stdout test/data/fastq/R1.fq.gz 'test/data/fastq/SRR8615409 chrM_1.fastq.gz' test/data/fastq/SRR8615687_flt3_1.fastq.gz"
       - "cutadapt .*TestSample3.*pigz --decompress --stdout test/data/fastq/R2.fq.gz 'test/data/fastq/SRR8615409 chrM_2.fastq.gz' test/data/fastq/SRR8615687_flt3_2.fastq.gz"
 
+- name: test-qc-hamlet-config
+  tags:
+    - dry-run
+    - qc-seq
+  command: >
+    snakemake
+    --snakefile includes/qc-seq/Snakefile
+    --workflow-profile test
+    --dry-run
+    --configfile test/data/config/hamlet-dry.json
+    --config pepfile=test/pep/chrM-trio-subsamples.csv
+  stdout:
+    contains:
+    # The trimmed fastq files should be merged
+    - "TestSample1/qc-seq/TestSample1-R1.fq.gz"
+    - "TestSample1/qc-seq/TestSample1-R2.fq.gz"
+    - "TestSample2/qc-seq/TestSample2-R1.fq.gz"
+    - "TestSample2/qc-seq/TestSample2-R2.fq.gz"
+    - "TestSample3/qc-seq/TestSample3-R1.fq.gz"
+    - "TestSample3/qc-seq/TestSample3-R2.fq.gz"
+    - "rule sequali"
+    # The forward/reverse fastq files from the PEP should be handled correctly
+    contains_regex:
+      - "cutadapt .*TestSample1.*pigz --decompress --stdout test/data/fastq/R1.fq.gz"
+      - "cutadapt .*TestSample1.*pigz --decompress --stdout test/data/fastq/R2.fq.gz"
+
+      - "cutadapt .*TestSample2.*pigz --decompress --stdout test/data/fastq/R1.fq.gz 'test/data/fastq/SRR8615409 chrM_1.fastq.gz'"
+      - "cutadapt .*TestSample2.*pigz --decompress --stdout test/data/fastq/R2.fq.gz 'test/data/fastq/SRR8615409 chrM_2.fastq.gz'"
+
+      - "cutadapt .*TestSample3.*pigz --decompress --stdout test/data/fastq/R1.fq.gz 'test/data/fastq/SRR8615409 chrM_1.fastq.gz' test/data/fastq/SRR8615687_flt3_1.fastq.gz"
+      - "cutadapt .*TestSample3.*pigz --decompress --stdout test/data/fastq/R2.fq.gz 'test/data/fastq/SRR8615409 chrM_2.fastq.gz' test/data/fastq/SRR8615687_flt3_2.fastq.gz"
+
 # QC pipeline should run successfully on multiple samples with differing number
 # of readgroups
 - name: test-qc-trio

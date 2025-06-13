@@ -16,6 +16,9 @@ containers = {
     "mutalyzer": "docker://quay.io/biocontainers/mutalyzer_hgvs_parser:0.3.8--pyh7e72e81_0",
 }
 
+# If we run with the full hamlet configuration, subset the configuration
+if "snv-indels" in config:
+    config = config["snv-indels"]
 
 # Old features that are no longer supported
 if "bed_variant_call_regions" in config:

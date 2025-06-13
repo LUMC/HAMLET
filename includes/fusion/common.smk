@@ -4,6 +4,11 @@ from types import SimpleNamespace
 pepfile: config["pepfile"]
 
 
+# If we run with the full hamlet configuration, subset the configuration
+if "fusion" in config:
+    config = config["fusion"]
+
+
 # Put each sample name in a SimpleNamespace to mimic Snakemake wildcard usage
 # (e.g {wildcards.sample}). This is only used in the 'all' rule.
 samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample_name"]]

@@ -49,6 +49,18 @@
       # Test the that we used the specify variant allele frequency of 0.1
       - "vardict-java .* -f 0.1"
 
+- name: test-snv-indels-hamlet-config
+  tags:
+    - dry-run
+    - snv-indels
+  command: >
+    snakemake
+    --snakefile includes/snv-indels/Snakefile
+    --workflow-profile test
+    --dry-run
+    --configfile test/data/config/hamlet-dry.json
+    --config pepfile=test/pep/chrM-trio.csv
+
 # snv-indel pipeline should run successfully on chrM test data
 - name: test-snv-indels-chrM
   tags:

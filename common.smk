@@ -41,4 +41,4 @@ def report_files(wildcards):
 
 
 # The version of HAMLET
-PIPELINE_VERSION = "v2.4.0"
+PIPELINE_VERSION = "v2.4.1-dev"

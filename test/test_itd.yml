@@ -33,6 +33,18 @@
     contains_regex:
       - "bwa mem .*  'test/data/fastq/SRR8615409 chrM_1.fastq.gz' 'test/data/fastq/SRR8615409 chrM_2.fastq.gz'"
 
+- name: test-itd-hamlet-config
+  tags:
+    - dry-run
+    - itd
+  command: >
+    snakemake
+    --snakefile includes/itd/Snakefile
+    --workflow-profile test
+    --dry-run
+    --configfile test/data/config/hamlet-dry.json
+    --config pepfile=test/pep/chrM-trio.csv
+
 # ITD pipeline should run successfully and actually create the specified files
 - name: test-itd
   tags:

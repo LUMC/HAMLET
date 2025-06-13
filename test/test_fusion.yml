@@ -31,6 +31,18 @@
       # The final json output file should be produced
       - "TestSample1/fusion/fusion-output.json"
 
+- name: test-fusion-hamlet-config
+  tags:
+    - dry-run
+    - fusion
+  command: >
+    snakemake
+    --snakefile includes/fusion/Snakefile
+    --workflow-profile test
+    --dry-run
+    --configfile test/data/config/hamlet-dry.json
+    --config pepfile=test/pep/chrM-trio.csv
+
 # Fusion pipeline should run successfully
 - name: test-fusion-chrM
   tags:

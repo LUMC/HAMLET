@@ -17,6 +17,18 @@
       - "rule seamless"
       - "rule amlmapr"
 
+- name: test-expression-hamlet-config
+  tags:
+    - dry-run
+    - expression
+  command: >
+    snakemake
+    --snakefile includes/expression/Snakefile
+    --workflow-profile test
+    --dry-run
+    --configfile test/data/config/hamlet-dry.json
+    --config pepfile=test/pep/expression.csv
+
 - name: Test error on unknown housekeeping gene
   tags:
     - sanity

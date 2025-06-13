@@ -12,6 +12,11 @@ containers = {
 pepfile: config["pepfile"]
 
 
+# If we run with the full hamlet configuration, subset the configuration
+if "expression" in config:
+    config = config["expression"]
+
+
 # Put each sample name in a SimpleNamespace to mimic Snakemake wildcard usage
 # (e.g {wildcards.sample}). This is only used in the 'all' rule.
 samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample_name"]]
