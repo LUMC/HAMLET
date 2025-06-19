@@ -78,6 +78,7 @@ rule multiqc:
         modules=multiqc_modules(),
     output:
         html="multiqc_qc_seq.html",
+        parquet="multiqc_qc_seq_data/BETA-multiqc.parquet",
     log:
         "log/qc_seq.multiqc.txt",
     container:

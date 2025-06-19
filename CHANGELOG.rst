@@ -11,6 +11,7 @@ Changelog
 v2.4.1-dev
 **********
 * Allow every module to run with the full HAMLET configuration
+* Update MultiQC to 1.29
 
 
 ******

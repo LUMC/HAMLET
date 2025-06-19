@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 containers = {
     "cutadapt": "docker://quay.io/biocontainers/cutadapt:5.0--py39hbcbf7aa_0",
-    "multiqc": "docker://quay.io/biocontainers/multiqc:1.27.1--pyhdfd78af_0",
+    "multiqc": "docker://quay.io/biocontainers/multiqc:1.29--pyhdfd78af_0",
     "sequali": "docker://quay.io/biocontainers/sequali:0.12.0--py311haab0aaa_1",
 }
 
@@ -76,4 +76,5 @@ module_output = SimpleNamespace(
     forward=get_forward_output,
     reverse=get_reverse_output,
     multiqc_files=multiqc_files(),
+    multiqc_parquet="multiqc_qc_seq_data/BETA-multiqc.parquet",
 )
