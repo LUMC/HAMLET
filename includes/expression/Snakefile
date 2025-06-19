@@ -200,6 +200,7 @@ rule multiqc:
         depth=2,
     output:
         html="multiqc_expression.html",
+        parquet="multiqc_expression_data/BETA-multiqc.parquet",
     log:
         "log/expression.multiqc.txt",
     container:

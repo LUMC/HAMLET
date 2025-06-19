@@ -446,6 +446,7 @@ rule multiqc:
         modules=multiqc_modules(),
     output:
         html="multiqc_snv_indels.html",
+        parquet="multiqc_snv_indels_data/BETA-multiqc.parquet",
     log:
         "log/snv_indels.multiqc.txt",
     container:

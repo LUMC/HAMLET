@@ -248,13 +248,11 @@ rule generate_html_report:
 
 rule multiqc:
     input:
-        qc_stats=qc_seq.module_output.multiqc_files,
-        snv_indel_stats=align.module_output.multiqc_files,
-        expression_stats=expression.module_output.multiqc_files,
+        qc_stats=qc_seq.module_output.multiqc_parquet,
+        snv_indel_stats=align.module_output.multiqc_parquet,
+        expression_stats=expression.module_output.multiqc_parquet,
         config=workflow.source_path("cfg/multiqc.yml"),
     params:
-        filelist="multiqc_filelist.txt",
-        depth=2,
         exclude="dedup",
     output:
         html="multiqc_hamlet.html",
@@ -264,20 +262,13 @@ rule multiqc:
         containers["multiqc"]
     shell:
         """
-        rm -f {params.filelist}
-
-        for fname in {input.qc_stats} {input.snv_indel_stats} {input.expression_stats}; do
-            echo $fname >> {params.filelist}
-        done
-
         multiqc \
         --force \
-        --dirs \
-        --dirs-depth {params.depth} \
-        --fullnames \
-        --fn_as_s_name \
-        --file-list {params.filelist} \
         --config {input.config} \
         --exclude {params.exclude} \
-        --filename {output.html} 2> {log}
+        --filename {output.html} \
+        {input.qc_stats} \
+        {input.snv_indel_stats} \
+        {input.expression_stats} \
+        2> {log}
         """

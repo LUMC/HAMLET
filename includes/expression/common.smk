@@ -158,5 +158,6 @@ module_output = SimpleNamespace(
     coverage=coverage,
     normalized_expression=normalized,
     multiqc_files=multiqc_files(),
+    multiqc_parquet="multiqc_expression_data/BETA-multiqc.parquet",
     json=get_json,
 )

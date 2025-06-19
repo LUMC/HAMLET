@@ -120,4 +120,5 @@ module_output = SimpleNamespace(
     filter_vep=get_filter_vep,
     json=get_json,
     multiqc_files=multiqc_files(),
+    multiqc_parquet="multiqc_snv_indels_data/BETA-multiqc.parquet",
 )
