@@ -205,6 +205,7 @@ rule call_vars:
         bed_end=3,
         bed_gene=4,
         min_sv_len=10_000_000,
+        min_variant_depth=config.get("min_variant_depth", 2),
     log:
         vardict="log/vardict.{sample}.txt",
         strandbias="log/strandbias.{sample}.txt",
@@ -227,6 +228,7 @@ rule call_vars:
             -E {params.bed_end} \
             -g {params.bed_gene} \
             -L {params.min_sv_len} \
+            -r {params.min_variant_depth} \
             -th {threads} \
             {input.bed} 2> {log.vardict} \
             |

@@ -9,7 +9,7 @@
     --workflow-profile test
     --dry-run
     --configfile test/data/config/snv-indels-vep-cache.json
-    --config pepfile=test/pep/chrM-trio.csv
+    --config pepfile=test/pep/chrM-trio.csv min_variant_depth=4
   stdout:
     contains:
       - "TestSample1/snv-indels/TestSample1.vep.txt.gz"
@@ -31,6 +31,8 @@
       - "TestSample1/snv-indels/TestSample1.bam.bai"
       # Test the default variant allele frequency of 0.05
       - "vardict-java .* -f 0.05"
+      # Test that the minimum variant depth is 4 set to 4
+      - "vardict-java .* -r 4"
 
 
 - name: test-snv-indels-dry-run-variant-allele-frequency

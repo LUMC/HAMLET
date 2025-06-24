@@ -97,6 +97,9 @@ Configuration options
     - Minimum variant allele frequency in the sample to call a variant
       (default=0.05)
     - no
+  * - min_variant_depth
+    - Minimum read depth to call a variant (default=2)
+    - no
 
 Filter and annotation criteria
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -12,6 +12,8 @@ v2.4.1-dev
 **********
 * Allow every module to run with the full HAMLET configuration
 * Update MultiQC to 1.29
+* Add option ``min_variant_depth`` to the snv-indels module to specify the
+  minimum number of reads to report a variant (default = 2)
 
 
 ******

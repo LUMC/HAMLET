@@ -74,6 +74,7 @@ def get_snv_indels_config(dirname):
         "blacklist": join("blacklist.txt"),
         "vep_cache": dirname,
         "variant_allele_frequency": 0.05,
+        "min_variant_depth": 2,
         "vep_include_consequence": [
             "stop_gained",
             "frameshift_variant",
