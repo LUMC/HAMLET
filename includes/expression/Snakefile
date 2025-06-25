@@ -23,8 +23,8 @@ rule normalized_coverage:
         housekeeping=config["housekeeping"],
         genes_of_interest=config["genes_of_interest"],
     output:
-        normalized="{sample}/expression/coverage.normalized.csv",
-        raw="{sample}/expression/coverage.csv",
+        normalized="{sample}/expression/coverage.normalized.tsv",
+        raw="{sample}/expression/coverage.tsv",
     log:
         "log/normalized_coverage.{sample}.txt",
     threads: 1

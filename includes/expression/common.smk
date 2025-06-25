@@ -125,11 +125,11 @@ def check_genes_for_report():
 
 ## Functions for module outputs ##
 def coverage(wildcards):
-    return f"{wildcards.sample}/expression/coverage.csv"
+    return f"{wildcards.sample}/expression/coverage.tsv"
 
 
 def normalized(wildcards):
-    return f"{wildcards.sample}/expression/coverage.normalized.csv"
+    return f"{wildcards.sample}/expression/coverage.normalized.tsv"
 
 
 def multiqc_files():
