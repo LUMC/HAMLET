@@ -43,7 +43,7 @@ rule filter_fusions:
         fusions="{sample}/fusion/arriba/fusions.raw.tsv",
         to_json=workflow.source_path("scripts/arriba2json.py"),
         to_tsv=workflow.source_path("scripts/json2arriba.py"),
-        report_genes=config["report_genes"],
+        report_genes=config.get("report_genes", []),
     output:
         json="{sample}/fusion/arriba/fusions.json",
         tsv="{sample}/fusion/arriba/fusions.tsv",
@@ -54,7 +54,13 @@ rule filter_fusions:
         containers["arriba"]
     shell:
         """
-        python3 {input.to_json} {input.fusions} --report-genes {input.report_genes} > {output.json} 2> {log}
+        if [ -z {input.report_genes} ];then
+            python3 {input.to_json} {input.fusions}  > {output.json} 2> {log}
+        else
+            python3 {input.to_json} {input.fusions} \
+                    --report-genes {input.report_genes} > {output.json} 2> {log}
+        fi
+
         python3 {input.to_tsv} {output.json} > {output.tsv} 2>> {log}
         """
 

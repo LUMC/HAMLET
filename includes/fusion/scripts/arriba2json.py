@@ -95,19 +95,25 @@ def main(fusion_file: str, report_genes_file: str) -> None:
     with open(fusion_file) as fin:
         # We want to keep the fusions in the same order as the input file
         fusions = list()
-        # Get the genes we want to report open
-        report_genes = read_genes(report_genes_file)
 
-        for record in parse_arriba(fin):
-            if record["gene1"] in report_genes or record["gene2"] in report_genes:
-                    fusions.append(record)
+        # If no filter list was specified
+        if report_genes_file is None:
+            fusions = list(parse_arriba(fin))
+
+        else:
+            # Get the genes we want to report
+            report_genes = read_genes(report_genes_file)
+
+            for record in parse_arriba(fin):
+                if record["gene1"] in report_genes or record["gene2"] in report_genes:
+                        fusions.append(record)
         print(json.dumps(fusions, indent=True))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("fusions")
-    parser.add_argument("--report-genes")
+    parser.add_argument("--report-genes", required=False)
 
     args = parser.parse_args()
 

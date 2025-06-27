@@ -30,6 +30,30 @@
       - "rule split_fusion_plots:"
       # The final json output file should be produced
       - "TestSample1/fusion/fusion-output.json"
+    contains_regex:
+      # Test that we pass the --report-genes flag when a list of fusion partners
+      # has been specified
+      - "arriba2json.py .* --report-genes"
+
+- name: test-fusion-no-target-genes
+  tags:
+    - functional
+    - fusion
+  command:
+    bash -c "
+    source test/helper.sh
+
+    snakemake
+    --snakefile includes/fusion/Snakefile
+    --workflow-profile test
+    --configfile test/data/config/fusion-no-target.json
+    --config pepfile=test/pep/chrM.csv
+    "
+  files:
+    # Should create the arriba output files
+    - path: SRR8615409/fusion/arriba/fusions.tsv
+      contains:
+        - "BCR\tABL1"
 
 - name: test-fusion-hamlet-config
   tags:

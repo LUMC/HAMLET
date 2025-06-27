@@ -58,7 +58,7 @@ Configuration options
     - yes
   * - report_genes
     - Only report fusions involving genes specified in this file
-    - yes
+    - no
   * - cytobands
     - A file with cytoband information for visualization
     - yes
