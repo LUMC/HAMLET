@@ -243,9 +243,9 @@ def test_variant_overview_expression(workflow_dir):
     expected = {'Gene': 'MT-TH', 'Raw count': '3', 'Normalized expression': '0.01'}
     assert table[1] == expected
 
-@pytest.mark.workflow('Test base64 string embedded in report cell type image')
+@pytest.mark.workflow('Test cell type and fusion images are embedded as base64 string')
 def test_base64_image_in_report(workflow_dir):
-    html_path = f"{workflow_dir}/hamlet_report.SRR8615409.html"
+    html_path = f"{workflow_dir}/report.html"
     imgs_path = [f"{workflow_dir}/SRR8615409/expression/seAMLess/cell-types.png",
                 f"{workflow_dir}/SRR8615409/fusion/arriba/plots/fusion-1.png"]
 

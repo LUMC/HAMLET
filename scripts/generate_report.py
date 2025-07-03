@@ -148,7 +148,7 @@ class Report(object):
             return [int(x) for x in alt]
         
         def convert_img_to_base64(img_path):
-            if not img_path:
+            if not Path(img_path).exists():
                 return ""
             import os
             with open(img_path, "rb") as f:
