@@ -1,5 +1,6 @@
 import argparse
 import json
+import base64
 from datetime import datetime as dt
 from pathlib import Path
 from tempfile import NamedTemporaryFile as NTF
@@ -145,6 +146,20 @@ class Report(object):
             ad = item["FORMAT"]["AD"]
             ref, *alt = ad.split(',')
             return [int(x) for x in alt]
+        
+        def convert_img_to_base64(img_path):
+            if not img_path:
+                return ""
+            import os
+            with open(img_path, "rb") as f:
+                data = f.read()
+            mime = {
+                ".png": "image/png",
+                ".jpg": "image/jpeg",
+                ".jpeg": "image/jpeg",
+            }.get(os.path.splitext(img_path)[1].lower(), "application/octet-stream")
+            return f'data:{mime};base64,{base64.b64encode(data).decode()}'
+
 
         env = Environment(loader=FileSystemLoader(tpl_dir))
         env.filters["show_int"] = show_int
@@ -156,6 +171,7 @@ class Report(object):
         env.globals["database_identifiers"] = database_identifiers
         env.globals["ref_AD"] = ref_AD
         env.globals["alt_AD"] = alt_AD
+        env.globals["convert_img_to_base64"] = convert_img_to_base64
         self.env = env
         self.cover_tpl = env.get_template(cover_tpl_fname)
         self.contents_tpl = env.get_template(contents_tpl_fname)

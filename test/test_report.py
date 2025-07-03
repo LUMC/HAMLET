@@ -1,5 +1,6 @@
 import pytest
 import bs4
+import base64
 
 def get_rows(table):
     """Get rows from table, supports rowspan in the first column only"""
@@ -34,6 +35,11 @@ def parse_table(table):
         d = {k: v.get_text() for k, v in zip(headers, row.find_all("td"))}
         data.append(d)
     return data
+
+def convert_image_to_base64(img_path):
+    with open(img_path, "rb") as f:
+        b64_bytes = base64.b64encode(f.read())
+    return b64_bytes.decode("utf-8")
 
 @pytest.mark.workflow('test-report')
 def test_variant_overview(workflow_dir):
@@ -236,3 +242,16 @@ def test_variant_overview_expression(workflow_dir):
     # Second row
     expected = {'Gene': 'MT-TH', 'Raw count': '3', 'Normalized expression': '0.01'}
     assert table[1] == expected
+
+@pytest.mark.workflow('Test base64 string embedded in report cell type image')
+def test_base64_image_in_report(workflow_dir):
+    html_path = f"{workflow_dir}/hamlet_report.SRR8615409.html"
+    imgs_path = [f"{workflow_dir}/SRR8615409/expression/seAMLess/cell-types.png",
+                f"{workflow_dir}/SRR8615409/fusion/arriba/plots/fusion-1.png"]
+
+    with open(html_path, "r", encoding="utf-8") as f:
+        html_content = f.read()
+
+    for img_path in imgs_path:
+        b64_str = convert_image_to_base64(img_path)
+        assert b64_str in html_content,f"Base64 string for {img_path} not found in HTML report"

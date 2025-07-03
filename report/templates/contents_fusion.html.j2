@@ -4,7 +4,7 @@
 <div class="keep-together">
   <h2 style="margin-bottom: -.5em;">{{ fusion.gene1 }}::{{ fusion.gene2}}</h2>
   <figure>
-    <img src="{{ fusion.plot }}"></img>
+    <img src="{{ convert_img_to_base64(fusion.plot) }}"></img>
   </figure>
 </div>
 {% endfor %}
