@@ -11,10 +11,10 @@ Changelog
 v2.4.1-dev
 **********
 * Allow every module to run with the full HAMLET configuration
-* Update MultiQC to 1.29
 * Add option ``min_variant_depth`` to the snv-indels module to specify the
   minimum number of reads to report a variant (default = 2)
 * The ``report_genes`` file for the fusion module is now optional
+* Update MultiQC to 1.30
 
 
 ******
