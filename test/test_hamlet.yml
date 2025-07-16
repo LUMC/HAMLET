@@ -8,7 +8,7 @@
     --snakefile Snakefile
     --workflow-profile test
     --configfile test/data/config/hamlet-dry.json
-    --config pepfile=test/pep/chrM-trio.csv
+    --config pepfile=test/pep/chrM-trio.csv background_samples=test/data/MO1-RNAseq-1-16714-multiqc.parquet
   stdout:
     contains:
       # The pipeline should create the final output files for TestSample1
@@ -114,7 +114,7 @@
     snakemake \
       --snakefile Snakefile \
       --configfile test/data/config/hamlet.json \
-      --config pepfile=test/pep/chrM_itd.csv \
+      --config pepfile=test/pep/chrM_itd.csv background_samples=test/data/MO1-RNAseq-1-16714-multiqc.parquet \
       --workflow-profile test \
       SRR8615409/hamlet_report.SRR8615409.html \
       SRR8615409/hamlet_report.SRR8615409.pdf \
@@ -191,6 +191,9 @@
         - "VEP"
         - "STAR"
         - "Picard"
+        # Test that the sample names are present
+        - "SRR8615409"
+        - "MO1-RNAseq-1-16714"
         # Custom MultiQC output from the expression module
         - "mqc_expression_unstranded"
       must_not_contain:
@@ -203,9 +206,6 @@
         - "sift_summary"
         - "polyphen_summary"
         - "position_in_protein"
-        # strandedness was not specified for the samples, so this sections
-        # should not be in the MultiQC Report
-        - "RnaSeqMetrics Strand Mapping"
     # Test that we remove the temporary folder from snv-indels
     - path: "snv-indel-tmp"
       should_exist: False

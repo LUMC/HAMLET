@@ -280,6 +280,7 @@ rule multiqc:
         snv_indel_stats=align.module_output.multiqc_parquet,
         expression_stats=expression.module_output.multiqc_parquet,
         config=workflow.source_path("cfg/multiqc.yml"),
+        background=config.get("background_samples", []),
     params:
         exclude="dedup",
     output:
@@ -298,6 +299,7 @@ rule multiqc:
         {input.qc_stats} \
         {input.snv_indel_stats} \
         {input.expression_stats} \
+        {input.background} \
         2> {log}
         """
 
