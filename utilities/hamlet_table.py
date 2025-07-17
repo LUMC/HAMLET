@@ -102,40 +102,24 @@ def get_fields(var_line):
 
 def print_fusion_table(json_files):
     """Print fusion table"""
-    # Did we print the header already
-    header = None
+    header = ["sample", "gene1", "gene2", "strand1(gene/fusion)", "strand2(gene/fusion)", "breakpoint1", "breakpoint2", "site1", "site2", "type", "split_reads1", "split_reads2", "discordant_mates", "coverage1", "coverage2", "confidence", "reading_frame", "tags", "retained_protein_domains", "closest_genomic_breakpoint1", "closest_genomic_breakpoint2", "gene_id1", "gene_id2", "transcript_id1", "transcript_id2", "direction1", "direction2", "filters", "fusion_transcript", "peptide_sequence"]
 
+    print(*header, sep="\t")
     for js in json_files:
         with open(js) as fin:
             data = json.load(fin)
 
+        sample = data["metadata"]["sample_name"]
         if "modules" in data: # HAMLET 2.0
             fusions = data["modules"]["fusion"]["events"]
         elif "results" in data: # HAMLET 1.0
             fusions = data["results"]["fusion"]["tables"]["intersection"]["top20"]
+        else:
+            raise ValueError
 
         for fusion in fusions:
-            # Sneakily put the sample name first
-            new_fusion = {"sample": sample_name(data)}
-            new_fusion.update(fusion)
-            fusion = new_fusion
-
-            # Throw out the reads
-            if "read_identifiers" in fusion:
-                fusion.pop("read_identifiers")
-
-            if header is None:
-                header = list(fusion.keys())
-                print(*header, sep="\t")
-            else:
-                new_header = list(fusion.keys())
-                if new_header != header:
-                    raise RuntimeError()
+            fusion["sample"] = sample
             print(*(fusion[key] for key in header), sep="\t")
-
-
-def sample_name(data):
-    return data["metadata"]["sample_name"]
 
 
 def print_itd_table(json_files, itd_gene):
