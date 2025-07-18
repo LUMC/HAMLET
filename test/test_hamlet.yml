@@ -149,8 +149,8 @@
         - "SRR8615409\tFLT3\tchr13\t28034117"
     - path: fusion.tsv
       contains:
-        - "sample\tbreakpoint1\tbreakpoint2"
-        - "SRR8615409\tchr22:23290413\tchr9:130854064"
+        - "sample\tgene1\tgene2"
+        - "SRR8615409\tBCR\tABL1"
     - path: itd_flt3.tsv
       contains:
         - "sample\tboundary_type\tfuzziness"

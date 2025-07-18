@@ -109,7 +109,7 @@ def print_fusion_table(json_files):
         with open(js) as fin:
             data = json.load(fin)
 
-        sample = data["metadata"]["sample_name"]
+        sample = sample_name(data)
         if "modules" in data: # HAMLET 2.0
             fusions = data["modules"]["fusion"]["events"]
         elif "results" in data: # HAMLET 1.0
@@ -121,6 +121,8 @@ def print_fusion_table(json_files):
             fusion["sample"] = sample
             print(*(fusion[key] for key in header), sep="\t")
 
+def sample_name(data):
+    return data["metadata"]["sample_name"]
 
 def print_itd_table(json_files, itd_gene):
     def join_list(positions):
