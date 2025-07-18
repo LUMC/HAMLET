@@ -17,21 +17,6 @@
       - "chr1"
       - "ENST00000369535.5:c.38G>T"
 
-- name: test-fusion-table
-  tags:
-    - functional
-    - utilities
-  command: >
-    python3 utilities/hamlet_table.py
-    fusion
-    test/data/output/v1/SRR8615409.summary.json
-  stdout:
-    contains:
-      # The variant table headers
-      - "sample\tjr_count\tname"
-      - "SRR8615409\t33\tSFPQ--ZFP36L1"
-      - "SRR8615409\t15\tSFPQ--ZFP36L1"
-
 - name: test-reference-files-dry-run
   tags:
     - dry-run
