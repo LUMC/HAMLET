@@ -1,3 +1,5 @@
+{% set myeloblast_logo = imgs_dir + "/Myeloblast_logo.png" %}
+{% set lumc_logo = imgs_dir + "/lumc-logo.jpg" %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -12,11 +14,11 @@
       <h2>Analysis Report</h2>
       <p class="report-subtitle">Sample '{{ sample_name }}'</p>
       <div class="logo">
-        <img src="{{ imgs_dir }}/Myeloblast_logo.png" height="250">
+        <img src="{{ convert_img_to_base64(myeloblast_logo) }}" height="250"></img>
       </div>
       <p>Version {{ pipeline_version }}<br />Generated on {{ timestamp.strftime('%A, %d %B %Y at %H:%M') }}</p>
       <div class="logo lumc">
-        <img src="{{ imgs_dir }}/lumc-logo.jpg" height="40">
+        <img src="{{ convert_img_to_base64(lumc_logo) }}" height="40"></img>
       </div>
       <p class="pipeline-trademark">Department of Hematology<br />Leiden University Medical Center</p>
     </div>

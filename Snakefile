@@ -262,7 +262,7 @@ rule generate_html_report:
         css={input.css}
         report=${{css%assets/style.css}}
         templates="${{report}}templates"
-        imgs="${{report}}imgs"
+        imgs="${{report}}assets/img"
 
         python3 {input.scr} \
             --templates-dir ${{templates}} \

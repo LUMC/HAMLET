@@ -23,7 +23,7 @@
     "fusion": [],
     "itd": {
       "flt3": {
-        "path": "test-hamlet-chrM/SRR8615409/itd/SRR8615409.flt3.png",
+        "path": "report/assets/img/Myeloblast_logo.png",
         "table": [
           {
             "boundary_type": "fuzzy-end",
@@ -61,7 +61,7 @@
         ]
       },
       "kmt2a": {
-        "path": "test-hamlet-chrM/SRR8615409/itd/SRR8615409.kmt2a.png",
+        "path": "report/assets/img/Myeloblast_logo.png",
         "table": [
           {
             "boundary_type": "fuzzy",

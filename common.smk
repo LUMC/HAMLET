@@ -22,7 +22,6 @@ def report_files(wildcards):
         "report/templates/contents_about.html.j2",
         "report/templates/contents_aln.html.j2",
         "report/templates/contents_basic.html.j2",
-        "report/templates/contents_expression.html.j2",
         "report/templates/contents_fusion.html.j2",
         "report/templates/contents_var.html.j2",
         "report/templates/cover.html.j2",

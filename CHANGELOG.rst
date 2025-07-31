@@ -16,6 +16,7 @@ v2.4.1-dev
   minimum number of reads to report a variant (default = 2)
 * The ``report_genes`` file for the fusion module is now optional
 * Clean up intermediate MultiQC files
+* Encode all figures into the HTML report
 
 
 ******

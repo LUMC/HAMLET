@@ -1,6 +1,7 @@
 import argparse
 import json
 import base64
+import os
 from datetime import datetime as dt
 from pathlib import Path
 from tempfile import NamedTemporaryFile as NTF
@@ -149,8 +150,7 @@ class Report(object):
         
         def convert_img_to_base64(img_path):
             if not Path(img_path).exists():
-                return ""
-            import os
+                raise ValueError(f"Unable to find file {img_path}")
             with open(img_path, "rb") as f:
                 data = f.read()
             mime = {

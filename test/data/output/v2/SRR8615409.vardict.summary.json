@@ -40,7 +40,7 @@
           "gene_id1": "ENSG00000186716",
           "gene_id2": "ENSG00000097007",
           "peptide_sequence": "SFSLTSVELQMLTNSCVKLQTVHSIPLTINKEDDESPGLYGFLNVIVHSATGFKQSS|kALQRPVASDFEPQGLSEAARWNSKENLLAGPSENDPNLFVALYDFVASGDNTLSITKGEKLR",
-          "plot": "SRR8615409/fusion/arriba/plots/fusion-1.png",
+          "plot": "report/assets/img/Myeloblast_logo.png",
           "read_identifiers": [
             "BCR-ABL1-60",
             "BCR-ABL1-76",
@@ -81,7 +81,7 @@
           "gene_id1": "ENSG00000122025",
           "gene_id2": "ENSG00000122025",
           "peptide_sequence": "LVKCCAYNSLGTSCETILLNSPGPFPFIQDNISFYATIGVCLLFIVVLTLLICHKYKKQFRYESQLQMVQVTGSSDNEYFYVDFREYEYD|hVDFREYEYDLKWEFPRENLEFGKVLGSGAFGKVM",
-          "plot": "SRR8615409/fusion/arriba/plots/fusion-2.png",
+          "plot": "report/assets/img/Myeloblast_logo.png",
           "read_identifiers": [
             "SRR8615687.47460344",
             "SRR8615687.47460370",
@@ -107,7 +107,7 @@
     },
     "itd": {
       "flt3": {
-        "path": "/data/lumc/test/HAMLET-6048/test-hamlet-chrM/SRR8615409/itd/SRR8615409.flt3.png",
+        "path": "report/assets/img/Myeloblast_logo.png",
         "table": [
           {
             "boundary_type": "fuzzy-end",
@@ -145,7 +145,7 @@
         ]
       },
       "kmt2a": {
-        "path": "/data/lumc/test/HAMLET-6048/test-hamlet-chrM/SRR8615409/itd/SRR8615409.kmt2a.png",
+        "path": "report/assets/img/Myeloblast_logo.png",
         "table": [
           {
             "boundary_type": "fuzzy",

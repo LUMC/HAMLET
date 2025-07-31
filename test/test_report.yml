@@ -13,6 +13,10 @@
       contains:
         # Test that we include the genomic HGVS description in the report
         - "chrM:g.8701A>G"
+      must_not_contain_regex:
+        # Test that we do not include paths to images, we should encode the
+        # images into the html
+        - '<img src=".*.png">'
 
 - name: Test report expression genes
   tags:
@@ -36,6 +40,7 @@
   tags:
     - hamlet
     - report
+    - current
   command: >
     python3 scripts/generate_report.py
     --html-output report.html
