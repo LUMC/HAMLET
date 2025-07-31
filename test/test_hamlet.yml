@@ -61,7 +61,8 @@
       --configfile test/data/config/hamlet.json \
       --config pepfile=test/pep/targetted.csv
     "
-    - path: MO1-RNAseq-1-16714/hamlet_report.SRR8615409.pdf
+  files:
+    - path: MO1-RNAseq-1-16714/hamlet_report.MO1-RNAseq-1-16714.pdf
     - path: "log/generate_report.MO1-RNAseq-1-16714.txt"
     - path: multiqc_hamlet.html
       contains:
@@ -72,6 +73,34 @@
         # Test that most reads are the correct strand (sample is reverse stranded)
         - "Sample\tCorrect\tIncorrect"
         - "MO1-RNAseq-1-16714\t155.0\t5.0"
+
+    # Clean up itermediate MultiQC files for the modules
+    - path: multiqc_snv_indels.html
+      should_exist: False
+    - path: multiqc_snv_indels_data
+      should_exist: False
+    - path: multiqc_filelist_snv_indels.txt
+      should_exist: False
+
+    - path: multiqc_qc_seq.html
+      should_exist: False
+    - path: multiqc_qc_seq_data
+      should_exist: False
+    - path: multiqc_filelist_qc_seq.txt
+      should_exist: False
+
+    - path: multiqc_expression.html
+      should_exist: False
+    - path: multiqc_expression_data
+      should_exist: False
+    - path: multiqc_filelist_expression.txt
+      should_exist: False
+    - path: merged_expression_cell_types_mqc.tsv
+      should_exist: False
+    - path: merged_expression_stranded_mqc.tsv
+      should_exist: False
+    - path: merged_expression_unstranded_mqc.tsv
+      should_exist: False
 
 # HAMLET pipeline should run successfully with default settings
 - name: test-hamlet-chrM
@@ -182,8 +211,6 @@
       should_exist: False
     # Test the output of the expression module
     - path: SRR8615409/expression/expression-output.json
-    # Test that we put the expression results in the PDF report
-    # Test that we put the expression results in the MultiQC report
 
 - name: lint-hamlet
   tags:

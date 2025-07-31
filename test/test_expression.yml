@@ -109,13 +109,6 @@
     - path: SRR8615409/expression/AMLmapR/aml_cluster_predictions.csv
       contains:
         - "AML.MRC.1."
-    # Test that the merged expression files are created, for unstranded,
-    # forward and reverse libraries
-    - path: merged_expression_unstranded_mqc.tsv
-      contains:
-        - "id: mqc_expression_unstranded"
-    # Empty file since this sample is unstranded
-    - path: merged_expression_stranded_mqc.tsv
     # Test that we create the multiqc report
     - path: multiqc_expression.html
       contains:
@@ -125,9 +118,19 @@
         - "Estimated cell type composition"
         # Test for seAMLess output in html
         - "CD14 Mono"
+        # Test for unstranded data in the html report
+        - "mqc_expression_unstranded-section"
       must_not_contain:
         # Test that the plot is not part of the MultiQC data
         - "cell-types.png"
+    - path: multiqc_filelist_expression.txt
+      should_exist: False
+    - path: merged_expression_cell_types_mqc.tsv
+      should_exist: False
+    - path: merged_expression_stranded_mqc.tsv
+      should_exist: False
+    - path: merged_expression_unstranded_mqc.tsv
+      should_exist: False
 
     - path: SRR8615409/expression/expression-output.json
       contains:
@@ -190,6 +193,7 @@
   command: >
     snakemake
     --snakefile includes/expression/Snakefile
+    --notemp
     --workflow-profile test
     --configfile test/data/config/expression.json
     --config

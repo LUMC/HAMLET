@@ -131,7 +131,6 @@
       contains:
         # Region for MT-TF
         - "chrM\t576\t3304"
-
     - path: multiqc_snv_indels.html
       must_not_contain:
         # Test that file names are set correctly in MultiQC report
@@ -166,7 +165,6 @@
     snakemake \
       --snakefile includes/snv-indels/Snakefile \
       --workflow-profile test \
-      --notemp \
       --configfile test/data/config/snv-indels.json \
       --config pepfile=test/pep/targetted.csv \
         blacklist=test/data/blacklist.txt
@@ -181,6 +179,8 @@
         # Test that most reads are the correct strand (sample is reverse stranded)
         - "Sample\tCorrect\tIncorrect"
         - "MO1-RNAseq-1-16714\t155.0\t5.0"
+    - path: multiqc_filelist_snv_indels.txt
+      should_exist: False
 
 # VEP should switch to offline mode when "vep_cache" is specified
 - name: test-chrM-vep-cache

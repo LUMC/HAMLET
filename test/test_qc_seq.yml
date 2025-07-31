@@ -100,6 +100,8 @@
         - "Sequali"
     - path: TestSample1/qc-seq/sequali/TestSample1.json
     - path: TestSample1/qc-seq/sequali/TestSample1.html
+    - path: multiqc_filelist_qc_seq.txt
+      should_exist: False
 
 - name: lint-qc
   tags:

@@ -6,6 +6,7 @@ rule all:
         merged_forward=[module_output.forward(sample) for sample in samples],
         merged_reverse=[module_output.reverse(sample) for sample in samples],
         multiqc="multiqc_qc_seq.html",
+        folder="multiqc_qc_seq_data",
 
 
 rule cutadapt:
@@ -73,22 +74,23 @@ rule multiqc:
         stats=module_output.multiqc_files,
         config=workflow.source_path("../../cfg/multiqc.yml"),
     params:
-        filelist="multiqc_filelist_qc_seq.txt",
         depth=2,
         modules=multiqc_modules(),
     output:
         html="multiqc_qc_seq.html",
+        folder=directory("multiqc_qc_seq_data"),
         parquet="multiqc_qc_seq_data/BETA-multiqc.parquet",
+        filelist=temporary("multiqc_filelist_qc_seq.txt"),
     log:
         "log/qc_seq.multiqc.txt",
     container:
         containers["multiqc"]
     shell:
         """
-        rm -f {params.filelist}
+        rm -f {output.filelist}
 
         for fname in {input.stats}; do
-            echo $fname >> {params.filelist}
+            echo $fname >> {output.filelist}
         done
 
         multiqc \
@@ -97,7 +99,7 @@ rule multiqc:
         --dirs-depth {params.depth} \
         --fullnames \
         --fn_as_s_name \
-        --file-list {params.filelist} \
+        --file-list {output.filelist} \
         --config {input.config} \
         {params.modules} \
         --filename {output.html} 2> {log}

@@ -172,9 +172,9 @@ rule merge_samples:
         samples=[sample.sample for sample in samples],
         strandedness=[get_strand(sample) for sample in samples],
     output:
-        unstranded="merged_expression_unstranded_mqc.tsv",
-        stranded="merged_expression_stranded_mqc.tsv",
-        cell_types="merged_expression_cell_types_mqc.tsv",
+        unstranded=temporary("merged_expression_unstranded_mqc.tsv"),
+        stranded=temporary("merged_expression_stranded_mqc.tsv"),
+        cell_types=temporary("merged_expression_cell_types_mqc.tsv"),
     log:
         "log/merge_samples.txt",
     threads: 1
@@ -196,21 +196,22 @@ rule multiqc:
         stats=module_output.multiqc_files,
         config=workflow.source_path("../../cfg/multiqc.yml"),
     params:
-        filelist="multiqc_filelist_expression.txt",
         depth=2,
     output:
         html="multiqc_expression.html",
+        folder=directory("multiqc_expression_data"),
         parquet="multiqc_expression_data/BETA-multiqc.parquet",
+        filelist=temporary("multiqc_filelist_expression.txt"),
     log:
         "log/expression.multiqc.txt",
     container:
         containers["multiqc"]
     shell:
         """
-        rm -f {params.filelist}
+        rm -f {output.filelist}
 
         for fname in {input.stats}; do
-            echo $fname >> {params.filelist}
+            echo $fname >> {output.filelist}
         done
 
         multiqc \
@@ -219,7 +220,7 @@ rule multiqc:
         --dirs-depth {params.depth} \
         --fullnames \
         --fn_as_s_name \
-        --file-list {params.filelist} \
+        --file-list {output.filelist} \
         --config {input.config} \
         --filename {output.html} 2> {log}
         """

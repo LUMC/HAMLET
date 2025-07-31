@@ -443,22 +443,23 @@ rule multiqc:
         stats=module_output.multiqc_files,
         config=workflow.source_path("../../cfg/multiqc.yml"),
     params:
-        filelist="multiqc_filelist_snv_indels.txt",
         depth=2,
         modules=multiqc_modules(),
     output:
         html="multiqc_snv_indels.html",
+        folder=directory("multiqc_snv_indels_data"),
         parquet="multiqc_snv_indels_data/BETA-multiqc.parquet",
+        filelist=temporary("multiqc_filelist_snv_indels.txt"),
     log:
         "log/snv_indels.multiqc.txt",
     container:
         containers["multiqc"]
     shell:
         """
-        rm -f {params.filelist}
+        rm -f {output.filelist}
 
         for fname in {input.stats}; do
-            echo $fname >> {params.filelist}
+            echo $fname >> {output.filelist}
         done
 
         multiqc \
@@ -467,7 +468,7 @@ rule multiqc:
         --dirs-depth {params.depth} \
         --fullnames \
         --fn_as_s_name \
-        --file-list {params.filelist} \
+        --file-list {output.filelist} \
         --config {input.config} \
         {params.modules} \
         --filename {output.html} 2> {log}

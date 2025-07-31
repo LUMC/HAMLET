@@ -6,6 +6,7 @@ localrules:
     align_genome_txt,
     align_json_output,
     align_table_vars_hi,
+    cleanup_multiqc,
     create_summary,
     fusion_arriba_to_json,
     generate_report,
@@ -21,6 +22,7 @@ rule all:
         summary=expand("{sample}/{sample}.summary.json", sample=samples),
         report=expand("{sample}/hamlet_report.{sample}.pdf", sample=samples),
         multiqc="multiqc_hamlet.html",
+        cleanup=".cleanup_multiqc",
 
 
 # Add the PEP configuration to each submodule
@@ -48,6 +50,15 @@ use rule cutadapt from qc_seq as qc_seq_cutadapt with:
         fq1=temp("{sample}/qc-seq/{sample}-R1.fq.gz"),
         fq2=temp("{sample}/qc-seq/{sample}-R2.fq.gz"),
         json="{sample}/qc-seq/{sample}.cutadapt.json",
+
+
+# Mark qc-seq MultiQC files as temporary
+use rule multiqc from qc_seq as qc_seq_multiqc with:
+    output:
+        html=temporary("multiqc_qc_seq.html"),
+        folder=directory("multiqc_qc_seq_data"),
+        parquet="multiqc_qc_seq_data/BETA-multiqc.parquet",
+        filelist=temporary("multiqc_filelist_qc_seq.txt"),
 
 
 module itd:
@@ -85,6 +96,15 @@ use rule align_vars from align as align_align_vars with:
         fq2=qc_seq.module_output.reverse,
         index=config["snv-indels"]["star_index"],
         gtf=config["snv-indels"]["gtf"],
+
+
+# Mark align MultiQC files as temporary
+use rule multiqc from align as align_multiqc with:
+    output:
+        html=temporary("multiqc_snv_indels.html"),
+        folder=directory("multiqc_snv_indels_data"),
+        parquet="multiqc_snv_indels_data/BETA-multiqc.parquet",
+        filelist=temporary("multiqc_filelist_snv_indels.txt"),
 
 
 module fusion:
@@ -148,6 +168,14 @@ use rule transform_counts from expression as expression_transform_counts with:
     input:
         counts=align.module_output.counts,
         src=workflow.source_path("includes/expression/scripts/transform_counts.py"),
+
+
+use rule multiqc from expression as expression_multiqc with:
+    output:
+        html=temporary("multiqc_expression.html"),
+        folder=directory("multiqc_expression_data"),
+        parquet="multiqc_expression_data/BETA-multiqc.parquet",
+        filelist=temporary("multiqc_filelist_expression.txt"),
 
 
 rule create_summary:
@@ -271,4 +299,27 @@ rule multiqc:
         {input.snv_indel_stats} \
         {input.expression_stats} \
         2> {log}
+        """
+
+
+rule cleanup_multiqc:
+    """Rule to clean up leftover MultiQC output files and folders from the modules"""
+    input:
+        qc_stats=qc_seq.module_output.multiqc_parquet,
+        snv_indel_stats=align.module_output.multiqc_parquet,
+        expression_stats=expression.module_output.multiqc_parquet,
+        run_after_multiqc_rule=rules.multiqc.output.html,
+    output:
+        target=".cleanup_multiqc",
+    log:
+        "log/cleanup_multiqc.txt",
+    container:
+        containers["multiqc"]
+    shell:
+        """
+        rm -rfv $(dirname {input.qc_stats}) 2>&1 >> {log}
+        rm -rfv $(dirname {input.snv_indel_stats}) 2>&1 >> {log}
+        rm -rfv $(dirname {input.expression_stats}) 2>&1 >> {log}
+
+        touch {output.target}
         """
