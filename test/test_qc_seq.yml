@@ -85,7 +85,7 @@
     # QC pipeline should create output file for TestSample3
     - path: "TestSample3/qc-seq/TestSample3-R1.fq.gz"
     - path: "TestSample3/qc-seq/TestSample3-R2.fq.gz"
-    - path: "log/cutadapt.TestSample3.txt"
+    - path: "log/cutadapt.TestSample3.out"
       contains:
         - "This is cutadapt"
     - path: "multiqc_qc_seq.html"
