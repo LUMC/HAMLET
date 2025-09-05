@@ -22,7 +22,10 @@ rule cutadapt:
         f_adapter=config["forward_adapter"],
         r_adapter=config["reverse_adapter"],
     log:
-        "log/cutadapt.{sample}.txt",
+        stdout="log/cutadapt.{sample}.out",
+        stderr="log/cutadapt.{sample}.err",
+        pigz1="log/cutadapt.pigz1.{sample}.err",
+        pigz2="log/cutadapt.pigz2.{sample}.err",
     threads: 8
     container:
         containers["cutadapt"]
@@ -38,8 +41,9 @@ rule cutadapt:
             --output={output.fq1} \
             --paired-output={output.fq2} \
             --json={output.json} \
-            <(pigz --decompress --stdout {input.fq1:q}) \
-            <(pigz --decompress --stdout {input.fq2:q}) > {log}
+            <(pigz --decompress --stdout {input.fq1:q} 2> {log.pigz1}) \
+            <(pigz --decompress --stdout {input.fq2:q} 2> {log.pigz2}) \
+            > {log.stdout} 2> {log.stderr}
         """
 
 
