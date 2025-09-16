@@ -10,6 +10,7 @@ Changelog
 **********
 v2.4.1-dev
 **********
+
 * Allow every module to run with the full HAMLET configuration
 * Add option ``min_variant_depth`` to the snv-indels module to specify the
   minimum number of reads to report a variant (default = 2)
@@ -17,7 +18,7 @@ v2.4.1-dev
 * Encode all figures into the HTML report
 * Update MultiQC to 1.30
 * Clean up intermediate MultiQC files
-
+* Truncate HGVS descriptions longer than 100 characters in the PDF report
 
 ******
 v2.4.0

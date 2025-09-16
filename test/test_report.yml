@@ -63,3 +63,21 @@
         # AF for ENST00000361899.2:c.175A>G
         # Test that we convert it to percentage, and round it
         - '95.83%'
+
+- name: test-report-long-hgvs
+  tags:
+    - hamlet
+    - report
+  command: >
+    python3 scripts/generate_report.py
+    --html-output report.html
+    test/data/output/v2/long-hgvs-description.json
+  files:
+    - path: report.html
+      contains:
+        # Test that the HGVSC is truncated
+        - "AAT..."
+        # Test that the HGVSG is truncated
+        - "AAC..."
+        # Test that HGVSP is truncated
+        - "AAG..."

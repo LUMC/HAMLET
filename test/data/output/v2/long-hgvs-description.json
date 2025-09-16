@@ -1,0 +1,379 @@
+{
+  "metadata": {
+    "genes_of_interest": [
+      {
+        "gene_id": "ENSG00000228253",
+        "gene_symbol": "MT-ATP8",
+        "transcript_ids": [
+          "ENST00000361851"
+        ]
+      },
+      {
+        "gene_id": "ENSG00000198899",
+        "gene_symbol": "MT-ATP6",
+        "transcript_ids": [
+          "ENST00000361899"
+        ]
+      }
+    ],
+    "pipeline_version": "v1.0.2-dev-1",
+    "sample_name": "SRR8615409"
+  },
+  "modules": {
+    "fusion": {
+      "events": [],
+      "metadata": {
+        "sample_name": "SRR8615409"
+      }
+    },
+    "itd": {
+      "flt3": {
+        "path": "report/assets/img/Myeloblast_logo.png",
+        "table": []
+      },
+      "kmt2a": {
+        "path": "report/assets/img/Myeloblast_logo.png",
+        "table": []
+      },
+      "metadata": {
+        "sample_name": "SRR8615409"
+      }
+    },
+    "snv_indels": {
+      "genes": {
+        "MT-ATP6": [
+          {
+            "FORMAT": {
+              "AD": "0,27",
+              "AF": "1",
+              "ALD": "14,13",
+              "DP": "27",
+              "GT": "1/1",
+              "RD": "0,0",
+              "VD": "27"
+            },
+            "INFO": {},
+            "allele_string": "A/G",
+            "assembly_name": "GRCh38",
+            "colocated_variants": [
+              {
+                "allele_string": "A/G",
+                "clin_sig": [
+                  "benign"
+                ],
+                "clin_sig_allele": "G:benign",
+                "end": 8566,
+                "id": "rs3020563",
+                "phenotype_or_disease": 1,
+                "start": 8566,
+                "strand": 1,
+                "variation_id": 384184143
+              }
+            ],
+            "end": 8566,
+            "id": ".",
+            "input": "",
+            "most_severe_consequence": "missense_variant",
+            "seq_region_name": "MT",
+            "start": 8566,
+            "strand": 1,
+            "transcript_consequences": [
+              {
+                "allele_num": 1,
+                "amino_acids": "I/V",
+                "cdna_end": 40,
+                "cdna_start": 40,
+                "cds_end": 40,
+                "cds_start": 40,
+                "codons": "Atc/Gtc",
+                "consequence_terms": [
+                  "missense_variant"
+                ],
+                "exon":"1/1",
+                "gene_id": "ENSG00000198899",
+                "hgvsc": "ENST:c.40_41insAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATCGZZ",
+                "hgvsg": "CHR1:g.40_41insAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACGZZZ",
+                "hgvsp": "CHR1:p.40_41insAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGZZZZ"
+              }
+            ]
+          }
+        ]
+      },
+      "metadata": {
+        "sample_name": "SRR8615409"
+      },
+      "stats": {
+        "aln": {
+          "num_aligned_bases": 502603,
+          "num_aligned_reads": 5318,
+          "num_aligned_reads_proper_pairs": 5258,
+          "num_total_bases": 504729,
+          "num_total_reads": 5318,
+          "pct_adapter": 0,
+          "pct_aligned_bases_from_total": 99.57878386223102,
+          "pct_aligned_reads_from_total": 100.0,
+          "pct_aligned_reads_proper_pairs": 98.87175629936065,
+          "pct_chimeras": 0.01147,
+          "rate_indel": 6.8e-05,
+          "rate_mismatch": 0.00532,
+          "strand_balance": 0.499624
+        },
+        "cov": {
+          "MT-ATP6": {
+            "ENST00000361899": [
+              {
+                "chrom": "chrM",
+                "end": 9207,
+                "exon_num": 1,
+                "metrics": {
+                  "avg": 48.06314243759178,
+                  "count": 681,
+                  "frac_cov_at_least": {
+                    "10x": 1.0,
+                    "20x": 0.9647577092511013,
+                    "30x": 0.8604992657856094,
+                    "40x": 0.7092511013215859,
+                    "50x": 0.5168869309838473,
+                    "8x": 1.0
+                  },
+                  "max": 77,
+                  "median": 50,
+                  "min": 16,
+                  "stdev": 14.866577441242029
+                },
+                "start": 8526
+              }
+            ]
+          },
+          "MT-ATP8": {
+            "ENST00000361851": [
+              {
+                "chrom": "chrM",
+                "end": 8572,
+                "exon_num": 1,
+                "metrics": {
+                  "avg": 79.57487922705315,
+                  "count": 207,
+                  "frac_cov_at_least": {
+                    "10x": 0.9468599033816425,
+                    "20x": 0.9033816425120773,
+                    "30x": 0.8454106280193237,
+                    "40x": 0.748792270531401,
+                    "50x": 0.6666666666666666,
+                    "8x": 0.9516908212560387
+                  },
+                  "max": 149,
+                  "median": 74,
+                  "min": 4,
+                  "stdev": 45.545271906838664
+                },
+                "start": 8365
+              }
+            ]
+          }
+        },
+        "ins": {
+          "max_insert_size": 10410,
+          "median_absolute_deviation": 50,
+          "median_insert_size": 177,
+          "min_insert_size": 47
+        },
+        "rna": {
+          "median_3prime_bias": 0.43784,
+          "median_5prime_bias": 0.903672,
+          "median_5prime_to_3prime_bias": 1.542735,
+          "median_cv_coverage": 0.437065,
+          "normalized_cov": [
+            0.309699,
+            0.414568,
+            0.67032,
+            0.783923,
+            0.885468,
+            0.978017,
+            1.062441,
+            1.111487,
+            1.135817,
+            1.135994,
+            1.098518,
+            1.103568,
+            1.020524,
+            0.984228,
+            0.987518,
+            0.99237,
+            0.985258,
+            1.052752,
+            1.087284,
+            1.11912,
+            1.191869,
+            1.20671,
+            1.208491,
+            1.184509,
+            1.165724,
+            1.145668,
+            1.114584,
+            1.131099,
+            1.166581,
+            1.206009,
+            1.200379,
+            1.182094,
+            1.146192,
+            1.089226,
+            1.06941,
+            1.095743,
+            1.139331,
+            1.18651,
+            1.191798,
+            1.187216,
+            1.222605,
+            1.22461,
+            1.217341,
+            1.231172,
+            1.240105,
+            1.277366,
+            1.279117,
+            1.280767,
+            1.240043,
+            1.233278,
+            1.208137,
+            1.14084,
+            1.071004,
+            1.080715,
+            1.030654,
+            0.961707,
+            0.945629,
+            0.918213,
+            0.905209,
+            0.915929,
+            0.954546,
+            0.97111,
+            1.001666,
+            1.067894,
+            1.106075,
+            1.137116,
+            1.148858,
+            1.167045,
+            1.152451,
+            1.145874,
+            1.104393,
+            1.058528,
+            1.047094,
+            1.028647,
+            0.997577,
+            0.960808,
+            0.978582,
+            0.964606,
+            0.929997,
+            0.954009,
+            0.955392,
+            0.903833,
+            0.838046,
+            0.846059,
+            0.84786,
+            0.855534,
+            0.854301,
+            0.835099,
+            0.819212,
+            0.795897,
+            0.79328,
+            0.749802,
+            0.733613,
+            0.690199,
+            0.669697,
+            0.60318,
+            0.542608,
+            0.46131,
+            0.37708,
+            0.309824,
+            0.268724
+          ],
+          "num_coding_bases": 444931,
+          "num_intergenic_bases": 3224,
+          "num_intronic_bases": 0,
+          "num_mrna_bases": 499270,
+          "num_ribosomal_bases": 399,
+          "num_utr_bases": 54339,
+          "pct_coding_bases": 0.884743,
+          "pct_intergenic_bases": 0.006411,
+          "pct_intronic_bases": 0,
+          "pct_mrna_bases": 0.992796,
+          "pct_ribosomal_bases": 0.07934093335958146,
+          "pct_utr_bases": 0.108053
+        },
+        "var": {
+          "coding_consequences": {
+            "missense_variant": 14,
+            "stop_gained": 1,
+            "synonymous_variant": 36
+          },
+          "num_deletions": 0,
+          "num_insertions": 1,
+          "num_snvs": 72,
+          "per_chromosome": {
+            "MT": 73
+          },
+          "polyphen": {
+            "num_benign_variants": 12,
+            "num_possibly_damaging_variants": 0,
+            "num_probably_damaging_variants": 0,
+            "num_unknown_variants": 0
+          },
+          "sift": {
+            "num_deleterious_variants": 0,
+            "num_tolerated_variants": 4
+          }
+        }
+      }
+    },
+    "expression": {
+      "cell-types": {
+        "data": {
+          "ASDC": 0.0,
+          "B Cells": 0.546573188005553,
+          "BaEoMa": 0.0,
+          "CD14 Mono": 0.0,
+          "CD16 Mono": 0.0,
+          "CLP": 0.0,
+          "EMP": 0.0,
+          "Early Eryth": 0.0,
+          "GMP": 0.0,
+          "HSC": 0.0,
+          "LMPP": 0.0,
+          "Late Eryth": 0.0,
+          "NK Cells": 0.0,
+          "Plasma": 0.0,
+          "Prog Mk": 0.0,
+          "T Cells": 0.453426811994447,
+          "cDC": 0.0,
+          "pDC": 0.0,
+          "pre B": 0.0,
+          "pre-mDC": 0.0,
+          "pre-pDC": 0.0,
+          "pro B": 0.0
+        },
+        "plot": "report/assets/img/lumc-logo.jpg"
+      },
+      "subtype": {
+        "AML.MRC.1.": 0.0,
+        "AML.MRC.2.": 0.0,
+        "AML.MRC.3.": 0.0,
+        "AML.MRC.4.": 0.0,
+        "AML.MRC.5.": 0.0,
+        "CBFB..MYH11": 0.0,
+        "CEBPA": 0.0,
+        "KMT2A.1.": 0.0,
+        "KMT2A.2.": 0.0,
+        "NPM1.1.": 0.0,
+        "NPM1.2.": 0.0,
+        "NPM1.3.": 0.0,
+        "NPM1.4.": 0.0,
+        "NPM1.5.": 0.0,
+        "NUP98": 0.0,
+        "PML..RARA": 0.0,
+        "RUNX1..RUNX1T1": 0.0,
+        "pass_cutoff": false,
+        "prediction": "NotClassified",
+        "sample_id": "SRR8615409"
+      }
+    }
+  }
+}
