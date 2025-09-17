@@ -16,9 +16,9 @@ v2.4.1-dev
   minimum number of reads to report a variant (default = 2)
 * The ``report_genes`` file for the fusion module is now optional
 * Encode all figures into the HTML report
-* Update MultiQC to 1.30
 * Clean up intermediate MultiQC files
 * Truncate HGVS descriptions longer than 100 characters in the PDF report
+* Update MultiQC to 1.31
 
 ******
 v2.4.0

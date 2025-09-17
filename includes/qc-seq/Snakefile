@@ -83,7 +83,7 @@ rule multiqc:
     output:
         html="multiqc_qc_seq.html",
         folder=directory("multiqc_qc_seq_data"),
-        parquet="multiqc_qc_seq_data/BETA-multiqc.parquet",
+        parquet="multiqc_qc_seq_data/multiqc.parquet",
         filelist=temporary("multiqc_filelist_qc_seq.txt"),
     log:
         "log/qc_seq.multiqc.txt",

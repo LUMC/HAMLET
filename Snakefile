@@ -57,7 +57,7 @@ use rule multiqc from qc_seq as qc_seq_multiqc with:
     output:
         html=temporary("multiqc_qc_seq.html"),
         folder=directory("multiqc_qc_seq_data"),
-        parquet="multiqc_qc_seq_data/BETA-multiqc.parquet",
+        parquet="multiqc_qc_seq_data/multiqc.parquet",
         filelist=temporary("multiqc_filelist_qc_seq.txt"),
 
 
@@ -103,7 +103,7 @@ use rule multiqc from align as align_multiqc with:
     output:
         html=temporary("multiqc_snv_indels.html"),
         folder=directory("multiqc_snv_indels_data"),
-        parquet="multiqc_snv_indels_data/BETA-multiqc.parquet",
+        parquet="multiqc_snv_indels_data/multiqc.parquet",
         filelist=temporary("multiqc_filelist_snv_indels.txt"),
 
 
@@ -174,7 +174,7 @@ use rule multiqc from expression as expression_multiqc with:
     output:
         html=temporary("multiqc_expression.html"),
         folder=directory("multiqc_expression_data"),
-        parquet="multiqc_expression_data/BETA-multiqc.parquet",
+        parquet="multiqc_expression_data/multiqc.parquet",
         filelist=temporary("multiqc_filelist_expression.txt"),
 
 

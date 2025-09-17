@@ -3,7 +3,7 @@ from scripts import gtf
 
 containers = {
     "pysam": "docker://quay.io/biocontainers/pysam:0.22.1--py39h61809e1_2",
-    "multiqc": "docker://quay.io/biocontainers/multiqc:1.30--pyhdfd78af_0",
+    "multiqc": "docker://quay.io/biocontainers/multiqc:1.31--pyhdfd78af_0",
     "seamless": "docker://quay.io/biocontainers/r-seamless:0.1.1--r44h3121a25_1",
     "amlmapr": "docker://quay.io/biocontainers/r-amlmapr:0.1.0--r44hdfd78af_0",
 }
@@ -158,6 +158,6 @@ module_output = SimpleNamespace(
     coverage=coverage,
     normalized_expression=normalized,
     multiqc_files=multiqc_files(),
-    multiqc_parquet="multiqc_expression_data/BETA-multiqc.parquet",
+    multiqc_parquet="multiqc_expression_data/multiqc.parquet",
     json=get_json,
 )

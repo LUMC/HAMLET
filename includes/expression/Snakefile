@@ -200,7 +200,7 @@ rule multiqc:
     output:
         html="multiqc_expression.html",
         folder=directory("multiqc_expression_data"),
-        parquet="multiqc_expression_data/BETA-multiqc.parquet",
+        parquet="multiqc_expression_data/multiqc.parquet",
         filelist=temporary("multiqc_filelist_expression.txt"),
     log:
         "log/expression.multiqc.txt",

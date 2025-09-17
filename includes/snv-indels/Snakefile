@@ -448,7 +448,7 @@ rule multiqc:
     output:
         html="multiqc_snv_indels.html",
         folder=directory("multiqc_snv_indels_data"),
-        parquet="multiqc_snv_indels_data/BETA-multiqc.parquet",
+        parquet="multiqc_snv_indels_data/multiqc.parquet",
         filelist=temporary("multiqc_filelist_snv_indels.txt"),
     log:
         "log/snv_indels.multiqc.txt",

@@ -13,7 +13,7 @@ for s in samples:
 
 containers = {
     "hamlet-scripts": "docker://quay.io/redmar_van_den_berg/hamlet-scripts:0.3",
-    "multiqc": "docker://quay.io/biocontainers/multiqc:1.30--pyhdfd78af_0",
+    "multiqc": "docker://quay.io/biocontainers/multiqc:1.31--pyhdfd78af_0",
 }
 
 
