@@ -84,13 +84,15 @@ jobs:
     strategy:
       matrix:
         module:
+          - test-hamlet-chrM
           - qc-seq
           - snv-indels
           - itd
           - fusion
           - expression
           - test-hamlet-targetted-RNA
-          - test-hamlet-chrM
+        fail-fast: true
+        max-parallel: 1
     steps:
       - name: Maximise build space
         uses: easimon/maximize-build-space@v10
@@ -146,9 +148,6 @@ jobs:
           path:
             ~/.singularity/cache/snakemake
           key: singularity-${{ hashFiles('**/common.smk') }}-${{ env.CACHE_NUMBER }}
-          restore-keys: |
-            singularity-${{ hashFiles('**/common.smk') }}-
-            singularity-
 
       - name: Run test in conda environment
         run: >-
