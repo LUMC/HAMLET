@@ -382,6 +382,7 @@ rule annotate_vep:
     input:
         vep="{sample}/snv-indels/{sample}.vep.filtered.txt.gz",
         annotation_criteria=config["annotation_criteria"],
+        known_variants=config.get("known_variants", []),
         scr=workflow.source_path("scripts/annotate_vep.py"),
         filter=workflow.source_path("scripts/filter_vep.py"),
     output:
@@ -403,7 +404,8 @@ rule annotate_vep:
 
         python3 {input.scr} \
             --vep $VEP \
-            --annotations {input.annotation_criteria} 2>>{log} \
+            --annotations {input.annotation_criteria} \
+            --known-variants {input.known_variants} 2>>{log} \
             | gzip > {output.annotated} 2>> {log}
         """
 
