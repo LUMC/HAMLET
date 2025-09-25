@@ -30,12 +30,18 @@ def read_criteria_file(criteria_file: str) -> OrderedDict:
             transcript_id = d.get("transcript_id")
             assert transcript_id is not None
 
+            # Get the frame
+            frame = d.get("frame")
+            if frame:
+                frame = int(frame)
+
             c = Criterion(
                 identifier=transcript_id,
                 coordinate="c",
                 consequence=d["consequence"],
                 start=d["start"],
                 end=d["end"],
+                frame=frame,
             )
             annotation = d.get("annotation", "")
 

@@ -8,7 +8,7 @@ Changelog
 .. that users understand how the changes affect the new version.
 
 **********
-v2.4.1-dev
+v2.5.0-dev
 **********
 
 * Allow every module to run with the full HAMLET configuration
@@ -19,6 +19,7 @@ v2.4.1-dev
 * Clean up intermediate MultiQC files
 * Truncate HGVS descriptions longer than 100 characters in the PDF report
 * Update MultiQC to 1.31
+* Add support for specifying the frame of variant Criteria
 
 ******
 v2.4.0
