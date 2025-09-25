@@ -344,14 +344,11 @@ class Criterion:
         return str(self)
 
     def match(self, variant: Variant) -> bool:
-        return all(
-            [
-                self.match_id(variant),
-                self.match_coordinate(variant),
-                self.match_consequence(variant),
-                self.match_region(variant),
-                self.match_frame(variant),
-            ]
+        return ( self.match_id(variant)
+            and self.match_coordinate(variant)
+            and self.match_consequence(variant)
+            and self.match_region(variant)
+            and self.match_frame(variant)
         )
 
     def match_id(self, variant: Variant) -> bool:
