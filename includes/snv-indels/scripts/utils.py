@@ -193,6 +193,101 @@ class Variant:
             raise NotImplementedError
         return str(self) == str(other)
 
+    @staticmethod
+    def _location_size(location: dict[str, Any]) -> int:
+        """Determine the size of a 'location' dict from mutalyzer"""
+        if location["type"] == "point":
+            size = 1
+        elif location["type"] == "range":
+            start = int(location["start"]["position"])
+            end = int(location["end"]["position"])
+            size = end - start + 1
+        else:
+            raise NotImplementedError
+
+        return size
+
+    def _outside_cds(self, location: dict[str, Any]) -> bool:
+        """Determine if a location object from Mutalyzer is outside the CDS"""
+        if "outside_cds" in location:
+            return True
+        if "offset" in location:
+            return True
+        if "start" in location and "outside_cds" in location["start"]:
+            return True
+        if "end" in location and "outside_cds" in location["end"]:
+            return True
+        if "start" in location and "offset" in location["start"]:
+            return True
+        if "end" in location and "offset" in location["end"]:
+            return True
+
+        return False
+
+    def size(self) -> int:
+        """Return the size of the variant, inserted-deleted"""
+        model = to_model(self.hgvs)
+        variants = model["variants"]
+
+        # No variant
+        if not model["variants"]:
+            return 0
+
+        if len(variants) > 1:
+            raise NotImplementedError
+
+        variant = variants[0]
+
+        # SNP
+        if "deleted" in variant and "inserted" in variant:
+            d = variant["deleted"][0]["sequence"]
+            i = variant["inserted"][0]["sequence"]
+            return len(i) - len(d)
+
+        # A deletion
+        elif variant["type"] == "deletion":
+            return -self._location_size(variant["location"])
+
+        # An insertion
+        elif variant["type"] == "insertion":
+            return len(variant["inserted"][0]["sequence"])
+
+        # A delins
+        elif variant["type"] == "deletion_insertion":
+            del_size = self._location_size(variant["location"])
+            ins_size = len(variant["inserted"][0]["sequence"])
+            return ins_size - del_size
+        elif variant["type"] == "inversion":
+            return 0
+        elif variant["type"] == "duplication":
+            return self._location_size(variant["location"])
+        else:
+            raise NotImplementedError
+
+    def frame(self) -> int:
+        model = to_model(self.hgvs)
+        # Determine if the coordinate system supports detecting the frame
+        coordinate = model["coordinate_system"]
+        if coordinate != "c":
+            raise ValueError("Determining the frame is only supported for c. variants")
+
+        variants = model["variants"]
+        # No variant
+        if not model["variants"]:
+            return 0
+
+        if len(variants) > 1:
+            raise NotImplementedError
+
+        variant = variants[0]
+        # Next, determine if the variant supports detecting the frame
+        if self._outside_cds(variant["location"]):
+            raise ValueError(
+                "Determing the frame is only supported in the coding region"
+            )
+
+        return self.size() % 3
+
 
 class Criterion:
     def __init__(
@@ -202,6 +297,7 @@ class Criterion:
         consequence: str | None = None,
         start: str | None = None,
         end: str | None = None,
+        frame: int | None = None,
     ) -> None:
         self.identifier = identifier
         self.coordinate = coordinate
@@ -215,31 +311,46 @@ class Criterion:
             # if end is not specified, set end equal to start
             if end is None:
                 end = start
+
             # Make a fake hgvs description to determine the start and end Location
             hgvs = f"{identifier}:c.{start}_{end}"
             self.start, self.end = get_position(hgvs)
+            if (
+                self.start is not None
+                and self.end is not None
+                and self.start > self.end
+            ):
+                raise ValueError(f"{start=} cannot be after {end=}")
+
         else:
             self.start = None
             self.end = None
+
+        self.frame = frame
 
     def __str__(self) -> str:
         return (
             f"Criterion(identifier={self.identifier}, "
             f"coordinate={self.coordinate}, "
-            f"consequence={self.consequence}, "
+            f"consequene={self.consequence}, "
             f"start={self.start}, "
-            f"end={self.end})"
+            f"end={self.end}, "
+            f"frame={self.frame})"
         )
 
     def __repr__(self) -> str:
         return str(self)
 
     def match(self, variant: Variant) -> bool:
-        return (self.match_id(variant) and
-                self.match_coordinate(variant) and
-                self.match_consequence(variant) and
-                self.match_region(variant)
-                )
+        return all(
+            [
+                self.match_id(variant),
+                self.match_coordinate(variant),
+                self.match_consequence(variant),
+                self.match_region(variant),
+                self.match_frame(variant),
+            ]
+        )
 
     def match_id(self, variant: Variant) -> bool:
         """Determine if the identifier matches the variant
@@ -295,6 +406,13 @@ class Criterion:
 
         return region_overlap(var_region, crit_region)
 
+    def match_frame(self, variant: Variant) -> bool:
+        if self.frame is None:
+            return True
+        else:
+            return variant.frame() == self.frame
+
+
 @functools.lru_cache(maxsize=1000)
 def get_position(hgvs: str) -> Region:
     # Get the variant part of the hgvs description
@@ -313,11 +431,6 @@ def get_position(hgvs: str) -> Region:
         start = point_to_tuple(location["start"])
         end = point_to_tuple(location["end"])
 
-        # make sure "end" is downstream of "start"
-        if start > end:
-            s, e = start, end
-            start = e
-            end = s
     else:
         raise RuntimeError
 

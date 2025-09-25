@@ -480,11 +480,6 @@ POSITION = [
         Location(0,10,0),
         Location(0,15,0)
     )),
-    #in case start and end are specified antisense in criterion
-    ("15_10del",(
-        Location(0,10,0),
-        Location(0,15,0)
-    )),
 ]
 # fmt: on
 
@@ -516,10 +511,6 @@ def test_variant_position_no_change_protein() -> None:
 # fmt: off
 POSITION_CRITERION = [
     ("10","15",(
-        Location(0,10,0),
-        Location(0,15,0)
-    )),
-    ("15","10",(
         Location(0,10,0),
         Location(0,15,0)
     )),
