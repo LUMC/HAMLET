@@ -60,7 +60,7 @@ rule all:
         star_index="star-index",
         ref_id_mapping="id_mappings.tsv",
         filter_criteria="filter_criteria.tsv",
-        hotspot_criteria="hotspot_criteria.tsv",
+        annotation_criteria="annotation_criteria.tsv",
         rrna_refflat="ucsc_rrna.refFlat",
         blacklist="blacklist.txt",
         arriba="arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3",
@@ -247,16 +247,16 @@ rule copy_id_mappings:
 rule copy_criteria_files:
     input:
         filter=workflow.source_path("small-files/filter_criteria.tsv"),
-        hotspot=workflow.source_path("small-files/hotspot_criteria.tsv"),
+        annotation=workflow.source_path("small-files/annotation_criteria.tsv"),
     output:
         filter="filter_criteria.tsv",
-        hotspot="hotspot_criteria.tsv",
+        annotation="annotation_criteria.tsv",
     singularity:
         containers["hamlet-scripts"]
     shell:
         """
         cp {input.filter} {output.filter}
-        cp {input.hotspot} {output.hotspot}
+        cp {input.annotation} {output.annotation}
         """
 
 
