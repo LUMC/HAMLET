@@ -98,13 +98,14 @@ def test_chr_location_exon(workflow_dir):
     row = next(rows)
 
     # Convert into a dictionary
-    header = "gene hgvs database VAF hotspot_exon ref alt total".split()
+    header = "gene hgvs database VAF_exon annotation ref alt total".split()
     data = {k:v for k, v in zip(header, row)}
 
     # Test that the genomic HGVS is in the table
     assert "chrM:g.8701A>G" in data["hgvs"]
-    # Test that the exon number is in the table
-    assert data["hotspot_exon"] == "Hotspot1/1"
+    # Test that the exon number is in the table in the VAF/Exon column
+    assert data["VAF_exon"] == "95.83%1/1"
+    assert data["annotation"] == "Hotspot"
 
 
 @pytest.mark.workflow('test-report')
@@ -137,7 +138,7 @@ def test_is_in_hotspot(workflow_dir):
 
     # Extract the variant table
     variant_table = soup.find('table', id='var-overview')
-    expected_values = ['1/1', 'Hotspot', 'Hotspot', 'Hotspot']
+    expected_values = ['', 'Hotspot', 'Hotspot', 'Hotspot']
     hotspot_column = 4
 
     for row, expected in zip(get_rows(variant_table), expected_values):
@@ -213,7 +214,7 @@ def test_full_variant_overview_vardict(workflow_dir):
     assert row["Ref/Alt(Total)"] == '0/27(27)'
 
     # The allele frequency should be given in percentage: 100%, not 1
-    assert row["VAF"] == '100.0%'
+    assert row["VAF/Exon"] == '100.0%1/1'
 
 @pytest.mark.workflow('Test report expression genes')
 def test_variant_overview_expression(workflow_dir):
