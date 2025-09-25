@@ -1,7 +1,9 @@
-from typing import Any, Iterator, Dict, Tuple
+from typing import Any, Iterator, Dict, Sequence, Tuple, Set
 import functools
 from collections import namedtuple
 from mutalyzer_hgvs_parser import to_model  # type: ignore
+from itertools import zip_longest
+from collections import OrderedDict
 
 # Type for the frequencies entry from VEP
 FrequenciesType = Dict[str, Dict[str, float]]
@@ -58,7 +60,7 @@ class VEP(dict[str, Any]):
         "intergenic_variant",
     ]
 
-    def filter_criteria(self, criteria: list["Criterion"]) -> None:
+    def filter_criteria(self, criteria: Sequence["Criterion"]) -> None:
         filtered = list()
         for tc in self.get("transcript_consequences", list()):
             hgvsc = tc.get("hgvsc")
@@ -467,3 +469,44 @@ def region_overlap(region1: Region, region2: Region) -> bool:
             region1[0] < region2[0] and region1[1] > region2[1],
         ]
     )
+
+def read_criteria_file(criteria_file: str) -> OrderedDict[Criterion, str]:
+    """Read the criterions file"""
+    annotations: OrderedDict[Criterion, str] = OrderedDict()
+
+    header = None
+    with open(criteria_file) as fin:
+        for line in fin:
+            if line.startswith("#"):
+                continue
+
+            spline = line.strip("\n").split("\t")
+            if header is None:
+                header = spline
+                continue
+
+            # Read into dict, convert '' to None
+            d = {k: v if v else None for k, v in zip_longest(header, spline)}
+
+            # Check that at least the transcript id is set
+            transcript_id = d.get("transcript_id")
+            assert transcript_id is not None
+
+            # Get the frame
+            frame = d.get("frame")
+            if frame is not None:
+                frame = int(frame)
+
+            c = Criterion(
+                identifier=transcript_id,
+                coordinate="c",
+                consequence=d["consequence"],
+                start=d["start"],
+                end=d["end"],
+                frame=frame,
+            )
+            annotation = d.get("annotation", "")
+
+            annotations[c] = annotation
+
+    return annotations

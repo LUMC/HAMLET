@@ -2,52 +2,12 @@
 
 import argparse
 import json
-from utils import Criterion, Variant, VEP
+from utils import Variant, VEP, read_criteria_file
 from itertools import zip_longest
 from collections import OrderedDict
 
 from typing import Iterator
 
-def read_criteria_file(criteria_file: str) -> OrderedDict:
-    """Read the criterions file"""
-    annotations = OrderedDict()
-
-    header = None
-    with open(criteria_file) as fin:
-        for line in fin:
-            if line.startswith("#"):
-                continue
-
-            spline = line.strip("\n").split("\t")
-            if header is None:
-                header = spline
-                continue
-
-            # Read into dict, convert '' to None
-            d = {k: v if v else None for k, v in zip_longest(header, spline)}
-
-            # Check that at least the transcript id is set
-            transcript_id = d.get("transcript_id")
-            assert transcript_id is not None
-
-            # Get the frame
-            frame = d.get("frame")
-            if frame:
-                frame = int(frame)
-
-            c = Criterion(
-                identifier=transcript_id,
-                coordinate="c",
-                consequence=d["consequence"],
-                start=d["start"],
-                end=d["end"],
-                frame=frame,
-            )
-            annotation = d.get("annotation", "")
-
-            annotations[c] = annotation
-
-    return annotations
 
 def parse_vep_json(vep_file: str) -> Iterator[VEP]:
     """Parse the VEP 'json' output file, each line contains a JSON entry"""

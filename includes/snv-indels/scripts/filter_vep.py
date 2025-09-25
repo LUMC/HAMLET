@@ -4,46 +4,11 @@
 
 import argparse
 import json
-from itertools import zip_longest
 
 from collections.abc import Iterator
 
 
-from utils import VEP, Criterion
-
-
-def read_criteria_file(criteria_file: str) -> list[Criterion]:
-    """Read the criterions file"""
-    criteria: list[Criterion] = list()
-
-    header = None
-    with open(criteria_file) as fin:
-        for line in fin:
-            if line.startswith("#"):
-                continue
-
-            spline = line.strip("\n").split("\t")
-            if header is None:
-                header = spline
-                continue
-
-            # Read into dict, convert '' to None
-            d = {k: v if v else None for k, v in zip_longest(header, spline)}
-
-            # Check that at least the transcript id is set
-            transcript_id = d.get("transcript_id")
-            assert transcript_id is not None
-
-            c = Criterion(
-                identifier=transcript_id,
-                coordinate="c",
-                consequence=d["consequence"],
-                start=d["start"],
-                end=d["end"],
-            )
-
-            criteria.append(c)
-    return criteria
+from utils import VEP, read_criteria_file
 
 
 def parse_vep_json(vep_file: str) -> Iterator[VEP]:
@@ -67,7 +32,7 @@ def main(
         if vep.above_population_threshold(population, frequency):
             continue
         # Filter transcripts based on criteria
-        vep.filter_criteria(criteria)
+        vep.filter_criteria(list(criteria.keys()))
 
         # If there is no consequence of interest left
         if not vep["transcript_consequences"]:
