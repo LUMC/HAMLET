@@ -3,8 +3,6 @@
 import argparse
 import json
 from utils import Variant, VEP, read_criteria_file
-from itertools import zip_longest
-from collections import OrderedDict
 
 from typing import Iterator
 
@@ -16,9 +14,14 @@ def parse_vep_json(vep_file: str) -> Iterator[VEP]:
             yield VEP(json.loads(line))
 
 def read_known_variants(fname: str) -> dict[str, str]:
-    raise NotImplementedError
+    known_variants = dict()
+    with open(fname) as fin:
+        for line in fin:
+            variant, annotation = line.strip("\n").split("\t")
+            known_variants[variant] = annotation
+    return known_variants
 
-def main(vep_file: str, annotations_file: str, known_variants_file: str | None):
+def main(vep_file: str, annotations_file: str, known_variants_file: str | None) -> None:
     criteria = read_criteria_file(annotations_file)
     known_variants = read_known_variants(known_variants_file) if known_variants_file else dict()
 

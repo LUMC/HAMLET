@@ -94,11 +94,13 @@ Configuration options
     - Folder containing the VEP cache
     - no
   * - variant_allele_frequency
-    - Minimum variant allele frequency in the sample to call a variant
-      (default=0.05)
-    - no
+    - Minimum variant allele frequency to call a variant
+    - no (default=0.05)
   * - min_variant_depth
-    - Minimum read depth to call a variant (default=2)
+    - Minimum read depth to call a variant
+    - no (default=2)
+  * - known_variants
+    - File containing known varaints and their annotation
     - no
 
 Filter and annotation criteria
@@ -118,3 +120,14 @@ The required columns are ``transcript_id``, ``consequence``, ``start`` and ``end
 .. csv-table:: Example ``annotation_criteria`` file, from the HAMLET tests
   :delim: U+0009
   :file: ../../test/data/config/annotation_criteria.tsv
+
+Known variant annotations
+^^^^^^^^^^^^^^^^^^^^^^^^^
+In addition to the annotation criteria desribed above, it is also possible to
+supply HAMLET with annotations for specific variants via the ``known_variants``
+file. Annotations from this file have a higher priority than the annotations
+specified in ``annotation_criteria``.
+
+.. csv-table:: Example ``known_variants`` file, from the HAMLET tests
+  :delim: U+0009
+  :file: ../../test/data/config/known_variants.tsv

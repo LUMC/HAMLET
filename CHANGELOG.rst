@@ -20,6 +20,7 @@ v2.5.0-dev
 * Truncate HGVS descriptions longer than 100 characters in the PDF report
 * Update MultiQC to 1.31
 * Add support for specifying the frame of variant Criteria
+* Add additional annotation file ``known_variants`` to the snv-indels module
 
 ******
 v2.4.0

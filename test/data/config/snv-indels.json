@@ -6,6 +6,7 @@
   "ref_id_mapping": "test/data/reference/id_mappings.tsv",
   "filter_criteria": "test/data/config/filter_criteria.tsv",
   "annotation_criteria": "test/data/config/annotation_criteria.tsv",
+  "known_variants": "test/data/config/known_variants.tsv",
   "rrna_refflat": "test/data/reference/ucsc_rrna.refFlat",
   "gtf": "test/data/reference/hamlet-ref.gtf",
   "annotation_refflat": "test/data/reference/hamlet-ref.refFlat"

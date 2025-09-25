@@ -4,13 +4,13 @@ import pytest
 import pathlib
 
 HOTSPOTS = [
-        (8390),
-        (8860),
+        (8390, "Hotspot"),
+        (8860, "known variant"),
 ]
 
 @pytest.mark.workflow('test-snv-indels-chrM')
-@pytest.mark.parametrize("pos", HOTSPOTS)
-def test_annotation(workflow_dir, pos):
+@pytest.mark.parametrize("pos, annotation", HOTSPOTS)
+def test_annotation(workflow_dir, pos, annotation):
     sample = "SRR8615409"
     output_file = pathlib.Path(workflow_dir, f"{sample}/snv-indels/{sample}.vep.annotated.txt.gz")
 
@@ -20,7 +20,7 @@ def test_annotation(workflow_dir, pos):
             d = json.loads(line)
             if d["start"] == pos:
                 ts = d["transcript_consequences"][0]
-                assert ts["annotation"] == "Hotspot"
+                assert ts["annotation"] == annotation
                 break
         else:
             raise RuntimeError(f"Position {pos} not found in {output_file}")
