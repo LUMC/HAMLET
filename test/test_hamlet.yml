@@ -132,6 +132,9 @@
       # This variant was blacklisted
       must_not_contain:
         - "ENST00000361899.2:c.175A>G"
+      contains:
+        # Test annotation Criteria that use a specific frame
+        - "FLT3 in frame"
     # Test log files
     - path: "log/create_summary.SRR8615409.txt"
     # FastQ files should be cleaned up when they are no longer needed
