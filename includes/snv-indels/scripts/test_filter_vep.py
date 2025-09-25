@@ -5,7 +5,7 @@
 import json
 import pytest
 
-from filter_vep import (
+from utils import (
     VEP,
     FrequenciesType,
     Criterion,

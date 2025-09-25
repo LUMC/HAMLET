@@ -2,7 +2,7 @@
 
 import argparse
 import json
-from filter_vep import Criterion, Variant, VEP
+from utils import Criterion, Variant, VEP
 from itertools import zip_longest
 from collections import OrderedDict
 

@@ -340,6 +340,7 @@ rule filter_vep:
         vep="{sample}/snv-indels/{sample}.vep.txt.gz",
         filter_criteria=config["filter_criteria"],
         scr=workflow.source_path("scripts/filter_vep.py"),
+        utils=workflow.source_path("scripts/utils.py"),
         filter=workflow.source_path("scripts/filter_vep.py"),
         blacklist=config.get("blacklist", []),
     params:
@@ -384,7 +385,7 @@ rule annotate_vep:
         annotation_criteria=config["annotation_criteria"],
         known_variants=config.get("known_variants", []),
         scr=workflow.source_path("scripts/annotate_vep.py"),
-        filter=workflow.source_path("scripts/filter_vep.py"),
+        utils=workflow.source_path("scripts/utils.py"),
     output:
         annotated="{sample}/snv-indels/{sample}.vep.annotated.txt.gz",
     log:
