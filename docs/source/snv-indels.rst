@@ -111,7 +111,9 @@ criteria are used both the filter which variants will be part of the output
 (``filter_criteria``), and also annotate the identified variants
 (``annotation_criteria``).
 
-The required columns are ``transcript_id``, ``consequence``, ``start`` and ``end``. For annotation variants, the ``annotation`` column is used. Every column except for ``transcript_id`` can be empty.
+The used columns are ``transcript_id``, ``consequence``, ``start``, ``end``
+and ``frame``. For annotating variants, the ``annotation`` column is used.
+Every column except for ``transcript_id`` can be empty.
 
 .. csv-table:: Example ``filter_criteria`` file, from the HAMLET tests
   :delim: U+0009
