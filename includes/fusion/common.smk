@@ -19,7 +19,7 @@ for s in samples:
 
 
 containers = {
-    "arriba": "docker://quay.io/biocontainers/arriba:2.4.0--h0033a41_2",
+    "arriba": "docker://quay.io/biocontainers/arriba:2.5.1--h87b9561_0",
     "poppler": "docker://quay.io/biocontainers/keggcharter:0.6.0--hdfd78af_0",
 }
 

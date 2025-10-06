@@ -315,7 +315,6 @@ rule annotate_vars:
             -i {input.vcf} \
             --fasta {input.genome_fasta} \
             ${{flags}} \
-            --verbose \
             --fork {threads} \
             --allele_number \
             --stats_text \
