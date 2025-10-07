@@ -12,7 +12,7 @@ localrules:
 
 
 containers = {
-    "arriba": "docker://quay.io/biocontainers/arriba:2.4.0--h0033a41_2",
+    "arriba": "docker://quay.io/biocontainers/arriba:2.5.1--h87b9561_0",
     "hamlet-scripts": "docker://lumc/hamlet-scripts:0.3",
     "debian": "docker://debian:buster-slim",
     "samtools": "docker://quay.io/biocontainers/samtools:1.6--h244ad75_4",
@@ -25,9 +25,9 @@ containers = {
 }
 
 VEP_RELEASE = 108
+ARRIBA_RELEASE="v2.5.1"
 
 settings = {
-    "arriba": "docker://quay.io/biocontainers/arriba:2.4.0--h0033a41_2",
     "reference_url": "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.15_GRCh38/seqs_for_alignment_pipelines.ucsc_ids/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz",
     "reference_fai": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.15_GRCh38/seqs_for_alignment_pipelines.ucsc_ids/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.fai",
     "refflat": "http://hgdownload.cse.ucsc.edu/goldenpath/hg38/database/refFlat.txt.gz",
@@ -63,7 +63,7 @@ rule all:
         annotation_criteria="annotation_criteria.tsv",
         rrna_refflat="ucsc_rrna.refFlat",
         blacklist="blacklist.txt",
-        arriba="arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3",
+        arriba=f"arriba/protein_domains_hg38_GRCh38_{ARRIBA_RELEASE}.gff3",
         arriba_report_genes="arriba/report_genes.txt",
         expression_bed="expression/regions.bed",
         seamless="expression/seamless_meta.csv",
@@ -384,10 +384,10 @@ rule copy_expression_bed:
 rule copy_arriba_database:
     output:
         folder=directory("arriba"),
-        blacklist="arriba/blacklist_hg38_GRCh38_v2.4.0.tsv.gz",
-        known_fusions="arriba/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz",
-        cytobands="arriba/cytobands_hg38_GRCh38_v2.4.0.tsv",
-        protein_domains="arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3",
+        blacklist=f"arriba/blacklist_hg38_GRCh38_{ARRIBA_RELEASE}.tsv.gz",
+        known_fusions=f"arriba/known_fusions_hg38_GRCh38_{ARRIBA_RELEASE}.tsv.gz",
+        cytobands=f"arriba/cytobands_hg38_GRCh38_{ARRIBA_RELEASE}.tsv",
+        protein_domains=f"arriba/protein_domains_hg38_GRCh38_{ARRIBA_RELEASE}.gff3",
     singularity:
         containers["arriba"]
     shell:
