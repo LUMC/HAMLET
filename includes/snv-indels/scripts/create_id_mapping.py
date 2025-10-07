@@ -27,7 +27,7 @@ def read_attributes(fin):
         yield d
 
 
-def main(gtf_file: str, transcripts: set[str]) -> None:
+def read_mapping(gtf_file: str, transcripts: set[str]) -> dict[str, Mapping]:
     results = dict()
     with open(gtf_file) as fin:
         for record in read_attributes(fin):
@@ -41,6 +41,20 @@ def main(gtf_file: str, transcripts: set[str]) -> None:
                 results[gene_id].transcript_ids.add(transcript_id)
             else:
                 results[gene_id] = Mapping(gene_id, gene_name, {transcript_id})
+    return results
+
+
+def main(gtf_file: str, transcripts: set[str]) -> None:
+
+    results = read_mapping(gtf_file, transcripts)
+
+    # Make sure we didn't miss any transcripts
+    found_transcripts = set()
+    for mapping in results.values():
+        found_transcripts.update(mapping.transcript_ids)
+
+    if missing := transcripts - found_transcripts:
+        raise RuntimeError(f"Unable to find transcripts: {', '.join(missing)}")
 
     # Print header
     print("GOI_ID", "GOI_SYMBOL", "TOI_IDS", sep="\t")
