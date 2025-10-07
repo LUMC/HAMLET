@@ -9,6 +9,9 @@ class Mapping:
     gene_name: str
     transcript_ids: set[str]
 
+    def __str__(self):
+        return f"{self.gene_id}\t{self.gene_name}\t{','.join(self.transcript_ids)}"
+
 
 def read_attributes(fin):
     for line in fin:
@@ -77,8 +80,8 @@ def main(gtf_file: str, filter_file: str) -> None:
 
     # Print header
     print("GOI_ID", "GOI_SYMBOL", "TOI_IDS", sep="\t")
-    for r in results.values():
-        print(r.gene_id, r.gene_name, ",".join(r.transcript_ids), sep="\t")
+    for mapping in results.values():
+        print(mapping)
 
 
 if __name__ == "__main__":
@@ -90,9 +93,6 @@ if __name__ == "__main__":
     parser.add_argument(
         "--filter-file", help="File with filter criteria", required=True
     )
-    # parser.add_argument(
-    #     "--transcripts", nargs="+", help="Transcripts of interest", required=True
-    # )
 
     args = parser.parse_args()
     main(args.gtf, args.filter_file)
