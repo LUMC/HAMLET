@@ -181,7 +181,7 @@ use rule multiqc from expression as expression_multiqc with:
 rule create_summary:
     """Combines statistics and other info across modules to a single JSON file per sample."""
     input:
-        idm=config["snv-indels"]["ref_id_mapping"],
+        idm=align.module_output.id_mapping,
         fusion_json=fusion.module_output.json,
         snv_indels_json=align.module_output.json,
         itd_json=itd.module_output.json,

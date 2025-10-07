@@ -25,6 +25,7 @@ v2.5.0-dev
 * Update sequali from 0.12 to 1.0.2
 * Update arriba from 2.4.0 to 2.5.1
 * Update VEP from 108 to 115
+* Deprecate the ``ref_id_mapping`` option
 
 ******
 v2.4.0

@@ -12,6 +12,7 @@ rule all:
         filter_vep=[module_output.filter_vep(sample) for sample in samples],
         json=[module_output.json(sample) for sample in samples],
         multiqc="multiqc_snv_indels.html",
+        id_mapping=module_output.id_mapping,
 
 
 rule tmpdir:
@@ -48,6 +49,28 @@ rule call_regions:
         """
         bash {input.src} {input.fasta} {input.gtf} 2> {log} |
         python {input.sort_bed} > {output.bed} 2>> {log}
+        """
+
+
+rule id_mapping:
+    """Make the id_mapping file based on the GTF and filter criteria"""
+    input:
+        gtf=config["gtf"],
+        filter_criteria=config["filter_criteria"],
+        src=workflow.source_path("scripts/create_id_mapping.py"),
+    output:
+        txt=temporary("id_mapping.txt"),
+    log:
+        "log/id_mapping.txt",
+    container:
+        containers["mutalyzer"]
+    shell:
+        """
+        python3 {input.src} \
+            {input.gtf} \
+            --filter-file {input.filter_criteria} \
+            > {output.txt} \
+            2> {log}
         """
 
 
@@ -167,7 +190,7 @@ rule exon_cov:
         bai=module_output.bai,
         bed=".tmp.exon_cov_ref.bed",
         genome=".tmp.genome.txt",
-        idm=config["ref_id_mapping"],
+        idm=module_output.id_mapping,
         scr=workflow.source_path("scripts/aggr_exon_cov.py"),
     output:
         json="{sample}/snv-indels/{sample}.exon_cov_stats.json",
@@ -412,7 +435,7 @@ rule annotate_vep:
 
 rule json_output:
     input:
-        id_mappings_path=config["ref_id_mapping"],
+        id_mappings_path=module_output.id_mapping,
         filter_vep=module_output.filter_vep,
         aln_stats="{sample}/snv-indels/{sample}.alignment_summary_metrics",
         rna_stats="{sample}/snv-indels/{sample}.rna_metrics",

@@ -28,6 +28,13 @@ if "bed_variant_call_regions" in config:
     """
     raise DeprecationWarning(msg)
 
+if "ref_id_mapping" in config:
+    msg = """
+    'ref_id_mapping' is no longer supported, the mapping is
+    determined automatically from the GTF file.
+    """
+    raise DeprecationWarning(msg)
+
 # Put each sample name in a SimpleNamespace to mimic Snakemake wildcard usage
 # (e.g {wildcards.sample}). This is only used in the 'all' rule.
 samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample_name"]]
@@ -118,6 +125,7 @@ module_output = SimpleNamespace(
     bai=get_bai_output,
     counts=get_star_count,
     filter_vep=get_filter_vep,
+    id_mapping="id_mapping.txt",
     json=get_json,
     multiqc_files=multiqc_files(),
     multiqc_parquet="multiqc_snv_indels_data/multiqc.parquet",

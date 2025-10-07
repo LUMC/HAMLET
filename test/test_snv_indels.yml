@@ -23,6 +23,8 @@
 
       - "rule multiqc"
       - "rule call_regions"
+      # Test that we create the id_mappings.txt file
+      - "rule id_mapping"
     contains_regex:
       - "STAR .* \"ID:TestSample1\" \"SM:TestSample1\" .* --readFilesIn 'test/data/fastq/SRR8615409 chrM_1.fastq.gz' 'test/data/fastq/SRR8615409 chrM_2.fastq.gz'"
       # Test that params.min_intron_size is used
@@ -229,3 +231,19 @@
   stderr:
     contains:
       - 'RuntimeError: Spaces in samples are not supported ("SRR 8615687")'
+
+- name: test-snv-indels-id-mapping-deprecated
+  tags:
+    - sanity
+    - snv-indels
+  command: >
+    snakemake
+    --snakefile includes/snv-indels/Snakefile
+    --workflow-profile test
+    --dry-run
+    --configfile test/data/config/snv-indels-vep-cache.json
+    --config pepfile=test/pep/chrM-trio.csv min_variant_depth=4 ref_id_mapping=filename
+  exit_code: 1
+  stdout:
+    contains:
+      - "'ref_id_mapping' is no longer supported"
