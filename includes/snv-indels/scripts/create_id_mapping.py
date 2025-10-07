@@ -27,7 +27,8 @@ def read_attributes(fin):
         yield d
 
 
-def read_mapping(gtf_file: str, transcripts: set[str]) -> dict[str, Mapping]:
+def create_mapping(gtf_file: str, transcripts: set[str]) -> dict[str, Mapping]:
+    """Create the mapping for each transcript in transcripts"""
     results = dict()
     with open(gtf_file) as fin:
         for record in read_attributes(fin):
@@ -44,9 +45,27 @@ def read_mapping(gtf_file: str, transcripts: set[str]) -> dict[str, Mapping]:
     return results
 
 
-def main(gtf_file: str, transcripts: set[str]) -> None:
+def read_transcripts(filter_file: str) -> set[str]:
+    """Read the transcripts of interest from the filter criteria file"""
+    transcripts = set()
+    header = None
+    with open(filter_file) as fin:
+        for line in fin:
+            spline = line.strip("\n").split("\t")
 
-    results = read_mapping(gtf_file, transcripts)
+            if header is None:
+                header = spline
+                continue
+
+            d = {k: v for k, v in zip(header, spline)}
+            transcripts.add(d["transcript_id"])
+    return transcripts
+
+
+def main(gtf_file: str, filter_file: str) -> None:
+
+    transcripts = read_transcripts(filter_file)
+    results = create_mapping(gtf_file, transcripts)
 
     # Make sure we didn't miss any transcripts
     found_transcripts = set()
@@ -69,8 +88,11 @@ if __name__ == "__main__":
 
     parser.add_argument("gtf", help="gtf file")
     parser.add_argument(
-        "--transcripts", nargs="+", help="Transcripts of interest", required=True
+        "--filter-file", help="File with filter criteria", required=True
     )
+    # parser.add_argument(
+    #     "--transcripts", nargs="+", help="Transcripts of interest", required=True
+    # )
 
     args = parser.parse_args()
-    main(args.gtf, set(args.transcripts))
+    main(args.gtf, args.filter_file)
