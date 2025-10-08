@@ -19,12 +19,12 @@ containers = {
     "ucsc-gtftogenepred": "docker://quay.io/biocontainers/ucsc-gtftogenepred:377--ha8a8165_5",
     "star": "docker://quay.io/biocontainers/star:2.7.10b--h9ee0642_0",
     "picard": "docker://quay.io/biocontainers/picard:2.27.4--hdfd78af_0",
-    "vep": "docker://quay.io/biocontainers/ensembl-vep:108.2--pl5321h4a94de4_0",
+    "vep": "docker://quay.io/biocontainers/ensembl-vep:115.2--pl5321h2a3209d_1",
     "zip": "docker://lumc/zip:3.0",
     "seamless": "docker://quay.io/biocontainers/r-seamless:0.1.1--r44h3121a25_1",
 }
 
-VEP_RELEASE = 108
+VEP_RELEASE = 115
 ARRIBA_RELEASE = "v2.5.1"
 
 settings = {
@@ -33,7 +33,7 @@ settings = {
     "refflat": "http://hgdownload.cse.ucsc.edu/goldenpath/hg38/database/refFlat.txt.gz",
     #'gtf': 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/genes/hg38.ensGene.gtf.gz'
     # "gtf": "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_41/gencode.v41.annotation.gtf.gz",
-    "gtf": "http://ftp.ensembl.org/pub/release-104/gtf/homo_sapiens/Homo_sapiens.GRCh38.104.gtf.gz",
+    "gtf": f"http://ftp.ensembl.org/pub/release-{VEP_RELEASE}/gtf/homo_sapiens/Homo_sapiens.GRCh38.{VEP_RELEASE}.gtf.gz",
     "vep_cache": f"https://ftp.ensembl.org/pub/release-{VEP_RELEASE}/variation/indexed_vep_cache/homo_sapiens_merged_vep_{VEP_RELEASE}_GRCh38.tar.gz",
     # See https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/
 }
