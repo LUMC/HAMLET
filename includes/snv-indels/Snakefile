@@ -1,10 +1,6 @@
 include: "common.smk"
 
 
-localrules:
-    final_bamfile,
-
-
 rule all:
     input:
         bam=[module_output.bam(sample) for sample in samples],
