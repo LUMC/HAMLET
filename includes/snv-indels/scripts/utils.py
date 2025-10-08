@@ -311,6 +311,9 @@ class Criterion:
         self.start: Location | None
         self.end: Location | None
 
+        if end is not None and start is None:
+            raise ValueError("Please specify a start and end")
+
         if start is not None:
             # if end is not specified, set end equal to start
             if end is None:
@@ -367,11 +370,23 @@ class Criterion:
             msg = f"Version mismatch between {self} and {other}"
             raise ValueError(msg)
 
-        # Determine if the same positions are set for self and other
+        # Determine if the start positions are set for self and other
         if self.start is None and other.start is not None:
             return False
         elif self.start is not None and other.start is None:
             return False
+
+        # Determine if the end positions are set for self and other
+        if self.end is None and other.end is not None:
+            return False
+        elif self.end is not None and other.end is None:
+            return False
+
+        self_region = Region(self.start, self.end)
+        other_region = Region(other.start, other.end)
+
+        # Determine if other region falls in self
+        # region_contained = self.start <= other.start and self.end >= other.end
 
         return (
             self.identifier == other.identifier
@@ -504,6 +519,24 @@ def region_overlap(region1: Region, region2: Region) -> bool:
         ]
     )
 
+def region_contains(region1: Region, region2: Region) -> bool:
+    """Determine of region1 contains region2
+
+        Note that both start and end of both regions can be None
+    """
+    # Determine if the start positions are set for region1 and region2
+    if region1.start is None and region2.start is not None:
+        return False
+    elif region1.start is not None and region2.start is None:
+        return False
+
+    # Determine if the end positions are set for self and other
+    if region1.end is None and region2.end is not None:
+        return False
+    elif region1.end is not None and region2.end is None:
+        return False
+
+    return True
 
 def read_criteria_file(criteria_file: str) -> OrderedDict[Criterion, str]:
     """Read the criterions file"""

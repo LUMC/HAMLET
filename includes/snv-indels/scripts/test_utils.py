@@ -10,6 +10,7 @@ from utils import (
     VEP,
     Location,
     Region,
+    region_contains,
     region_overlap,
     get_position,
 )
@@ -494,10 +495,14 @@ class TestCriterion:
             # Test consequence equality
             (Criterion("A", consequence="A"), Criterion("A", consequence="A"), True),
             (Criterion("A", consequence="A"), Criterion("A", consequence="B"), False),
-            # Test position equality
+            # Test position equality start
             (Criterion("A", start="1"), Criterion("A", start="1"), True),
             (Criterion("A"), Criterion("A", start="1"), False),
             (Criterion("A", start="1"), Criterion("A"), False),
+            # Test position equality end
+            (Criterion("A", start="1", end="2"), Criterion("A", start="1", end="2"), True),
+            # (Criterion("A", start="1"), Criterion("A", start="1", end="2"), False),
+            # (Criterion("A", start="1", end="2"), Criterion("A"), False),
             # (Criterion("A", start="1"), Criterion("A", start="2"), False),
         ],
     )
@@ -506,6 +511,9 @@ class TestCriterion:
         GIVEN two Criteria
         THEN determine if c1 is contained within c2
         """
+        print()
+        print(f"{c1=}")
+        print(f"{c2=}")
         assert c1.contains(c2) == expected
         pass
 
@@ -524,3 +532,27 @@ class TestCriterion:
         c2 = Criterion("ENST.1")
         with pytest.raises(ValueError):
             c1.contains(c2)
+
+    @pytest.mark.parametrize(
+        "r1, r2, expected",
+        [
+            (Region(1, 1), Region(1, 1), True),
+            # Test containment when only one position is set
+            (Region(None, None), Region(None, None), True),
+            (Region(1, None), Region(None, None), False),
+            (Region(None, 1), Region(None, None), False),
+            (Region(None, None), Region(1, None), False),
+            (Region(None, None), Region(None, 1), False),
+            # Test containment when only one position is not set
+            (Region(None, 1), Region(1, 1), False),
+            (Region(1, None), Region(1, 1), False),
+            (Region(1, 1), Region(None, 1), False),
+            (Region(1, 1), Region(1, None), False),
+        ]
+    )
+    def test_region_contains(self, r1: Region, r2: Region, expected: bool) -> None:
+        """
+        GIVEN two regions, r1 and r2
+        THEN determine if region 2 falls within region1
+        """
+        assert region_contains(r1, r2) == expected
