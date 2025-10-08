@@ -497,8 +497,7 @@ class TestCriterion:
             (Criterion("A", consequence="A"), Criterion("A", consequence="B"), False),
             # Test frame equality
             (Criterion("A", frame=1), Criterion("A", frame=1), True),
-            (Criterion("A", frame=1), Criterion("A"), False),
-            (Criterion("A"), Criterion("A", frame=1), False),
+            (Criterion("A"), Criterion("A", frame=1), True),
             (Criterion("A", frame=2), Criterion("A", frame=1), False),
             # Test position containment
             ## Equal positions are contained
@@ -514,6 +513,9 @@ class TestCriterion:
             (Criterion("A", start="1", end="2"), Criterion("A"), False),
             (Criterion("A", start="1"), Criterion("A", start="2"), False),
             (Criterion("A", start="1", end="2"), Criterion("A", start="1"), True),
+            # Tests where the other criteria contains unset values
+            (Criterion("A"), Criterion("A", consequence="a"), True),
+            (Criterion("A"), Criterion("A", frame=1), True)
         ],
     )
     def test_criteria_containment(self, c1: Criterion, c2: Criterion, expected: bool) -> None:

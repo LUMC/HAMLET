@@ -348,14 +348,9 @@ class Criterion:
     def __repr__(self) -> str:
         return str(self)
 
-    def contains(self, other: "Criterion") -> bool:
-        """Determine if other falls within self
-
-        In this context, this means that any Variant that matches other will
-        also match self.
-        """
-        if not isinstance(other, Criterion):
-            raise NotImplementedError
+    def _contains_identifier(self, other: "Criterion") -> bool:
+        if self.identifier is None:
+            return True
 
         # Check that the identifier versions match
         id1, v1 = self.split_version(self.identifier)
@@ -370,12 +365,41 @@ class Criterion:
             msg = f"Version mismatch between {self} and {other}"
             raise ValueError(msg)
 
+        return self.identifier == other.identifier
+
+    def _contains_consequence(self, other: "Criterion") -> bool:
+        if self.consequence is None:
+            return True
+        else:
+            return self.consequence == other.consequence
+
+    def _contains_region(self, other: "Criterion") -> bool:
+        r1 = Region(self.start, self.end)
+        r2 = Region(other.start, other.end)
+        return region_contains(r1, r2)
+
+    def _contains_frame(self, other: "Criterion") -> bool:
+        if self.frame is None:
+            return True
+        else:
+            return self.frame == other.frame
+
+    def contains(self, other: "Criterion") -> bool:
+        """Determine if other falls within self
+
+        In this context, this means that any Variant that matches other will
+        also match self.
+        """
+        if not isinstance(other, Criterion):
+            raise NotImplementedError
+
+
         return (
-            self.identifier == other.identifier
+            self._contains_identifier(other)
             and self.coordinate == other.coordinate
-            and self.consequence == other.consequence
-            and region_contains(Region(self.start, self.end), Region(other.start, other.end))
-            and self.frame == other.frame
+            and self._contains_consequence(other)
+            and self._contains_region(other)
+            and self._contains_frame(other)
         )
 
     def match(self, variant: Variant) -> bool:
