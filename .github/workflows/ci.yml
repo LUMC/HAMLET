@@ -12,7 +12,7 @@ defaults:
     shell: bash -l {0}
 
 env:
-  APPTAINER_CACHEDIR=${GITHUB_WORKSPACE}
+  APPTAINER_CACHEDIR: ${GITHUB_WORKSPACE}
 
 jobs:
   quick-tests:
