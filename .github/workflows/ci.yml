@@ -106,6 +106,7 @@ jobs:
           remove-android: 'true'
           remove-dotnet: 'true'
           remove-codeql: 'true'
+          overprovision-lvm: 'true'
 
       - uses: actions/checkout@v4
         with:
