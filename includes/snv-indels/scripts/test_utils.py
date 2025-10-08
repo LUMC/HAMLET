@@ -502,8 +502,8 @@ class TestCriterion:
             # Test position containment
             ## Equal positions are contained
             (Criterion("A", start="1"), Criterion("A", start="1"), True),
-            # If a position is unset, it cannot contain a set position
-            (Criterion("A"), Criterion("A", start="1"), False),
+            # If a position is unset, it will contain a set position
+            (Criterion("A"), Criterion("A", start="1"), True),
             # If a position is set, it cannot contain an unset position
             (Criterion("A", start="1"), Criterion("A"), False),
             # Equal positions are contained

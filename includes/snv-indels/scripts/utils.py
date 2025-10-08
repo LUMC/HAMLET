@@ -376,7 +376,10 @@ class Criterion:
     def _contains_region(self, other: "Criterion") -> bool:
         r1 = Region(self.start, self.end)
         r2 = Region(other.start, other.end)
-        return region_contains(r1, r2)
+        if r1 == (None, None):
+            return True
+        else:
+            return region_contains(r1, r2)
 
     def _contains_frame(self, other: "Criterion") -> bool:
         if self.frame is None:
