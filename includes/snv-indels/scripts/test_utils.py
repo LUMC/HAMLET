@@ -42,7 +42,7 @@ class TestVariant:
             ]
         }
 
-        return minimal_vep_record
+        return VEP(minimal_vep_record)
 
     def test_create_variant(self, variant: Variant) -> None:
         assert variant.hgvs == "ENST123.5:c.10A>T"
@@ -481,3 +481,46 @@ class TestCriterion:
         c = Criterion("ENST123", frame=1)
         v = Variant(variant, [])
         assert c.match(v) == expected
+
+    @pytest.mark.parametrize(
+        "c1, c2, expected",
+        [
+            # Test identifier equality
+            (Criterion("ENST"), Criterion("ENST"), True),
+            (Criterion("ENST0"), Criterion("ENST"), False),
+            # Test cooridinate equality
+            (Criterion("A", coordinate="c"), Criterion("A", coordinate="c"), True),
+            (Criterion("A", coordinate="c"), Criterion("A", coordinate="r"), False),
+            # Test consequence equality
+            (Criterion("A", consequence="A"), Criterion("A", consequence="A"), True),
+            (Criterion("A", consequence="A"), Criterion("A", consequence="B"), False),
+            # Test position equality
+            (Criterion("A", start="1"), Criterion("A", start="1"), True),
+            (Criterion("A"), Criterion("A", start="1"), False),
+            (Criterion("A", start="1"), Criterion("A"), False),
+            # (Criterion("A", start="1"), Criterion("A", start="2"), False),
+        ],
+    )
+    def test_criteria_containment(self, c1: Criterion, c2: Criterion, expected: bool) -> None:
+        """
+        GIVEN two Criteria
+        THEN determine if c1 is contained within c2
+        """
+        assert c1.contains(c2) == expected
+        pass
+
+    def test_criteria_containment_version_mismatch(self) -> None:
+        """
+        GIVEN two criteria with different version numbers
+        WHEN we check if there is containment
+        THEN we should raise a ValueError
+        """
+        c1 = Criterion("ENST.1")
+        c2 = Criterion("ENST.2")
+        with pytest.raises(ValueError):
+            c1.contains(c2)
+
+        c1 = Criterion("ENST")
+        c2 = Criterion("ENST.1")
+        with pytest.raises(ValueError):
+            c1.contains(c2)

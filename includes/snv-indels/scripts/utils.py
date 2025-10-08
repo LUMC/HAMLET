@@ -14,8 +14,10 @@ Location = namedtuple("Location", ["downstream", "position", "offset"])
 # Tuple to store a region
 Region = namedtuple("Region", ["start", "end"])
 
+
 class VEP(dict[str, Any]):
     """Class to work with VEP objects"""
+
     # From most to least severe, taken from the ensembl website
     # https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html
     severity = [
@@ -343,13 +345,62 @@ class Criterion:
     def __repr__(self) -> str:
         return str(self)
 
+    def contains(self, other: "Criterion") -> bool:
+        """Determine if other falls within self
+
+        In this context, this means that any Variant that matches other will
+        also match self.
+        """
+        if not isinstance(other, Criterion):
+            raise NotImplementedError
+
+        # Check that the identifier versions match
+        id1, v1 = self.split_version(self.identifier)
+        id2, v2 = self.split_version(other.identifier)
+
+        # Identifiers do not match
+        if id1 != id2:
+            return False
+
+        # Version numbers do not match
+        if v1 != v2:
+            msg = f"Version mismatch between {self} and {other}"
+            raise ValueError(msg)
+
+        # Determine if the same positions are set for self and other
+        if self.start is None and other.start is not None:
+            return False
+        elif self.start is not None and other.start is None:
+            return False
+
+        return (
+            self.identifier == other.identifier
+            and self.coordinate == other.coordinate
+            and self.consequence == other.consequence
+        )
+
     def match(self, variant: Variant) -> bool:
-        return ( self.match_id(variant)
+        return (
+            self.match_id(variant)
             and self.match_coordinate(variant)
             and self.match_consequence(variant)
             and self.match_region(variant)
             and self.match_frame(variant)
         )
+
+    def split_version(self, identifier: str) -> Tuple[str, str]:
+        """Split the version from the identifier
+
+        Set version to 0 if there is no version
+        """
+        try:
+            id_, version = identifier.split(".")
+        # If there is no version (e.g. chr5), set version to 0
+        except ValueError:
+            id_ = identifier
+            version = "0"
+
+        return id_, version
 
     def match_id(self, variant: Variant) -> bool:
         """Determine if the identifier matches the variant
@@ -358,26 +409,12 @@ class Criterion:
         could indicate the use of incompatible reference seqeunces
         """
 
-        def split_version(variant_id: str) -> Tuple[str, str]:
-            """Split the version from the identifier
-
-            Set version to 0 if there is no version
-            """
-            try:
-                id_, version = variant_id.split(".")
-            # If there is no version (e.g. chr5), set version to 0
-            except ValueError:
-                id_ = variant_id
-                version = "0"
-
-            return id_, version
-
         # Get the variant id
         variant_id = variant.hgvs.split(":")[0]
         criterion_id = self.identifier
 
-        id1, v1 = split_version(variant_id)
-        id2, v2 = split_version(criterion_id)
+        id1, v1 = self.split_version(variant_id)
+        id2, v2 = self.split_version(criterion_id)
 
         if id1 != id2:
             return False
@@ -466,6 +503,7 @@ def region_overlap(region1: Region, region2: Region) -> bool:
             region1[0] < region2[0] and region1[1] > region2[1],
         ]
     )
+
 
 def read_criteria_file(criteria_file: str) -> OrderedDict[Criterion, str]:
     """Read the criterions file"""
