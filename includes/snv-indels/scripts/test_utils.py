@@ -515,7 +515,9 @@ class TestCriterion:
             (Criterion("A", start="1", end="2"), Criterion("A", start="1"), True),
             # Tests where the other criteria contains unset values
             (Criterion("A"), Criterion("A", consequence="a"), True),
-            (Criterion("A"), Criterion("A", frame=1), True)
+            (Criterion("A"), Criterion("A", frame=1), True),
+            # Tests where the other criteria does not contain a consequence
+            (Criterion("A", consequence="a"), Criterion("A"), False),
         ],
     )
     def test_criteria_containment(self, c1: Criterion, c2: Criterion, expected: bool) -> None:
