@@ -339,7 +339,7 @@ class Criterion:
         return (
             f"Criterion(identifier={self.identifier}, "
             f"coordinate={self.coordinate}, "
-            f"consequene={self.consequence}, "
+            f"consequence={self.consequence}, "
             f"start={self.start}, "
             f"end={self.end}, "
             f"frame={self.frame})"
