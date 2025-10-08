@@ -11,6 +11,9 @@ defaults:
     # https://github.com/marketplace/actions/setup-miniconda#important.
     shell: bash -l {0}
 
+env:
+  APPTAINER_CACHEDIR=${GITHUB_WORKSPACE}
+
 jobs:
   quick-tests:
     runs-on: ubuntu-latest
