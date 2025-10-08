@@ -495,15 +495,25 @@ class TestCriterion:
             # Test consequence equality
             (Criterion("A", consequence="A"), Criterion("A", consequence="A"), True),
             (Criterion("A", consequence="A"), Criterion("A", consequence="B"), False),
-            # Test position equality start
+            # Test frame equality
+            (Criterion("A", frame=1), Criterion("A", frame=1), True),
+            (Criterion("A", frame=1), Criterion("A"), False),
+            (Criterion("A"), Criterion("A", frame=1), False),
+            (Criterion("A", frame=2), Criterion("A", frame=1), False),
+            # Test position containment
+            ## Equal positions are contained
             (Criterion("A", start="1"), Criterion("A", start="1"), True),
+            # If a position is unset, it cannot contain a set position
             (Criterion("A"), Criterion("A", start="1"), False),
+            # If a position is set, it cannot contain an unset position
             (Criterion("A", start="1"), Criterion("A"), False),
-            # Test position equality end
+            # Equal positions are contained
             (Criterion("A", start="1", end="2"), Criterion("A", start="1", end="2"), True),
-            # (Criterion("A", start="1"), Criterion("A", start="1", end="2"), False),
-            # (Criterion("A", start="1", end="2"), Criterion("A"), False),
-            # (Criterion("A", start="1"), Criterion("A", start="2"), False),
+            # If a position is smaller, it cannot contain a bigger position
+            (Criterion("A", start="1"), Criterion("A", start="1", end="2"), False),
+            (Criterion("A", start="1", end="2"), Criterion("A"), False),
+            (Criterion("A", start="1"), Criterion("A", start="2"), False),
+            (Criterion("A", start="1", end="2"), Criterion("A", start="1"), True),
         ],
     )
     def test_criteria_containment(self, c1: Criterion, c2: Criterion, expected: bool) -> None:
@@ -515,7 +525,6 @@ class TestCriterion:
         print(f"{c1=}")
         print(f"{c2=}")
         assert c1.contains(c2) == expected
-        pass
 
     def test_criteria_containment_version_mismatch(self) -> None:
         """

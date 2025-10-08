@@ -370,28 +370,12 @@ class Criterion:
             msg = f"Version mismatch between {self} and {other}"
             raise ValueError(msg)
 
-        # Determine if the start positions are set for self and other
-        if self.start is None and other.start is not None:
-            return False
-        elif self.start is not None and other.start is None:
-            return False
-
-        # Determine if the end positions are set for self and other
-        if self.end is None and other.end is not None:
-            return False
-        elif self.end is not None and other.end is None:
-            return False
-
-        self_region = Region(self.start, self.end)
-        other_region = Region(other.start, other.end)
-
-        # Determine if other region falls in self
-        # region_contained = self.start <= other.start and self.end >= other.end
-
         return (
             self.identifier == other.identifier
             and self.coordinate == other.coordinate
             and self.consequence == other.consequence
+            and region_contains(Region(self.start, self.end), Region(other.start, other.end))
+            and self.frame == other.frame
         )
 
     def match(self, variant: Variant) -> bool:
