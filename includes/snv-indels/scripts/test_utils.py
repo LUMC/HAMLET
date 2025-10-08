@@ -548,6 +548,16 @@ class TestCriterion:
             (Region(1, None), Region(1, 1), False),
             (Region(1, 1), Region(None, 1), False),
             (Region(1, 1), Region(1, None), False),
+            # Equal regions are contained
+            (Region(1,2), Region(1,2), True),
+            # Smaller region is contained
+            (Region(1,2), Region(1,1), True),
+            # Region2 is before region1
+            (Region(1,2), Region(0,1), False),
+            # Region2 is bigger than region1
+            (Region(1,2), Region(1,3), False),
+            # Region2 is after region1
+            (Region(1,2), Region(2,3), False),
         ]
     )
     def test_region_contains(self, r1: Region, r2: Region, expected: bool) -> None:

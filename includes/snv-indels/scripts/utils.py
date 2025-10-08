@@ -536,7 +536,12 @@ def region_contains(region1: Region, region2: Region) -> bool:
     elif region1.end is not None and region2.end is None:
         return False
 
-    return True
+    # If both regions are simply None
+    if region1 == (None, None) and region2 == (None, None):
+        return True
+
+    # Here, we know both regions do not contain any None
+    return bool(region1.start <= region2.start and region1.end >= region2.end)
 
 def read_criteria_file(criteria_file: str) -> OrderedDict[Criterion, str]:
     """Read the criterions file"""
