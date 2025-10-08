@@ -12,7 +12,8 @@ defaults:
     shell: bash -l {0}
 
 env:
-  APPTAINER_CACHEDIR: ${GITHUB_WORKSPACE}
+  APPTAINER_CACHEDIR: ${GITHUB_WORKSPACE}/.apptainer
+  SINGULARITY_CACHEDIR: ${GITHUB_WORKSPACE}/.singularity
 
 jobs:
   quick-tests:
@@ -110,6 +111,9 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Print the environment
+        run: env
+
       - name: Setup Miniforge
         uses: conda-incubator/setup-miniconda@v3
         with:
@@ -141,9 +145,6 @@ jobs:
         uses: eWaterCycle/setup-apptainer@v2
         with:
           apptainer-version: 1.3.6
-
-      - name: Softlink singularity folder to ${GITHUB_WORKSPACE}
-        run: ln -s ~/.singularity ${GITHUB_WORKSPACE}/.singularity
 
       - name: Cache singularity images
         uses: actions/cache@v3
