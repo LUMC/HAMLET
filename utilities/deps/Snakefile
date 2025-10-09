@@ -5,7 +5,6 @@ localrules:
     copy_itd,
     copy_expression_bed,
     copy_arriba_database,
-    copy_id_mappings,
     copy_blacklist,
     copy_report_genes,
     copy_criteria_files,
@@ -58,7 +57,6 @@ rule all:
         itd_folder="itd",
         genome_fasta=reference_fname,
         star_index="star-index",
-        ref_id_mapping="id_mappings.tsv",
         filter_criteria="filter_criteria.tsv",
         annotation_criteria="annotation_criteria.tsv",
         rrna_refflat="ucsc_rrna.refFlat",
@@ -228,19 +226,6 @@ rule rewrite_refflat:
     shell:
         """
         python3 {input.scr} {input.gtf} > {output}
-        """
-
-
-rule copy_id_mappings:
-    input:
-        workflow.source_path("small-files/id_mappings.tsv"),
-    output:
-        "id_mappings.tsv",
-    singularity:
-        containers["hamlet-scripts"]
-    shell:
-        """
-        cp {input} {output}
         """
 
 

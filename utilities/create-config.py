@@ -65,7 +65,6 @@ def get_snv_indels_config(dirname):
         "genome_fai": join("GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.fai"),
         "genome_dict": join("GCA_000001405.15_GRCh38_no_alt_analysis_set.dict"),
         "star_index": join("star-index"),
-        "ref_id_mapping": join("id_mappings.tsv"),
         "filter_criteria": join("filter_criteria.tsv"),
         "annotation_criteria": join("annotation_criteria.tsv"),
         "rrna_refflat": join("ucsc_rrna.refFlat"),
