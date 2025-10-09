@@ -34,10 +34,9 @@ def read_known_variants(fname: str) -> dict[str, str]:
             variant = d.get("variant")
             assert variant is not None
 
-            # If there is no annotation specified, use annotation "known pathogenic"
+            # Check that the annotation column is filled
             annotation = d.get("annotation")
-            if annotation is None:
-                annotation = "known pathogenic"
+            assert annotation is not None
 
             known_variants[variant] = annotation
     return known_variants
