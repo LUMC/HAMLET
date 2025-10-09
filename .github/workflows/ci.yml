@@ -59,6 +59,11 @@ jobs:
         run: mamba env update -n HAMLET -f environment.yml
         if: steps.conda-cache.outputs.cache-hit != 'true'
 
+      - name: Install apptainer
+        uses: eWaterCycle/setup-apptainer@v2
+        with:
+          apptainer-version: 1.3.6
+
       - name: Run test in conda environment
         run: >-
           pytest --keep-workflow-wd-on-fail
