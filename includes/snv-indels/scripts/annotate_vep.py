@@ -3,6 +3,7 @@
 import argparse
 import json
 from utils import Variant, VEP, read_criteria_file
+from itertools import zip_longest
 
 from typing import Iterator
 
@@ -15,9 +16,28 @@ def parse_vep_json(vep_file: str) -> Iterator[VEP]:
 
 def read_known_variants(fname: str) -> dict[str, str]:
     known_variants = dict()
+    header = None
     with open(fname) as fin:
         for line in fin:
-            variant, annotation = line.strip("\n").split("\t")
+            if line.startswith("#"):
+                continue
+
+            spline = line.strip("\n").split("\t")
+            if header is None:
+                header = spline
+                continue
+
+            # Read into dict, convert '' to None
+            d = {k: v if v else None for k, v in zip_longest(header, spline)}
+        
+            # Check that the variant column is filled
+            variant = d.get("variant")
+            assert variant is not None
+
+            # Check that the annotation column is filled
+            annotation = d.get("annotation")
+            assert annotation is not None
+
             known_variants[variant] = annotation
     return known_variants
 
