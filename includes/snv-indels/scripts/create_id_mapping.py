@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from dataclasses import dataclass
+import sys
 
 
 @dataclass
@@ -35,8 +36,11 @@ def create_mapping(gtf_file: str, transcripts: set[str]) -> dict[str, Mapping]:
     results = dict()
     with open(gtf_file) as fin:
         for record in read_attributes(fin):
-            transcript_id = record.get("transcript_id")
-            if transcript_id not in transcripts or transcript_id is None:
+            if (transcript_id := record.get("transcript_id")) is None:
+                continue
+
+            # Transscript can have a version number, or not
+            if transcript_id not in transcripts:
                 continue
             gene_id = record["gene_id"]
             gene_name = record["gene_name"]
@@ -49,7 +53,10 @@ def create_mapping(gtf_file: str, transcripts: set[str]) -> dict[str, Mapping]:
 
 
 def read_transcripts(filter_file: str) -> set[str]:
-    """Read the transcripts of interest from the filter criteria file"""
+    """Read the transcripts of interest from the filter criteria file
+
+    Ignore the transcript version
+    """
     transcripts = set()
     header = None
     with open(filter_file) as fin:
@@ -61,7 +68,9 @@ def read_transcripts(filter_file: str) -> set[str]:
                 continue
 
             d = {k: v for k, v in zip(header, spline)}
-            transcripts.add(d["transcript_id"])
+            # Strip the version from the transcript id
+            transcript = d["transcript_id"].split(".")[0]
+            transcripts.add(transcript)
     return transcripts
 
 
@@ -76,7 +85,9 @@ def main(gtf_file: str, filter_file: str) -> None:
         found_transcripts.update(mapping.transcript_ids)
 
     if missing := transcripts - found_transcripts:
-        raise RuntimeError(f"Unable to find transcripts: {', '.join(missing)}")
+        print("Missing transcripts:", file=sys.stderr)
+        print(*missing, sep="\n", file=sys.stderr)
+        raise RuntimeError(f"Unable to find {len(missing)} transcripts")
 
     # Print header
     print("GOI_ID", "GOI_SYMBOL", "TOI_IDS", sep="\t")

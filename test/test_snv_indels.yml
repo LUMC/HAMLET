@@ -247,3 +247,34 @@
   stdout:
     contains:
       - "'ref_id_mapping' is no longer supported"
+
+
+# Test that the id_mapping script works if the filter criteria contain no transcript versions
+- name: test-id-mapping-no-transcript-version
+  tags:
+    - functional
+    - snv-indels
+  command: >
+    python3 includes/snv-indels/scripts/create_id_mapping.py
+    --filter-file test/data/config/filter_criteria.tsv test/data/reference/hamlet-ref.gtf
+  stdout:
+    contains:
+      - "ENSG00000228253\tMT-ATP8\tENST00000361851"
+
+# Test that the id_mapping script works if the filter criteria contain transcript versions
+- name: test-id-mapping-with-transcript-version
+  tags:
+    - functional
+    - snv-indels
+  command: >
+    bash -c "
+    echo -e 'transcript_id\tconsequence\tstart\tend\tframe' > filter.tsv;
+    echo ENST00000361851.1 >> filter.tsv;
+
+    python3 includes/snv-indels/scripts/create_id_mapping.py  \
+      --filter-file filter.tsv \
+      test/data/reference/hamlet-ref.gtf
+    "
+  stdout:
+    contains:
+      - "ENSG00000228253\tMT-ATP8\tENST00000361851"
