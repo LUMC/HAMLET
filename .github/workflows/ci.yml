@@ -160,17 +160,11 @@ jobs:
           mv /tmp/pytest_workflow_*/test-hamlet-chrM/SRR8615409/hamlet_report.SRR8615409.pdf HAMLET-example-report.pdf
           mv /tmp/pytest_workflow_*/test-hamlet-chrM/multiqc_hamlet.html HAMLET-example-MultiQC.html
 
-      - name: Upload example HAMLET report
+      - name: Upload example output files
         uses: actions/upload-artifact@v4
         with:
-          name: hamlet-report
-          path: HAMLET-example-report.pdf
-
-      - name: Upload example MultiQC report
-        uses: actions/upload-artifact@v4
-        with:
-          name: multiqc-report
-          path: HAMLET-example-MultiQC.html
+          name: HAMLET-example
+          path: HAMLET-example*
 
       - name: Check pytest stdout messages in case of failure
         if: ${{ failure() }}
