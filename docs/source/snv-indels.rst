@@ -130,8 +130,8 @@ supply HAMLET with annotations for specific variants via the ``known_variants``
 file. Annotations from this file have a higher priority than the annotations
 specified in ``annotation_criteria``.
 
-The used columns are ``variant`` and ``annotation``. In case ``annotation`` is 
-empty, the annotation is set to ``known pathogenic``.
+The used columns are ``variant`` and ``annotation``. These columns cannot be 
+empty.
 
 .. csv-table:: Example ``known_variants`` file, from the HAMLET tests
   :delim: U+0009
