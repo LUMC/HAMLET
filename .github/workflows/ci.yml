@@ -38,6 +38,7 @@ jobs:
           miniforge-version: latest
           activate-environment: HAMLET
           use-mamba: true
+          channels: bioconda, conda-forge, defaults
 
       # This is used to invalidate the conda environment every week
       - name: Get year and week (for conda cache)
