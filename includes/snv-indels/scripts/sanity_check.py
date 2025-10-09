@@ -28,6 +28,13 @@ def main(filter_criteria_file, annotation_criteria_file, known_variants_file):
         print("The following annotation criteria can never be met:")
         print("\n".join([str(criteria) for criteria in annotation_errors]))
 
+    # For the variants, we don't know the consequence, so we cannot do a full check
+    # As a workaround, we reset the consequence of all the filter criteria to
+    # None, so we can at least check if the variants are within the regions
+    # specified in the filter criteria.
+    for filter in filter_criteria:
+        filter.consequence=None
+
     variant_errors = list()
     for variant in known_variants:
         for filter in filter_criteria:
