@@ -24,7 +24,7 @@ set-resources:
   qc_seq_cutadapt:
     cpus_per_task: 8
 
-  align_align_vars:
+  align_STAR:
     mem: 100G 
     cpus_per_task: 8
     runtime: 2880
@@ -33,12 +33,12 @@ set-resources:
     mem: 120G
     cpus_per_task: 1
 
-  align_call_vars:
+  align_vardict:
     mem: 120G
     cpus_per_task: 11
     runtime: 2880
 
-  align_annotate_vars:
+  align_VEP:
     cpus_per_task: 8
 
   fusion_arriba:

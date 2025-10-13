@@ -70,7 +70,7 @@ rule id_mapping:
         """
 
 
-rule align_vars:
+rule STAR:
     input:
         fq1=get_forward,
         fq2=get_reverse,
@@ -208,7 +208,7 @@ rule exon_cov:
         """
 
 
-rule call_vars:
+rule vardict:
     input:
         bam=module_output.bam,
         bai=module_output.bai,
@@ -298,7 +298,7 @@ rule picard_metrics:
         """
 
 
-rule annotate_vars:
+rule VEP:
     """Annotate variants using VEP"""
     input:
         vcf="{sample}/snv-indels/{sample}.raw.vcf.gz",
@@ -310,7 +310,7 @@ rule annotate_vars:
         vep="{sample}/snv-indels/{sample}.vep.txt.gz",
         stats="{sample}/snv-indels/{sample}.vep_stats.txt",
     log:
-        "log/annotate_vars.{sample}.txt",
+        "log/VEP.{sample}.txt",
     threads: 8
     container:
         containers["vep"]

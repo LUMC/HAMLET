@@ -112,7 +112,7 @@
         - "CollectAlignmentSummaryMetrics"
         - "CollectInsertSizeMetrics"
         - "RnaSeqMetrics"
-    - path: "log/annotate_vars.SRR8615409.txt"
+    - path: "log/VEP.SRR8615409.txt"
     - path: "log/filter_vep.SRR8615409.txt"
     - path: "SRR8615409/snv-indels/snv-indels-output.json"
       contains:

@@ -88,7 +88,7 @@ use rule * from align as align_*
 
 
 # Connect the align rule to the output of qc-seq
-use rule align_vars from align as align_align_vars with:
+use rule STAR from align as align_STAR with:
     input:
         fq1=qc_seq.module_output.forward,
         fq2=qc_seq.module_output.reverse,
