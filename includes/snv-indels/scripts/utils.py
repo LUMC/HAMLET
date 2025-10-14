@@ -77,7 +77,7 @@ class VEP(dict[str, Any]):
         self["transcript_consequences"] = filtered
         self.update_most_severe()
 
-    def filter_annotate_transcripts(self, criteria: dict["Criterion", str], known_variants: dict[str, str]) -> None:
+    def filter_annotate_transcripts(self, known_variants: dict[str, str], criteria: dict["Criterion", str], ) -> None:
         """Filter and annotate the transcripts"""
 
         filtered = list()
@@ -584,7 +584,12 @@ def region_contains(region1: Region, region2: Region) -> bool:
     return bool(region1.start <= region2.start and region1.end >= region2.end)
 
 def read_criteria_file(criteria_file: str) -> OrderedDict[Criterion, str]:
-    """Read the criterions file"""
+    """Read the criteria and annotations from the criteria file
+
+    If the annotations column does not exist, all criteria will get an empty
+    string as annotation
+    """
+
     annotations: OrderedDict[Criterion, str] = OrderedDict()
 
     header = None
@@ -623,3 +628,30 @@ def read_criteria_file(criteria_file: str) -> OrderedDict[Criterion, str]:
             annotations[c] = annotation
 
     return annotations
+
+def read_known_variants(fname: str) -> dict[str, str]:
+    known_variants = dict()
+    header = None
+    with open(fname) as fin:
+        for line in fin:
+            if line.startswith("#"):
+                continue
+
+            spline = line.strip("\n").split("\t")
+            if header is None:
+                header = spline
+                continue
+
+            # Read into dict, convert '' to None
+            d = {k: v if v else None for k, v in zip_longest(header, spline)}
+
+            # Check that the variant column is filled
+            variant = d.get("variant")
+            assert variant is not None
+
+            # Check that the annotation column is filled
+            annotation = d.get("annotation")
+            assert annotation is not None
+
+            known_variants[variant] = annotation
+    return known_variants
