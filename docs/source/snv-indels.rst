@@ -16,7 +16,7 @@ The variants annotated by VEP are then filtered based on a number of different c
 
 1. Variant that have a population frequency of more than 1% in the ``gnomADe`` population are excluded.
 2. Variants which are specified in ``known_variants`` will be included.
-3. Only variants that match at least one criteria in ``filter_criteria`` or ``annotation_criteria`` are included.
+3. Variants that match at least one criteria in ``filter_criteria`` or ``annotation_criteria`` are included.
 
 Picard is used to generate various alignment statistics.
 
