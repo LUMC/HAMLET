@@ -5,6 +5,7 @@
 import argparse
 import json
 import gzip
+import re
 
 from collections.abc import Iterator
 
@@ -12,11 +13,12 @@ from collections.abc import Iterator
 from utils import VEP, read_criteria_file, read_known_variants
 
 
-def parse_vep_json(vep_file: str) -> Iterator[VEP]:
+def parse_vep_json(vep_file: str, prog: re.Pattern) -> Iterator[VEP]:
     """Parse the VEP 'json' output file, each line contains a JSON entry"""
     with gzip.open(vep_file, 'rt') as fin:
         for line in fin:
-            yield VEP(json.loads(line))
+            if prog.search(line):
+                yield VEP(json.loads(line))
 
 
 def main(
@@ -38,7 +40,20 @@ def main(
     # TODO, read known variants file
     known_variants = read_known_variants(known_variants_file) if known_variants_file else dict()
 
-    for vep in parse_vep_json(vep_file):
+    # Get all identifiers, remove version number
+    # because we raise an error later on version mismatch
+    ids = {c.identifier.split(".")[0] for c in annotations}
+    for v in known_variants:
+        # Get transcript ID from known variants, without version number
+        id = v.split(":c")[0].split(".")[0]
+        ids.add(id)
+
+    # Make a regex to recognize lines which contain variatns of interest,
+    # without parsing the json which is slow
+    regex = r"|".join(ids)
+    prog = re.compile(regex)
+
+    for vep in parse_vep_json(vep_file, prog):
         # Skip variants that are above the specified population frequency
         if vep.above_population_threshold(population, frequency):
             continue
