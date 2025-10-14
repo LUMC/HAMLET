@@ -50,7 +50,6 @@ def get_fusion_config(dirname):
     return {
         "genome_fasta": get_reference(dirname),
         "gtf": get_gtf(dirname),
-        "blacklist": join("arriba/blacklist_hg38_GRCh38_v2.4.0.tsv.gz"),
         "cytobands": join("arriba/cytobands_hg38_GRCh38_v2.4.0.tsv"),
         "known_fusions": join("arriba/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz"),
         "protein_domains": join("arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3"),
@@ -70,7 +69,6 @@ def get_snv_indels_config(dirname):
         "rrna_refflat": join("ucsc_rrna.refFlat"),
         "gtf": get_gtf(dirname),
         "annotation_refflat": join("ucsc_gencode.refFlat"),
-        "blacklist": join("blacklist.txt"),
         "vep_cache": dirname,
         "variant_allele_frequency": 0.05,
         "min_variant_depth": 2,

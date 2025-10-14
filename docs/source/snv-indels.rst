@@ -13,9 +13,10 @@ defined in ``filter_criteria``, and annotated based on ``annotation_criteria``.
 
 The variants annotated by VEP are then filtered based on a number of different criteria:
 
-1. Variants that are present on the ``blacklist`` are excluded.
-2. Only variants that match at least one criteria in ``filter_criteria`` are included.
-3. Variant that have a population frequency of more than 1% in the ``gnomADe`` population are excluded.
+
+1. Variant that have a population frequency of more than 1% in the ``gnomADe`` population are excluded.
+2. Variants which are specified in ``known_variants`` will be included.
+3. Only variants that match at least one criteria in ``filter_criteria`` or ``annotation_criteria`` are included.
 
 Picard is used to generate various alignment statistics.
 
@@ -87,9 +88,6 @@ Configuration options
   * - annotation_refflat
     - File used to determine exon coverage
     - yes
-  * - blacklist
-    - File of blacklisted variants
-    - no
   * - vep-cache
     - Folder containing the VEP cache
     - no
@@ -100,7 +98,7 @@ Configuration options
     - Minimum read depth to call a variant
     - no (default=2)
   * - known_variants
-    - File containing known varaints and their annotation
+    - File containing known variants and their annotation
     - no
 
 Filter and annotation criteria
