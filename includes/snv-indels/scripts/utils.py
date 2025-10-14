@@ -77,6 +77,35 @@ class VEP(dict[str, Any]):
         self["transcript_consequences"] = filtered
         self.update_most_severe()
 
+    def filter_annotate_transcripts(self, criteria: dict["Criterion", str], known_variants: dict[str, str]) -> None:
+        """Filter and annotate the transcripts"""
+
+        filtered = list()
+        for transcript in self.get("transcript_consequences", list()):
+            # Make sure hgvsc is defined
+            hgvsc = transcript.get("hgvsc")
+
+            # If there is no HGVSC, we do nothing
+            if hgvsc is None:
+                continue
+
+            # If hgvsc is a known variant, we update the annotation
+            if hgvsc in known_variants:
+                transcript["annotation"] = known_variants[hgvsc]
+                filtered.append(transcript)
+                continue
+
+            # Otherwise, we check the criteria
+            variant = Variant(hgvsc, transcript["consequence_terms"])
+            for crit, annotation in criteria.items():
+                if crit.match(variant):
+                    transcript["annotation"] = annotation
+                    filtered.append(transcript)
+                    break
+
+        self["transcript_consequences"] = filtered
+        self.update_most_severe()
+
     def update_most_severe(self) -> None:
         """The most severe consequence for all genes and transcript is stored
         at the top level of the VEP object. After filtering the transcript
@@ -589,7 +618,7 @@ def read_criteria_file(criteria_file: str) -> OrderedDict[Criterion, str]:
                 end=d["end"],
                 frame=frame,
             )
-            annotation = d.get("annotation", "")
+            annotation = str(d.get("annotation", ""))
 
             annotations[c] = annotation
 

@@ -333,7 +333,7 @@ def minimal_vep() -> VEP:
     }
     # fmt: on
 
-    return minimal_vep_record
+    return VEP(minimal_vep_record)
 
 
 def test_create_criterion() -> None:

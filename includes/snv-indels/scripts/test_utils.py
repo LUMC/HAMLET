@@ -1,5 +1,6 @@
 # Authors: Anne van der Grinten, Redmar van den Berg
 
+from typing import Any
 import pytest
 
 # Authors: Anne van der Grinten, Redmar van den Berg
@@ -15,35 +16,36 @@ from utils import (
     get_position,
 )
 
+@pytest.fixture
+def vep() -> VEP:
+    minimal_vep_record = {
+        "transcript_consequences": [
+            {
+                "consequence_terms": ["inframe_insertion"],
+                "hgvsg": "chr13:g.28034118_28034147dup",
+                "hgvsc": "ENST00000241453.1:c.1772_1801dup",
+                "hgvsp": "ENSP00000241453.1:p.Asp600_Leu601insHisValAspPheArgGluTyrGluTyrAsp",
+            },
+            {
+                "consequence_terms": [
+                    "inframe_insertion",
+                    "NMD_transcript_variant",
+                ],
+                "hgvsg": "chr13:g.28034118_28034147dup",
+                "hgvsc": "ENST00000380987.1:c.1772_1801dup",
+                "hgvsp": "ENSP00000370374.1:p.Asp600_Leu601insHisValAspPheArgGluTyrGluTyrAsp",
+            },
+        ]
+    }
+
+    return VEP(minimal_vep_record)
+
+
 
 class TestVariant:
     @pytest.fixture
     def variant(self) -> Variant:
         return Variant("ENST123.5:c.10A>T", consequences=["missense", "inframe"])
-
-    @pytest.fixture
-    def vep(self) -> VEP:
-        minimal_vep_record = {
-            "transcript_consequences": [
-                {
-                    "consequence_terms": ["inframe_insertion"],
-                    "hgvsg": "chr13:g.28034118_28034147dup",
-                    "hgvsc": "ENST00000241453.1:c.1772_1801dup",
-                    "hgvsp": "ENSP00000241453.1:p.Asp600_Leu601insHisValAspPheArgGluTyrGluTyrAsp",
-                },
-                {
-                    "consequence_terms": [
-                        "inframe_insertion",
-                        "NMD_transcript_variant",
-                    ],
-                    "hgvsg": "chr13:g.28034118_28034147dup",
-                    "hgvsc": "ENST00000380987.1:c.1772_1801dup",
-                    "hgvsp": "ENSP00000370374.1:p.Asp600_Leu601insHisValAspPheArgGluTyrGluTyrAsp",
-                },
-            ]
-        }
-
-        return VEP(minimal_vep_record)
 
     def test_create_variant(self, variant: Variant) -> None:
         assert variant.hgvs == "ENST123.5:c.10A>T"

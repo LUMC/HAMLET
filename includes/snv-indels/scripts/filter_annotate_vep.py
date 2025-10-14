@@ -27,16 +27,21 @@ def main(
     # Get genes and transcripts of interest
     criteria = read_criteria_file(criteria_file)
 
+    # TODO, read known variants file
+    known_variants: dict[str, str] = dict()
+
     for vep in parse_vep_json(vep_file):
         # Skip variants that are above the specified population frequency
         if vep.above_population_threshold(population, frequency):
             continue
+
         # Filter transcripts based on criteria
-        vep.filter_criteria(list(criteria.keys()))
+        vep.filter_annotate_transcripts(criteria, known_variants)
 
         # If there is no consequence of interest left
         if not vep["transcript_consequences"]:
             continue
+
         print(json.dumps(vep, sort_keys=True))
 
 
@@ -46,7 +51,7 @@ if __name__ == "__main__":
     )
 
     parser.add_argument("--vep", help="VEP json output file")
-    parser.add_argument("--criteria", help="File with criteria")
+    parser.add_argument("--filter-criteria", help="File with filter criteria")
     parser.add_argument(
         "--population", help="Population to use for variant frequency", default="gnomAD"
     )
@@ -61,7 +66,7 @@ if __name__ == "__main__":
 
     main(
         args.vep,
-        args.criteria,
+        args.filter_criteria,
         args.population,
         args.frequency,
     )
