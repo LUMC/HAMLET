@@ -262,7 +262,7 @@ class TestVariant:
         v = Variant(variant, consequences=list())
         assert v.frame() == frame
 
-    FRAME_ERROR = [
+    NO_FRAME = [
         # Genomic
         "ENST:g.10A>T",
         # Protein
@@ -293,12 +293,27 @@ class TestVariant:
         "ENST:c.30_40-12delinsAT",
     ]
 
-    @pytest.mark.parametrize("variant", FRAME_ERROR)
-    def test_variant_frame_error(self, variant: str) -> None:
+    @pytest.mark.parametrize("variant", NO_FRAME)
+    def test_variant_no_frame(self, variant: str) -> None:
         """Test variants where frame() is not supported"""
         v = Variant(variant, consequences=[])
-        with pytest.raises(ValueError):
-            v.frame()
+        assert v.frame() == None
+
+    def test_variant_outside_cds_no_frame(self) -> None:
+        v=Variant("ENST1:c.-100A>T", consequences=[])
+        c=Criterion(
+            identifier="ENST1"
+
+        )
+        assert c.match(v)
+
+    def test_variant_outside_cds_does_not_match(self) -> None:
+        v=Variant("ENST1:c.-100A>T", consequences=[])
+        c=Criterion(
+            identifier="ENST1", frame=0
+
+        )
+        assert not c.match(v)
 
     def test_match_region(self, variant: Variant) -> None:
         """
@@ -357,6 +372,8 @@ class TestVariant:
             ),
         ]
         assert list(Variant.from_VEP(vep)) == expected
+
+
 
 
 class TestCriterion:

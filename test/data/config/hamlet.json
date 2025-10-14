@@ -31,8 +31,7 @@
     "known_variants": "test/data/config/known_variants.tsv",
     "rrna_refflat": "test/data/reference/ucsc_rrna.refFlat",
     "gtf": "test/data/reference/hamlet-ref.gtf",
-    "annotation_refflat": "test/data/reference/hamlet-ref.refFlat",
-    "blacklist": "test/data/blacklist.txt"
+    "annotation_refflat": "test/data/reference/hamlet-ref.refFlat"
   },
   "expression":{
     "housekeeping": [

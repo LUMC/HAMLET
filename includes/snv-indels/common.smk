@@ -23,15 +23,19 @@ if "snv-indels" in config:
 # Old features that are no longer supported
 if "bed_variant_call_regions" in config:
     msg = """
-    'bed_variant_call_regions' is no longer supported, regions of interest are
-    determined automatically from the GTF file.
+    'bed_variant_call_regions' is no longer supported, regions of interest are determined automatically from the GTF file.
     """
     raise DeprecationWarning(msg)
 
 if "ref_id_mapping" in config:
     msg = """
-    'ref_id_mapping' is no longer supported, the mapping is
-    determined automatically from the GTF file.
+    'ref_id_mapping' is no longer supported, the mapping is determined automatically from the GTF file.
+    """
+    raise DeprecationWarning(msg)
+
+if "blacklist" in config:
+    msg = """
+    'blacklist' is no longer supported, please specify artifacts in the `known_variants` file.
     """
     raise DeprecationWarning(msg)
 

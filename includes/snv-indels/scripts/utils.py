@@ -297,12 +297,12 @@ class Variant:
         else:
             raise NotImplementedError
 
-    def frame(self) -> int:
+    def frame(self) -> int | None:
         model = to_model(self.hgvs)
         # Determine if the coordinate system supports detecting the frame
         coordinate = model["coordinate_system"]
         if coordinate != "c":
-            raise ValueError("Determining the frame is only supported for c. variants")
+            return None
 
         variants = model["variants"]
         # No variant
@@ -315,9 +315,7 @@ class Variant:
         variant = variants[0]
         # Next, determine if the variant supports detecting the frame
         if self._outside_cds(variant["location"]):
-            raise ValueError(
-                "Determing the frame is only supported in the coding region"
-            )
+            return None
 
         return self.size() % 3
 

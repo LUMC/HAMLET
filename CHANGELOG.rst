@@ -21,6 +21,8 @@ v2.5.0-dev
 * Update MultiQC to 1.31
 * Add support for specifying the frame of variant Criteria
 * Add additional annotation file ``known_variants`` to the snv-indels module
+* Deprecate the ``blacklist`` option in favour of ``known_variants``
+* Combine filtering and annotation of variants into a single step
 * Update cutadapt from 5.0 to 5.1
 * Update sequali from 0.12 to 1.0.2
 * Update arriba from 2.4.0 to 2.5.1

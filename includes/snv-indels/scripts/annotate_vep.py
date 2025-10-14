@@ -4,13 +4,14 @@ import argparse
 import json
 from utils import Variant, VEP, read_criteria_file
 from itertools import zip_longest
+import gzip
 
 from typing import Iterator
 
 
 def parse_vep_json(vep_file: str) -> Iterator[VEP]:
     """Parse the VEP 'json' output file, each line contains a JSON entry"""
-    with open(vep_file) as fin:
+    with gzip.open(vep_file, 'rt') as fin:
         for line in fin:
             yield VEP(json.loads(line))
 

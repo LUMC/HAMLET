@@ -13,13 +13,13 @@
   stdout:
     contains:
       - "TestSample1/snv-indels/TestSample1.vep.txt.gz"
-      - "TestSample1/snv-indels/TestSample1.vep.filtered.txt.gz"
+      - "TestSample1/snv-indels/TestSample1.vep.annotated.txt.gz"
 
       - "TestSample2/snv-indels/TestSample2.vep.txt.gz"
-      - "TestSample2/snv-indels/TestSample2.vep.filtered.txt.gz"
+      - "TestSample2/snv-indels/TestSample2.vep.annotated.txt.gz"
 
       - "TestSample3/snv-indels/TestSample3.vep.txt.gz"
-      - "TestSample3/snv-indels/TestSample3.vep.filtered.txt.gz"
+      - "TestSample3/snv-indels/TestSample3.vep.annotated.txt.gz"
 
       - "rule multiqc"
       - "rule call_regions"
@@ -79,8 +79,7 @@
       --workflow-profile test \
       --notemp \
       --configfile test/data/config/snv-indels.json \
-      --config pepfile=test/pep/chrM.csv \
-        blacklist=test/data/blacklist.txt
+      --config pepfile=test/pep/chrM.csv
     "
   stderr:
     # snv-indel should not use a local VEP database, but query ensembl
@@ -95,7 +94,7 @@
     - path: "SRR8615409/snv-indels/SRR8615409.exon_cov_stats.json"
     - path: "SRR8615409/snv-indels/SRR8615409.alignment_summary_metrics"
     - path: "SRR8615409/snv-indels/SRR8615409.vep.txt.gz"
-    - path: "SRR8615409/snv-indels/SRR8615409.vep.filtered.txt.gz"
+    - path: "SRR8615409/snv-indels/SRR8615409.vep.annotated.txt.gz"
       contains:
         - "missense_variant"
     # Test log files
@@ -113,17 +112,13 @@
         - "CollectInsertSizeMetrics"
         - "RnaSeqMetrics"
     - path: "log/VEP.SRR8615409.txt"
-    - path: "log/filter_vep.SRR8615409.txt"
+    - path: "log/filter_annotate_vep.SRR8615409.txt"
     - path: "SRR8615409/snv-indels/snv-indels-output.json"
       contains:
         # Test that VEP outputs the genomic HGVS
         - "hgvsg"
         # Test that we find a variant
         - "ENST00000361899:c.334A>G"
-      must_not_contain:
-        # Test the variants on the blacklist are not found
-        - "ENST00000361899:c.175A>G"
-        - "ENST00000361899:c.40A>G"
     # Test that a STAR counts file is generated
     - path: "SRR8615409/snv-indels/SRR8615409.ReadsPerGene.out.tab"
       contains:
@@ -169,7 +164,6 @@
       --workflow-profile test \
       --configfile test/data/config/snv-indels.json \
       --config pepfile=test/pep/targetted.csv \
-        blacklist=test/data/blacklist.txt
     "
   files:
     - path: multiqc_snv_indels.html
@@ -247,6 +241,22 @@
   stdout:
     contains:
       - "'ref_id_mapping' is no longer supported"
+
+- name: test-snv-indels-blacklist-deprecated
+  tags:
+    - sanity
+    - snv-indels
+  command: >
+    snakemake
+    --snakefile includes/snv-indels/Snakefile
+    --workflow-profile test
+    --dry-run
+    --configfile test/data/config/snv-indels-vep-cache.json
+    --config pepfile=test/pep/chrM-trio.csv min_variant_depth=4 blacklist=filename
+  exit_code: 1
+  stdout:
+    contains:
+      - "'blacklist' is no longer supported"
 
 
 # Test that the id_mapping script works if the filter criteria contain no transcript versions
