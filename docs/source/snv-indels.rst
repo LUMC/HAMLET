@@ -70,9 +70,6 @@ Configuration options
   * - star_index
     - STAR index database
     - yes
-  * - ref_id_mapping
-    - File of transcripts of interest
-    - yes
   * - filter_criteria
     - Criteria file to filter variants
     - yes
