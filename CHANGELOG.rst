@@ -11,6 +11,7 @@ Changelog
 v2.5.0-dev
 **********
 
+* **Important: Please rebuild the HAMLET-data folder when updating to v2.5**
 * Allow every module to run with the full HAMLET configuration
 * Add option ``min_variant_depth`` to the snv-indels module to specify the
   minimum number of reads to report a variant (default = 2)
@@ -18,16 +19,17 @@ v2.5.0-dev
 * Encode all figures into the HTML report
 * Clean up intermediate MultiQC files
 * Truncate HGVS descriptions longer than 100 characters in the PDF report
-* Update MultiQC to 1.31
 * Add support for specifying the frame of variant Criteria
 * Add additional annotation file ``known_variants`` to the snv-indels module
-* Deprecate the ``blacklist`` option in favour of ``known_variants``
+* **Deprecate** the ``blacklist`` option in favour of ``known_variants``
+* **Deprecate** the ``ref_id_mapping`` option
 * Combine filtering and annotation of variants into a single step
+* Update the filter and annotation criteria to include 46 genes
+* Update MultiQC to 1.31
 * Update cutadapt from 5.0 to 5.1
 * Update sequali from 0.12 to 1.0.2
 * Update arriba from 2.4.0 to 2.5.1
 * Update VEP from 108 to 115
-* Deprecate the ``ref_id_mapping`` option
 
 ******
 v2.4.0
