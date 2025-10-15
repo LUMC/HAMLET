@@ -24,6 +24,7 @@ v2.5.0-dev
 * **Deprecate** the ``blacklist`` option in favour of ``known_variants``
 * **Deprecate** the ``ref_id_mapping`` option
 * Combine filtering and annotation of variants into a single step
+* Add the ``--safe`` flag to VEP to ensure there are no hidden errors
 * Update the filter and annotation criteria to include 46 genes
 * Update MultiQC to 1.31
 * Update cutadapt from 5.0 to 5.1
