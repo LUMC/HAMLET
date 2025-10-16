@@ -20,6 +20,7 @@ def main(args):
     else:
         raise NotADirectoryError(args.table)
 
+
 def print_aml_subtype_table(json_files):
     header = None
     for js in json_files:
@@ -33,7 +34,7 @@ def print_aml_subtype_table(json_files):
                 clusters = [field for field in subtype if field not in header]
 
                 header += clusters
-                print(*header, sep='\t')
+                print(*header, sep="\t")
 
             print(*(subtype[field] for field in header), sep="\t")
 
@@ -48,9 +49,12 @@ def print_celltype_table(json_files):
 
             if header is None:
                 header = list(celltypes["data"].keys())
-                print("sample", *header, sep='\t')
+                print("sample", *header, sep="\t")
 
-            print(sample, *(celltypes["data"][celltype] for celltype in header), sep="\t")
+            print(
+                sample, *(celltypes["data"][celltype] for celltype in header), sep="\t"
+            )
+
 
 def print_expression_table(json_files):
     """Print gene expression table"""
@@ -84,10 +88,12 @@ def print_expression_table(json_files):
 
             print(*row, sep="\t")
 
+
 def print_variant_table(json_files):
     """Print variant table"""
+
     def parse_genes_v1(_, genes):
-        """ Parse HAMLET variant results in v1 format"""
+        """Parse HAMLET variant results in v1 format"""
         for gene in genes:
             for variant in genes[gene]:
                 yield variant
@@ -100,26 +106,33 @@ def print_variant_table(json_files):
                     values = parse_variant(sample, gene, variant)
                     # Copy over hgvs
                     for field in ["hgvsc", "hgvsp", "impact"]:
-                        values[field] = transcript_consequence.get(field, '')
+                        values[field] = transcript_consequence.get(field, "")
                     # Copy over consequence terms
-                    values["consequence_terms"] = ",".join(transcript_consequence["consequence_terms"])
+                    values["consequence_terms"] = ",".join(
+                        transcript_consequence["consequence_terms"]
+                    )
                     # Throw out the 'input' field, since that is just the VCF
                     # information again
                     values.pop("input")
                     yield values
 
     def parse_colocated_variants(coloc):
-        return ','.join((var["id"] for var in coloc))
+        return ",".join((var["id"] for var in coloc))
 
     def parse_variant(sample, gene, variant):
-        """ Parse a single variant"""
+        """Parse a single variant"""
         var = dict()
         var["sample"] = sample
         var["gene"] = gene
 
         # Add headers for the VCF fields
         vcf_header = "CHROM POS ID REF ALT QUAL FILTER INFO FORMAT FORMAT_DATA".split()
-        var.update({field: value for field, value in zip(vcf_header, variant["input"].split("\t"))})
+        var.update(
+            {
+                field: value
+                for field, value in zip(vcf_header, variant["input"].split("\t"))
+            }
+        )
 
         # Copy over all simple values
         for field in variant:
@@ -127,9 +140,12 @@ def print_variant_table(json_files):
                 var[field] = variant[field]
 
         # Copy over all colocated variants
-        var["colocated_variants"] = parse_colocated_variants(variant.get("colocated_variants", list()))
+        var["colocated_variants"] = parse_colocated_variants(
+            variant.get("colocated_variants", list())
+        )
 
         return var
+
     # The headers in the csv file are based on the json output
     header = None
 
@@ -139,10 +155,10 @@ def print_variant_table(json_files):
             data = json.load(fin)
 
         # See if the data is from HAMLET 1.0 or 2.0
-        if "modules" in data: # HAMLET 2.0
+        if "modules" in data:  # HAMLET 2.0
             genes = data["modules"]["snv_indels"]["genes"]
             parse = parse_genes_v2
-        elif "results" in data: # HAMLET 1.0
+        elif "results" in data:  # HAMLET 1.0
             genes = data["results"]["var"]["overview"]
             parse = parse_genes_v1
 
@@ -162,18 +178,51 @@ def print_variant_table(json_files):
                     raise RuntimeError(msg)
             print(*(var_line[field] for field in header), sep="\t")
 
+
 def get_fields(var_line):
     fields = list(var_line.keys())
     # minimised is not set for every variant, so we remove it
     try:
-        fields.remove('minimised')
+        fields.remove("minimised")
     except ValueError:
         pass
     return fields
 
+
 def print_fusion_table(json_files):
     """Print fusion table"""
-    header = ["sample", "gene1", "gene2", "strand1(gene/fusion)", "strand2(gene/fusion)", "breakpoint1", "breakpoint2", "site1", "site2", "type", "split_reads1", "split_reads2", "discordant_mates", "coverage1", "coverage2", "confidence", "reading_frame", "tags", "retained_protein_domains", "closest_genomic_breakpoint1", "closest_genomic_breakpoint2", "gene_id1", "gene_id2", "transcript_id1", "transcript_id2", "direction1", "direction2", "filters", "fusion_transcript", "peptide_sequence"]
+    header = [
+        "sample",
+        "gene1",
+        "gene2",
+        "strand1(gene/fusion)",
+        "strand2(gene/fusion)",
+        "breakpoint1",
+        "breakpoint2",
+        "site1",
+        "site2",
+        "type",
+        "split_reads1",
+        "split_reads2",
+        "discordant_mates",
+        "coverage1",
+        "coverage2",
+        "confidence",
+        "reading_frame",
+        "tags",
+        "retained_protein_domains",
+        "closest_genomic_breakpoint1",
+        "closest_genomic_breakpoint2",
+        "gene_id1",
+        "gene_id2",
+        "transcript_id1",
+        "transcript_id2",
+        "direction1",
+        "direction2",
+        "filters",
+        "fusion_transcript",
+        "peptide_sequence",
+    ]
 
     print(*header, sep="\t")
     for js in json_files:
@@ -181,9 +230,9 @@ def print_fusion_table(json_files):
             data = json.load(fin)
 
         sample = sample_name(data)
-        if "modules" in data: # HAMLET 2.0
+        if "modules" in data:  # HAMLET 2.0
             fusions = data["modules"]["fusion"]["events"]
-        elif "results" in data: # HAMLET 1.0
+        elif "results" in data:  # HAMLET 1.0
             fusions = data["results"]["fusion"]["tables"]["intersection"]["top20"]
         else:
             raise ValueError
@@ -192,8 +241,10 @@ def print_fusion_table(json_files):
             fusion["sample"] = sample
             print(*(fusion[key] for key in header), sep="\t")
 
+
 def sample_name(data):
     return data["metadata"]["sample_name"]
+
 
 def print_itd_table(json_files, itd_gene):
     def join_list(positions):
@@ -215,7 +266,7 @@ def print_itd_table(json_files, itd_gene):
 
         if "modules" in data:  # HAMLET 2.0
             itd_table = data["modules"]["itd"][itd_gene]["table"]
-        elif "results" in data: # HAMLET 1.0
+        elif "results" in data:  # HAMLET 1.0
             itd_table = data["results"]["itd"][itd_gene]["table"]
 
         for event in itd_table:
