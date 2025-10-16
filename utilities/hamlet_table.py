@@ -2,23 +2,41 @@
 
 import argparse
 import json
+import os
+import functools
 
 
 def main(args):
-    if args.table == "variant":
-        print_variant_table(args.json_files)
-    elif args.table == "fusion":
-        print_fusion_table(args.json_files)
-    elif args.table == "itd":
-        print_itd_table(args.json_files, args.itd_gene)
-    elif args.table == "expression":
-        print_expression_table(args.json_files)
-    elif args.table == "celltype":
-        print_celltype_table(args.json_files)
-    elif args.table == "aml_subtype":
-        print_aml_subtype_table(args.json_files)
+    functions = {
+        "variant": print_variant_table,
+        "fusion": print_fusion_table,
+        "itd": print_itd_table,
+        "expression": print_expression_table,
+        "celltype": print_celltype_table,
+        "aml_subtype": print_aml_subtype_table,
+    }
+    if args.table == "itd":
+        functions[args.table](args.json_files, args.itd_gene)
+    elif args.table in functions:
+        functions[args.table](args.json_files)
+    elif args.table == "all":
+        os.makedirs(args.output, exist_ok=True)
+
+        modules = "variant fusion expression celltype aml_subtype".split()
+        for m in modules:
+            fname = f"{args.output}/m.tsv"
+            with open(fname, 'wt') as fout:
+                write =functools.partial(print, file=fout)
+                functions[m](args.json_files, write)
+
+        for gene in ["flt3", "kmt2a"]:
+            fname = f"{args.output}/{gene}_itd.tsv"
+            with open(fname, 'wt') as fout:
+                write = functools.partial(print, file=fout)
+                functions["itd"](args.json_files, gene, write)
+
     else:
-        raise NotADirectoryError(args.table)
+        raise NotImplementedError(args.table)
 
 
 def print_aml_subtype_table(json_files, write=print):
@@ -292,16 +310,20 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "table",
-        choices=["variant", "fusion", "itd", "expression", "celltype", "aml_subtype"],
+        choices=["variant", "fusion", "itd", "expression", "celltype", "aml_subtype", "all"],
         default="variant",
         help="Table to output",
     )
     parser.add_argument("json_files", nargs="+")
     parser.add_argument("--itd-gene", required=False, choices=["flt3", "kmt2a"])
+    parser.add_argument("--output", help="Output folder when using 'all'")
 
     args = parser.parse_args()
 
     if args.table == "itd" and not args.itd_gene:
         raise parser.error("Please specify an itd gene with --itd-gene")
+
+    if args.table == "all" and not args.output:
+        raise parser.error("Please specify an --output folder")
 
     main(args)
