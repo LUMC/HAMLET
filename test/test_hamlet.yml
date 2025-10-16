@@ -121,10 +121,15 @@
       multiqc_hamlet.html
 
     # Test if the table scripts can still parse the summary.json file
-    
-    python3 utilities/hamlet_table.py variant SRR8615409/SRR8615409.summary.json > variant.tsv;
-    python3 utilities/hamlet_table.py fusion SRR8615409/SRR8615409.summary.json > fusion.tsv;
-    python3 utilities/hamlet_table.py itd --itd-gene flt3 SRR8615409/SRR8615409.summary.json > itd_flt3.tsv;
+
+    for section in variant fusion expression celltype aml_subtype; do
+      python3 utilities/hamlet_table.py ${section} SRR8615409/SRR8615409.summary.json > ${section}.tsv;
+    done
+
+    # Test the itd module
+
+    python3 utilities/hamlet_table.py itd --itd-gene flt3 SRR8615409/SRR8615409.summary.json > flt3.tsv;
+    python3 utilities/hamlet_table.py itd --itd-gene kmt2a SRR8615409/SRR8615409.summary.json > kmt2a.tsv;
     "
   files:
     # HAMLET pipeline should generate the final output files
@@ -185,10 +190,26 @@
       contains:
         - "sample\tgene1\tgene2"
         - "SRR8615409\tBCR\tABL1"
-    - path: itd_flt3.tsv
+    - path: expression.tsv
+      contains:
+        - "sample\tMT-CO2-normalized"
+        - "SRR8615409\t1.0"
+    - path: celltype.tsv
+      contains:
+        - "sample\tASDC\tB Cells"
+        - "SRR8615409\t0.0\t0.54"
+    - path: aml_subtype.tsv
+      contains:
+        - "sample\tprediction\tpass_cutoff"
+        - "SRR8615409\tNotClassified\tFalse"
+    - path: flt3.tsv
       contains:
         - "sample\tboundary_type\tfuzziness"
         - "SRR8615409\tfuzzy-end\t1"
+    - path: kmt2a.tsv
+      contains:
+        - "sample\tboundary_type\tfuzziness"
+        - "SRR8615409\tfuzzy\t4"
     - path: "multiqc_hamlet.html"
       contains:
         - "Cutadapt"
