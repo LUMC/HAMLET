@@ -15,9 +15,27 @@ def main(args):
         print_expression_table(args.json_files)
     elif args.table == "celltype":
         print_celltype_table(args.json_files)
-        pass
+    elif args.table == "aml_subtype":
+        print_aml_subtype_table(args.json_files)
     else:
         raise NotADirectoryError(args.table)
+
+def print_aml_subtype_table(json_files):
+    header = None
+    for js in json_files:
+        with open(js) as fin:
+            data = json.load(fin)
+            subtype = data["modules"]["expression"]["subtype"]
+            subtype["sample"] = subtype.pop("sample_id")
+
+            if header is None:
+                header = ["sample", "prediction", "pass_cutoff"]
+                clusters = [field for field in subtype if field not in header]
+
+                header += clusters
+                print(*header, sep='\t')
+
+            print(*(subtype[field] for field in header), sep="\t")
 
 
 def print_celltype_table(json_files):
@@ -223,7 +241,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "table",
-        choices=["variant", "fusion", "itd", "expression", "celltype", "aml_classification"],
+        choices=["variant", "fusion", "itd", "expression", "celltype", "aml_subtype"],
         default="variant",
         help="Table to output",
     )

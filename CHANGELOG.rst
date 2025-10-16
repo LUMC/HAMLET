@@ -27,6 +27,7 @@ v2.5.0-dev
 * Add the ``--safe`` flag to VEP to ensure there are no hidden errors
 * Add support for tabulating gene expression data to the ``hamlet_table.py`` script
 * Add support for tabulating cell types to the ``hamlet_table.py`` script
+* Add support for tabulating AML subtype prediction to the ``hamlet_table.py`` script
 * Update the filter and annotation criteria to include 46 genes
 * Update MultiQC to 1.31
 * Update cutadapt from 5.0 to 5.1
