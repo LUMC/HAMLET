@@ -21,7 +21,7 @@ def main(args):
         raise NotADirectoryError(args.table)
 
 
-def print_aml_subtype_table(json_files):
+def print_aml_subtype_table(json_files, write=print):
     header = None
     for js in json_files:
         with open(js) as fin:
@@ -34,12 +34,12 @@ def print_aml_subtype_table(json_files):
                 clusters = [field for field in subtype if field not in header]
 
                 header += clusters
-                print(*header, sep="\t")
+                write(*header, sep="\t")
 
-            print(*(subtype[field] for field in header), sep="\t")
+            write(*(subtype[field] for field in header), sep="\t")
 
 
-def print_celltype_table(json_files):
+def print_celltype_table(json_files, write=print):
     header = None
     for js in json_files:
         with open(js) as fin:
@@ -49,14 +49,14 @@ def print_celltype_table(json_files):
 
             if header is None:
                 header = list(celltypes["data"].keys())
-                print("sample", *header, sep="\t")
+                write("sample", *header, sep="\t")
 
-            print(
+            write(
                 sample, *(celltypes["data"][celltype] for celltype in header), sep="\t"
             )
 
 
-def print_expression_table(json_files):
+def print_expression_table(json_files, write=print):
     """Print gene expression table"""
     genes = None
     for js in json_files:
@@ -76,7 +76,7 @@ def print_expression_table(json_files):
                 for gene in genes:
                     header.append(f"{gene}-raw")
 
-                print(*header, sep="\t")
+                write(*header, sep="\t")
 
             # Print the data
             row = [sample]
@@ -86,10 +86,10 @@ def print_expression_table(json_files):
             for gene in genes:
                 row.append(expression[gene]["raw"])
 
-            print(*row, sep="\t")
+            write(*row, sep="\t")
 
 
-def print_variant_table(json_files):
+def print_variant_table(json_files, write=print):
     """Print variant table"""
 
     def parse_genes_v1(_, genes):
@@ -170,13 +170,13 @@ def print_variant_table(json_files):
         for var_line in parse(sample, genes):
             if header is None:
                 header = get_fields(var_line)
-                print(*header, sep="\t")
+                write(*header, sep="\t")
             else:
                 current_keys = get_fields(var_line)
                 if current_keys != header:
                     msg = f"\n{current_keys}\n{header}\n do not match!"
                     raise RuntimeError(msg)
-            print(*(var_line[field] for field in header), sep="\t")
+            write(*(var_line[field] for field in header), sep="\t")
 
 
 def get_fields(var_line):
@@ -189,7 +189,7 @@ def get_fields(var_line):
     return fields
 
 
-def print_fusion_table(json_files):
+def print_fusion_table(json_files, write=print):
     """Print fusion table"""
     header = [
         "sample",
@@ -224,7 +224,7 @@ def print_fusion_table(json_files):
         "peptide_sequence",
     ]
 
-    print(*header, sep="\t")
+    write(*header, sep="\t")
     for js in json_files:
         with open(js) as fin:
             data = json.load(fin)
@@ -239,14 +239,14 @@ def print_fusion_table(json_files):
 
         for fusion in fusions:
             fusion["sample"] = sample
-            print(*(fusion[key] for key in header), sep="\t")
+            write(*(fusion[key] for key in header), sep="\t")
 
 
 def sample_name(data):
     return data["metadata"]["sample_name"]
 
 
-def print_itd_table(json_files, itd_gene):
+def print_itd_table(json_files, itd_gene, write=print):
     def join_list(positions):
         """Join a list of positions
 
@@ -280,12 +280,12 @@ def print_itd_table(json_files, itd_gene):
 
             if header is None:
                 header = list(event.keys())
-                print(*header, sep="\t")
+                write(*header, sep="\t")
             else:
                 new_header = list(event.keys())
                 if new_header != header:
                     raise RuntimError()
-            print(*(event[field] for field in header), sep="\t")
+            write(*(event[field] for field in header), sep="\t")
 
 
 if __name__ == "__main__":
