@@ -13,7 +13,26 @@ def main(args):
         print_itd_table(args.json_files, args.itd_gene)
     elif args.table == "expression":
         print_expression_table(args.json_files)
+    elif args.table == "celltype":
+        print_celltype_table(args.json_files)
+        pass
+    else:
+        raise NotADirectoryError(args.table)
 
+
+def print_celltype_table(json_files):
+    header = None
+    for js in json_files:
+        with open(js) as fin:
+            data = json.load(fin)
+            celltypes = data["modules"]["expression"]["cell-types"]
+            sample = sample_name(data)
+
+            if header is None:
+                header = list(celltypes["data"].keys())
+                print("sample", *header, sep='\t')
+
+            print(sample, *(celltypes["data"][celltype] for celltype in header), sep="\t")
 
 def print_expression_table(json_files):
     """Print gene expression table"""
@@ -204,7 +223,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "table",
-        choices=["variant", "fusion", "itd", "expression"],
+        choices=["variant", "fusion", "itd", "expression", "celltype", "aml_classification"],
         default="variant",
         help="Table to output",
     )
