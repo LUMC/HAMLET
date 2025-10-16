@@ -25,12 +25,14 @@ v2.5.0-dev
 * **Deprecate** the ``ref_id_mapping`` option
 * Combine filtering and annotation of variants into a single step
 * Add the ``--safe`` flag to VEP to ensure there are no hidden errors
+* Add support for tabulating gene expression data to the ``hamlet_table.py`` script
 * Update the filter and annotation criteria to include 46 genes
 * Update MultiQC to 1.31
 * Update cutadapt from 5.0 to 5.1
 * Update sequali from 0.12 to 1.0.2
 * Update arriba from 2.4.0 to 2.5.1
 * Update VEP from 108 to 115
+
 
 ******
 v2.4.0

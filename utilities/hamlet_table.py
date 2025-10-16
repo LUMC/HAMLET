@@ -11,7 +11,41 @@ def main(args):
         print_fusion_table(args.json_files)
     elif args.table == "itd":
         print_itd_table(args.json_files, args.itd_gene)
+    elif args.table == "expression":
+        print_expression_table(args.json_files)
 
+
+def print_expression_table(json_files):
+    """Print gene expression table"""
+    genes = None
+    for js in json_files:
+        with open(js) as fin:
+            data = json.load(fin)
+            expression = data["modules"]["expression"]["gene-expression"]
+            sample = sample_name(data)
+            if genes is None:
+                genes = list(expression.keys())
+
+                # Print the header
+                header = ["sample"]
+                #  First add all normalized columns
+                for gene in genes:
+                    header.append(f"{gene}-normalized")
+                # Then add all raw columncs
+                for gene in genes:
+                    header.append(f"{gene}-raw")
+
+                print(*header, sep="\t")
+
+            # Print the data
+            row = [sample]
+            # First we append the normalized data in order
+            for gene in genes:
+                row.append(expression[gene]["normalized"])
+            for gene in genes:
+                row.append(expression[gene]["raw"])
+
+            print(*row, sep="\t")
 
 def print_variant_table(json_files):
     """Print variant table"""
@@ -170,12 +204,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "table",
-        choices=["variant", "fusion", "itd"],
+        choices=["variant", "fusion", "itd", "expression"],
         default="variant",
         help="Table to output",
     )
     parser.add_argument("json_files", nargs="+")
-    parser.add_argument("--itd-gene", required=False)
+    parser.add_argument("--itd-gene", required=False, choices=["flt3", "kmt2a"])
 
     args = parser.parse_args()
 
