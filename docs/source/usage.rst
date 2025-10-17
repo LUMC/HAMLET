@@ -30,7 +30,7 @@ To run the HAMLET pipeline, you need to supply the input files, as well as a
 `Snakemake profile
 <https://snakemake.readthedocs.io/en/stable/executing/cli.html#profiles>`_,
 which configures Snakemake to run the HAMLET pipeline. The example profile,
-located in ``HAMLET/cfg/config.v8+.yaml`` is shown below.
+located in ``cfg/config.v8+.yaml`` is shown below.
 
 Snakemake profile
 -----------------
@@ -64,8 +64,8 @@ run HAMLET is quite simple.
 .. code:: bash
 
   $ snakemake \
-      --snakefile HAMLET/Snakefile \
-      --profile HAMLET/cfg \
+      --snakefile Snakefile \
+      --profile cfg \
       --configfile config.json \
       --config pepfile=sample_sheet.csv
 
@@ -94,18 +94,12 @@ If you analysed multiple samples using HAMLET, you can generate an overview of
 multiple samples using the ``utilities/hamlet_table.py`` script, rather than
 relying on individual PDF files. This script uses the
 ``{sample_name}.summary.json`` files which are generated as part of the default
-HAMLET output. Simply specify the results you are interested in (``variant``,
-``fusion`` or ``itd``) as shown below.
+HAMLET output. Simply specify the results you are interested in to generate the apropriate table.
+It is also possible to generate all output tables in a single go:
 
 .. code:: bash
 
-  usage: hamlet_table.py [-h] [--itd-gene ITD_GENE]
-                         {variant,fusion,itd} json_files [json_files ...]
-
-  positional arguments:
-    {variant,fusion,itd}  Table to output
-    json_files
-
-  options:
-    -h, --help            show this help message and exit
-    --itd-gene ITD_GENE
+  python3 utilities/hamlet_table.py all \
+  --output tables \
+  /path/to/sample1/sample1.summary.json \
+  /path/to/sample2/sample2.summary.json etc
