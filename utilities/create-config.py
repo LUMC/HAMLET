@@ -51,7 +51,7 @@ def get_fusion_config(dirname):
     return {
         "genome_fasta": get_reference(dirname),
         "gtf": get_gtf(dirname),
-        "blacklist": join(f"blacklist_hg38_GRCh38_${VERSION}.tsv.gz"),
+        "blacklist": join(f"arriba/blacklist_hg38_GRCh38_{VERSION}.tsv.gz"),
         "cytobands": join(f"arriba/cytobands_hg38_GRCh38_{VERSION}.tsv"),
         "known_fusions": join(f"arriba/known_fusions_hg38_GRCh38_{VERSION}.tsv.gz"),
         "protein_domains": join(f"arriba/protein_domains_hg38_GRCh38_{VERSION}.gff3"),
