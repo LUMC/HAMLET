@@ -21,6 +21,9 @@ housekeeping_genes = [
     'PEX26'
 ]
 
+ARRIBA_VERSION="v2.5.1"
+GTF_VERSION="115"
+
 def get_qc_config():
     return {"forward_adapter": "AGATCGGAAGAG", "reverse_adapter": "AGATCGGAAGAG"}
 
@@ -30,7 +33,7 @@ def get_reference(dirname):
 
 
 def get_gtf(dirname):
-    return os.path.join(dirname, "Homo_sapiens.GRCh38.104.chr.gtf")
+    return os.path.join(dirname, f"Homo_sapiens.GRCh38.{GTF_VERSION}.chr.gtf")
 
 
 def get_itd_config(dirname):
@@ -47,14 +50,13 @@ def get_itd_config(dirname):
 
 def get_fusion_config(dirname):
     join = functools.partial(os.path.join, dirname)
-    VERSION="v2.5.1"
     return {
         "genome_fasta": get_reference(dirname),
         "gtf": get_gtf(dirname),
-        "blacklist": join(f"arriba/blacklist_hg38_GRCh38_{VERSION}.tsv.gz"),
-        "cytobands": join(f"arriba/cytobands_hg38_GRCh38_{VERSION}.tsv"),
-        "known_fusions": join(f"arriba/known_fusions_hg38_GRCh38_{VERSION}.tsv.gz"),
-        "protein_domains": join(f"arriba/protein_domains_hg38_GRCh38_{VERSION}.gff3"),
+        "blacklist": join(f"arriba/blacklist_hg38_GRCh38_{ARRIBA_VERSION}.tsv.gz"),
+        "cytobands": join(f"arriba/cytobands_hg38_GRCh38_{ARRIBA_VERSION}.tsv"),
+        "known_fusions": join(f"arriba/known_fusions_hg38_GRCh38_{ARRIBA_VERSION}.tsv.gz"),
+        "protein_domains": join(f"arriba/protein_domains_hg38_GRCh38_{ARRIBA_VERSION}.gff3"),
         "report_genes": join("arriba/report_genes.txt"),
     }
 
