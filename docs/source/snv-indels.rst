@@ -57,6 +57,7 @@ Example
      "genome_fai": "HAMLET-data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.fai",
      "genome_fasta": "HAMLET-data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna",
      "gtf": "HAMLET-data/Homo_sapiens.GRCh38.115.chr.gtf",
+     "known_variants": "HAMLET-data/known_variants.tsv",
      "min_variant_depth": 2,
      "rrna_refflat": "HAMLET-data/ucsc_rrna.refFlat",
      "star_index": "HAMLET-data/star-index",
@@ -98,6 +99,9 @@ Configuration options
   * - gtf
     - GTF file with transcripts, used by STAR
     - yes
+  * - known_variants
+    - File containing known variants and their annotation
+    - no
   * - min_variant_depth
     - Minimum read depth to call a variant
     - no (default=2)
@@ -112,9 +116,6 @@ Configuration options
     - no (default=0.05)
   * - vep-cache
     - Folder containing the VEP cache
-    - no
-  * - known_variants
-    - File containing known variants and their annotation
     - no
 
 Filter and annotation criteria
