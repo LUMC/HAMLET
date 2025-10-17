@@ -72,7 +72,7 @@ performance, please specify a ``vep-cache`` folder as well.
 Configuration options
 ^^^^^^^^^^^^^^^^^^^^^
 .. list-table:: Configuration options
-  :widths: 30 80 15
+  :widths: 30 70 25
   :header-rows: 1
 
   * - Option
@@ -122,7 +122,7 @@ Filter and annotation criteria
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 HAMLET include the ability to specify separate filter criteria for every
 transcript, based on the position and the VEP consequence of the variant. The
-criteria are used both the filter which variants will be part of the output
+criteria are used both to filter which variants will be part of the output
 (``filter_criteria``), and also annotate the identified variants
 (``annotation_criteria``).
 
