@@ -4,7 +4,16 @@
 
 project = 'HAMLET'
 copyright = '2018, LUMC'
-author = 'Wibowo Arindrarto, Redmar van den Berg, Xiaoyun Liu, Anne van der Grinten'
+
+author = " Redmar van den Berg, Wibowo Arindrarto, Xiaoyun Liu, Anne van der Grinten, Ramin Shirali"
+
+# Fudge the latex author list, insert \and where you want the line break to appear
+latex_elements={
+    "maketitle":
+        r"""\author{Redmar van den Berg, Wibowo Arindrarto, Xiaoyun Liu, \and Anne van der Grinten, Ramin Shirali}
+\sphinxmaketitle
+"""
+}
 
 release = "v2.4.1-dev"
 version = '.'.join(release.split('.')[0:2])
