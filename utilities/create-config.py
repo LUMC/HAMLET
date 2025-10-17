@@ -64,19 +64,19 @@ def get_fusion_config(dirname):
 def get_snv_indels_config(dirname):
     join = functools.partial(os.path.join, dirname)
     return {
-        "genome_fasta": get_reference(dirname),
-        "genome_fai": join("GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.fai"),
-        "genome_dict": join("GCA_000001405.15_GRCh38_no_alt_analysis_set.dict"),
-        "star_index": join("star-index"),
-        "filter_criteria": join("filter_criteria.tsv"),
         "annotation_criteria": join("annotation_criteria.tsv"),
-        "known_variants": join("known_variants.tsv"),
-        "rrna_refflat": join("ucsc_rrna.refFlat"),
-        "gtf": get_gtf(dirname),
         "annotation_refflat": join("ucsc_gencode.refFlat"),
-        "vep_cache": dirname,
-        "variant_allele_frequency": 0.05,
+        "filter_criteria": join("filter_criteria.tsv"),
+        "genome_dict": join("GCA_000001405.15_GRCh38_no_alt_analysis_set.dict"),
+        "genome_fai": join("GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.fai"),
+        "genome_fasta": get_reference(dirname),
+        "gtf": get_gtf(dirname),
+        "known_variants": join("known_variants.tsv"),
         "min_variant_depth": 2,
+        "rrna_refflat": join("ucsc_rrna.refFlat"),
+        "star_index": join("star-index"),
+        "variant_allele_frequency": 0.05,
+        "vep_cache": dirname,
     }
 
 def get_expression_config(dirname):
