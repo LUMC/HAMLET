@@ -70,22 +70,13 @@ def get_snv_indels_config(dirname):
         "star_index": join("star-index"),
         "filter_criteria": join("filter_criteria.tsv"),
         "annotation_criteria": join("annotation_criteria.tsv"),
+        "known_variants": join("known_variants.tsv"),
         "rrna_refflat": join("ucsc_rrna.refFlat"),
         "gtf": get_gtf(dirname),
         "annotation_refflat": join("ucsc_gencode.refFlat"),
         "vep_cache": dirname,
         "variant_allele_frequency": 0.05,
         "min_variant_depth": 2,
-        "vep_include_consequence": [
-            "stop_gained",
-            "frameshift_variant",
-            "stop_lost",
-            "start_lost",
-            "inframe_insertion",
-            "inframe_deletion",
-            "protein_altering_variant",
-            "missense_variant",
-        ],
     }
 
 def get_expression_config(dirname):

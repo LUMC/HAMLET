@@ -58,6 +58,7 @@ rule all:
         star_index="star-index",
         filter_criteria="filter_criteria.tsv",
         annotation_criteria="annotation_criteria.tsv",
+        known_variants="known_variants.tsv",
         rrna_refflat="ucsc_rrna.refFlat",
         arriba=f"arriba/protein_domains_hg38_GRCh38_{ARRIBA_RELEASE}.gff3",
         arriba_report_genes="arriba/report_genes.txt",
@@ -231,15 +232,18 @@ rule copy_criteria_files:
     input:
         filter=workflow.source_path("small-files/filter_criteria.tsv"),
         annotation=workflow.source_path("small-files/annotation_criteria.tsv"),
+        known_variants=workflow.source_path("small-files/known_variants.tsv"),
     output:
         filter="filter_criteria.tsv",
         annotation="annotation_criteria.tsv",
+        known_variants="known_variants.tsv",
     singularity:
         containers["hamlet-scripts"]
     shell:
         """
         cp {input.filter} {output.filter}
         cp {input.annotation} {output.annotation}
+        cp {input.known_variants} {output.known_variants}
         """
 
 
