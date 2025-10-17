@@ -61,17 +61,7 @@ Example
      "rrna_refflat": "HAMLET-data/ucsc_rrna.refFlat",
      "star_index": "HAMLET-data/star-index",
      "variant_allele_frequency": 0.05,
-     "vep_cache": "HAMLET-data",
-     "vep_include_consequence": [
-      "stop_gained",
-      "frameshift_variant",
-      "stop_lost",
-      "start_lost",
-      "inframe_insertion",
-      "inframe_deletion",
-      "protein_altering_variant",
-      "missense_variant"
-     ]
+     "vep_cache": "HAMLET-data"
     }
 
 
