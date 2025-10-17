@@ -47,12 +47,14 @@ def get_itd_config(dirname):
 
 def get_fusion_config(dirname):
     join = functools.partial(os.path.join, dirname)
+    VERSION="v2.5.1"
     return {
         "genome_fasta": get_reference(dirname),
         "gtf": get_gtf(dirname),
-        "cytobands": join("arriba/cytobands_hg38_GRCh38_v2.4.0.tsv"),
-        "known_fusions": join("arriba/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz"),
-        "protein_domains": join("arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3"),
+        "blacklist": join(f"blacklist_hg38_GRCh38_${VERSION}.tsv.gz"),
+        "cytobands": join(f"arriba/cytobands_hg38_GRCh38_{VERSION}.tsv"),
+        "known_fusions": join(f"arriba/known_fusions_hg38_GRCh38_{VERSION}.tsv.gz"),
+        "protein_domains": join(f"arriba/protein_domains_hg38_GRCh38_{VERSION}.gff3"),
         "report_genes": join("arriba/report_genes.txt"),
     }
 
