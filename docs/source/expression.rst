@@ -46,14 +46,15 @@ not specified, all samples will be treated as unstranded.
 Output
 ------
 
-* The genes specified under the ``report`` section of the configuration will be
-  included in the HAMLET pdf report.
+* The expression levels for genes specified under the ``report`` section of the
+  configuration will be included in the HAMLET pdf report.
 * All genes from the ``bed`` file and the ``genes_of_interest`` will be included in
   the MultiQC report. Stranded (forward and reverse) and unstranded samples
   will be listed separately, since their values cannot be compared directly.
 * The cell type composition for each sample wil be included in the HAMLET pdf
   report. In addition, an overview of the composition of all samples is
   included in the MultiQC report.
+* The predicted AML subtypes based on AMLmapR will be included in the PDF report.
 
 Note that the overexpression and cell type composition results can be exported
 to csv directly from the MultiQC html file.
