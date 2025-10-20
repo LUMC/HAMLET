@@ -53,6 +53,8 @@ rule id_mapping:
     input:
         gtf=config["gtf"],
         filter_criteria=config["filter_criteria"],
+        annotation_criteria=config["annotation_criteria"],
+        known_variants=config.get("known_variants", []),
         src=workflow.source_path("scripts/create_id_mapping.py"),
     output:
         txt=temporary("id_mapping.txt"),
@@ -65,6 +67,8 @@ rule id_mapping:
         python3 {input.src} \
             {input.gtf} \
             --filter-file {input.filter_criteria} \
+            --annotation-file {input.annotation_criteria} \
+            --known-variants {input.known_variants} \
             > {output.txt} \
             2> {log}
         """

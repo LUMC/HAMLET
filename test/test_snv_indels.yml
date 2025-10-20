@@ -119,6 +119,10 @@
         - "hgvsg"
         # Test that we find a variant
         - "ENST00000361899:c.334A>G"
+        # Test that we find a transcript from the annotation criteria file
+        - "ENST00000361453:c.117T>C"
+        # Test that we find a transcript from the known variants file
+        - "ENST00000361390"
     # Test that a STAR counts file is generated
     - path: "SRR8615409/snv-indels/SRR8615409.ReadsPerGene.out.tab"
       contains:
@@ -150,6 +154,14 @@
       should_exist: False
     - path: SRR8615409/snv-indels/_STARpass1
       should_exist: False
+    - path: id_mapping.txt
+      contains:
+        # Test that we find a transcript from the filter criteria file
+        - "ENST00000361899"
+        # Test that we find a transcript from the annotation criteria file
+        - "ENST00000305877"
+        # Test that we find a transcript from the known variants file
+        - "ENST00000361390"
 
 - name: test-snv-indels-stranded
   tags:

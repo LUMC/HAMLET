@@ -3,3 +3,5 @@ ENST00000241453				0	FLT3 in frame
 ENST00000241453	inframe_insertion	1790	1801		Hotspot
 ENST00000361899	missense_variant	334	334		Hotspot
 ENST00000361851	missense_variant	25			Hotspot
+ENST00000305877	intron_variant	1279	1280		BCR
+ENST00000361453	synonymous_variant				MT-ND2

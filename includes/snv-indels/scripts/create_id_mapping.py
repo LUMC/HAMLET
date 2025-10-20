@@ -73,10 +73,34 @@ def read_transcripts(filter_file: str) -> set[str]:
             transcripts.add(transcript)
     return transcripts
 
+def known_variants(fname: str) -> set[str]:
+    """Read the transcripts from the known variants file"""
+    transcripts = set()
+    header = None
+    with open(fname) as fin:
+        for line in fin:
+            spline = line.strip("\n").split("\t")
+            if header is None:
+                header = spline
+                continue
+            d = {k: v for k, v in zip(header, spline)}
+            # Get the transcript identifier from the HGVS
+            transcript_id = d["variant"].split(":c.")[0]
+            # Remove the version number
+            transcript = transcript_id.split(".")[0]
+            transcripts.add(transcript)
+    return transcripts
 
-def main(gtf_file: str, filter_file: str) -> None:
+def main(gtf_file: str, filter_file: str, annotation_file: str | None, known_variants_file: str |None) -> None:
 
     transcripts = read_transcripts(filter_file)
+
+    if annotation_file:
+        transcripts.update(read_transcripts(annotation_file))
+
+    if known_variants_file:
+        transcripts.update(known_variants(known_variants_file))
+
     results = create_mapping(gtf_file, transcripts)
 
     # Make sure we didn't miss any transcripts
@@ -104,6 +128,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--filter-file", help="File with filter criteria", required=True
     )
+    parser.add_argument("--annotation-file", help="File with annotation criteria")
+    parser.add_argument("--known-variants", help="File with known variants")
 
     args = parser.parse_args()
-    main(args.gtf, args.filter_file)
+    main(args.gtf, args.filter_file, args.annotation_file, args.known_variants)
