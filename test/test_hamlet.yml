@@ -184,8 +184,8 @@
     # Test the hamlet_table.py utility script
     - path: variant.tsv
       contains:
-        - "sample\tgene\tCHROM\tPOS"
-        - "SRR8615409\tFLT3\tchr13\t28034117"
+        - "sample\tgene_name\thgvsc\thgvsp"
+        - "SRR8615409\tFLT3\tENST00000241453:c.1772_1801dup"
     - path: fusion.tsv
       contains:
         - "sample\tgene1\tgene2"

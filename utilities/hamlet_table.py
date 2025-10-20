@@ -110,102 +110,39 @@ def print_expression_table(json_files, write=print):
 def print_variant_table(json_files, write=print):
     """Print variant table"""
 
-    def parse_genes_v1(_, genes):
-        """Parse HAMLET variant results in v1 format"""
-        for gene in genes:
-            for variant in genes[gene]:
-                yield variant
+    # Print the header
+    header = "sample gene_name hgvsc hgvsp hgvsg database vaf exon annotation ref_depth alt_depth total_depth".split()
+    write(*header, sep="\t")
 
-    def parse_genes_v2(sample, genes):
-        """Parse HAMLET variant results in V2 format"""
-        for gene, variants in genes.items():
-            for variant in variants:
-                for transcript_consequence in variant["transcript_consequences"]:
-                    values = parse_variant(sample, gene, variant)
-                    # Copy over hgvs
-                    for field in ["hgvsc", "hgvsp", "impact"]:
-                        values[field] = transcript_consequence.get(field, "")
-                    # Copy over consequence terms
-                    values["consequence_terms"] = ",".join(
-                        transcript_consequence["consequence_terms"]
-                    )
-                    # Throw out the 'input' field, since that is just the VCF
-                    # information again
-                    values.pop("input")
-                    yield values
-
-    def parse_colocated_variants(coloc):
-        return ",".join((var["id"] for var in coloc))
-
-    def parse_variant(sample, gene, variant):
-        """Parse a single variant"""
-        var = dict()
-        var["sample"] = sample
-        var["gene"] = gene
-
-        # Add headers for the VCF fields
-        vcf_header = "CHROM POS ID REF ALT QUAL FILTER INFO FORMAT FORMAT_DATA".split()
-        var.update(
-            {
-                field: value
-                for field, value in zip(vcf_header, variant["input"].split("\t"))
-            }
-        )
-
-        # Copy over all simple values
-        for field in variant:
-            if isinstance(variant[field], (str, float, int)):
-                var[field] = variant[field]
-
-        # Copy over all colocated variants
-        var["colocated_variants"] = parse_colocated_variants(
-            variant.get("colocated_variants", list())
-        )
-
-        return var
-
-    # The headers in the csv file are based on the json output
-    header = None
-
-    # Process every json file
     for fname in json_files:
         with open(fname) as fin:
-            data = json.load(fin)
+            js = json.load(fin)
 
-        # See if the data is from HAMLET 1.0 or 2.0
-        if "modules" in data:  # HAMLET 2.0
-            genes = data["modules"]["snv_indels"]["genes"]
-            parse = parse_genes_v2
-        elif "results" in data:  # HAMLET 1.0
-            genes = data["results"]["var"]["overview"]
-            parse = parse_genes_v1
+        genes = js["modules"]["snv_indels"]["genes"]
+        for gene, variants in genes.items():
+            for variant in variants:
+                # Dict to store all the column values we will print
+                ref, alt = variant["FORMAT"]["AD"].split(",")
 
-        # Extract the sample name
-        sample = data["metadata"]["sample_name"]
+                db_ids = ",".join((var["id"] for var in variant.get("colocated_variants", [])))
+                to_print = {
+                    "sample": sample_name(js),
+                    "gene_name": gene,
+                    "total_depth":  variant["FORMAT"]["DP"],
+                    "vaf": variant["FORMAT"]["AF"],
+                    "ref_depth": ref,
+                    "alt_depth": alt,
+                    "database": db_ids
+                }
 
-        # Print the headers if this is the first time
-        # Next print every variant line
-        for var_line in parse(sample, genes):
-            if header is None:
-                header = get_fields(var_line)
-                write(*header, sep="\t")
-            else:
-                current_keys = get_fields(var_line)
-                if current_keys != header:
-                    msg = f"\n{current_keys}\n{header}\n do not match!"
-                    raise RuntimeError(msg)
-            write(*(var_line[field] for field in header), sep="\t")
+                for transcript in variant["transcript_consequences"]:
+                    to_print["hgvsc"] = transcript.get("hgvsc", "")
+                    to_print["hgvsp"] = transcript.get("hgvsp", "")
+                    to_print["hgvsg"] = transcript.get("hgvsg", "")
 
-
-def get_fields(var_line):
-    fields = list(var_line.keys())
-    # minimised is not set for every variant, so we remove it
-    try:
-        fields.remove("minimised")
-    except ValueError:
-        pass
-    return fields
-
+                    to_print["exon"] = transcript.get("exon", "")
+                    to_print["annotation"] = transcript.get("annotation", "")
+                write(*(to_print[field] for field in header), sep="\t")
 
 def print_fusion_table(json_files, write=print):
     """Print fusion table"""
