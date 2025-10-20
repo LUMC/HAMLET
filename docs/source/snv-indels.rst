@@ -21,6 +21,32 @@ The variants annotated by VEP are then filtered based on a number of different c
 
 Picard is used to generate various alignment statistics.
 
+Variant annotations
+-------------------
+By default, HAMLET comes with variant filters and annotations which are tuned towards diagnosing AML. When using the default variant filters and annotations, HAMLET uses the following definitions:
+
+.. list-table:: Configuration options
+  :widths: 30 70
+  :header-rows: 1
+
+  * - Annotation
+    - Definition
+  * - Known pathogenic
+    - This variant is known to cause AML
+  * - Pathogenic
+    - All evidence point to this variant being pathogenic for AML
+  * - Likely pathogenic
+    - This variant should be considered pathogenic, unless there is evidence to
+      the contrary (*e.g.* it is a known benign variant)
+  * - Possible pathogenic
+    - This variant should **not** be considered pathogenic, unless there is
+      additional evidence (*e.g.* it is a known pathogenic variant)
+  * - Discard
+    - This variant should not be considere pathogenic
+  * - Artifact
+    - This variant is most likely an artifact produced by the pipeline, *i.e.*
+      the variant is not truly present in the sample
+
 Input
 -----
 The input for this module is a single pair of FastQ files per sample, specified in a PEP configuration file, as is shown below.
