@@ -1,16 +1,13 @@
 gene_name	transcript_id	consequence	start	end	frame	annotation
 NPM1	ENST00000296930.10	frameshift_variant	860	875	1	pathogenic
-NPM1	ENST00000296930.10					discard
 FLT3	ENST00000241453.12	missense_variant	2491	2526		likely pathogenic (FLT3-TKD)
 FLT3	ENST00000241453.12	inframe_insertion	2491	2526		likely pathogenic (FLT3-TKD)
 FLT3	ENST00000241453.12	inframe_deletion	2491	2526		likely pathogenic (FLT3-TKD)
 FLT3	ENST00000241453.12	inframe_insertion	1705	1942		likely pathogenic (FLT3-ITD)
-FLT3	ENST00000241453.12					discard
 CEBPA	ENST00000498907.3	inframe_deletion	814	1077		pathogenic (bZIP inframe)
 CEBPA	ENST00000498907.3	inframe_insertion	814	1077		pathogenic (bZIP inframe)
 ASXL1	ENST00000375687.10	stop_gained	1720	4626		pathogenic
 ASXL1	ENST00000375687.10	frameshift_variant	1720	4626		pathogenic
-ASXL1	ENST00000375687.10					discard
 BCOR	ENST00000378444.9	frameshift_variant				pathogenic
 BCOR	ENST00000378444.9	stop_gained				pathogenic
 BCOR	ENST00000378444.9	stop_lost				pathogenic
@@ -48,7 +45,6 @@ SF3B1	ENST00000335508.11	stop_lost				discard
 SRSF2	ENST00000359995.10	missense_variant	283	284		pathogenic
 SRSF2	ENST00000359995.10	inframe_insertion	283	284		pathogenic
 SRSF2	ENST00000359995.10	inframe_deletion	283	284		pathogenic
-SRSF2	ENST00000359995.10					discard
 STAG2	ENST00000371145.8	frameshift_variant				pathogenic
 STAG2	ENST00000371145.8	start_lost				pathogenic
 STAG2	ENST00000371145.8	stop_gained				pathogenic
@@ -61,7 +57,6 @@ U2AF1	ENST00000291552.9	inframe_deletion	100	105		possible pathogenic
 U2AF1	ENST00000291552.9	missense_variant	466	477		possible pathogenic
 U2AF1	ENST00000291552.9	inframe_insertion	466	477		possible pathogenic
 U2AF1	ENST00000291552.9	inframe_deletion	466	477		possible pathogenic
-U2AF1	ENST00000291552.9					discard
 ZRSR2	ENST00000307771.8	frameshift_variant				pathogenic
 ZRSR2	ENST00000307771.8	start_lost				pathogenic
 ZRSR2	ENST00000307771.8	stop_gained				pathogenic
@@ -104,18 +99,15 @@ KIT	ENST00000288135.6	stop_lost				discard
 BRAF	ENST00000646891.2	missense_variant	1768	1845		possible pathogenic
 BRAF	ENST00000646891.2	inframe_deletion	1768	1845		possible pathogenic
 BRAF	ENST00000646891.2	inframe_insertion	1768	1845		possible pathogenic
-BRAF	ENST00000646891.2					discard
 CALR	ENST00000316448.10	frameshift_variant	1090	1110	2	pathogenic (type-1 (like)
 CALR	ENST00000316448.10	frameshift_variant	1141	1251	2	pathogenic (type-2 (like)
 CALR	ENST00000316448.10	frameshift_variant	1111	1140	2	pathogenic (other)
-CALR	ENST00000316448.10					discard
 CBL	ENST00000264033.6		1096-2	1431+2		possible pathogenic (RING fingers)
 CSF3R	ENST00000373103.5	frameshift_variant	2041	2592		pathogenic (exon 17 truncating)
 CSF3R	ENST00000373103.5	stop_gained	2041	2592		pathogenic (exon 17 truncating)
 CSF3R	ENST00000373103.5	stop_lost	2041	2592		pathogenic (exon 17 truncating)
 CSF3R	ENST00000373103.5	missense_variant	1724	1864		possible pahtogenic (exon 14 activating)
 CSF3R	ENST00000373103.5		1724	1864		possible pathogenic
-CSF3R	ENST00000373103.5					discard
 DNMT3A	ENST00000321117.10	missense_variant	2644	2645		pathogenic
 DNMT3A	ENST00000321117.10	missense_variant				possible pathogenic
 DNMT3A	ENST00000321117.10	inframe_deletion				possible pathogenic
@@ -170,7 +162,6 @@ PTPN11	ENST00000351677.7	frameshift_variant				discard
 PTPN11	ENST00000351677.7	stop_gained				discard
 PTPN11	ENST00000351677.7	stop_lost				discard
 SETBP1	ENST00000649279.2	missense_variant	2548	2730		possible pathogenic
-SETBP1	ENST00000649279.2					discard
 TET2	ENST00000380013.9	frameshift_variant				pathogenic
 TET2	ENST00000380013.9	start_lost				pathogenic
 TET2	ENST00000380013.9	stop_gained				pathogenic
