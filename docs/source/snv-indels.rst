@@ -32,7 +32,7 @@ By default, HAMLET comes with variant filters and annotations which are tuned to
   * - Annotation
     - Definition
   * - Known pathogenic
-    - This variant is known to cause AML
+    - This variant is known to be associated with AML
   * - Pathogenic
     - All evidence point to this variant being pathogenic for AML
   * - Likely pathogenic
