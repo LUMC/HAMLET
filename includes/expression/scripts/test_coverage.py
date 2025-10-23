@@ -2,7 +2,7 @@ import pysam
 import pytest
 import dataclasses
 
-from typing import Any
+from typing import Any, Sequence, cast
 
 from coverage import orientation_first
 
@@ -26,11 +26,13 @@ def to_pysam_read(
     fake_read: FakeRead, header: pysam.AlignmentHeader
 ) -> pysam.AlignedSegment:
     dataclass_dict = dataclasses.asdict(fake_read)
-    return pysam.AlignedSegment.from_dict(dataclass_dict, header)
+    return cast(
+        pysam.AlignedSegment, pysam.AlignedSegment.from_dict(dataclass_dict, header)
+    )
 
 
 @pytest.fixture
-def reads():
+def reads() -> list[pysam.AlignedSegment]:
 
     reads = [
         # paired, proper pair, mate reverse, first in pair
@@ -50,7 +52,7 @@ def reads():
     return [to_pysam_read(read, H) for read in reads]
 
 
-def test_true(reads):
+def test_true(reads: Sequence[pysam.AlignedSegment]) -> None:
     assert True
 
     # Orientation of the first read of the pair, for the reads in the fixture

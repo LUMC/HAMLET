@@ -2,9 +2,13 @@
 
 import argparse
 import json
+from typing import Sequence
+
+ExpressionType = dict[str, str]
+PerSampleExpression = dict[str, ExpressionType]
 
 
-def read_expression(fname, strand):
+def read_expression(fname: str, strand: str) -> ExpressionType:
     """Read the expression data from the correct column for the specified strand"""
     columns = {"unstranded": 1, "forward": 2, "reverse": 3}
     column = columns[strand]
@@ -18,7 +22,9 @@ def read_expression(fname, strand):
     return expression
 
 
-def read_data(samples, countfiles, strandedness):
+def read_data(
+    samples: Sequence[str], countfiles: Sequence[str], strandedness: Sequence[str]
+) -> PerSampleExpression:
     """Read the data for every sample"""
     data = dict()
     for sample, fname, strand in zip(samples, countfiles, strandedness):
@@ -26,7 +32,7 @@ def read_data(samples, countfiles, strandedness):
     return data
 
 
-def write_cell_types(sample_json):
+def write_cell_types(sample_json: Sequence[str]) -> None:
     outfile = "merged_expression_cell_types_mqc.tsv"
     url = "https://github.com/eonurk/seAMLess"
 
@@ -59,7 +65,12 @@ def write_cell_types(sample_json):
             print(*(data[field] for field in header), sep="\t", file=fout)
 
 
-def main(samples, countfiles, strandedness, sample_json):
+def main(
+    samples: Sequence[str],
+    countfiles: Sequence[str],
+    strandedness: Sequence[str],
+    sample_json: Sequence[str],
+) -> None:
     # Read all the data
     data = read_data(samples, countfiles, strandedness)
 
@@ -79,7 +90,7 @@ def main(samples, countfiles, strandedness, sample_json):
     write_cell_types(sample_json)
 
 
-def write_multiqc(data, strand):
+def write_multiqc(data: PerSampleExpression, strand: str) -> None:
     outfile = f"merged_expression_{strand}_mqc.tsv"
 
     with open(outfile, "wt") as fout:

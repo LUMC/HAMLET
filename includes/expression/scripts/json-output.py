@@ -7,25 +7,29 @@ from pathlib import Path
 from multiqc import read_expression
 
 
-def parse_deconvolution(fname):
+def parse_deconvolution(fname: str) -> dict[str, float]:
     with open(fname) as fin:
         header = next(fin).strip("\n").replace('"', "").split(",")[1:]
-        data = next(fin).strip("\n").split(",")
-        data = [float(x) for x in data[1:]]
+        spline = next(fin).strip("\n").split(",")
+        data = [float(x) for x in spline[1:]]
 
         assert len(data) == len(header)
         d = {k: v for k, v in zip(header, data)}
     return d
 
 
-def parse_amlmapr(fname):
+AMLmapRType = dict[str, str | float | bool]
+
+
+def parse_amlmapr(fname: str) -> AMLmapRType:
     with open(fname) as fin:
         header = next(fin).strip("\n").replace('"', "").split(",")
         data = next(fin).strip("\n").replace('"', "").split(",")
 
-    fix_type = []
+    fix_type: list[str | float | bool] = []
 
     # Convert to float
+    value: float | str
     for x in data:
         try:
             value = float(x)
@@ -39,7 +43,7 @@ def parse_amlmapr(fname):
     return {k: v for k, v in zip(header, fix_type)}
 
 
-def main(args):
+def main(args: argparse.Namespace) -> None:
     """Create json output of expression results"""
 
     # Create results dictionary
