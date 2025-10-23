@@ -94,9 +94,9 @@ class VEP(dict[str, Any]):
             if hgvsc is None:
                 continue
 
-            # If the variant does not match the inclusion criteria, we do nothing
             variant = Variant(hgvsc, transcript["consequence_terms"])
 
+            # If the variant does not match the inclusion criteria, we do nothing
             for criteria in inclusion:
                 if criteria.match(variant):
                     filtered.append(transcript)
