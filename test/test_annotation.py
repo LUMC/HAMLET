@@ -13,7 +13,7 @@ HOTSPOTS = [
 
 @pytest.mark.workflow("test-snv-indels-chrM")
 @pytest.mark.parametrize("pos, annotation", HOTSPOTS)
-def test_annotation(workflow_dir, pos, annotation):
+def test_annotation(workflow_dir: str, pos: int, annotation: str) -> None:
     sample = "SRR8615409"
     output_file = pathlib.Path(
         workflow_dir, f"{sample}/snv-indels/{sample}.vep.annotated.txt.gz"

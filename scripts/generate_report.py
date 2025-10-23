@@ -5,7 +5,7 @@ import os
 from datetime import datetime as dt
 from pathlib import Path
 from tempfile import NamedTemporaryFile as NTF
-from typing import Optional
+from typing import Any, Dict, List, Optional
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -15,7 +15,7 @@ class Report(object):
 
     def __init__(
         self,
-        summaryd: dict,
+        summaryd: Dict[str, Any],
         tpl_dir: str = "templates",
         imgs_dir: str = "assets/img",
         cover_tpl_fname: str = "cover.html.j2",
@@ -27,7 +27,7 @@ class Report(object):
         footer_line: bool = True,
         footer_lcaption: Optional[str] = None,
         footer_rcaption: Optional[str] = None,
-        pdfkit_opts: Optional[dict] = None,
+        pdfkit_opts: Optional[Dict[str, Any]] = None,
         timestamp: Optional[dt] = None,
     ) -> None:
         sdm = summaryd["metadata"]
@@ -71,33 +71,33 @@ class Report(object):
             pdfkit_opts["footer-right"] = footer_rcaption.format(**hf_ctx)
         self.pdfkit_opts = pdfkit_opts
 
-        def show_int(value):
+        def show_int(value: Any) -> str:
             if value is None or value == "":
                 return "?"
             return "{:,d}".format(int(value))
 
-        def show_pct(value1, value2):
+        def show_pct(value1: Any, value2: Any) -> str:
             if value2 == 0:
                 return "undefined"
             elif any(v is None or v == "" for v in (value1, value2)):
                 return "?"
             return "{:,.2f}%".format(value1 * 100.0 / value2)
 
-        def show_float(value, spec=".3g"):
+        def show_float(value: Any, spec: str = ".3g") -> str:
             if value is None or value == "":
                 return "?"
             fmt = "{:," + spec + "}"
             return fmt.format(float(value))
 
-        def as_pct(value):
+        def as_pct(value: Any) -> str:
             if value is None or value == "":
                 return "?"
             return "{:,.2f}%".format(float(value) * 100.0)
 
-        def num_tids(idm):
+        def num_tids(idm: Any) -> int:
             return sum([len(v["transcript_ids"]) for v in idm])
 
-        def gene_rows(gene):
+        def gene_rows(gene: Any) -> int:
             """Determine how many rows a gene should span
 
             The number of rows for a gene is determined by two factors:
@@ -109,7 +109,7 @@ class Report(object):
                 rows += len(variant["transcript_consequences"])
             return rows
 
-        def database_url(identifier):
+        def database_url(identifier: str) -> str:
             """Turn a database identifier into the apropriate url
 
             If not known, return the identifier itself
@@ -121,7 +121,7 @@ class Report(object):
             else:
                 return identifier
 
-        def make_href(identifier):
+        def make_href(identifier: str) -> str:
             """Create a link for identifier"""
             url = database_url(identifier)
             # Don't know how to make an url
@@ -130,25 +130,25 @@ class Report(object):
             else:
                 return f"<a href={url}>{identifier}</a>"
 
-        def database_identifiers(item):
+        def database_identifiers(item: Any) -> List[str]:
             """Extract the id's from colocated variants"""
             ids = list()
             for known_var in item.get("colocated_variants", list()):
                 ids.append(make_href(known_var["id"]))
             return ids
 
-        def ref_AD(item):
+        def ref_AD(item: Any) -> int:
             """Extract the reference depth from the vardict FORMAT AD field"""
             ad = item["FORMAT"]["AD"]
             return int(ad.split(",")[0])
 
-        def alt_AD(item):
+        def alt_AD(item: Any) -> List[int]:
             """Extract the alt depth(s) from the vardcit FORMAT AD field"""
             ad = item["FORMAT"]["AD"]
             ref, *alt = ad.split(",")
             return [int(x) for x in alt]
 
-        def convert_img_to_base64(img_path):
+        def convert_img_to_base64(img_path: str) -> str:
             if not Path(img_path).exists():
                 raise ValueError(f"Unable to find file {img_path}")
             with open(img_path, "rb") as f:
@@ -175,7 +175,7 @@ class Report(object):
         self.cover_tpl = env.get_template(cover_tpl_fname)
         self.contents_tpl = env.get_template(contents_tpl_fname)
 
-    def write(self, html, pdf) -> None:
+    def write(self, html: str, pdf: str) -> None:
         """Writes the report to the given path."""
         toc = {"xsl-style-sheet": self.toc_fname}
         tmp_prefix = str(Path.cwd()) + "/"
@@ -215,7 +215,15 @@ class Report(object):
                 )
 
 
-def main(input_summary_path, css_path, templates_dir, imgs_dir, toc_path, html, pdf):
+def main(
+    input_summary_path: str,
+    css_path: str,
+    templates_dir: str,
+    imgs_dir: str,
+    toc_path: str,
+    html: str,
+    pdf: str,
+) -> None:
     """Script for generating PDF report of a sample analyzed with the Hamlet
     pipeline."""
     with open(input_summary_path) as src:

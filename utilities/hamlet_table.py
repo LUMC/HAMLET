@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 
 import argparse
+from collections.abc import Sequence
 import json
 import os
 import functools
+from typing import Any, Dict, cast
 
 
-def main(args):
-    functions = {
+def main(args: argparse.Namespace) -> None:
+    functions: Dict[str, Any] = {
         "variant": print_variant_table,
         "fusion": print_fusion_table,
         "itd": print_itd_table,
@@ -39,7 +41,7 @@ def main(args):
         raise NotImplementedError(args.table)
 
 
-def print_aml_subtype_table(json_files, write=print):
+def print_aml_subtype_table(json_files: Sequence[str], write: Any = print) -> None:
     header = None
     for js in json_files:
         with open(js) as fin:
@@ -57,7 +59,7 @@ def print_aml_subtype_table(json_files, write=print):
             write(*(subtype[field] for field in header), sep="\t")
 
 
-def print_celltype_table(json_files, write=print):
+def print_celltype_table(json_files: Sequence[str], write: Any = print) -> None:
     header = None
     for js in json_files:
         with open(js) as fin:
@@ -74,7 +76,7 @@ def print_celltype_table(json_files, write=print):
             )
 
 
-def print_expression_table(json_files, write=print):
+def print_expression_table(json_files: Sequence[str], write: Any = print) -> None:
     """Print gene expression table"""
     genes = None
     for js in json_files:
@@ -107,7 +109,7 @@ def print_expression_table(json_files, write=print):
             write(*row, sep="\t")
 
 
-def print_variant_table(json_files, write=print):
+def print_variant_table(json_files: Sequence[str], write: Any = print) -> None:
     """Print variant table"""
 
     # Print the header
@@ -147,7 +149,7 @@ def print_variant_table(json_files, write=print):
                 write(*(to_print[field] for field in header), sep="\t")
 
 
-def print_fusion_table(json_files, write=print):
+def print_fusion_table(json_files: Sequence[str], write: Any = print) -> None:
     """Print fusion table"""
     header = [
         "sample",
@@ -200,12 +202,14 @@ def print_fusion_table(json_files, write=print):
             write(*(fusion[key] for key in header), sep="\t")
 
 
-def sample_name(data):
-    return data["metadata"]["sample_name"]
+def sample_name(data: Dict[str, Any]) -> str:
+    return cast(str, data["metadata"]["sample_name"])
 
 
-def print_itd_table(json_files, itd_gene, write=print):
-    def join_list(positions):
+def print_itd_table(
+    json_files: Sequence[str], itd_gene: str, write: Any = print
+) -> None:
+    def join_list(positions: Sequence[Any]) -> Any:
         """Join a list of positions
 
         Also handle the case where we don't get a list at all
@@ -242,7 +246,7 @@ def print_itd_table(json_files, itd_gene, write=print):
             else:
                 new_header = list(event.keys())
                 if new_header != header:
-                    raise RuntimError()
+                    raise RuntimeError()
             write(*(event[field] for field in header), sep="\t")
 
 

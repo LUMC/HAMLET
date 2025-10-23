@@ -3,12 +3,12 @@
 import sys
 
 
-def unplaced(chrom):
+def unplaced(chrom: str) -> bool:
     """Guess if a chromosome is unplaced, from the name"""
     return chrom.startswith("GL") or chrom.startswith("KI")
 
 
-def main():
+def main() -> None:
     refflat = sys.argv[1]
 
     # Put the gene name in the first column

@@ -2,29 +2,33 @@
 
 import functools
 import sys
+from typing import Any
 from release_notes import changelog_by_release
 import pytest
 from collections import OrderedDict
 import copy
 
 
+Changelog = OrderedDict[str, Any]
+
+
 @pytest.fixture()
-def changelog():
+def changelog() -> Changelog:
     return OrderedDict({"v1.0-dev": ["changes"], "v0.9": ["older", "changes"]})
 
 
-def test_set_new_version(changelog):
+def test_set_new_version(changelog: Changelog) -> None:
     new = set_version(changelog, "v2.0")
     assert next(iter(new)) == "v2.0"
 
 
-def test_unset_dev(changelog):
+def test_unset_dev(changelog: Changelog) -> None:
     new = set_version(changelog, "v1.0")
     assert next(iter(new)) == "v1.0"
     assert len(new) == 2
 
 
-def test_set_existing_version(changelog):
+def test_set_existing_version(changelog: Changelog) -> None:
     new = set_version(changelog, "v1.0-dev")
     latest_version, changes = next(iter(new.items()))
 
@@ -32,7 +36,7 @@ def test_set_existing_version(changelog):
     assert changes == ["changes"]
 
 
-def set_version(changelog: OrderedDict, version: str) -> OrderedDict:
+def set_version(changelog: Changelog, version: str) -> Changelog:
     """Set version of the ordered dict
 
     Either by adding a new entry, or removing -dev from the latest entry
@@ -53,7 +57,7 @@ def set_version(changelog: OrderedDict, version: str) -> OrderedDict:
     return new
 
 
-def set_version_changelog(new_version) -> None:
+def set_version_changelog(new_version: str) -> None:
     changelog = "CHANGELOG.rst"
     releases = changelog_by_release(changelog)
     new = set_version(releases, new_version)
@@ -84,7 +88,7 @@ def set_version_changelog(new_version) -> None:
             write()
 
 
-def set_version_hamlet(version):
+def set_version_hamlet(version: str) -> None:
     hamlet = "common.smk"
     with open(hamlet) as fin:
         lines = fin.readlines()
@@ -97,7 +101,7 @@ def set_version_hamlet(version):
                 write(line, end="")
 
 
-def set_version_docs(version) -> str:
+def set_version_docs(version: str) -> None:
     config = "docs/source/conf.py"
     with open(config) as fin:
         lines = fin.readlines()

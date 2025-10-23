@@ -4,6 +4,7 @@ import argparse
 import functools
 import json
 import os
+from typing import Any, Dict
 
 
 fusion_partners = [
@@ -85,19 +86,19 @@ ARRIBA_VERSION = "v2.5.1"
 GTF_VERSION = "115"
 
 
-def get_qc_config():
+def get_qc_config() -> Dict[str, str]:
     return {"forward_adapter": "AGATCGGAAGAG", "reverse_adapter": "AGATCGGAAGAG"}
 
 
-def get_reference(dirname):
+def get_reference(dirname: str) -> str:
     return os.path.join(dirname, "GCA_000001405.15_GRCh38_no_alt_analysis_set.fna")
 
 
-def get_gtf(dirname):
+def get_gtf(dirname: str) -> str:
     return os.path.join(dirname, f"Homo_sapiens.GRCh38.{GTF_VERSION}.chr.gtf")
 
 
-def get_itd_config(dirname):
+def get_itd_config(dirname: str) -> Dict[str, Any]:
     return {
         "fasta": os.path.join(dirname, "itd/itd_genes.fa"),
         "flt3_name": "FLT3-001",
@@ -109,7 +110,7 @@ def get_itd_config(dirname):
     }
 
 
-def get_fusion_config(dirname):
+def get_fusion_config(dirname: str) -> Dict[str, str]:
     join = functools.partial(os.path.join, dirname)
     return {
         "genome_fasta": get_reference(dirname),
@@ -126,7 +127,7 @@ def get_fusion_config(dirname):
     }
 
 
-def get_snv_indels_config(dirname):
+def get_snv_indels_config(dirname: str) -> dict[str, Any]:
     join = functools.partial(os.path.join, dirname)
     return {
         "annotation_criteria": join("annotation_criteria.tsv"),
@@ -145,7 +146,7 @@ def get_snv_indels_config(dirname):
     }
 
 
-def get_expression_config(dirname):
+def get_expression_config(dirname: str) -> dict[str, Any]:
     d = {
         "housekeeping": housekeeping_genes,
         "gtf": get_gtf(dirname),
@@ -157,7 +158,7 @@ def get_expression_config(dirname):
     return d
 
 
-def main(dirname, module):
+def main(dirname: str, module: str) -> None:
     # Get the absolute path to the root reference folder
     dirname = os.path.abspath(dirname)
 

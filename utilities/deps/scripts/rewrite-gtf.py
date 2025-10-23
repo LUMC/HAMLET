@@ -3,7 +3,7 @@
 import sys
 
 
-def main():
+def main() -> None:
     infile = sys.argv[1]
 
     # How to rename the regular chromosomes

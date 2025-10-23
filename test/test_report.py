@@ -1,9 +1,10 @@
+from typing import Dict, Iterator, List
 import pytest
 import bs4
 import base64
 
 
-def get_rows(table):
+def get_rows(table: bs4.element.Tag) -> Iterator[List[str]]:
     """Get rows from table, supports rowspan in the first column only"""
     # To deal with rowspan
     rowspan = None
@@ -26,7 +27,7 @@ def get_rows(table):
         yield text
 
 
-def parse_table(table):
+def parse_table(table: bs4.element.Tag) -> List[Dict[str, str]]:
     """Convert a table to a list of dicts"""
     data = list()
     # Get the headers
@@ -39,14 +40,14 @@ def parse_table(table):
     return data
 
 
-def convert_image_to_base64(img_path):
+def convert_image_to_base64(img_path: str) -> str:
     with open(img_path, "rb") as f:
         b64_bytes = base64.b64encode(f.read())
     return b64_bytes.decode("utf-8")
 
 
 @pytest.mark.workflow("test-report")
-def test_variant_overview(workflow_dir):
+def test_variant_overview(workflow_dir: str) -> None:
     """Test the content of the variant overview
 
     The structure of the data that gets put in the variant overview is quite
@@ -74,7 +75,7 @@ def test_variant_overview(workflow_dir):
 
 
 @pytest.mark.workflow("test-report")
-def test_genes_in_order(workflow_dir):
+def test_genes_in_order(workflow_dir: str) -> None:
     """Test if genes in table 2 are in order"""
     report = f"{workflow_dir}/report.html"
     with open(report) as fin:
@@ -87,7 +88,7 @@ def test_genes_in_order(workflow_dir):
 
 
 @pytest.mark.workflow("test-report")
-def test_chr_location_exon(workflow_dir):
+def test_chr_location_exon(workflow_dir: str) -> None:
     """Test if the genomic HGVS and exons are in the table"""
     report = f"{workflow_dir}/report.html"
     with open(report) as fin:
@@ -112,7 +113,7 @@ def test_chr_location_exon(workflow_dir):
 
 
 @pytest.mark.workflow("test-report")
-def test_fusion_overview(workflow_dir):
+def test_fusion_overview(workflow_dir: str) -> None:
     """Test the content of the fusion overview"""
     report = f"{workflow_dir}/report.html"
     with open(report) as fin:
@@ -133,7 +134,7 @@ def test_fusion_overview(workflow_dir):
 
 
 @pytest.mark.workflow("test-report")
-def test_is_in_hotspot(workflow_dir):
+def test_is_in_hotspot(workflow_dir: str) -> None:
     report = f"{workflow_dir}/report.html"
     with open(report) as fin:
         soup = bs4.BeautifulSoup(fin, features="html.parser")
@@ -148,7 +149,7 @@ def test_is_in_hotspot(workflow_dir):
 
 
 @pytest.mark.workflow("test-report")
-def test_database_identifiers(workflow_dir):
+def test_database_identifiers(workflow_dir: str) -> None:
     report = f"{workflow_dir}/report.html"
     with open(report) as fin:
         soup = bs4.BeautifulSoup(fin, features="html.parser")
@@ -165,7 +166,7 @@ def test_database_identifiers(workflow_dir):
 
 
 @pytest.mark.workflow("test-full-report")
-def test_full_variant_overview(workflow_dir):
+def test_full_variant_overview(workflow_dir: str) -> None:
     """Test the content of the variant overview
 
     The structure of the data that gets put in the variant overview is quite
@@ -197,7 +198,7 @@ def test_full_variant_overview(workflow_dir):
 
 
 @pytest.mark.workflow("test-report-vardict")
-def test_full_variant_overview_vardict(workflow_dir):
+def test_full_variant_overview_vardict(workflow_dir: str) -> None:
     """Test the content of the variant overview from vardict"""
     report = f"{workflow_dir}/report.html"
     with open(report) as fin:
@@ -215,7 +216,7 @@ def test_full_variant_overview_vardict(workflow_dir):
 
 
 @pytest.mark.workflow("Test report expression genes")
-def test_variant_overview_expression(workflow_dir):
+def test_variant_overview_expression(workflow_dir: str) -> None:
     """Test the content of the variant overview
 
     The structure of the data that gets put in the variant overview is quite
@@ -244,7 +245,7 @@ def test_variant_overview_expression(workflow_dir):
 
 
 @pytest.mark.workflow("Test cell type and fusion images are embedded as base64 string")
-def test_base64_image_in_report(workflow_dir):
+def test_base64_image_in_report(workflow_dir: str) -> None:
     html_path = f"{workflow_dir}/report.html"
     imgs_path = [
         f"{workflow_dir}/SRR8615409/expression/seAMLess/cell-types.png",

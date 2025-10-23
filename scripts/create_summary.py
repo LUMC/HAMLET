@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 
 import argparse
+from io import TextIOWrapper
 import json
+from typing import Dict, List, Union
+
+IMD = Dict[str, Union[str, List[str]]]
 
 
-def parse_idm(fh):
-    idms = []
+def parse_idm(fh: TextIOWrapper) -> List[IMD]:
+    idms: List[IMD] = []
     for lineno, line in enumerate(fh):
         if lineno == 0:
             continue
@@ -15,7 +19,7 @@ def parse_idm(fh):
     return idms
 
 
-def main(args):
+def main(args: argparse.Namespace) -> None:
     """Helper script for combining multiple stats files into one JSON."""
     with open(args.id_mappings_path) as fin:
         idm = parse_idm(fin)
