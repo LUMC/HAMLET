@@ -3,13 +3,13 @@
 import argparse
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, List
 
 
-ITDresult = dict[str, Any]
+ITDresult = Dict[str, Any]
 
 
-def add_itd_table(csv_fname: str) -> list[ITDresult]:
+def add_itd_table(csv_fname: str) -> List[ITDresult]:
     rv = []
     with open(csv_fname, "r") as src:
         header_cols = next(src).strip().split("\t")

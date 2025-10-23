@@ -167,17 +167,11 @@ def get_normalizer_values(
     """Calculate the normalizer values for each strand"""
 
     # Exclude None values
-    unstranded = [
-        x for x in (STAR_counts[gene].unstranded for gene in genes) if x is not None
-    ]
-    forward = [
-        x for x in (STAR_counts[gene].forward for gene in genes) if x if x is not None
-    ]
-    reverse = [
-        x for x in (STAR_counts[gene].reverse for gene in genes) if x if x is not None
-    ]
+    unstranded = [STAR_counts[gene].unstranded for gene in genes]
+    forward = [STAR_counts[gene].forward for gene in genes]
+    reverse = [STAR_counts[gene].reverse for gene in genes]
 
-    return Coverage(median(unstranded), median(forward), median(reverse))
+    return Coverage(median(unstranded), median(forward), median(reverse))  # type: ignore
 
 
 def main(

@@ -3,6 +3,7 @@
 import json
 import argparse
 from pathlib import Path
+from typing import Union
 
 from multiqc import read_expression
 
@@ -18,7 +19,7 @@ def parse_deconvolution(fname: str) -> dict[str, float]:
     return d
 
 
-AMLmapRType = dict[str, str | float | bool]
+AMLmapRType = dict[str, Union[str, float, bool]]
 
 
 def parse_amlmapr(fname: str) -> AMLmapRType:
@@ -26,10 +27,10 @@ def parse_amlmapr(fname: str) -> AMLmapRType:
         header = next(fin).strip("\n").replace('"', "").split(",")
         data = next(fin).strip("\n").replace('"', "").split(",")
 
-    fix_type: list[str | float | bool] = []
+    fix_type: list[Union[str, float, bool]] = []
 
     # Convert to float
-    value: float | str
+    value: Union[float, str]
     for x in data:
         try:
             value = float(x)

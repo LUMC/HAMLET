@@ -251,4 +251,4 @@
   tags:
     - sanity
     - expression
-  command: black --check includes/expression/
+  command: mypy --strict includes/expression/
