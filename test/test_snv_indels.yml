@@ -235,6 +235,13 @@
     - snv-indels
   command: black --check includes/snv-indels/
 
+# - name: mypy-snv-indels
+#   tags:
+#     - sanity
+#     - snv-indels
+#   command: mypy --strict includes/snv-indels/
+
+
 - name: test-snv-indels-sample-with-space
   tags:
     - sanity

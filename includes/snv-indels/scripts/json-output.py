@@ -2,15 +2,17 @@
 
 import argparse
 import gzip
+from io import TextIOWrapper
 import json
 import csv
 from pathlib import Path
 from collections import defaultdict
+from typing import Any, DefaultDict, Sequence, cast
 
 from crimson import picard, vep
 
 
-def process_aln_stats(path):
+def process_aln_stats(path: str) -> dict[str, Any]:
     pd = picard.parse(path)
     raw = next(x for x in pd["metrics"]["contents"] if x["CATEGORY"] == "PAIR")
 
@@ -35,7 +37,7 @@ def process_aln_stats(path):
     }
 
 
-def process_rna_stats(path):
+def process_rna_stats(path: str) -> dict[str, Any]:
     pd = picard.parse(path)
     raw = pd["metrics"]["contents"]
     cov_sort_key = lambda x: x["normalized_position"]
@@ -72,7 +74,7 @@ def process_rna_stats(path):
     }
 
 
-def process_insert_stats(path):
+def process_insert_stats(path: str) -> dict[str, Any]:
     pd = picard.parse(path)
     raw = pd["metrics"]["contents"]
     # Raw can be a list if there are more than one PAIR_ORIENTATION.
@@ -86,7 +88,7 @@ def process_insert_stats(path):
     }
 
 
-def process_var_stats(path):
+def process_var_stats(path: str) -> dict[str, Any]:
     pd = vep.parse(path)
 
     # If there are no variants, insert an empty defaultdict so that any queried
@@ -121,13 +123,14 @@ def process_var_stats(path):
     }
 
 
-def process_exon_cov_stats(path, idm):
+IDM = dict[str, str|list[str]]
+def process_exon_cov_stats(path: str, idm: Sequence[IDM]) -> dict[str, Any]:
     with open(path, "r") as src:
         raw = json.load(src)
 
     tid_map = {item["gene_symbol"]: set(item["transcript_ids"]) for item in idm}
 
-    tempd = {}
+    tempd: dict[str, Any]= {}
     for val in raw.values():
         gene = val.pop("gx")
         if gene not in tempd:
@@ -150,7 +153,7 @@ def process_exon_cov_stats(path, idm):
     }
 
 
-def post_process(cs):
+def post_process(cs: Any) -> Any:
     cs["aln"]["num_total_bases"] = cs["rna"].pop("num_total_bases")
     pct_bases_aln = (
         cs["aln"]["num_aligned_bases"] * 100.0 / cs["aln"]["num_total_bases"]
@@ -159,8 +162,8 @@ def post_process(cs):
     return cs
 
 
-def parse_idm(fh):
-    idms = []
+def parse_idm(fh: TextIOWrapper) -> list[IDM]:
+    idms: list[IDM] = []
     for lineno, line in enumerate(fh):
         if lineno == 0:
             continue
@@ -170,44 +173,46 @@ def parse_idm(fh):
     return idms
 
 
-def idf_to_gene_symbol(id_mapping):
+def idf_to_gene_symbol(id_mapping: Sequence[IDM]) -> dict[str, str]:
     """Convert id_mapping to gene_id, gene_symbol lookup dict"""
     d = dict()
 
     for m in id_mapping:
-        gene_id = m["gene_id"]
-        symbol = m["gene_symbol"]
+        gene_id = cast(str, m["gene_id"])
+        symbol = cast(str, m["gene_symbol"])
         d[gene_id] = symbol
 
     return d
 
-
-def update_variant_overview(mapping, vep, overview):
+VEP = dict[str, Any]
+def update_variant_overview(mapping: dict[str, str], vep: VEP, overview: DefaultDict[str, list[VEP]]) -> None:
     """Add the vep entry to overview"""
     symbol = get_gene_symbol(vep, mapping)
     overview[symbol].append(vep)
 
 
-def get_gene_symbol(vep, mapping):
+def get_gene_symbol(vep: VEP, mapping: dict[str, str]) -> str:
     """Determine the gene symbol from a VEP object"""
     consequences = vep.get("transcript_consequences")
+    assert consequences is not None
     gene_id = get_gene_id(consequences[0])
     return mapping[gene_id]
 
 
-def get_gene_id(consequence):
+def get_gene_id(consequence: dict[str, str]) -> str:
     """Extract the gene_id from a VEP transcript_consequnce"""
     return consequence["gene_id"]
 
 
-def add_variant_overview(idm, fn_csv):
+VariantOverview = dict[str, Any]
+def add_variant_overview(idm: Sequence[IDM], fn_csv: str) -> VariantOverview:
     idms = set([])
     for item in idm:
         gsym = item["gene_symbol"]
         assert gsym not in idms, item
         idms.add(gsym)
 
-    rv = {}
+    rv: VariantOverview = {}
     with open(fn_csv, "r") as src:
         reader = csv.DictReader(src)
         for row in reader:
@@ -257,10 +262,10 @@ def add_variant_overview(idm, fn_csv):
     return rv
 
 
-def group_variants(id_mapping, vep_txt):
+def group_variants(id_mapping: Sequence[IDM], vep_txt: str) -> DefaultDict[str, list[VEP]]:
     """Group variants by gene symbol"""
     mapping = idf_to_gene_symbol(id_mapping)
-    overview = defaultdict(list)
+    overview: DefaultDict[str, list[VEP]] = defaultdict(list)
     with gzip.open(vep_txt, "rt") as fin:
         for line in fin:
             js = json.loads(line)
@@ -271,13 +276,13 @@ def group_variants(id_mapping, vep_txt):
     return overview
 
 
-def get_info(vcf):
+def get_info(vcf: str) -> dict[str, str]:
     """Create an INFO dict from a vcf line"""
     split = vcf.strip().split("\t")
     return dict((pair.split("=") for pair in split[7].split(";")))
 
 
-def get_format(vcf):
+def get_format(vcf: str) -> dict[str, str]:
     """Create a FORMAT dict from a vcf line"""
     split = vcf.strip().split("\t")
     format_fields = split[8].split(":")
@@ -286,15 +291,15 @@ def get_format(vcf):
 
 
 def main(
-    id_mappings_path,
-    vep_txt,
-    aln_stats_path,
-    rna_stats_path,
-    insert_stats_path,
-    exon_cov_stats_path,
-    vep_stats_path,
-    sample_name,
-):
+    id_mappings_path: str,
+    vep_txt: str,
+    aln_stats_path: str,
+    rna_stats_path: str,
+    insert_stats_path: str,
+    exon_cov_stats_path: str,
+    vep_stats_path: str,
+    sample_name: str,
+) -> None:
     """Helper script for combining multiple stats files into one JSON."""
     with open(id_mappings_path) as fin:
         idm = parse_idm(fin)

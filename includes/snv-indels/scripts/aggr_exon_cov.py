@@ -5,7 +5,7 @@ import json
 import sys
 import statistics as stats
 from collections import namedtuple
-from typing import Dict, Iterable, Optional, TextIO, Tuple
+from typing import Any, Dict, Iterable, Optional, TextIO, Tuple
 
 
 class Row(
@@ -92,7 +92,7 @@ def group_per_exon(
     cov_limits: Iterable[int] = (8, 10, 20, 30, 40, 50),
 ):
     idms = {} if idm_fh is None else parse_idm(idm_fh)
-    grouped = {}
+    grouped: dict[tuple[str, int], dict[str, Any]] = {}
 
     def include_row(row):
         if idms:

@@ -4,7 +4,7 @@ import sys
 
 
 class Bed:
-    def __init__(self, chrom, start, end):
+    def __init__(self: Bed, chrom:str, start:str, end: str) -> None:
         self.chrom = chrom
         self.start = int(start)
         self.end = int(end)
@@ -17,14 +17,14 @@ class Bed:
     #     size = self.size
     #     return f"Bed({chrom=}, {start=}, {end=}, {size=})"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.chrom}\t{self.start}\t{self.end}"
 
-    def __gt__(self, other):
+    def __gt__(self, other: Bed) -> bool:
         return self.size > other.size
 
 
-def main():
+def main() -> None:
     # Read all bed records
     records = list()
     for line in sys.stdin:

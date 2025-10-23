@@ -1,7 +1,7 @@
 from typing import Any, Iterator, Dict, Sequence, Tuple, Set
 import functools
 from collections import namedtuple
-from mutalyzer_hgvs_parser import to_model  # type: ignore
+from mutalyzer_hgvs_parser import to_model
 from itertools import zip_longest
 from collections import OrderedDict
 

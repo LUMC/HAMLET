@@ -8,12 +8,13 @@ import gzip
 import re
 
 from collections.abc import Iterator
+from typing import Any
 
 
 from utils import VEP, read_criteria_file, read_known_variants
 
 
-def parse_vep_json(vep_file: str, prog: re.Pattern) -> Iterator[VEP]:
+def parse_vep_json(vep_file: str, prog: Any) -> Iterator[VEP]:
     """Parse the VEP 'json' output file, each line contains a JSON entry"""
     with gzip.open(vep_file, "rt") as fin:
         for line in fin:

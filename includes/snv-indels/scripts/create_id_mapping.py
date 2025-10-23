@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 from dataclasses import dataclass
+from io import TextIOWrapper
 import sys
+from typing import Iterator
 
 
 @dataclass
@@ -10,11 +12,12 @@ class Mapping:
     gene_name: str
     transcript_ids: set[str]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.gene_id}\t{self.gene_name}\t{','.join(self.transcript_ids)}"
 
 
-def read_attributes(fin):
+Attributes = dict[str, str]
+def read_attributes(fin: TextIOWrapper) -> Iterator[Attributes]:
     for line in fin:
         if line.startswith("#"):
             continue
@@ -33,7 +36,7 @@ def read_attributes(fin):
 
 def create_mapping(gtf_file: str, transcripts: set[str]) -> dict[str, Mapping]:
     """Create the mapping for each transcript in transcripts"""
-    results = dict()
+    results: dict[str, Mapping] = dict()
     with open(gtf_file) as fin:
         for record in read_attributes(fin):
             if (transcript_id := record.get("transcript_id")) is None:
