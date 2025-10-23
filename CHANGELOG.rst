@@ -24,6 +24,7 @@ v2.5.0-dev
 * **Deprecate** the ``blacklist`` option in favour of ``known_variants``
 * **Deprecate** the ``ref_id_mapping`` option
 * **Deprecate** the ``vep_include_consequence`` option
+  **Rename** ``filter_criteria`` to ``inclusion_criteria``
 * Combine filtering and annotation of variants into a single step
 * Add the ``--safe`` flag to VEP to ensure there are no hidden errors
 * Add support for tabulating gene expression data to the ``hamlet_table.py`` script

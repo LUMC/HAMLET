@@ -52,7 +52,7 @@ rule id_mapping:
     """Make the id_mapping file based on the GTF and filter criteria"""
     input:
         gtf=config["gtf"],
-        inclusion_criteria=config["filter_criteria"],
+        inclusion_criteria=config["inclusion_criteria"],
         src=workflow.source_path("scripts/create_id_mapping.py"),
     output:
         txt=temporary("id_mapping.txt"),
@@ -358,7 +358,7 @@ rule filter_annoate_vep:
     input:
         scr=workflow.source_path("scripts/filter_annotate_vep.py"),
         vep="{sample}/snv-indels/{sample}.vep.txt.gz",
-        filter_criteria=config["filter_criteria"],
+        inclusion_criteria=config["inclusion_criteria"],
         annotation_criteria=config["annotation_criteria"],
         known_variants=config.get("known_variants", []),
         utils=workflow.source_path("scripts/utils.py"),
@@ -379,7 +379,7 @@ rule filter_annoate_vep:
 
         python3 {input.scr} \
             --vep {input.vep} \
-            --filter-criteria {input.filter_criteria} \
+            --inclusion-criteria {input.inclusion_criteria} \
             --annotation-criteria {input.annotation_criteria} \
             --known-variants {input.known_variants} \
             --population {params.population} \

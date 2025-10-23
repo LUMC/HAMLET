@@ -66,7 +66,7 @@ def get_snv_indels_config(dirname):
     return {
         "annotation_criteria": join("annotation_criteria.tsv"),
         "annotation_refflat": join("ucsc_gencode.refFlat"),
-        "filter_criteria": join("filter_criteria.tsv"),
+        "inclusion_criteria": join("inclusion_criteria.tsv"),
         "genome_dict": join("GCA_000001405.15_GRCh38_no_alt_analysis_set.dict"),
         "genome_fai": join("GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.fai"),
         "genome_fasta": get_reference(dirname),

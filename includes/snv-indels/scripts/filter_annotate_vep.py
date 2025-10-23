@@ -23,7 +23,7 @@ def parse_vep_json(vep_file: str, prog: re.Pattern) -> Iterator[VEP]:
 
 def main(
     vep_file: str,
-    criteria_file: str,
+    inclusion_file: str,
     annotation_file: str,
     known_variants_file: str,
     population: str,
@@ -31,7 +31,7 @@ def main(
 ) -> None:
     # Get genes and transcripts of interest
     annotations = read_criteria_file(annotation_file)
-    inclusion_criteria = list(read_criteria_file(criteria_file).keys())
+    inclusion_criteria = list(read_criteria_file(inclusion_file).keys())
 
 
     known_variants = read_known_variants(known_variants_file) if known_variants_file else dict()
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     )
 
     parser.add_argument("--vep", help="VEP json output file")
-    parser.add_argument("--filter-criteria", help="File with filter criteria")
+    parser.add_argument("--inclusion-criteria", help="File with inclusion criteria")
     parser.add_argument("--annotation-criteria", help="File with annotation criteria")
     parser.add_argument("--known-variants", help="File with known variants")
     parser.add_argument(
@@ -90,7 +90,7 @@ if __name__ == "__main__":
 
     main(
         args.vep,
-        args.filter_criteria,
+        args.inclusion_criteria,
         args.annotation_criteria,
         args.known_variants,
         args.population,

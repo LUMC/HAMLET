@@ -299,7 +299,7 @@
     - snv-indels
   command: >
     python3 includes/snv-indels/scripts/create_id_mapping.py
-    --inclusion-criteria test/data/config/filter_criteria.tsv test/data/reference/hamlet-ref.gtf
+    --inclusion-criteria test/data/config/inclusion_criteria.tsv test/data/reference/hamlet-ref.gtf
   stdout:
     contains:
       - "ENSG00000228253\tMT-ATP8\tENST00000361851"

@@ -81,7 +81,7 @@ Example
     {
      "annotation_criteria": "HAMLET-data/annotation_criteria.tsv",
      "annotation_refflat": "HAMLET-data/ucsc_gencode.refFlat",
-     "inclusion_criteria": "HAMLET-data/filter_criteria.tsv",
+     "inclusion_criteria": "HAMLET-data/inclusion_criteria.tsv",
      "genome_dict": "HAMLET-data/GCA_000001405.15_GRCh38_no_alt_analysis_set.dict",
      "genome_fai": "HAMLET-data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.fai",
      "genome_fasta": "HAMLET-data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna",
@@ -161,7 +161,7 @@ Every column except for ``transcript_id`` can be empty.
 
 .. csv-table:: Example ``inclusion_criteria`` file, from the HAMLET tests
   :delim: U+0009
-  :file: ../../test/data/config/filter_criteria.tsv
+  :file: ../../test/data/config/inclusion_criteria.tsv
 
 .. csv-table:: Example ``annotation_criteria`` file, from the HAMLET tests
   :delim: U+0009

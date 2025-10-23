@@ -56,7 +56,7 @@ rule all:
         itd_folder="itd",
         genome_fasta=reference_fname,
         star_index="star-index",
-        filter_criteria="filter_criteria.tsv",
+        inclusion_criteria="inclusion_criteria.tsv",
         annotation_criteria="annotation_criteria.tsv",
         known_variants="known_variants.tsv",
         rrna_refflat="ucsc_rrna.refFlat",
@@ -230,11 +230,11 @@ rule rewrite_refflat:
 
 rule copy_criteria_files:
     input:
-        filter=workflow.source_path("small-files/filter_criteria.tsv"),
+        filter=workflow.source_path("small-files/inclusion_criteria.tsv"),
         annotation=workflow.source_path("small-files/annotation_criteria.tsv"),
         known_variants=workflow.source_path("small-files/known_variants.tsv"),
     output:
-        filter="filter_criteria.tsv",
+        filter="inclusion_criteria.tsv",
         annotation="annotation_criteria.tsv",
         known_variants="known_variants.tsv",
     singularity:
