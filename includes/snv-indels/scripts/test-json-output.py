@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import importlib
+from typing import Any, Dict, List, Sequence, Union
 import pytest
 from collections import defaultdict
 
@@ -12,9 +13,12 @@ idf_to_gene_symbol = json_output.idf_to_gene_symbol
 get_format = json_output.get_format
 get_info = json_output.get_info
 
+Mapping = Dict[str, Union[str, List[str]]]
+VEP = Dict[str, Any]
+
 
 @pytest.fixture
-def id_mapping():
+def id_mapping() -> List[Mapping]:
     """Dummy gene to transcript ID mapping"""
     gene1 = {
         "gene_id": "gene1",
@@ -26,22 +30,22 @@ def id_mapping():
         "gene_symbol": "GENE2",
         "transcript_ids": ["transcript1", "transcript2"],
     }
-    return [gene1, gene2]
+    return [gene1, gene2]  # type: ignore
 
 
 @pytest.fixture
-def vcf_line():
+def vcf_line() -> str:
     """The VCF input is included in the VEP json object"""
     return "chrM\t13650\t.\tC\tT\t.\tPASS\tADP=17;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:81:17:17:0:15:100%:6.4467E-9:0:40:0:0:10:5"
 
 
 @pytest.fixture
-def mapping():
+def mapping() -> Mapping:
     return {"gene1": "GENE1", "gene2": "GENE2"}
 
 
 @pytest.fixture
-def vep_single():
+def vep_single() -> VEP:
     """A single vep entry, with a single transcript"""
     transcript = {"gene_id": "gene1", "transcript_id": "transcript1"}
     vep = {"transcript_consequences": [transcript]}
@@ -49,32 +53,32 @@ def vep_single():
     return vep
 
 
-def test_get_gene_id():
+def test_get_gene_id() -> None:
     assert get_gene_id({"gene_id": "gene1"}) == "gene1"
 
 
-def test_idf_to_gene_symbol(id_mapping):
+def test_idf_to_gene_symbol(id_mapping: Sequence[Mapping]) -> None:
     gene_symbol = idf_to_gene_symbol(id_mapping)
     assert gene_symbol == {"gene1": "GENE1", "gene2": "GENE2"}
 
 
-def test_get_gene_symbol(vep_single, mapping):
+def test_get_gene_symbol(vep_single: VEP, mapping: Mapping) -> None:
     assert get_gene_symbol(vep_single, mapping) == "GENE1"
 
 
-def test_update_variant_overview(mapping, vep_single):
-    overview = defaultdict(list)
+def test_update_variant_overview(vep_single: VEP, mapping: Mapping) -> None:
+    overview: defaultdict[str, list[VEP]] = defaultdict(list)
     update_variant_overview(mapping, vep_single, overview)
     assert "GENE1" in overview
 
 
-def test_get_format(vcf_line):
+def test_get_format(vcf_line: str) -> None:
     FORMAT = get_format(vcf_line)
     assert FORMAT["GT"] == "1/1"
     assert FORMAT["ADR"] == "5"
 
 
-def test_get_info(vcf_line):
+def test_get_info(vcf_line: str) -> None:
     INFO = get_info(vcf_line)
     assert INFO["ADP"] == "17"
     assert INFO["HOM"] == "1"

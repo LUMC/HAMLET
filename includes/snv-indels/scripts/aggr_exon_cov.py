@@ -5,7 +5,7 @@ import json
 import sys
 import statistics as stats
 from collections import namedtuple
-from typing import Any, Dict, Iterable, Optional, TextIO, Tuple
+from typing import Any, Dict, Iterable, Optional, Sequence, TextIO, Tuple
 
 
 class Row(
@@ -36,9 +36,11 @@ class Row(
         return (self.chrom, self.start + self.exon_pos)
 
 
-def aggr_covs_entry(entry: dict, cov_limits: Iterable[int]) -> dict:
+def aggr_covs_entry(entry: Dict[str, Any], cov_limits: Iterable[int]) -> Dict[str, Any]:
     covs = entry.pop("covs")
-    metrics = {k: None for k in ("min", "max", "avg", "median", "stdev")}
+    metrics: Dict[str, Any] = {
+        k: None for k in ("min", "max", "avg", "median", "stdev")
+    }
     metrics["count"] = 0
     metrics["frac_cov_at_least"] = {f"{k}x": 0 for k in cov_limits}
     metrics["len"] = entry["end"] - entry["start"]
@@ -86,15 +88,18 @@ def parse_idm(idm_fh: TextIO) -> Dict[str, str]:
     return idms
 
 
+Key = Tuple[str, int]
+
+
 def group_per_exon(
     input_fh: TextIO,
     idm_fh: Optional[TextIO] = None,
     cov_limits: Iterable[int] = (8, 10, 20, 30, 40, 50),
-):
+) -> Dict[Key, Dict[str, Any]]:
     idms = {} if idm_fh is None else parse_idm(idm_fh)
-    grouped: dict[tuple[str, int], dict[str, Any]] = {}
+    grouped: Dict[Key, Dict[str, Any]] = {}
 
-    def include_row(row):
+    def include_row(row: Row) -> bool:
         if idms:
             return row.feature in idms
         return True
@@ -125,7 +130,9 @@ def group_per_exon(
     return {k: aggr_covs_entry(v, cov_limits) for k, v in grouped.items()}
 
 
-def main(input_tsv, output, id_mapping, cov_limit):
+def main(
+    input_tsv: TextIO, output: str, id_mapping: str, cov_limit: Sequence[int]
+) -> None:
     """Calculates exon-level coverage metrics.
 
     The input to this script is a TSV file with the following columns:
@@ -150,7 +157,7 @@ def main(input_tsv, output, id_mapping, cov_limit):
     with open(id_mapping) as mapping:
         grouped = group_per_exon(input_tsv, mapping, cov_limit)
 
-    def serialize_key(row_key):
+    def serialize_key(row_key: Key) -> str:
         return f"{row_key[0]}|{row_key[1]}"
 
     with open(output, "wt") as fout:

@@ -54,7 +54,7 @@ class TestFilterAnnotate:
         }
         return VEP(minimal_vep_record)
 
-    def criteria(self):
+    def criteria(self) -> List[Criterion]:
         return [
             Criterion("ENST1.1", consequence="frameshift"),
             Criterion("ENST2.1", start="0", end="200", consequence="splice site"),
@@ -62,11 +62,11 @@ class TestFilterAnnotate:
         ]
 
     @pytest.fixture
-    def inclusion_criteria(self) -> Sequence[Criterion]:
+    def inclusion_criteria(self) -> List[Criterion]:
         return self.criteria()
 
     @pytest.fixture
-    def annotation_criteria(self) -> Sequence[Criterion]:
+    def annotation_criteria(self) -> List[Criterion]:
         """The annotation criteria are the same as the inclusion criteria"""
         return self.criteria()
 
@@ -75,7 +75,7 @@ class TestFilterAnnotate:
         return ["ENST1.1:c.100del", "ENST2.1:c.100A>T", "ENST3.1:c.100+100A>T"]
 
     def test_filter_annotate_variants_empty(self, vep: VEP) -> None:
-        vep.filter_annotate_transcripts(dict(), list(), dict())
+        vep.filter_annotate_transcripts(list(), dict(), dict())
         assert not vep["transcript_consequences"]
 
     @pytest.mark.parametrize(
