@@ -62,21 +62,6 @@ class VEP(dict[str, Any]):
         "intergenic_variant",
     ]
 
-    def filter_criteria(self, criteria: Sequence["Criterion"]) -> None:
-        filtered = list()
-        for tc in self.get("transcript_consequences", list()):
-            hgvsc = tc.get("hgvsc")
-            if hgvsc is None:
-                continue
-
-            variant = Variant(hgvsc, tc["consequence_terms"])
-            for crit in criteria:
-                if crit.match(variant):
-                    filtered.append(tc)
-                    break
-        self["transcript_consequences"] = filtered
-        self.update_most_severe()
-
     def filter_annotate_transcripts(
         self,
         inclusion: Sequence["Criterion"],

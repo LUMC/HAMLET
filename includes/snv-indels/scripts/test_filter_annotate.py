@@ -166,20 +166,20 @@ def test_filter_criteria(
 ) -> None:
     """Test filtering by consequence_term"""
     assert len(vep["transcript_consequences"]) == 3
-    vep.filter_criteria(criteria)
+    vep.filter_annotate_transcripts(criteria, dict(), dict())
     genes = [tc["gene_id"] for tc in vep["transcript_consequences"]]
     assert genes == readout
 
 
 def test_filter_criteria_no_match(vep: VEP) -> None:
     """Test that we get an empty list if no criteria matches"""
-    vep.filter_criteria([Criterion("no_such_transcript")])
+    vep.filter_annotate_transcripts([Criterion("no_such_transcript")], dict(), dict())
     assert not vep["transcript_consequences"]
 
 
 def test_filter_no_criteria(vep: VEP) -> None:
     """Check that we filter nothing if there are no criteria"""
-    vep.filter_criteria([])
+    vep.filter_annotate_transcripts([], dict(), dict())
     assert not vep["transcript_consequences"]
 
 
@@ -189,7 +189,7 @@ def test_vep_of_interest_one_transcript(vep: VEP) -> None:
     c = Criterion("ENTS0125.1")
 
     # Restrict to transcript of interest
-    vep.filter_criteria([c])
+    vep.filter_annotate_transcripts([c], dict(), dict())
 
     # Get the consequences after rewriting the VEP obejct
     cons = vep["transcript_consequences"]
@@ -224,7 +224,7 @@ def test_no_transcript_consequence() -> None:
     # Create an empty VEP object
     empty = VEP(dict())
     c = Criterion("ENTS0123.1")
-    empty.filter_criteria([c])
+    empty.filter_annotate_transcripts([c], dict(), dict())
     empty.update_most_severe()
 
 
