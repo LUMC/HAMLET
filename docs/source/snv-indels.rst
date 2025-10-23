@@ -9,15 +9,18 @@ This module uses `STAR <https://github.com/alexdobin/STAR>`_ to align the reads
 to the reference using two-pass mode. `VarDict
 <https://github.com/AstraZeneca-NGS/VarDictJava>`_ is used to call variants,
 which are annotated using ``VEP``. Variants are filtered based on the criteria
-defined in ``filter_criteria``, and annotated based on ``annotation_criteria``.
+defined in ``inclusion_criteria``, and annotated based on ``annotation_criteria``.
 
-The variants annotated by VEP are then filtered based on a number of different criteria:
+The variants annotated by VEP are then filtered and annotated in the following order:
 
-
-1. Variant that have a population frequency of more than 1% in the ``gnomADe`` population are excluded.
-2. Variants which are specified in ``known_variants`` will be included.
-3. Variants that match at least one criteria in ``filter_criteria`` or ``annotation_criteria`` are included.
-4. All other variants, and all variant annotations on other transcripts, will be excluded.
+1. Variants that have a population frequency of more than 1% in the ``gnomADe``
+   population are removed.
+2. Only variant which match the ``inclusion_criteria`` will be included.
+3. If a variant is present in ``known_variants``, the annotation from that file
+   will be added to the variant.
+4. If a variant is not in ``known_variants``, it will be checked against the
+   criteria in ``annotation_criteria``. The annotation from the first matching
+   definition will be added to the variant.
 
 Picard is used to generate various alignment statistics.
 
@@ -78,7 +81,7 @@ Example
     {
      "annotation_criteria": "HAMLET-data/annotation_criteria.tsv",
      "annotation_refflat": "HAMLET-data/ucsc_gencode.refFlat",
-     "filter_criteria": "HAMLET-data/filter_criteria.tsv",
+     "inclusion_criteria": "HAMLET-data/filter_criteria.tsv",
      "genome_dict": "HAMLET-data/GCA_000001405.15_GRCh38_no_alt_analysis_set.dict",
      "genome_fai": "HAMLET-data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.fai",
      "genome_fasta": "HAMLET-data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna",
@@ -110,7 +113,7 @@ Configuration options
   * - annotation_refflat
     - File used to determine exon coverage
     - yes
-  * - filter_criteria
+  * - inclusion_criteria
     - Criteria file to filter variants
     - yes
   * - genome_dict
@@ -149,16 +152,16 @@ Filter and annotation criteria
 HAMLET include the ability to specify separate filter criteria for every
 transcript, based on the position and the VEP consequence of the variant. The
 criteria are used both to filter which variants will be part of the output
-(``filter_criteria``), and also annotate the identified variants
+(``inclusion_criteria``), and also annotate the identified variants
 (``annotation_criteria``).
 
 The used columns are ``transcript_id``, ``consequence``, ``start``, ``end``
 and ``frame``. For annotating variants, the ``annotation`` column is used.
 Every column except for ``transcript_id`` can be empty.
 
-.. csv-table:: Example ``filter_criteria`` file, from the HAMLET tests
+.. csv-table:: Example ``inclusion_criteria`` file, from the HAMLET tests
   :delim: U+0009
-  :file: ../../test/data/config/filter_criteria.tsv
+  :file: ../../test/data/config/inclusion_criteria.tsv
 
 .. csv-table:: Example ``annotation_criteria`` file, from the HAMLET tests
   :delim: U+0009
