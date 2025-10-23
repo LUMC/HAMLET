@@ -246,3 +246,9 @@
     - sanity
     - expression
   command: black --check includes/expression/
+
+- name: mypy-expression
+  tags:
+    - sanity
+    - expression
+  command: black --check includes/expression/

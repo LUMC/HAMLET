@@ -3,15 +3,19 @@
 import json
 import argparse
 import os
+from typing import Any, cast
 
 
-def fusion_results(fname):
+ArribaResults = list[dict[str, Any]]
+
+
+def fusion_results(fname: str) -> ArribaResults:
     # Initialise the results dictionary
     with open(fname) as fin:
-        return json.load(fin)
+        return cast(ArribaResults, json.load(fin))
 
 
-def main(args):
+def main(args: argparse.Namespace) -> None:
     """Create json output of fusion results"""
     results = fusion_results(args.arriba)
 

@@ -23,9 +23,9 @@ json_format = {
 arriba_format = "BCR\tABL\tread1,read2\t15\t."
 
 
-def test_arriba_to_json():
+def test_arriba_to_json() -> None:
     assert arriba_to_json(header, arriba_format) == json_format
 
 
-def test_json_to_arriba():
+def test_json_to_arriba() -> None:
     assert json_to_arriba(header, json_format) == arriba_format

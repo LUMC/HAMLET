@@ -5,7 +5,7 @@ import argparse
 import json
 
 
-def main(fusion_file):
+def main(fusion_file: str) -> None:
     with open(fusion_file) as fin:
         fusions = json.load(fin)
 

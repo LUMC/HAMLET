@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-from typing import Any, Dict, Set
+from io import TextIOWrapper
+from os import walk
+from typing import Any, Dict, Iterator, Sequence, Set
 import argparse
 import json
 
@@ -37,10 +39,12 @@ arriba_header = [
     "read_identifiers",
 ]
 
+ArribaResult = dict[str, Any]
 
-def arriba_to_json(header, line):
+
+def arriba_to_json(header: Sequence[str], line: str) -> ArribaResult:
     """Convert an arriba line to json"""
-    d = {k: v for k, v in zip(header, line.split("\t"))}
+    d: ArribaResult = {k: v for k, v in zip(header, line.split("\t"))}
 
     # Convert '.' to None
     for key, value in d.items():
@@ -59,7 +63,7 @@ def arriba_to_json(header, line):
     return d
 
 
-def json_to_arriba(header, data):
+def json_to_arriba(header: Sequence[str], data: ArribaResult) -> str:
     """Convert arriba data to a list of strings"""
     # Join read identifiers into single string
     data["read_identifiers"] = ",".join(data["read_identifiers"])
@@ -72,7 +76,7 @@ def json_to_arriba(header, data):
     return "\t".join((str(data[field]) for field in header))
 
 
-def parse_arriba(fin) -> Dict[str, Any]:
+def parse_arriba(fin: TextIOWrapper) -> Iterator[ArribaResult]:
     header = next(fin)[1:-1].split("\t")
 
     if header != arriba_header:
