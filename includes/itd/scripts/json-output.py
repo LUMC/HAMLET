@@ -3,14 +3,18 @@
 import argparse
 import json
 from pathlib import Path
+from typing import Any
 
 
-def add_itd_table(csv_fname):
+ITDresult = dict[str, Any]
+
+
+def add_itd_table(csv_fname: str) -> list[ITDresult]:
     rv = []
     with open(csv_fname, "r") as src:
         header_cols = next(src).strip().split("\t")
         for line in (l.strip() for l in src):
-            d = dict(zip(header_cols, line.split("\t")))
+            d: ITDresult = dict(zip(header_cols, line.split("\t")))
 
             # Integer fields
             int_fields = [
@@ -35,7 +39,9 @@ def add_itd_table(csv_fname):
     return rv
 
 
-def main(flt3_csv, flt3_plot, kmt2a_csv, kmt2a_plot, sample_name):
+def main(
+    flt3_csv: str, flt3_plot: str, kmt2a_csv: str, kmt2a_plot: str, sample_name: str
+) -> None:
     """Helper script for combining multiple stats files into one JSON."""
     combined = dict()
     combined["itd"] = {

@@ -264,7 +264,7 @@
 - name: mypy-hamlet
   tags:
     - sanity
-    -hamlet
+    - hamlet
   command: mypy --strict .
 
 - name: test-sample-with-space
