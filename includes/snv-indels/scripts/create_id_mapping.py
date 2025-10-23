@@ -73,6 +73,7 @@ def read_transcripts(filter_file: str) -> set[str]:
             transcripts.add(transcript)
     return transcripts
 
+
 def known_variants(fname: str) -> set[str]:
     """Read the transcripts from the known variants file"""
     transcripts = set()
@@ -90,6 +91,7 @@ def known_variants(fname: str) -> set[str]:
             transcript = transcript_id.split(".")[0]
             transcripts.add(transcript)
     return transcripts
+
 
 def main(gtf_file: str, inclusion_criteria_file: str) -> None:
 

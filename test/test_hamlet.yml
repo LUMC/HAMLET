@@ -255,6 +255,12 @@
     - hamlet
   command: snakefmt --check .
 
+- name: black-hamlet
+  tags:
+    - sanity
+    - expression
+  command: black --check .
+
 - name: test-sample-with-space
   tags:
     - sanity

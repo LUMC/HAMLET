@@ -3,6 +3,7 @@
 import sys
 import json
 
+
 def read_attributes(fin):
     for line in fin:
         if line.startswith("#"):
@@ -16,7 +17,7 @@ def read_attributes(fin):
                 continue
             pair = pair.strip(" ")
             k, v = pair.split(" ", maxsplit=1)
-            d[k] = v.replace('"','')
+            d[k] = v.replace('"', "")
         yield d
 
 

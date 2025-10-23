@@ -25,9 +25,10 @@ def read_data(samples, countfiles, strandedness):
         data[sample] = read_expression(fname, strand)
     return data
 
+
 def write_cell_types(sample_json):
-    outfile="merged_expression_cell_types_mqc.tsv"
-    url="https://github.com/eonurk/seAMLess"
+    outfile = "merged_expression_cell_types_mqc.tsv"
+    url = "https://github.com/eonurk/seAMLess"
 
     with open(outfile, "wt") as fout:
         multiqc_header = f"""# plot_type: "table"
@@ -46,7 +47,7 @@ def write_cell_types(sample_json):
             if header is None:
                 header = list(js["expression"]["cell-types"]["data"].keys())
                 header.insert(0, "Sample")
-                print(*header, sep='\t', file=fout)
+                print(*header, sep="\t", file=fout)
 
             # Get the cell type data
             data = js["expression"]["cell-types"]["data"]
@@ -56,6 +57,7 @@ def write_cell_types(sample_json):
 
             # Print
             print(*(data[field] for field in header), sep="\t", file=fout)
+
 
 def main(samples, countfiles, strandedness, sample_json):
     # Read all the data
@@ -67,7 +69,7 @@ def main(samples, countfiles, strandedness, sample_json):
     for sample, strand in zip(samples, strandedness):
         if strand == "unstranded":
             unstranded[sample] = data[sample]
-        elif strand =="forward" or strand == "reverse":
+        elif strand == "forward" or strand == "reverse":
             stranded[sample] = data[sample]
         else:
             raise RuntimeError
@@ -101,9 +103,7 @@ def write_multiqc(data, strand):
                 gene_header = list(genes.keys())
                 print("Sample", *gene_header, sep="\t", file=fout)
 
-            print(
-                sample, *(genes[gene] for gene in gene_header), sep="\t", file=fout
-            )
+            print(sample, *(genes[gene] for gene in gene_header), sep="\t", file=fout)
 
 
 if __name__ == "__main__":
@@ -126,7 +126,7 @@ if __name__ == "__main__":
         "--sample-json",
         required=True,
         nargs="+",
-        help="Per sample expression json files"
+        help="Per sample expression json files",
     )
 
     args = parser.parse_args()

@@ -25,13 +25,13 @@ def main(args):
         modules = "variant fusion expression celltype aml_subtype".split()
         for m in modules:
             fname = f"{args.output}/m.tsv"
-            with open(fname, 'wt') as fout:
-                write =functools.partial(print, file=fout)
+            with open(fname, "wt") as fout:
+                write = functools.partial(print, file=fout)
                 functions[m](args.json_files, write)
 
         for gene in ["flt3", "kmt2a"]:
             fname = f"{args.output}/{gene}_itd.tsv"
-            with open(fname, 'wt') as fout:
+            with open(fname, "wt") as fout:
                 write = functools.partial(print, file=fout)
                 functions["itd"](args.json_files, gene, write)
 
@@ -124,15 +124,17 @@ def print_variant_table(json_files, write=print):
                 # Dict to store all the column values we will print
                 ref, alt = variant["FORMAT"]["AD"].split(",")
 
-                db_ids = ",".join((var["id"] for var in variant.get("colocated_variants", [])))
+                db_ids = ",".join(
+                    (var["id"] for var in variant.get("colocated_variants", []))
+                )
                 to_print = {
                     "sample": sample_name(js),
                     "gene_name": gene,
-                    "total_depth":  variant["FORMAT"]["DP"],
+                    "total_depth": variant["FORMAT"]["DP"],
                     "vaf": variant["FORMAT"]["AF"],
                     "ref_depth": ref,
                     "alt_depth": alt,
-                    "database": db_ids
+                    "database": db_ids,
                 }
 
                 for transcript in variant["transcript_consequences"]:
@@ -143,6 +145,7 @@ def print_variant_table(json_files, write=print):
                     to_print["exon"] = transcript.get("exon", "")
                     to_print["annotation"] = transcript.get("annotation", "")
                 write(*(to_print[field] for field in header), sep="\t")
+
 
 def print_fusion_table(json_files, write=print):
     """Print fusion table"""
@@ -247,7 +250,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "table",
-        choices=["variant", "fusion", "itd", "expression", "celltype", "aml_subtype", "all"],
+        choices=[
+            "variant",
+            "fusion",
+            "itd",
+            "expression",
+            "celltype",
+            "aml_subtype",
+            "all",
+        ],
         default="variant",
         help="Table to output",
     )

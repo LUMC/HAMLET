@@ -15,7 +15,7 @@ from utils import VEP, read_criteria_file, read_known_variants
 
 def parse_vep_json(vep_file: str, prog: re.Pattern) -> Iterator[VEP]:
     """Parse the VEP 'json' output file, each line contains a JSON entry"""
-    with gzip.open(vep_file, 'rt') as fin:
+    with gzip.open(vep_file, "rt") as fin:
         for line in fin:
             if prog.search(line):
                 yield VEP(json.loads(line))
@@ -33,8 +33,9 @@ def main(
     annotations = read_criteria_file(annotation_file)
     inclusion_criteria = list(read_criteria_file(inclusion_file).keys())
 
-
-    known_variants = read_known_variants(known_variants_file) if known_variants_file else dict()
+    known_variants = (
+        read_known_variants(known_variants_file) if known_variants_file else dict()
+    )
 
     # Get all identifiers, remove version number
     # because we raise an error later on version mismatch

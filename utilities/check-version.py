@@ -2,13 +2,14 @@
 
 import sys
 
+
 def get_changelog_version() -> str:
     changelog = "CHANGELOG.rst"
     with open(changelog) as fin:
         for line in fin:
             # The next line holds the version number
-            if line.startswith('******'):
-                changelog_version = next(fin).strip('\n')
+            if line.startswith("******"):
+                changelog_version = next(fin).strip("\n")
                 return changelog_version
     return ""
 
@@ -45,7 +46,11 @@ if __name__ == "__main__":
     print(f"HAMLET version:    {hamlet_version}")
     print(f"Docs version:      {docs_version}")
 
-    if changelog_version == version and hamlet_version == version and docs_version == version:
+    if (
+        changelog_version == version
+        and hamlet_version == version
+        and docs_version == version
+    ):
         exit(0)
     else:
         exit(1)

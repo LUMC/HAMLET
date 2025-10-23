@@ -166,6 +166,12 @@
     - itd
   command: snakefmt --check includes/itd
 
+- name: black-itd
+  tags:
+    - sanity
+    - expression
+  command: black --check includes/itd
+
 - name: test-itd-sample-with-space
   tags:
     - sanity

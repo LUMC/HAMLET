@@ -2,7 +2,8 @@
 
 import sys
 
-class Bed():
+
+class Bed:
     def __init__(self, chrom, start, end):
         self.chrom = chrom
         self.start = int(start)
@@ -22,16 +23,18 @@ class Bed():
     def __gt__(self, other):
         return self.size > other.size
 
+
 def main():
     # Read all bed records
     records = list()
     for line in sys.stdin:
-        row=line.strip('\n').split('\t')
+        row = line.strip("\n").split("\t")
         record = Bed(*row[:3])
         records.append(record)
 
     for record in sorted(records, reverse=True):
         print(record)
+
 
 if __name__ == "__main__":
     main()

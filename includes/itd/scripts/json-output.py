@@ -14,9 +14,13 @@ def add_itd_table(csv_fname):
 
             # Integer fields
             int_fields = [
-                "fuzziness", "rose_end_anchor_pos", "rose_end_count",
-                "rose_end_pos", "rose_start_anchor_pos", "rose_start_count",
-                "rose_start_pos"
+                "fuzziness",
+                "rose_end_anchor_pos",
+                "rose_end_count",
+                "rose_end_pos",
+                "rose_start_anchor_pos",
+                "rose_start_count",
+                "rose_start_pos",
             ]
 
             # Convert values to int
@@ -35,13 +39,15 @@ def main(flt3_csv, flt3_plot, kmt2a_csv, kmt2a_plot, sample_name):
     """Helper script for combining multiple stats files into one JSON."""
     combined = dict()
     combined["itd"] = {
-        "flt3": {"path": str(Path(flt3_plot).resolve()),
-                 "table": add_itd_table(flt3_csv)},
-        "kmt2a": {"path": str(Path(kmt2a_plot).resolve()),
-                  "table": add_itd_table(kmt2a_csv)},
-        "metadata": {
-            "sample_name": sample_name
-        }
+        "flt3": {
+            "path": str(Path(flt3_plot).resolve()),
+            "table": add_itd_table(flt3_csv),
+        },
+        "kmt2a": {
+            "path": str(Path(kmt2a_plot).resolve()),
+            "table": add_itd_table(kmt2a_csv),
+        },
+        "metadata": {"sample_name": sample_name},
     }
     print(json.dumps(combined, sort_keys=True, indent=2))
 
@@ -56,4 +62,3 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     main(args.flt3_csv, args.flt3_plot, args.kmt2a_csv, args.kmt2a_plot, args.sample)
-

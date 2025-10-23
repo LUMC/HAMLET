@@ -6,23 +6,84 @@ import json
 import os
 
 
-fusion_partners = ['ABL', 'AFDN', 'AFF1', 'BCOR', 'BCR', 'CBFA2T3', 'CBFB',
-        'CREBBP', 'DEK', 'ELL', 'ERG', 'ETV6', 'FIP1L1', 'FUS', 'GATA2',
-        'GLIS2', 'IRF2BP2', 'KAT6A', 'KMT2A', 'MECOM', 'MLF1', 'MLLT1',
-        'MLLT10', 'MLLT3', 'MNX1', 'MRTF1', 'MYC', 'MYH11', 'NPM1', 'NUP214',
-        'NUP98', 'PICALM', 'PML', 'PRDM16', 'RARA', 'RBM15', 'RPN1',
-        'RUNX1', 'RUNX1T1', 'STAT3B', 'STAT5B', 'TBL1XR1', 'TET1', 'ZBTB16',
-        'KMD5A', 'NSD1']
-
-housekeeping_genes = [
-    'INTS11', 'USP33', 'EXOSC10', 'CNOT11', 'CIAO1', 'ERCC3', 'CREB1',
-    'NDUFA10', 'REV1', 'STAMBP', 'OCIAD1', 'MAP3K7', 'RARS2', 'TBP', 'TMED4',
-    'HNRNPA2B1', 'MAPKAPK5', 'PPHLN1', 'ZNF384', 'PSME3IP1', 'RANBP3', 'EWSR1',
-    'PEX26'
+fusion_partners = [
+    "ABL",
+    "AFDN",
+    "AFF1",
+    "BCOR",
+    "BCR",
+    "CBFA2T3",
+    "CBFB",
+    "CREBBP",
+    "DEK",
+    "ELL",
+    "ERG",
+    "ETV6",
+    "FIP1L1",
+    "FUS",
+    "GATA2",
+    "GLIS2",
+    "IRF2BP2",
+    "KAT6A",
+    "KMT2A",
+    "MECOM",
+    "MLF1",
+    "MLLT1",
+    "MLLT10",
+    "MLLT3",
+    "MNX1",
+    "MRTF1",
+    "MYC",
+    "MYH11",
+    "NPM1",
+    "NUP214",
+    "NUP98",
+    "PICALM",
+    "PML",
+    "PRDM16",
+    "RARA",
+    "RBM15",
+    "RPN1",
+    "RUNX1",
+    "RUNX1T1",
+    "STAT3B",
+    "STAT5B",
+    "TBL1XR1",
+    "TET1",
+    "ZBTB16",
+    "KMD5A",
+    "NSD1",
 ]
 
-ARRIBA_VERSION="v2.5.1"
-GTF_VERSION="115"
+housekeeping_genes = [
+    "INTS11",
+    "USP33",
+    "EXOSC10",
+    "CNOT11",
+    "CIAO1",
+    "ERCC3",
+    "CREB1",
+    "NDUFA10",
+    "REV1",
+    "STAMBP",
+    "OCIAD1",
+    "MAP3K7",
+    "RARS2",
+    "TBP",
+    "TMED4",
+    "HNRNPA2B1",
+    "MAPKAPK5",
+    "PPHLN1",
+    "ZNF384",
+    "PSME3IP1",
+    "RANBP3",
+    "EWSR1",
+    "PEX26",
+]
+
+ARRIBA_VERSION = "v2.5.1"
+GTF_VERSION = "115"
+
 
 def get_qc_config():
     return {"forward_adapter": "AGATCGGAAGAG", "reverse_adapter": "AGATCGGAAGAG"}
@@ -55,8 +116,12 @@ def get_fusion_config(dirname):
         "gtf": get_gtf(dirname),
         "blacklist": join(f"arriba/blacklist_hg38_GRCh38_{ARRIBA_VERSION}.tsv.gz"),
         "cytobands": join(f"arriba/cytobands_hg38_GRCh38_{ARRIBA_VERSION}.tsv"),
-        "known_fusions": join(f"arriba/known_fusions_hg38_GRCh38_{ARRIBA_VERSION}.tsv.gz"),
-        "protein_domains": join(f"arriba/protein_domains_hg38_GRCh38_{ARRIBA_VERSION}.gff3"),
+        "known_fusions": join(
+            f"arriba/known_fusions_hg38_GRCh38_{ARRIBA_VERSION}.tsv.gz"
+        ),
+        "protein_domains": join(
+            f"arriba/protein_domains_hg38_GRCh38_{ARRIBA_VERSION}.gff3"
+        ),
         "report_genes": join("arriba/report_genes.txt"),
     }
 
@@ -79,6 +144,7 @@ def get_snv_indels_config(dirname):
         "vep_cache": dirname,
     }
 
+
 def get_expression_config(dirname):
     d = {
         "housekeeping": housekeeping_genes,
@@ -86,7 +152,7 @@ def get_expression_config(dirname):
         "bed": f"{dirname}/expression/regions.bed",
         "seamless_ref": f"{dirname}/expression/seamless_expr.csv",
         "seamless_meta": f"{dirname}/expression/seamless_meta.csv",
-        "report": ["MECOM-206-e1", "MECOM-220-e15-e16"]
+        "report": ["MECOM-206-e1", "MECOM-220-e15-e16"],
     }
     return d
 
@@ -112,7 +178,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("reference_dir", help="Path to the reference folder")
-    parser.add_argument("--module", default="hamlet", choices=["hamlet", "snv-indels", "itd", "qc-seq", "fusion", "expression"])
+    parser.add_argument(
+        "--module",
+        default="hamlet",
+        choices=["hamlet", "snv-indels", "itd", "qc-seq", "fusion", "expression"],
+    )
 
     args = parser.parse_args()
     main(args.reference_dir, args.module)

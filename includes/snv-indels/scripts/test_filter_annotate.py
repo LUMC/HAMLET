@@ -104,7 +104,7 @@ class TestFilterAnnotate:
             ("012", "02", "", ["var", "", "var"]),
             # Everything included, but nothing annotated
             # Note that the annotation exist, but is empty
-            ("012", "", "", ["", "", ""])
+            ("012", "", "", ["", "", ""]),
         ],
     )
     def test_filter_annotate_variants(

@@ -10,8 +10,9 @@ def fusion_results(fname):
     with open(fname) as fin:
         return json.load(fin)
 
+
 def main(args):
-    """ Create json output of fusion results """
+    """Create json output of fusion results"""
     results = fusion_results(args.arriba)
 
     # The padding in the png filename is dependent on the total number of
@@ -29,23 +30,15 @@ def main(args):
 
         fusion["plot"] = os.path.abspath(plot)
 
-    data = {
-        "fusion": {
-            "events": results,
-            "metadata": {
-                "sample_name": args.sample
-            }
-        }
-    }
+    data = {"fusion": {"events": results, "metadata": {"sample_name": args.sample}}}
     print(json.dumps(data, sort_keys=True, indent=2))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('arriba', help='Arriba output converted to JSON')
-    parser.add_argument('plots', help='Arriba fusion plots')
+    parser.add_argument("arriba", help="Arriba output converted to JSON")
+    parser.add_argument("plots", help="Arriba fusion plots")
     parser.add_argument("--sample")
 
     args = parser.parse_args()
     main(args)
-

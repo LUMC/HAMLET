@@ -4,12 +4,13 @@ from arriba2json import arriba_header, json_to_arriba
 import argparse
 import json
 
+
 def main(fusion_file):
     with open(fusion_file) as fin:
         fusions = json.load(fin)
 
     # Prin the header
-    print("#", '\t'.join(arriba_header), sep='')
+    print("#", "\t".join(arriba_header), sep="")
 
     for fusion in fusions:
         print(json_to_arriba(arriba_header, fusion))

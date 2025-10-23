@@ -8,7 +8,7 @@ from coverage import orientation_first
 
 
 @dataclasses.dataclass
-class FakeRead():
+class FakeRead:
     name: str
     flag: str
     ref_name: str = "chr1"
@@ -22,7 +22,9 @@ class FakeRead():
     length: str = "4"
 
 
-def to_pysam_read(fake_read: FakeRead, header: pysam.AlignmentHeader) -> pysam.AlignedSegment:
+def to_pysam_read(
+    fake_read: FakeRead, header: pysam.AlignmentHeader
+) -> pysam.AlignedSegment:
     dataclass_dict = dataclasses.asdict(fake_read)
     return pysam.AlignedSegment.from_dict(dataclass_dict, header)
 
@@ -31,19 +33,17 @@ def to_pysam_read(fake_read: FakeRead, header: pysam.AlignmentHeader) -> pysam.A
 def reads():
 
     reads = [
-            # paired, proper pair, mate reverse, first in pair
-            FakeRead("read1", "99"),
-            # paired, proper pair, mate reverse, second in pair
-            FakeRead("read2", "163"),
-            # paired, proper pair, read reverse, first in pair
-            FakeRead("read3", "83"),
-            # paired, proper pair, read reverse, second in pair
-            FakeRead("read4", "147"),
+        # paired, proper pair, mate reverse, first in pair
+        FakeRead("read1", "99"),
+        # paired, proper pair, mate reverse, second in pair
+        FakeRead("read2", "163"),
+        # paired, proper pair, read reverse, first in pair
+        FakeRead("read3", "83"),
+        # paired, proper pair, read reverse, second in pair
+        FakeRead("read4", "147"),
     ]
 
-    header = {
-            "SQ": [{"SN": "chr1", "LN": 100}]
-    }
+    header = {"SQ": [{"SN": "chr1", "LN": 100}]}
 
     H = pysam.AlignmentHeader.from_dict(header)
 

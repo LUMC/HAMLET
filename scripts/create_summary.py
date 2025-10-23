@@ -11,8 +11,7 @@ def parse_idm(fh):
             continue
         gid, gsym, raw_tids = line.strip().split("\t")
         tids = raw_tids.split(",")
-        idms.append({"gene_id": gid, "gene_symbol": gsym,
-                     "transcript_ids": tids})
+        idms.append({"gene_id": gid, "gene_symbol": gsym, "transcript_ids": tids})
     return idms
 
 
@@ -26,7 +25,7 @@ def main(args):
             "sample_name": args.sample_name,
             "genes_of_interest": idm,
         },
-        "modules": dict()
+        "modules": dict(),
     }
 
     # Read and add module json files
@@ -43,9 +42,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("id_mappings_path")
-    parser.add_argument("--sample-name", help="Name of the sample from which the stats were generated.")
+    parser.add_argument(
+        "--sample-name", help="Name of the sample from which the stats were generated."
+    )
     parser.add_argument("--pipeline-version", help="Version string of the pipeline.")
-    parser.add_argument("--module", action="append", help="JSON outputs from various modules")
+    parser.add_argument(
+        "--module", action="append", help="JSON outputs from various modules"
+    )
 
     args = parser.parse_args()
     main(args)

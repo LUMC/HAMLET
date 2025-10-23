@@ -16,14 +16,16 @@ get_info = json_output.get_info
 @pytest.fixture
 def id_mapping():
     """Dummy gene to transcript ID mapping"""
-    gene1 = { "gene_id": "gene1",
-              "gene_symbol": "GENE1",
-              "transcript_ids": ["transcript1"]
-            }
-    gene2 = { "gene_id": "gene2",
-              "gene_symbol": "GENE2",
-              "transcript_ids": ["transcript1", "transcript2"]
-            }
+    gene1 = {
+        "gene_id": "gene1",
+        "gene_symbol": "GENE1",
+        "transcript_ids": ["transcript1"],
+    }
+    gene2 = {
+        "gene_id": "gene2",
+        "gene_symbol": "GENE2",
+        "transcript_ids": ["transcript1", "transcript2"],
+    }
     return [gene1, gene2]
 
 
@@ -31,6 +33,7 @@ def id_mapping():
 def vcf_line():
     """The VCF input is included in the VEP json object"""
     return "chrM\t13650\t.\tC\tT\t.\tPASS\tADP=17;WT=0;HET=0;HOM=1;NC=0\tGT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR\t1/1:81:17:17:0:15:100%:6.4467E-9:0:40:0:0:10:5"
+
 
 @pytest.fixture
 def mapping():
@@ -40,9 +43,8 @@ def mapping():
 @pytest.fixture
 def vep_single():
     """A single vep entry, with a single transcript"""
-    transcript = { "gene_id": "gene1",
-            "transcript_id": "transcript1"}
-    vep = { "transcript_consequences": [transcript] }
+    transcript = {"gene_id": "gene1", "transcript_id": "transcript1"}
+    vep = {"transcript_consequences": [transcript]}
 
     return vep
 

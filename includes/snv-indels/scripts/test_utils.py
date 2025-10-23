@@ -16,6 +16,7 @@ from utils import (
     get_position,
 )
 
+
 @pytest.fixture
 def vep() -> VEP:
     minimal_vep_record = {
@@ -39,7 +40,6 @@ def vep() -> VEP:
     }
 
     return VEP(minimal_vep_record)
-
 
 
 class TestVariant:
@@ -300,19 +300,13 @@ class TestVariant:
         assert v.frame() == None
 
     def test_variant_outside_cds_no_frame(self) -> None:
-        v=Variant("ENST1:c.-100A>T", consequences=[])
-        c=Criterion(
-            identifier="ENST1"
-
-        )
+        v = Variant("ENST1:c.-100A>T", consequences=[])
+        c = Criterion(identifier="ENST1")
         assert c.match(v)
 
     def test_variant_outside_cds_does_not_match(self) -> None:
-        v=Variant("ENST1:c.-100A>T", consequences=[])
-        c=Criterion(
-            identifier="ENST1", frame=0
-
-        )
+        v = Variant("ENST1:c.-100A>T", consequences=[])
+        c = Criterion(identifier="ENST1", frame=0)
         assert not c.match(v)
 
     def test_match_region(self, variant: Variant) -> None:
@@ -372,8 +366,6 @@ class TestVariant:
             ),
         ]
         assert list(Variant.from_VEP(vep)) == expected
-
-
 
 
 class TestCriterion:
@@ -526,7 +518,11 @@ class TestCriterion:
             # If a position is set, it cannot contain an unset position
             (Criterion("A", start="1"), Criterion("A"), False),
             # Equal positions are contained
-            (Criterion("A", start="1", end="2"), Criterion("A", start="1", end="2"), True),
+            (
+                Criterion("A", start="1", end="2"),
+                Criterion("A", start="1", end="2"),
+                True,
+            ),
             # If a position is smaller, it cannot contain a bigger position
             (Criterion("A", start="1"), Criterion("A", start="1", end="2"), False),
             (Criterion("A", start="1", end="2"), Criterion("A"), False),
@@ -539,7 +535,9 @@ class TestCriterion:
             (Criterion("A", consequence="a"), Criterion("A"), False),
         ],
     )
-    def test_criteria_containment(self, c1: Criterion, c2: Criterion, expected: bool) -> None:
+    def test_criteria_containment(
+        self, c1: Criterion, c2: Criterion, expected: bool
+    ) -> None:
         """
         GIVEN two Criteria
         THEN determine if c1 is contained within c2
@@ -581,16 +579,16 @@ class TestCriterion:
             (Region(1, 1), Region(None, 1), False),
             (Region(1, 1), Region(1, None), False),
             # Equal regions are contained
-            (Region(1,2), Region(1,2), True),
+            (Region(1, 2), Region(1, 2), True),
             # Smaller region is contained
-            (Region(1,2), Region(1,1), True),
+            (Region(1, 2), Region(1, 1), True),
             # Region2 is before region1
-            (Region(1,2), Region(0,1), False),
+            (Region(1, 2), Region(0, 1), False),
             # Region2 is bigger than region1
-            (Region(1,2), Region(1,3), False),
+            (Region(1, 2), Region(1, 3), False),
             # Region2 is after region1
-            (Region(1,2), Region(2,3), False),
-        ]
+            (Region(1, 2), Region(2, 3), False),
+        ],
     )
     def test_region_contains(self, r1: Region, r2: Region, expected: bool) -> None:
         """

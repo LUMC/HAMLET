@@ -115,6 +115,12 @@
     - fusion
   command: snakefmt --check includes/fusion
 
+- name: black-fusion
+  tags:
+    - sanity
+    - expression
+  command: black --check includes/fusion/
+
 - name: test-fusion-sample-with-space
   tags:
     - sanity

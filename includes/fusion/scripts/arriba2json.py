@@ -67,7 +67,7 @@ def json_to_arriba(header, data):
     # Convert 'None' values to a dot
     for field, value in data.items():
         if value is None:
-            data[field] = '.'
+            data[field] = "."
 
     return "\t".join((str(data[field]) for field in header))
 
@@ -87,7 +87,7 @@ def read_genes(fname: str) -> Set[str]:
     report_genes = set()
     with open(fname) as fin:
         for line in fin:
-            report_genes.add(line.strip('\n'))
+            report_genes.add(line.strip("\n"))
     return report_genes
 
 
@@ -106,7 +106,7 @@ def main(fusion_file: str, report_genes_file: str) -> None:
 
             for record in parse_arriba(fin):
                 if record["gene1"] in report_genes or record["gene2"] in report_genes:
-                        fusions.append(record)
+                    fusions.append(record)
         print(json.dumps(fusions, indent=True))
 
 

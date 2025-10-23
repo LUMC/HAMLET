@@ -12,11 +12,9 @@ from crimson import picard, vep
 
 def process_aln_stats(path):
     pd = picard.parse(path)
-    raw = next(x for x in pd["metrics"]["contents"]
-               if x["CATEGORY"] == "PAIR")
+    raw = next(x for x in pd["metrics"]["contents"] if x["CATEGORY"] == "PAIR")
 
-    aln_proper_pairs = (raw["READS_ALIGNED_IN_PAIRS"] -
-                        raw["PF_READS_IMPROPER_PAIRS"])
+    aln_proper_pairs = raw["READS_ALIGNED_IN_PAIRS"] - raw["PF_READS_IMPROPER_PAIRS"]
 
     return {
         "num_aligned_bases": raw["PF_ALIGNED_BASES"],
@@ -24,10 +22,12 @@ def process_aln_stats(path):
         "num_aligned_reads_proper_pairs": aln_proper_pairs,
         "num_total_reads": raw["TOTAL_READS"],
         "pct_adapter": raw["PCT_ADAPTER"],
-        "pct_aligned_reads_from_total": (raw["PF_READS_ALIGNED"] * 100. /
-                                         raw["TOTAL_READS"]),
-        "pct_aligned_reads_proper_pairs": (aln_proper_pairs * 100. /
-                                           raw["PF_READS_ALIGNED"]),
+        "pct_aligned_reads_from_total": (
+            raw["PF_READS_ALIGNED"] * 100.0 / raw["TOTAL_READS"]
+        ),
+        "pct_aligned_reads_proper_pairs": (
+            aln_proper_pairs * 100.0 / raw["PF_READS_ALIGNED"]
+        ),
         "pct_chimeras": raw["PCT_CHIMERAS"],
         "rate_indel": raw["PF_INDEL_RATE"],
         "rate_mismatch": raw["PF_MISMATCH_RATE"],
@@ -48,22 +48,27 @@ def process_rna_stats(path):
         "num_intergenic_bases": raw["INTERGENIC_BASES"],
         "num_intronic_bases": raw["INTRONIC_BASES"],
         "num_mrna_bases": raw["CODING_BASES"] + raw["UTR_BASES"],
-        "num_ribosomal_bases": (raw["RIBOSOMAL_BASES"]
-                                if raw["RIBOSOMAL_BASES"] != ""
-                                else None),
+        "num_ribosomal_bases": (
+            raw["RIBOSOMAL_BASES"] if raw["RIBOSOMAL_BASES"] != "" else None
+        ),
         "num_total_bases": raw["PF_BASES"],
         "num_utr_bases": raw["UTR_BASES"],
         "pct_coding_bases": raw["PCT_CODING_BASES"],
         "pct_intergenic_bases": raw["PCT_INTERGENIC_BASES"],
         "pct_intronic_bases": raw["PCT_INTRONIC_BASES"],
         "pct_mrna_bases": raw["PCT_MRNA_BASES"],
-        "pct_ribosomal_bases": (raw["RIBOSOMAL_BASES"] * 100. / raw["PF_ALIGNED_BASES"]
-                                if raw["RIBOSOMAL_BASES"] != ""
-                                else None),
+        "pct_ribosomal_bases": (
+            raw["RIBOSOMAL_BASES"] * 100.0 / raw["PF_ALIGNED_BASES"]
+            if raw["RIBOSOMAL_BASES"] != ""
+            else None
+        ),
         "pct_utr_bases": raw["PCT_UTR_BASES"],
-        "normalized_cov": [item["All_Reads.normalized_coverage"]
-                           for item in sorted(pd["histogram"]["contents"],
-                                              key=cov_sort_key, reverse=False)]
+        "normalized_cov": [
+            item["All_Reads.normalized_coverage"]
+            for item in sorted(
+                pd["histogram"]["contents"], key=cov_sort_key, reverse=False
+            )
+        ],
     }
 
 
@@ -94,22 +99,24 @@ def process_var_stats(path):
         "num_deletions": pd["Variant classes"].get("deletion", 0),
         "num_insertions": pd["Variant classes"].get("insertion", 0),
         "num_snvs": pd["Variant classes"].get("SNV", 0),
-        "per_chromosome": {k: v
-                             for k, v in pd["Variants by chromosome"].items()
-                             if k in {str(i) for i in range(1, 23)}.union({"X", "Y", "MT"})},
+        "per_chromosome": {
+            k: v
+            for k, v in pd["Variants by chromosome"].items()
+            if k in {str(i) for i in range(1, 23)}.union({"X", "Y", "MT"})
+        },
         "polyphen": {
             "num_benign_variants": pd["PolyPhen summary"].get("benign", 0),
-            "num_possibly_damaging_variants":
-            pd["PolyPhen summary"].get("possibly damaging", 0),
-            "num_probably_damaging_variants":
-            pd["PolyPhen summary"].get("probably damaging", 0),
+            "num_possibly_damaging_variants": pd["PolyPhen summary"].get(
+                "possibly damaging", 0
+            ),
+            "num_probably_damaging_variants": pd["PolyPhen summary"].get(
+                "probably damaging", 0
+            ),
             "num_unknown_variants": pd["PolyPhen summary"].get("unknown", 0),
         },
         "sift": {
-            "num_deleterious_variants":
-            pd["SIFT summary"].get("deleterious", 0),
-            "num_tolerated_variants":
-            pd["SIFT summary"].get("tolerated", 0),
+            "num_deleterious_variants": pd["SIFT summary"].get("deleterious", 0),
+            "num_tolerated_variants": pd["SIFT summary"].get("tolerated", 0),
         },
     }
 
@@ -118,8 +125,7 @@ def process_exon_cov_stats(path, idm):
     with open(path, "r") as src:
         raw = json.load(src)
 
-    tid_map = {item["gene_symbol"]: set(item["transcript_ids"])
-               for item in idm}
+    tid_map = {item["gene_symbol"]: set(item["transcript_ids"]) for item in idm}
 
     tempd = {}
     for val in raw.values():
@@ -135,17 +141,20 @@ def process_exon_cov_stats(path, idm):
         assert exon not in tempd[gene][trx], f"{gene}:{trx}:{exon}"
         tempd[gene][trx][exon] = val
 
-    return {gid: {tid: sorted([exn for exn in tv.values()],
-                               key=lambda x: int(x["exon_num"]))
-                  for tid, tv in gv.items()}
-            for gid, gv in tempd.items()}
+    return {
+        gid: {
+            tid: sorted([exn for exn in tv.values()], key=lambda x: int(x["exon_num"]))
+            for tid, tv in gv.items()
+        }
+        for gid, gv in tempd.items()
+    }
 
 
 def post_process(cs):
-    cs["aln"]["num_total_bases"] = (cs["rna"]
-                                          .pop("num_total_bases"))
-    pct_bases_aln = (cs["aln"]["num_aligned_bases"] * 100. /
-                     cs["aln"]["num_total_bases"])
+    cs["aln"]["num_total_bases"] = cs["rna"].pop("num_total_bases")
+    pct_bases_aln = (
+        cs["aln"]["num_aligned_bases"] * 100.0 / cs["aln"]["num_total_bases"]
+    )
     cs["aln"]["pct_aligned_bases_from_total"] = pct_bases_aln
     return cs
 
@@ -157,8 +166,7 @@ def parse_idm(fh):
             continue
         gid, gsym, raw_tids = line.strip().split("\t")
         tids = raw_tids.split(",")
-        idms.append({"gene_id": gid, "gene_symbol": gsym,
-                     "transcript_ids": tids})
+        idms.append({"gene_id": gid, "gene_symbol": gsym, "transcript_ids": tids})
     return idms
 
 
@@ -175,7 +183,7 @@ def idf_to_gene_symbol(id_mapping):
 
 
 def update_variant_overview(mapping, vep, overview):
-    """ Add the vep entry to overview """
+    """Add the vep entry to overview"""
     symbol = get_gene_symbol(vep, mapping)
     overview[symbol].append(vep)
 
@@ -211,18 +219,28 @@ def add_variant_overview(idm, fn_csv):
 
             # Fields to include in the variant overview
             report_fields = {
-                "CHROM", "POS", "REF", "genotype", "HGVSc", "HGVSp",
-                "Existing_variation", "FREQ", "is_in_hotspot", "PVAL", "RD",
-                "AD", "DP"
+                "CHROM",
+                "POS",
+                "REF",
+                "genotype",
+                "HGVSc",
+                "HGVSp",
+                "Existing_variation",
+                "FREQ",
+                "is_in_hotspot",
+                "PVAL",
+                "RD",
+                "AD",
+                "DP",
             }
             # Extract relevant fields
-            d = {k: v for k, v in row.items() if k in report_fields }
+            d = {k: v for k, v in row.items() if k in report_fields}
 
             # Replace NA values with an empty string
             d = {k: v if v != "NA" else "" for k, v in d.items()}
 
             # Update field types
-            d["FREQ"] = float(d["FREQ"][:-1]) # Cut off %
+            d["FREQ"] = float(d["FREQ"][:-1])  # Cut off %
             d["is_in_hotspot"] = d["is_in_hotspot"] == "yes"
             d["PVAL"] = float(d["PVAL"])
 
@@ -255,21 +273,28 @@ def group_variants(id_mapping, vep_txt):
 
 def get_info(vcf):
     """Create an INFO dict from a vcf line"""
-    split = vcf.strip().split('\t')
-    return dict((pair.split('=') for pair in split[7].split(';')))
+    split = vcf.strip().split("\t")
+    return dict((pair.split("=") for pair in split[7].split(";")))
 
 
 def get_format(vcf):
     """Create a FORMAT dict from a vcf line"""
-    split = vcf.strip().split('\t')
+    split = vcf.strip().split("\t")
     format_fields = split[8].split(":")
     format_values = split[9].split(":")
-    return {k:v for k, v in zip(format_fields, format_values)}
+    return {k: v for k, v in zip(format_fields, format_values)}
 
 
-def main(id_mappings_path, vep_txt,
-         aln_stats_path, rna_stats_path,
-         insert_stats_path, exon_cov_stats_path, vep_stats_path, sample_name):
+def main(
+    id_mappings_path,
+    vep_txt,
+    aln_stats_path,
+    rna_stats_path,
+    insert_stats_path,
+    exon_cov_stats_path,
+    vep_stats_path,
+    sample_name,
+):
     """Helper script for combining multiple stats files into one JSON."""
     with open(id_mappings_path) as fin:
         idm = parse_idm(fin)
@@ -279,17 +304,25 @@ def main(id_mappings_path, vep_txt,
             "stats": {
                 "aln": process_aln_stats(aln_stats_path) if aln_stats_path else dict(),
                 "rna": process_rna_stats(rna_stats_path) if rna_stats_path else dict(),
-                "cov": process_exon_cov_stats(exon_cov_stats_path, idm) if exon_cov_stats_path else dict(),
-                "ins": process_insert_stats(insert_stats_path) if insert_stats_path else dict(),
-                "var": process_var_stats(vep_stats_path) if vep_stats_path else dict()
+                "cov": (
+                    process_exon_cov_stats(exon_cov_stats_path, idm)
+                    if exon_cov_stats_path
+                    else dict()
+                ),
+                "ins": (
+                    process_insert_stats(insert_stats_path)
+                    if insert_stats_path
+                    else dict()
+                ),
+                "var": process_var_stats(vep_stats_path) if vep_stats_path else dict(),
             },
-            "metadata": {
-                "sample_name": sample_name
-            }
+            "metadata": {"sample_name": sample_name},
         },
     }
 
-    combined["snv_indels"]["genes"] = group_variants(idm, vep_txt) if vep_txt else dict()
+    combined["snv_indels"]["genes"] = (
+        group_variants(idm, vep_txt) if vep_txt else dict()
+    )
 
     if aln_stats_path:
         combined["snv_indels"]["stats"] = post_process(combined["snv_indels"]["stats"])
@@ -318,4 +351,3 @@ if __name__ == "__main__":
         args.vep_stats_path,
         args.sample,
     )
-
