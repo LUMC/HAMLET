@@ -54,12 +54,17 @@ class TestFilterAnnotate():
 
 
     @pytest.fixture
-    def criteria(self) -> Sequence[Criterion]:
+    def inclusion_criteria(self) -> Sequence[Criterion]:
         return [
             Criterion("ENST1.1", consequence = "frameshift"),
             Criterion("ENST2.1", start="0", end="200", consequence="splice site"),
             Criterion("ENST3.1", start="100+20", end="101-20")
         ]
+
+    @pytest.fixture
+    def annotation_criteria(self) -> Sequence[Criterion]:
+        """The annotation criteria are the same as the filter criteria"""
+        return self.inclusion_criteria()
 
     @pytest.fixture
     def known_variants(self) -> Sequence[str]:
@@ -75,7 +80,7 @@ class TestFilterAnnotate():
         assert not vep["transcript_consequences"]
 
     @pytest.mark.parametrize(
-        "v, c, expected_annotations",
+        "var_index, inclusion_index, expected_annotations",
         [
             # No annotations means all transcript consequences are filtered out
             ("", "", []),
@@ -92,15 +97,15 @@ class TestFilterAnnotate():
         ]
     )
 
-    def test_filter_annotate_variants(self, vep: VEP, criteria: Sequence[Criterion], known_variants: Sequence[str], c: str, v: str, expected_annotations: list[str]) -> None:
+    def test_filter_annotate_variants(self, vep: VEP, inclusion_criteria: Sequence[Criterion], known_variants: Sequence[str], inclusion_index: str, var_index: str, expected_annotations: list[str]) -> None:
         # Create the dict for the criteria
         criteria_dict = dict()
-        for index in c:
-            criteria_dict[criteria[int(index)]] = "crit"
+        for index in inclusion_index:
+            criteria_dict[inclusion_criteria[int(index)]] = "crit"
 
         # Create the dict for the known variants
         known_variants_dict = dict()
-        for index in v:
+        for index in var_index:
             known_variants_dict[known_variants[int(index)]] = "var"
 
 
