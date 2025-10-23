@@ -161,7 +161,7 @@ Every column except for ``transcript_id`` can be empty.
 
 .. csv-table:: Example ``inclusion_criteria`` file, from the HAMLET tests
   :delim: U+0009
-  :file: ../../test/data/config/inclusion_criteria.tsv
+  :file: ../../test/data/config/filter_criteria.tsv
 
 .. csv-table:: Example ``annotation_criteria`` file, from the HAMLET tests
   :delim: U+0009

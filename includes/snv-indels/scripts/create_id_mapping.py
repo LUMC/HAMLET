@@ -91,15 +91,9 @@ def known_variants(fname: str) -> set[str]:
             transcripts.add(transcript)
     return transcripts
 
-def main(gtf_file: str, filter_file: str, annotation_file: str | None, known_variants_file: str |None) -> None:
+def main(gtf_file: str, inclusion_criteria_file: str) -> None:
 
-    transcripts = read_transcripts(filter_file)
-
-    if annotation_file:
-        transcripts.update(read_transcripts(annotation_file))
-
-    if known_variants_file:
-        transcripts.update(known_variants(known_variants_file))
+    transcripts = read_transcripts(inclusion_criteria_file)
 
     results = create_mapping(gtf_file, transcripts)
 
@@ -126,10 +120,8 @@ if __name__ == "__main__":
 
     parser.add_argument("gtf", help="gtf file")
     parser.add_argument(
-        "--filter-file", help="File with filter criteria", required=True
+        "--inclusion-criteria", help="File with inclusion criteria", required=True
     )
-    parser.add_argument("--annotation-file", help="File with annotation criteria")
-    parser.add_argument("--known-variants", help="File with known variants")
 
     args = parser.parse_args()
-    main(args.gtf, args.filter_file, args.annotation_file, args.known_variants)
+    main(args.gtf, args.inclusion_criteria)

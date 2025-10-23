@@ -31,18 +31,16 @@ def main(
 ) -> None:
     # Get genes and transcripts of interest
     annotations = read_criteria_file(annotation_file)
-    filter_criteria = read_criteria_file(criteria_file)
+    inclusion_criteria = list(read_criteria_file(criteria_file).keys())
 
-    # Add the filter criteria to the end of the annotations, so they have a
-    # lower priority
-    annotations.update(filter_criteria)
 
-    # TODO, read known variants file
     known_variants = read_known_variants(known_variants_file) if known_variants_file else dict()
 
     # Get all identifiers, remove version number
     # because we raise an error later on version mismatch
     ids = {c.identifier.split(".")[0] for c in annotations}
+    ids.update({c.identifier.split(".")[0] for c in inclusion_criteria})
+
     for v in known_variants:
         # Get transcript ID from known variants, without version number
         id = v.split(":c")[0].split(".")[0]
@@ -60,7 +58,7 @@ def main(
 
         # Filter and annotate transcripts based on known variants and the annotations
         # The known variants have the higher priority
-        vep.filter_annotate_transcripts(known_variants, annotations)
+        vep.filter_annotate_transcripts(inclusion_criteria, known_variants, annotations)
 
         # If there is no consequence of interest left
         if not vep["transcript_consequences"]:
