@@ -232,7 +232,7 @@
 - name: black-snv-indels
   tags:
     - sanity
-    - expression
+    - snv-indels
   command: black --check includes/snv-indels/
 
 - name: test-snv-indels-sample-with-space

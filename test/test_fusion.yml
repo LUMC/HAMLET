@@ -118,13 +118,13 @@
 - name: black-fusion
   tags:
     - sanity
-    - expression
+    - fusion
   command: black --check includes/fusion/
 
 - name: mypy-fusion
   tags:
     - sanity
-    - expression
+    - fusion
   command: mypy --strict includes/fusion/
 
 - name: test-fusion-sample-with-space

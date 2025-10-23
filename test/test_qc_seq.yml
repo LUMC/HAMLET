@@ -123,7 +123,7 @@
 - name: black-qc
   tags:
     - sanity
-    - expression
+    - qc-seq
   command: black --check includes/qc-seq/
 
 - name: test-qc-seq-sample-with-space

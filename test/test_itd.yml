@@ -152,7 +152,7 @@
 - name: lint-itd
   tags:
     - sanity
-    - itd 
+    - itd
   command: >
     snakemake
     --lint
@@ -169,7 +169,7 @@
 - name: black-itd
   tags:
     - sanity
-    - expression
+    - itd
   command: black --check includes/itd
 
 - name: test-itd-sample-with-space
