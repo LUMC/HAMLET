@@ -26,7 +26,7 @@ EZH2	ENST00000320356.7	inframe_insertion	1507	1851		possible pathogenic (CXC)
 EZH2	ENST00000320356.7	missense_variant	1852	2253		possible pathogenic (SET)
 EZH2	ENST00000320356.7	inframe_deletion	1852	2253		possible pathogenic (SET)
 EZH2	ENST00000320356.7	inframe_insertion	1852	2253		possible pathogenic (SET)
-EZH2	ENST00000320356.7	frameshift				pathogenic
+EZH2	ENST00000320356.7	frameshift_variant				pathogenic
 EZH2	ENST00000320356.7	stop_gained				pathogenic
 EZH2	ENST00000320356.7	stop_lost				pathogenic
 RUNX1	ENST00000675419.1	frameshift_variant				pathogenic
@@ -73,7 +73,7 @@ TP53	ENST00000269305.9	start_lost				pathogenic
 TP53	ENST00000269305.9	stop_gained				pathogenic
 TP53	ENST00000269305.9	stop_lost				pathogenic
 TP53	ENST00000269305.9	missense_variant	742	744		pathogenic
-TP53	ENST00000269305.9	missense				possible pathogenic
+TP53	ENST00000269305.9	missense_variant				possible pathogenic
 TP53	ENST00000269305.9	inframe_insertion				possible pathogenic
 TP53	ENST00000269305.9	inframe_deletion				possible pathogenic
 TP53g	ENST00000455263.6		994-2	*2		possible pathogenic  (alt exon 10 gamma)
@@ -120,7 +120,7 @@ DNMT3A	ENST00000321117.10	missense_variant	2644	2645		pathogenic
 DNMT3A	ENST00000321117.10	missense_variant				possible pathogenic
 DNMT3A	ENST00000321117.10	inframe_deletion				possible pathogenic
 DNMT3A	ENST00000321117.10	inframe_insertion				possible pathogenic
-DNMT3A	ENST00000321117.10	frameshift				possible pathogenic
+DNMT3A	ENST00000321117.10	frameshift_variant				possible pathogenic
 DNMT3A	ENST00000321117.10	stop_gained				possible pathogenic
 DNMT3A	ENST00000321117.10	stop_lost				possible pathogenic
 ETNK1	ENST00000671733.1	missense_variant	727	734		(only known pathogenic)
@@ -175,8 +175,8 @@ TET2	ENST00000380013.9	frameshift_variant				pathogenic
 TET2	ENST00000380013.9	start_lost				pathogenic
 TET2	ENST00000380013.9	stop_gained				pathogenic
 TET2	ENST00000380013.9	start_lost				pathogenic
-TET2	ENST00000380013.9	missense_variant	3310	4443		possible pathogenic (Cat. Dom)
-TET2	ENST00000380013.9	missense_variant	5527	6009		possible pathogenic (Cat. Dom)
+TET2	ENST00000380013.9	missense_variant	3310	4443		possible pathogenic (cat. dom)
+TET2	ENST00000380013.9	missense_variant	5527	6009		possible pathogenic (cat. dom)
 UBA1	ENST00000335972.11					discard (only known pathogenic)
 WT1	ENST00000452863.10	frameshift_variant	1114	1264		pathogenic
 WT1	ENST00000452863.10	start_lost	1114	1264		pathogenic
