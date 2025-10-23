@@ -18,7 +18,8 @@ from utils import (
     get_position,
 )
 
-class TestFilterAnnotate():
+
+class TestFilterAnnotate:
     """
     Tests for the filtering/annotation of transcripts for variants, based on Criteria and known variants
 
@@ -32,6 +33,7 @@ class TestFilterAnnotate():
     The tests combine the Criteria with the known_variants to ensure that the
     annotations and filtering works correctly, with the expected priority.
     """
+
     @pytest.fixture
     def vep(self) -> VEP:
         minimal_vep_record = {
@@ -52,68 +54,93 @@ class TestFilterAnnotate():
         }
         return VEP(minimal_vep_record)
 
+    def criteria(self):
+        return [
+            Criterion("ENST1.1", consequence="frameshift"),
+            Criterion("ENST2.1", start="0", end="200", consequence="splice site"),
+            Criterion("ENST3.1", start="100+20", end="101-20"),
+        ]
 
     @pytest.fixture
     def inclusion_criteria(self) -> Sequence[Criterion]:
-        return [
-            Criterion("ENST1.1", consequence = "frameshift"),
-            Criterion("ENST2.1", start="0", end="200", consequence="splice site"),
-            Criterion("ENST3.1", start="100+20", end="101-20")
-        ]
+        return self.criteria()
 
     @pytest.fixture
     def annotation_criteria(self) -> Sequence[Criterion]:
-        """The annotation criteria are the same as the filter criteria"""
-        return self.inclusion_criteria()
+        """The annotation criteria are the same as the inclusion criteria"""
+        return self.criteria()
 
     @pytest.fixture
     def known_variants(self) -> Sequence[str]:
-        return [
-            "ENST1.1:c.100del",
-            "ENST2.1:c.100A>T",
-            "ENST3.1:c.100+100A>T"
-        ]
-
+        return ["ENST1.1:c.100del", "ENST2.1:c.100A>T", "ENST3.1:c.100+100A>T"]
 
     def test_filter_annotate_variants_empty(self, vep: VEP) -> None:
-        vep.filter_annotate_transcripts(dict(), dict())
+        vep.filter_annotate_transcripts(dict(), list(), dict())
         assert not vep["transcript_consequences"]
 
     @pytest.mark.parametrize(
-        "var_index, inclusion_index, expected_annotations",
+        "inclusion_index, var_index, annotation_index, expected_annotations",
         [
-            # No annotations means all transcript consequences are filtered out
-            ("", "", []),
-            # All three Criteria
-            ("", "012", ["crit", "crit", "crit"]),
-            # All three known variants
-            ("012", "", ["var", "var", "var"]),
-            # Both criteria and known variants, variants take precedence
-            ("012", "012", ["var", "var", "var"]),
+            # No inclusion means all transcript consequences are filtered out
+            ("", "012", "012", []),
+            # If all three inclusion and annotation criteria are set
+            ("012", "", "012", ["crit", "crit", "crit"]),
+            # If two inclusion and three annotation criteria are set
+            ("01", "", "012", ["crit", "crit"]),
+            # If one inclusion and three annotation criteria are set
+            ("0", "", "012", ["crit"]),
+            # If all three inclusion and known variants are set. Variants have
+            # priorty over annotations
+            ("012", "012", "012", ["var", "var", "var"]),
+            # Idem, but with two inclusion criteria set
+            ("01", "012", "012", ["var", "var"]),
+            # Idem, but with one inclusion criteria set
+            ("0", "012", "012", ["var"]),
+            # Idem, but without inclusion criteria set
+            ("", "012", "012", []),
             # The second variant is not in known variants
-            ("02", "012", ["var", "crit", "var"]),
-            ("02", "1", ["var", "crit", "var"]),
-            ("02", "", ["var", "var"]),
-        ]
+            ("012", "02", "012", ["var", "crit", "var"]),
+            ("012", "02", "1", ["var", "crit", "var"]),
+            ("012", "02", "", ["var", "", "var"]),
+            # Everything included, but nothing annotated
+            # Note that the annotation exist, but is empty
+            ("012", "", "", ["", "", ""])
+        ],
     )
-
-    def test_filter_annotate_variants(self, vep: VEP, inclusion_criteria: Sequence[Criterion], known_variants: Sequence[str], inclusion_index: str, var_index: str, expected_annotations: list[str]) -> None:
-        # Create the dict for the criteria
-        criteria_dict = dict()
+    def test_filter_annotate_variants(
+        self,
+        vep: VEP,
+        inclusion_criteria: Sequence[Criterion],
+        known_variants: Sequence[str],
+        annotation_criteria: Sequence[Criterion],
+        inclusion_index: str,
+        var_index: str,
+        annotation_index: str,
+        expected_annotations: list[str],
+    ) -> None:
+        # Create the list for the inclusion criteria
+        inclusion = list()
         for index in inclusion_index:
-            criteria_dict[inclusion_criteria[int(index)]] = "crit"
+            inclusion.append(inclusion_criteria[int(index)])
 
         # Create the dict for the known variants
-        known_variants_dict = dict()
+        variants = dict()
         for index in var_index:
-            known_variants_dict[known_variants[int(index)]] = "var"
+            variants[known_variants[int(index)]] = "var"
 
+        # Create the dict for the annotation criteria
+        annotation = dict()
+        for index in annotation_index:
+            annotation[annotation_criteria[int(index)]] = "crit"
 
-        vep.filter_annotate_transcripts(known_variants_dict, criteria_dict)
+        vep.filter_annotate_transcripts(inclusion, variants, annotation)
 
-        annotations = [transcript["annotation"] for transcript in vep["transcript_consequences"]]
+        annotations = [
+            transcript["annotation"] for transcript in vep["transcript_consequences"]
+        ]
 
         assert annotations == expected_annotations
+
 
 @pytest.fixture
 def vep() -> VEP:
