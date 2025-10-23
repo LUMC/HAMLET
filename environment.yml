@@ -10,6 +10,8 @@ dependencies:
   - "bs4>=4.12, <=4.14"
   - peppy=0.40
   - pytest-workflow=2.1.0
+  - mypy=1.15.0
+  - python=3.12
   - "snakemake-minimal>=8.24.1, <=9.13.2"
   - snakemake-executor-plugin-slurm
   - snakefmt

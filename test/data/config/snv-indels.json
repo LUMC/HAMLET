@@ -3,7 +3,7 @@
   "genome_fai": "test/data/reference/hamlet-ref.fa.fai",
   "genome_dict": "test/data/reference/hamlet-ref.dict",
   "star_index": "test/data/reference/hamlet-star",
-  "filter_criteria": "test/data/config/filter_criteria.tsv",
+  "inclusion_criteria": "test/data/config/inclusion_criteria.tsv",
   "annotation_criteria": "test/data/config/annotation_criteria.tsv",
   "known_variants": "test/data/config/known_variants.tsv",
   "rrna_refflat": "test/data/reference/ucsc_rrna.refFlat",

@@ -2,13 +2,13 @@ import pysam
 import pytest
 import dataclasses
 
-from typing import Any
+from typing import Any, Sequence, cast
 
 from coverage import orientation_first
 
 
 @dataclasses.dataclass
-class FakeRead():
+class FakeRead:
     name: str
     flag: str
     ref_name: str = "chr1"
@@ -22,35 +22,37 @@ class FakeRead():
     length: str = "4"
 
 
-def to_pysam_read(fake_read: FakeRead, header: pysam.AlignmentHeader) -> pysam.AlignedSegment:
+def to_pysam_read(
+    fake_read: FakeRead, header: pysam.AlignmentHeader
+) -> pysam.AlignedSegment:
     dataclass_dict = dataclasses.asdict(fake_read)
-    return pysam.AlignedSegment.from_dict(dataclass_dict, header)
+    return cast(
+        pysam.AlignedSegment, pysam.AlignedSegment.from_dict(dataclass_dict, header)
+    )
 
 
 @pytest.fixture
-def reads():
+def reads() -> list[pysam.AlignedSegment]:
 
     reads = [
-            # paired, proper pair, mate reverse, first in pair
-            FakeRead("read1", "99"),
-            # paired, proper pair, mate reverse, second in pair
-            FakeRead("read2", "163"),
-            # paired, proper pair, read reverse, first in pair
-            FakeRead("read3", "83"),
-            # paired, proper pair, read reverse, second in pair
-            FakeRead("read4", "147"),
+        # paired, proper pair, mate reverse, first in pair
+        FakeRead("read1", "99"),
+        # paired, proper pair, mate reverse, second in pair
+        FakeRead("read2", "163"),
+        # paired, proper pair, read reverse, first in pair
+        FakeRead("read3", "83"),
+        # paired, proper pair, read reverse, second in pair
+        FakeRead("read4", "147"),
     ]
 
-    header = {
-            "SQ": [{"SN": "chr1", "LN": 100}]
-    }
+    header = {"SQ": [{"SN": "chr1", "LN": 100}]}
 
     H = pysam.AlignmentHeader.from_dict(header)
 
     return [to_pysam_read(read, H) for read in reads]
 
 
-def test_true(reads):
+def test_true(reads: Sequence[pysam.AlignedSegment]) -> None:
     assert True
 
     # Orientation of the first read of the pair, for the reads in the fixture

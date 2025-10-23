@@ -2,8 +2,9 @@
 
 import sys
 
+
 def unplaced(chrom):
-    """ Guess if a chromosome is unplaced, from the name """
+    """Guess if a chromosome is unplaced, from the name"""
     return chrom.startswith("GL") or chrom.startswith("KI")
 
 
@@ -15,7 +16,7 @@ def main():
 
     with open(refflat) as fin:
         for line in fin:
-            spline = line.strip('\n').split('\t')
+            spline = line.strip("\n").split("\t")
             if not spline[11]:
                 print(f"Skipping {spline[0]}, no gene name", file=sys.stderr)
                 continue
@@ -23,7 +24,8 @@ def main():
             if unplaced(chromosome):
                 print(f"Skipping {spline[0]}, unplaced chromosome", file=sys.stderr)
                 continue
-            print(*[spline[f] for f in order ], sep='\t')
+            print(*[spline[f] for f in order], sep="\t")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

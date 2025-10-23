@@ -240,3 +240,15 @@
     - sanity
     - expression
   command: snakefmt --check includes/expression/
+
+- name: black-expression
+  tags:
+    - sanity
+    - expression
+  command: black --check includes/expression/
+
+- name: mypy-expression
+  tags:
+    - sanity
+    - expression
+  command: mypy --strict includes/expression/

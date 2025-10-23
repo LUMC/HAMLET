@@ -1,7 +1,7 @@
 import argparse
 
 
-def main(countfile, strand, sample):
+def main(countfile: str, strand: str, sample: str) -> None:
     columns = {"unstranded": 1, "forward": 2, "reverse": 3}
     # Select the column for the specified strand
     column = columns[strand]

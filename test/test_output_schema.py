@@ -3,6 +3,7 @@ import jsonschema
 import pathlib
 import pytest
 
+
 def validate_files(output_file, schema_file):
     # Load the output file
     with open(output_file) as fin:
@@ -14,62 +15,81 @@ def validate_files(output_file, schema_file):
 
     jsonschema.validate(instance=hamlet_output, schema=schema)
 
-@pytest.mark.workflow('test-hamlet-chrM')
+
+@pytest.mark.workflow("test-hamlet-chrM")
 def test_output_against_schema(workflow_dir):
     sample = "SRR8615409"
     output_file = pathlib.Path(workflow_dir, f"{sample}/{sample}.summary.json")
     schema_file = pathlib.Path(workflow_dir, "utilities/output-schema.json")
     validate_files(output_file, schema_file)
 
-@pytest.mark.workflow('test-hamlet-targetted-RNA')
+
+@pytest.mark.workflow("test-hamlet-targetted-RNA")
 def test_output_targetted_seq_against_schema(workflow_dir):
     sample = "MO1-RNAseq-1-16714"
     output_file = pathlib.Path(workflow_dir, f"{sample}/{sample}.summary.json")
     schema_file = pathlib.Path(workflow_dir, "utilities/output-schema.json")
     validate_files(output_file, schema_file)
 
-@pytest.mark.workflow('test-fusion-chrM')
+
+@pytest.mark.workflow("test-fusion-chrM")
 def test_fusion_schema(workflow_dir):
     sample = "SRR8615409"
     output_file = pathlib.Path(workflow_dir, f"{sample}/fusion/fusion-output.json")
     schema_file = pathlib.Path(workflow_dir, "includes/fusion/output-schema.json")
     validate_files(output_file, schema_file)
 
-@pytest.mark.workflow('test-snv-indels-chrM')
+
+@pytest.mark.workflow("test-snv-indels-chrM")
 def test_snv_indel_schema(workflow_dir):
     sample = "SRR8615409"
-    output_file = pathlib.Path(workflow_dir, f"{sample}/snv-indels/snv-indels-output.json")
+    output_file = pathlib.Path(
+        workflow_dir, f"{sample}/snv-indels/snv-indels-output.json"
+    )
     schema_file = pathlib.Path(workflow_dir, "includes/snv-indels/output-schema.json")
     validate_files(output_file, schema_file)
 
-@pytest.mark.workflow('test-itd')
+
+@pytest.mark.workflow("test-itd")
 def test_itd_schema(workflow_dir):
     sample = "SRR8616218"
     output_file = pathlib.Path(workflow_dir, f"{sample}/itd//itd-output.json")
     schema_file = pathlib.Path(workflow_dir, "includes/itd/output-schema.json")
     validate_files(output_file, schema_file)
 
+
 workflows = [
-'Run the expression module with genes of interest',
-'Run the expression module without genes of interest or bed',
-'Run the expression module with a bed file'
+    "Run the expression module with genes of interest",
+    "Run the expression module without genes of interest or bed",
+    "Run the expression module with a bed file",
 ]
+
+
 @pytest.mark.workflow(*workflows)
 def test_expression_schema(workflow_dir):
     sample = "SRR8615409"
-    output_file = pathlib.Path(workflow_dir, f"{sample}/expression/expression-output.json")
+    output_file = pathlib.Path(
+        workflow_dir, f"{sample}/expression/expression-output.json"
+    )
     schema_file = pathlib.Path(workflow_dir, "includes/expression/output-schema.json")
     validate_files(output_file, schema_file)
 
-@pytest.mark.parametrize("sample", ["SRR8615409-unstranded","SRR8615409-forward","SRR8615409-reverse"])
-@pytest.mark.workflow('Run the expression module with strandedness specified')
+
+@pytest.mark.parametrize(
+    "sample", ["SRR8615409-unstranded", "SRR8615409-forward", "SRR8615409-reverse"]
+)
+@pytest.mark.workflow("Run the expression module with strandedness specified")
 def test_expression_schema_strand(sample, workflow_dir):
-    output_file = pathlib.Path(workflow_dir, f"{sample}/expression/expression-output.json")
+    output_file = pathlib.Path(
+        workflow_dir, f"{sample}/expression/expression-output.json"
+    )
     schema_file = pathlib.Path(workflow_dir, "includes/expression/output-schema.json")
     validate_files(output_file, schema_file)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     import sys
+
     instance = sys.argv[1]
     schema = sys.argv[2]
 

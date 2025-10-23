@@ -152,7 +152,7 @@
 - name: lint-itd
   tags:
     - sanity
-    - itd 
+    - itd
   command: >
     snakemake
     --lint
@@ -165,6 +165,18 @@
     - sanity
     - itd
   command: snakefmt --check includes/itd
+
+- name: black-itd
+  tags:
+    - sanity
+    - itd
+  command: black --check includes/itd
+
+- name: mypy-itd
+  tags:
+    - sanity
+    - itd
+  command: mypy --strict includes/itd/
 
 - name: test-itd-sample-with-space
   tags:

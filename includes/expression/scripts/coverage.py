@@ -33,7 +33,7 @@ class Coverage:
     reverse: Optional[float]
 
 
-def parse_bed(fname: str):
+def parse_bed(fname: str) -> Iterator[Bed]:
     """Parse BED file and yield records"""
     with open(fname) as fin:
         for line in fin:
@@ -65,7 +65,7 @@ def get_reads(record: Bed, bamfile: str) -> Iterator[pysam.AlignedSegment]:
             yield read
 
 
-def read_names(Bed: Bed, bamfile):
+def read_names(Bed: Bed, bamfile: str) -> dict[str, set[str]]:
     """Extract the read names in Bed region, per strandedness"""
 
     # Store the read name to ensure we don't count forward/reverse double
@@ -78,6 +78,7 @@ def read_names(Bed: Bed, bamfile):
     for read in get_reads(Bed, bamfile):
         orientation = orientation_first(read)
         read_name = read.query_name
+        assert read_name is not None
         if orientation == Bed.strand:
             by_strand["forward"].add(read_name)
         else:
@@ -93,7 +94,7 @@ def get_bed_coverage(bedfile: str, bamfile: str) -> dict[str, Coverage]:
     """Get coverage for the regions specified in the bedfile"""
     # If there are multiple regions in the BED file with the same name, we add
     # the read names together so we don't count double
-    by_name: dict[str, dict[str, set]] = defaultdict(
+    by_name: dict[str, dict[str, set[str]]] = defaultdict(
         lambda: {"unstranded": set(), "forward": set(), "reverse": set()}
     )
 
@@ -130,7 +131,7 @@ def orientation_first(read: pysam.AlignedSegment) -> str:
     raise RuntimeError(msg)
 
 
-def read_STAR_counts(fname):
+def read_STAR_counts(fname: str) -> Iterator[tuple[str, Coverage]]:
     """Read the STAR counts file into Coverage by strand"""
     with open(fname) as fin:
         # Skip the headers
@@ -165,11 +166,12 @@ def get_normalizer_values(
 ) -> Coverage:
     """Calculate the normalizer values for each strand"""
 
+    # Exclude None values
     unstranded = [STAR_counts[gene].unstranded for gene in genes]
     forward = [STAR_counts[gene].forward for gene in genes]
     reverse = [STAR_counts[gene].reverse for gene in genes]
 
-    return Coverage(median(unstranded), median(forward), median(reverse))
+    return Coverage(median(unstranded), median(forward), median(reverse))  # type: ignore
 
 
 def main(
@@ -203,15 +205,15 @@ def main(
         for gene in coverage:
             # If all housekeeping genes have 0 expression, we set the value to None
             try:
-                coverage[gene].unstranded /= normalizer.unstranded
+                coverage[gene].unstranded /= normalizer.unstranded  # type: ignore
             except ZeroDivisionError:
                 coverage[gene].unstranded = None
             try:
-                coverage[gene].forward /= normalizer.forward
+                coverage[gene].forward /= normalizer.forward  # type: ignore
             except ZeroDivisionError:
                 coverage[gene].forward = None
             try:
-                coverage[gene].reverse /= normalizer.reverse
+                coverage[gene].reverse /= normalizer.reverse  # type: ignore
             except ZeroDivisionError:
                 coverage[gene].reverse = None
 

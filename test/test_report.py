@@ -2,6 +2,7 @@ import pytest
 import bs4
 import base64
 
+
 def get_rows(table):
     """Get rows from table, supports rowspan in the first column only"""
     # To deal with rowspan
@@ -24,11 +25,12 @@ def get_rows(table):
 
         yield text
 
+
 def parse_table(table):
     """Convert a table to a list of dicts"""
     data = list()
     # Get the headers
-    headers = [header.get_text() for header in table.find_all('th')]
+    headers = [header.get_text() for header in table.find_all("th")]
 
     # Get the rows
     for row in table.find("tbody").find_all("tr"):
@@ -36,14 +38,16 @@ def parse_table(table):
         data.append(d)
     return data
 
+
 def convert_image_to_base64(img_path):
     with open(img_path, "rb") as f:
         b64_bytes = base64.b64encode(f.read())
     return b64_bytes.decode("utf-8")
 
-@pytest.mark.workflow('test-report')
+
+@pytest.mark.workflow("test-report")
 def test_variant_overview(workflow_dir):
-    """ Test the content of the variant overview
+    """Test the content of the variant overview
 
     The structure of the data that gets put in the variant overview is quite
     complex.
@@ -58,7 +62,7 @@ def test_variant_overview(workflow_dir):
         soup = bs4.BeautifulSoup(fin, features="html.parser")
 
     # Extract the variant table
-    variant_table = soup.find('table', id='var-overview')
+    variant_table = soup.find("table", id="var-overview")
 
     # Extract the gene name columns
     gene1, gene2 = variant_table.findAll(attrs={"class": "hl"})
@@ -69,8 +73,7 @@ def test_variant_overview(workflow_dir):
     assert gene2.text == "MT-ATP8"
 
 
-
-@pytest.mark.workflow('test-report')
+@pytest.mark.workflow("test-report")
 def test_genes_in_order(workflow_dir):
     """Test if genes in table 2 are in order"""
     report = f"{workflow_dir}/report.html"
@@ -78,12 +81,12 @@ def test_genes_in_order(workflow_dir):
         soup = bs4.BeautifulSoup(fin, features="html.parser")
 
     # Extract table 2, genes of interest
-    genes_of_interest = parse_table(soup.find('table', id='genes-of-interest'))
+    genes_of_interest = parse_table(soup.find("table", id="genes-of-interest"))
     assert "MT-ATP6" in genes_of_interest[0].values()
     assert "MT-ATP8" in genes_of_interest[1].values()
 
 
-@pytest.mark.workflow('test-report')
+@pytest.mark.workflow("test-report")
 def test_chr_location_exon(workflow_dir):
     """Test if the genomic HGVS and exons are in the table"""
     report = f"{workflow_dir}/report.html"
@@ -91,7 +94,7 @@ def test_chr_location_exon(workflow_dir):
         soup = bs4.BeautifulSoup(fin, features="html.parser")
 
     # Get rows from the table, accounting for rowspan
-    rows = get_rows(soup.find('table', id='var-overview'))
+    rows = get_rows(soup.find("table", id="var-overview"))
 
     # The genomic HGVS is in the second row
     next(rows)
@@ -99,7 +102,7 @@ def test_chr_location_exon(workflow_dir):
 
     # Convert into a dictionary
     header = "gene hgvs database VAF_exon annotation ref alt total".split()
-    data = {k:v for k, v in zip(header, row)}
+    data = {k: v for k, v in zip(header, row)}
 
     # Test that the genomic HGVS is in the table
     assert "chrM:g.8701A>G" in data["hgvs"]
@@ -108,16 +111,15 @@ def test_chr_location_exon(workflow_dir):
     assert data["annotation"] == "Hotspot"
 
 
-@pytest.mark.workflow('test-report')
+@pytest.mark.workflow("test-report")
 def test_fusion_overview(workflow_dir):
-    """ Test the content of the fusion overview
-    """
+    """Test the content of the fusion overview"""
     report = f"{workflow_dir}/report.html"
     with open(report) as fin:
         soup = bs4.BeautifulSoup(fin, features="html.parser")
 
     # Extract the fusion table
-    fusion_table = parse_table(soup.find('table', id='fusion-overview'))
+    fusion_table = parse_table(soup.find("table", id="fusion-overview"))
     row = fusion_table[0]
 
     # Check the headers
@@ -130,36 +132,31 @@ def test_fusion_overview(workflow_dir):
     assert "(chr22, chr9)" in row["Fusion name"]
 
 
-@pytest.mark.workflow('test-report')
+@pytest.mark.workflow("test-report")
 def test_is_in_hotspot(workflow_dir):
     report = f"{workflow_dir}/report.html"
     with open(report) as fin:
         soup = bs4.BeautifulSoup(fin, features="html.parser")
 
     # Extract the variant table
-    variant_table = soup.find('table', id='var-overview')
-    expected_values = ['', 'Hotspot', 'Hotspot', 'Hotspot']
+    variant_table = soup.find("table", id="var-overview")
+    expected_values = ["", "Hotspot", "Hotspot", "Hotspot"]
     hotspot_column = 4
 
     for row, expected in zip(get_rows(variant_table), expected_values):
         assert expected in row[hotspot_column]
 
 
-@pytest.mark.workflow('test-report')
+@pytest.mark.workflow("test-report")
 def test_database_identifiers(workflow_dir):
     report = f"{workflow_dir}/report.html"
     with open(report) as fin:
         soup = bs4.BeautifulSoup(fin, features="html.parser")
 
     # Extract the variant table
-    variant_table = soup.find('table', id='var-overview')
+    variant_table = soup.find("table", id="var-overview")
 
-    expected_values = [
-            "rs3020563",
-            "COSV104419767 rs2000975",
-            "rs2001031",
-            ""
-    ]
+    expected_values = ["rs3020563", "COSV104419767 rs2000975", "rs2001031", ""]
 
     database_column = 2
 
@@ -167,9 +164,9 @@ def test_database_identifiers(workflow_dir):
         assert row[database_column] == expected
 
 
-@pytest.mark.workflow('test-full-report')
+@pytest.mark.workflow("test-full-report")
 def test_full_variant_overview(workflow_dir):
-    """ Test the content of the variant overview
+    """Test the content of the variant overview
 
     The structure of the data that gets put in the variant overview is quite
     complex.
@@ -185,7 +182,7 @@ def test_full_variant_overview(workflow_dir):
         soup = bs4.BeautifulSoup(fin, features="html.parser")
 
     # Extract the variant table
-    variant_table = soup.find('table', id='var-overview')
+    variant_table = soup.find("table", id="var-overview")
 
     # Extract the gene name columns
     gene1, gene2 = variant_table.findAll(attrs={"class": "hl"})
@@ -198,27 +195,28 @@ def test_full_variant_overview(workflow_dir):
     assert gene2["rowspan"] == "1"
     assert gene2.text == "MT-ATP8"
 
-@pytest.mark.workflow('test-report-vardict')
+
+@pytest.mark.workflow("test-report-vardict")
 def test_full_variant_overview_vardict(workflow_dir):
-    """ Test the content of the variant overview from vardict
-    """
+    """Test the content of the variant overview from vardict"""
     report = f"{workflow_dir}/report.html"
     with open(report) as fin:
         soup = bs4.BeautifulSoup(fin, features="html.parser")
 
     # Extract the variant table
-    variant_table = soup.find('table', id='var-overview')
+    variant_table = soup.find("table", id="var-overview")
 
     # Check the first row
     row = parse_table(variant_table)[0]
-    assert row["Ref/Alt(Total)"] == '0/27(27)'
+    assert row["Ref/Alt(Total)"] == "0/27(27)"
 
     # The allele frequency should be given in percentage: 100%, not 1
-    assert row["VAF/Exon"] == '100.0%1/1'
+    assert row["VAF/Exon"] == "100.0%1/1"
 
-@pytest.mark.workflow('Test report expression genes')
+
+@pytest.mark.workflow("Test report expression genes")
 def test_variant_overview_expression(workflow_dir):
-    """ Test the content of the variant overview
+    """Test the content of the variant overview
 
     The structure of the data that gets put in the variant overview is quite
     complex.
@@ -233,26 +231,31 @@ def test_variant_overview_expression(workflow_dir):
         soup = bs4.BeautifulSoup(fin, features="html.parser")
 
     # Extract the variant table
-    expression_table = soup.find('table', id='gene-expression')
+    expression_table = soup.find("table", id="gene-expression")
     table = parse_table(expression_table)
 
     # First row
-    expected = {'Gene': 'MT-ND4', 'Raw count': '314', 'Normalized expression': '1.11'}
+    expected = {"Gene": "MT-ND4", "Raw count": "314", "Normalized expression": "1.11"}
     assert table[0] == expected
 
     # Second row
-    expected = {'Gene': 'MT-TH', 'Raw count': '3', 'Normalized expression': '0.01'}
+    expected = {"Gene": "MT-TH", "Raw count": "3", "Normalized expression": "0.01"}
     assert table[1] == expected
 
-@pytest.mark.workflow('Test cell type and fusion images are embedded as base64 string')
+
+@pytest.mark.workflow("Test cell type and fusion images are embedded as base64 string")
 def test_base64_image_in_report(workflow_dir):
     html_path = f"{workflow_dir}/report.html"
-    imgs_path = [f"{workflow_dir}/SRR8615409/expression/seAMLess/cell-types.png",
-                f"{workflow_dir}/SRR8615409/fusion/arriba/plots/fusion-1.png"]
+    imgs_path = [
+        f"{workflow_dir}/SRR8615409/expression/seAMLess/cell-types.png",
+        f"{workflow_dir}/SRR8615409/fusion/arriba/plots/fusion-1.png",
+    ]
 
     with open(html_path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
     for img_path in imgs_path:
         b64_str = convert_image_to_base64(img_path)
-        assert b64_str in html_content,f"Base64 string for {img_path} not found in HTML report"
+        assert (
+            b64_str in html_content
+        ), f"Base64 string for {img_path} not found in HTML report"

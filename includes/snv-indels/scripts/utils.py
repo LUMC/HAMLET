@@ -1,7 +1,7 @@
 from typing import Any, Iterator, Dict, Sequence, Tuple, Set
 import functools
 from collections import namedtuple
-from mutalyzer_hgvs_parser import to_model  # type: ignore
+from mutalyzer_hgvs_parser import to_model
 from itertools import zip_longest
 from collections import OrderedDict
 
@@ -62,22 +62,12 @@ class VEP(dict[str, Any]):
         "intergenic_variant",
     ]
 
-    def filter_criteria(self, criteria: Sequence["Criterion"]) -> None:
-        filtered = list()
-        for tc in self.get("transcript_consequences", list()):
-            hgvsc = tc.get("hgvsc")
-            if hgvsc is None:
-                continue
-
-            variant = Variant(hgvsc, tc["consequence_terms"])
-            for crit in criteria:
-                if crit.match(variant):
-                    filtered.append(tc)
-                    break
-        self["transcript_consequences"] = filtered
-        self.update_most_severe()
-
-    def filter_annotate_transcripts(self, known_variants: dict[str, str], criteria: dict["Criterion", str], ) -> None:
+    def filter_annotate_transcripts(
+        self,
+        inclusion: Sequence["Criterion"],
+        known_variants: dict[str, str],
+        annotation: dict["Criterion", str],
+    ) -> None:
         """Filter and annotate the transcripts"""
 
         filtered = list()
@@ -89,18 +79,27 @@ class VEP(dict[str, Any]):
             if hgvsc is None:
                 continue
 
+            variant = Variant(hgvsc, transcript["consequence_terms"])
+
+            # If the variant does not match the inclusion criteria, we do nothing
+            for criteria in inclusion:
+                if criteria.match(variant):
+                    filtered.append(transcript)
+                    # Make sure the annotation key always exists
+                    transcript["annotation"] = ""
+                    break
+            else:
+                continue
+
             # If hgvsc is a known variant, we update the annotation
             if hgvsc in known_variants:
                 transcript["annotation"] = known_variants[hgvsc]
-                filtered.append(transcript)
                 continue
 
             # Otherwise, we check the criteria
-            variant = Variant(hgvsc, transcript["consequence_terms"])
-            for crit, annotation in criteria.items():
+            for crit, annot in annotation.items():
                 if crit.match(variant):
-                    transcript["annotation"] = annotation
-                    filtered.append(transcript)
+                    transcript["annotation"] = annot
                     break
 
         self["transcript_consequences"] = filtered
@@ -423,7 +422,6 @@ class Criterion:
         if not isinstance(other, Criterion):
             raise NotImplementedError
 
-
         return (
             self._contains_identifier(other)
             and self.coordinate == other.coordinate
@@ -557,10 +555,11 @@ def region_overlap(region1: Region, region2: Region) -> bool:
         ]
     )
 
+
 def region_contains(region1: Region, region2: Region) -> bool:
     """Determine of region1 contains region2
 
-        Note that both start and end of both regions can be None
+    Note that both start and end of both regions can be None
     """
     # Determine if the start positions are set for region1 and region2
     if region1.start is None and region2.start is not None:
@@ -580,6 +579,7 @@ def region_contains(region1: Region, region2: Region) -> bool:
 
     # Here, we know both regions do not contain any None
     return bool(region1.start <= region2.start and region1.end >= region2.end)
+
 
 def read_criteria_file(criteria_file: str) -> OrderedDict[Criterion, str]:
     """Read the criteria and annotations from the criteria file
@@ -626,6 +626,7 @@ def read_criteria_file(criteria_file: str) -> OrderedDict[Criterion, str]:
             annotations[c] = annotation
 
     return annotations
+
 
 def read_known_variants(fname: str) -> dict[str, str]:
     known_variants = dict()

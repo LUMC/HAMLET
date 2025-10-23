@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-from typing import Any, Dict, Set
+from io import TextIOWrapper
+from os import walk
+from typing import Any, Dict, Iterator, Sequence, Set
 import argparse
 import json
 
@@ -37,10 +39,12 @@ arriba_header = [
     "read_identifiers",
 ]
 
+ArribaResult = dict[str, Any]
 
-def arriba_to_json(header, line):
+
+def arriba_to_json(header: Sequence[str], line: str) -> ArribaResult:
     """Convert an arriba line to json"""
-    d = {k: v for k, v in zip(header, line.split("\t"))}
+    d: ArribaResult = {k: v for k, v in zip(header, line.split("\t"))}
 
     # Convert '.' to None
     for key, value in d.items():
@@ -59,7 +63,7 @@ def arriba_to_json(header, line):
     return d
 
 
-def json_to_arriba(header, data):
+def json_to_arriba(header: Sequence[str], data: ArribaResult) -> str:
     """Convert arriba data to a list of strings"""
     # Join read identifiers into single string
     data["read_identifiers"] = ",".join(data["read_identifiers"])
@@ -67,12 +71,12 @@ def json_to_arriba(header, data):
     # Convert 'None' values to a dot
     for field, value in data.items():
         if value is None:
-            data[field] = '.'
+            data[field] = "."
 
     return "\t".join((str(data[field]) for field in header))
 
 
-def parse_arriba(fin) -> Dict[str, Any]:
+def parse_arriba(fin: TextIOWrapper) -> Iterator[ArribaResult]:
     header = next(fin)[1:-1].split("\t")
 
     if header != arriba_header:
@@ -87,7 +91,7 @@ def read_genes(fname: str) -> Set[str]:
     report_genes = set()
     with open(fname) as fin:
         for line in fin:
-            report_genes.add(line.strip('\n'))
+            report_genes.add(line.strip("\n"))
     return report_genes
 
 
@@ -106,7 +110,7 @@ def main(fusion_file: str, report_genes_file: str) -> None:
 
             for record in parse_arriba(fin):
                 if record["gene1"] in report_genes or record["gene2"] in report_genes:
-                        fusions.append(record)
+                    fusions.append(record)
         print(json.dumps(fusions, indent=True))
 
 

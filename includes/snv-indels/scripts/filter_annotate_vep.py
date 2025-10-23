@@ -8,14 +8,15 @@ import gzip
 import re
 
 from collections.abc import Iterator
+from typing import Any
 
 
 from utils import VEP, read_criteria_file, read_known_variants
 
 
-def parse_vep_json(vep_file: str, prog: re.Pattern) -> Iterator[VEP]:
+def parse_vep_json(vep_file: str, prog: Any) -> Iterator[VEP]:
     """Parse the VEP 'json' output file, each line contains a JSON entry"""
-    with gzip.open(vep_file, 'rt') as fin:
+    with gzip.open(vep_file, "rt") as fin:
         for line in fin:
             if prog.search(line):
                 yield VEP(json.loads(line))
@@ -23,7 +24,7 @@ def parse_vep_json(vep_file: str, prog: re.Pattern) -> Iterator[VEP]:
 
 def main(
     vep_file: str,
-    criteria_file: str,
+    inclusion_file: str,
     annotation_file: str,
     known_variants_file: str,
     population: str,
@@ -31,18 +32,17 @@ def main(
 ) -> None:
     # Get genes and transcripts of interest
     annotations = read_criteria_file(annotation_file)
-    filter_criteria = read_criteria_file(criteria_file)
+    inclusion_criteria = list(read_criteria_file(inclusion_file).keys())
 
-    # Add the filter criteria to the end of the annotations, so they have a
-    # lower priority
-    annotations.update(filter_criteria)
-
-    # TODO, read known variants file
-    known_variants = read_known_variants(known_variants_file) if known_variants_file else dict()
+    known_variants = (
+        read_known_variants(known_variants_file) if known_variants_file else dict()
+    )
 
     # Get all identifiers, remove version number
     # because we raise an error later on version mismatch
     ids = {c.identifier.split(".")[0] for c in annotations}
+    ids.update({c.identifier.split(".")[0] for c in inclusion_criteria})
+
     for v in known_variants:
         # Get transcript ID from known variants, without version number
         id = v.split(":c")[0].split(".")[0]
@@ -60,7 +60,7 @@ def main(
 
         # Filter and annotate transcripts based on known variants and the annotations
         # The known variants have the higher priority
-        vep.filter_annotate_transcripts(known_variants, annotations)
+        vep.filter_annotate_transcripts(inclusion_criteria, known_variants, annotations)
 
         # If there is no consequence of interest left
         if not vep["transcript_consequences"]:
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     )
 
     parser.add_argument("--vep", help="VEP json output file")
-    parser.add_argument("--filter-criteria", help="File with filter criteria")
+    parser.add_argument("--inclusion-criteria", help="File with inclusion criteria")
     parser.add_argument("--annotation-criteria", help="File with annotation criteria")
     parser.add_argument("--known-variants", help="File with known variants")
     parser.add_argument(
@@ -92,7 +92,7 @@ if __name__ == "__main__":
 
     main(
         args.vep,
-        args.filter_criteria,
+        args.inclusion_criteria,
         args.annotation_criteria,
         args.known_variants,
         args.population,

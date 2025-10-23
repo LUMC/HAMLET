@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 
+from io import TextIOWrapper
 import sys
 import json
+from typing import Iterator
 
-def read_attributes(fin):
+
+def read_attributes(fin: TextIOWrapper) -> Iterator[dict[str, str]]:
     for line in fin:
         if line.startswith("#"):
             continue
@@ -16,11 +19,11 @@ def read_attributes(fin):
                 continue
             pair = pair.strip(" ")
             k, v = pair.split(" ", maxsplit=1)
-            d[k] = v.replace('"','')
+            d[k] = v.replace('"', "")
         yield d
 
 
-def gene_id_name(fin) -> dict[str, str]:
+def gene_id_name(fin: TextIOWrapper) -> dict[str, str]:
     """Return a two-way mapping between gene names and ID's"""
     mapping = dict()
     for record in read_attributes(fin):

@@ -255,6 +255,18 @@
     - hamlet
   command: snakefmt --check .
 
+- name: black-hamlet
+  tags:
+    - sanity
+    - hamlet
+  command: black --check .
+
+# - name: mypy-hamlet
+#   tags:
+#     - sanity
+#     - hamlet
+#   command: mypy --strict .
+
 - name: test-sample-with-space
   tags:
     - sanity

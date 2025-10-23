@@ -11,23 +11,25 @@ from jinja2 import Environment, FileSystemLoader
 
 
 class Report(object):
-
     """Analysis report of a single sample."""
 
-    def __init__(self, summaryd: dict,
-                 tpl_dir: str="templates",
-                 imgs_dir: str="assets/img",
-                 cover_tpl_fname: str="cover.html.j2",
-                 contents_tpl_fname: str="contents.html.j2",
-                 css_fname: str="assets/style.css",
-                 toc_fname: str="assets/toc.xsl",
-                 header_line: bool=True,
-                 header_caption: Optional[str]=None,
-                 footer_line: bool=True,
-                 footer_lcaption: Optional[str]=None,
-                 footer_rcaption: Optional[str]=None,
-                 pdfkit_opts: Optional[dict]=None,
-                 timestamp: Optional[dt]=None) -> None:
+    def __init__(
+        self,
+        summaryd: dict,
+        tpl_dir: str = "templates",
+        imgs_dir: str = "assets/img",
+        cover_tpl_fname: str = "cover.html.j2",
+        contents_tpl_fname: str = "contents.html.j2",
+        css_fname: str = "assets/style.css",
+        toc_fname: str = "assets/toc.xsl",
+        header_line: bool = True,
+        header_caption: Optional[str] = None,
+        footer_line: bool = True,
+        footer_lcaption: Optional[str] = None,
+        footer_rcaption: Optional[str] = None,
+        pdfkit_opts: Optional[dict] = None,
+        timestamp: Optional[dt] = None,
+    ) -> None:
         sdm = summaryd["metadata"]
         self.summary = summaryd
         self.sample_name = sdm["sample_name"]
@@ -48,14 +50,12 @@ class Report(object):
             "title": header_caption,
             "encoding": "UTF-8",
             "quiet": None,
-
             "page-size": "A4",
-            "page-offset":-1,
+            "page-offset": -1,
             "margin-top": "20",
             "margin-right": "16",
             "margin-bottom": "20",
             "margin-left": "16",
-
             "header-spacing": "5",
             "footer-spacing": "4",
         }
@@ -81,7 +81,7 @@ class Report(object):
                 return "undefined"
             elif any(v is None or v == "" for v in (value1, value2)):
                 return "?"
-            return "{:,.2f}%".format(value1 * 100. / value2)
+            return "{:,.2f}%".format(value1 * 100.0 / value2)
 
         def show_float(value, spec=".3g"):
             if value is None or value == "":
@@ -92,13 +92,13 @@ class Report(object):
         def as_pct(value):
             if value is None or value == "":
                 return "?"
-            return "{:,.2f}%".format(float(value) * 100.)
+            return "{:,.2f}%".format(float(value) * 100.0)
 
         def num_tids(idm):
             return sum([len(v["transcript_ids"]) for v in idm])
 
         def gene_rows(gene):
-            """ Determine how many rows a gene should span
+            """Determine how many rows a gene should span
 
             The number of rows for a gene is determined by two factors:
             1. The number of variants for that gene
@@ -114,9 +114,9 @@ class Report(object):
 
             If not known, return the identifier itself
             """
-            if identifier.startswith('rs'):
+            if identifier.startswith("rs"):
                 return f"https://www.ncbi.nlm.nih.gov/snp/{identifier}"
-            elif identifier.startswith('COSV'):
+            elif identifier.startswith("COSV"):
                 return f"https://cancer.sanger.ac.uk/cosmic/search?q={identifier}"
             else:
                 return identifier
@@ -140,14 +140,14 @@ class Report(object):
         def ref_AD(item):
             """Extract the reference depth from the vardict FORMAT AD field"""
             ad = item["FORMAT"]["AD"]
-            return int(ad.split(',')[0])
+            return int(ad.split(",")[0])
 
         def alt_AD(item):
             """Extract the alt depth(s) from the vardcit FORMAT AD field"""
             ad = item["FORMAT"]["AD"]
-            ref, *alt = ad.split(',')
+            ref, *alt = ad.split(",")
             return [int(x) for x in alt]
-        
+
         def convert_img_to_base64(img_path):
             if not Path(img_path).exists():
                 raise ValueError(f"Unable to find file {img_path}")
@@ -158,8 +158,7 @@ class Report(object):
                 ".jpg": "image/jpeg",
                 ".jpeg": "image/jpeg",
             }.get(os.path.splitext(img_path)[1].lower(), "application/octet-stream")
-            return f'data:{mime};base64,{base64.b64encode(data).decode()}'
-
+            return f"data:{mime};base64,{base64.b64encode(data).decode()}"
 
         env = Environment(loader=FileSystemLoader(tpl_dir))
         env.filters["show_int"] = show_int
@@ -204,13 +203,19 @@ class Report(object):
                     fout.write(con_txt)
             if pdf:
                 import pdfkit
-                pdfkit.from_string(con_txt, pdf,
-                               options=self.pdfkit_opts, css=self.css_fname,
-                               toc=toc, cover=cov_fh.name, cover_first=True)
+
+                pdfkit.from_string(
+                    con_txt,
+                    pdf,
+                    options=self.pdfkit_opts,
+                    css=self.css_fname,
+                    toc=toc,
+                    cover=cov_fh.name,
+                    cover_first=True,
+                )
 
 
-def main(input_summary_path, css_path, templates_dir,
-         imgs_dir, toc_path, html, pdf):
+def main(input_summary_path, css_path, templates_dir, imgs_dir, toc_path, html, pdf):
     """Script for generating PDF report of a sample analyzed with the Hamlet
     pipeline."""
     with open(input_summary_path) as src:
@@ -223,14 +228,16 @@ def main(input_summary_path, css_path, templates_dir,
     footer_lcaption = "Generated on {timestamp:%A, %d %B %Y at %H:%M}"
     footer_rcaption = "[page]/[toPage]"
 
-    report = Report(sd,
-                    tpl_dir=templates_dir,
-                    imgs_dir=imgs_dir,
-                    css_fname=css_path,
-                    toc_fname=toc_path,
-                    header_caption=header_caption,
-                    footer_lcaption=footer_lcaption,
-                    footer_rcaption=footer_rcaption)
+    report = Report(
+        sd,
+        tpl_dir=templates_dir,
+        imgs_dir=imgs_dir,
+        css_fname=css_path,
+        toc_fname=toc_path,
+        header_caption=header_caption,
+        footer_lcaption=footer_lcaption,
+        footer_rcaption=footer_rcaption,
+    )
     report.write(html, pdf)
 
 
@@ -247,5 +254,12 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    main(args.input_summary_path, args.css_path,
-        args.templates_dir, args.imgs_dir, args.toc_path, args.html, args.pdf)
+    main(
+        args.input_summary_path,
+        args.css_path,
+        args.templates_dir,
+        args.imgs_dir,
+        args.toc_path,
+        args.html,
+        args.pdf,
+    )

@@ -120,6 +120,12 @@
     - qc-seq
   command: snakefmt --check includes/qc-seq/
 
+- name: black-qc
+  tags:
+    - sanity
+    - qc-seq
+  command: black --check includes/qc-seq/
+
 - name: test-qc-seq-sample-with-space
   tags:
     - sanity
