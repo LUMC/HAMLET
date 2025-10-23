@@ -5,35 +5,33 @@ localrules:
     copy_itd,
     copy_expression_bed,
     copy_arriba_database,
-    copy_id_mappings,
-    copy_blacklist,
     copy_report_genes,
     copy_criteria_files,
 
 
 containers = {
-    "arriba": "docker://quay.io/biocontainers/arriba:2.4.0--h0033a41_2",
+    "arriba": "docker://quay.io/biocontainers/arriba:2.5.1--h87b9561_0",
     "hamlet-scripts": "docker://lumc/hamlet-scripts:0.3",
     "debian": "docker://debian:buster-slim",
     "samtools": "docker://quay.io/biocontainers/samtools:1.6--h244ad75_4",
     "ucsc-gtftogenepred": "docker://quay.io/biocontainers/ucsc-gtftogenepred:377--ha8a8165_5",
-    "star": "docker://quay.io/biocontainers/star:2.7.10b--h9ee0642_0",
-    "picard": "docker://quay.io/biocontainers/picard:2.27.4--hdfd78af_0",
-    "vep": "docker://quay.io/biocontainers/ensembl-vep:108.2--pl5321h4a94de4_0",
+    "star": "docker://quay.io/biocontainers/star:2.7.11b--h5ca1c30_5",
+    "picard": "docker://quay.io/biocontainers/picard:3.3.0--hdfd78af_0",
+    "vep": "docker://quay.io/biocontainers/ensembl-vep:115.2--pl5321h2a3209d_1",
     "zip": "docker://lumc/zip:3.0",
     "seamless": "docker://quay.io/biocontainers/r-seamless:0.1.1--r44h3121a25_1",
 }
 
-VEP_RELEASE = 108
+VEP_RELEASE = 115
+ARRIBA_RELEASE = "v2.5.1"
 
 settings = {
-    "arriba": "docker://quay.io/biocontainers/arriba:2.4.0--h0033a41_2",
     "reference_url": "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.15_GRCh38/seqs_for_alignment_pipelines.ucsc_ids/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz",
     "reference_fai": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.15_GRCh38/seqs_for_alignment_pipelines.ucsc_ids/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.fai",
     "refflat": "http://hgdownload.cse.ucsc.edu/goldenpath/hg38/database/refFlat.txt.gz",
     #'gtf': 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/genes/hg38.ensGene.gtf.gz'
     # "gtf": "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_41/gencode.v41.annotation.gtf.gz",
-    "gtf": "http://ftp.ensembl.org/pub/release-104/gtf/homo_sapiens/Homo_sapiens.GRCh38.104.gtf.gz",
+    "gtf": f"http://ftp.ensembl.org/pub/release-{VEP_RELEASE}/gtf/homo_sapiens/Homo_sapiens.GRCh38.{VEP_RELEASE}.gtf.gz",
     "vep_cache": f"https://ftp.ensembl.org/pub/release-{VEP_RELEASE}/variation/indexed_vep_cache/homo_sapiens_merged_vep_{VEP_RELEASE}_GRCh38.tar.gz",
     # See https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/
 }
@@ -58,12 +56,11 @@ rule all:
         itd_folder="itd",
         genome_fasta=reference_fname,
         star_index="star-index",
-        ref_id_mapping="id_mappings.tsv",
         filter_criteria="filter_criteria.tsv",
         annotation_criteria="annotation_criteria.tsv",
+        known_variants="known_variants.tsv",
         rrna_refflat="ucsc_rrna.refFlat",
-        blacklist="blacklist.txt",
-        arriba="arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3",
+        arriba=f"arriba/protein_domains_hg38_GRCh38_{ARRIBA_RELEASE}.gff3",
         arriba_report_genes="arriba/report_genes.txt",
         expression_bed="expression/regions.bed",
         seamless="expression/seamless_meta.csv",
@@ -231,45 +228,22 @@ rule rewrite_refflat:
         """
 
 
-rule copy_id_mappings:
-    input:
-        workflow.source_path("small-files/id_mappings.tsv"),
-    output:
-        "id_mappings.tsv",
-    singularity:
-        containers["hamlet-scripts"]
-    shell:
-        """
-        cp {input} {output}
-        """
-
-
 rule copy_criteria_files:
     input:
         filter=workflow.source_path("small-files/filter_criteria.tsv"),
         annotation=workflow.source_path("small-files/annotation_criteria.tsv"),
+        known_variants=workflow.source_path("small-files/known_variants.tsv"),
     output:
         filter="filter_criteria.tsv",
         annotation="annotation_criteria.tsv",
+        known_variants="known_variants.tsv",
     singularity:
         containers["hamlet-scripts"]
     shell:
         """
         cp {input.filter} {output.filter}
         cp {input.annotation} {output.annotation}
-        """
-
-
-rule copy_blacklist:
-    input:
-        workflow.source_path("small-files/blacklist.txt"),
-    output:
-        "blacklist.txt",
-    singularity:
-        containers["hamlet-scripts"]
-    shell:
-        """
-        cp {input} {output}
+        cp {input.known_variants} {output.known_variants}
         """
 
 
@@ -384,10 +358,10 @@ rule copy_expression_bed:
 rule copy_arriba_database:
     output:
         folder=directory("arriba"),
-        blacklist="arriba/blacklist_hg38_GRCh38_v2.4.0.tsv.gz",
-        known_fusions="arriba/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz",
-        cytobands="arriba/cytobands_hg38_GRCh38_v2.4.0.tsv",
-        protein_domains="arriba/protein_domains_hg38_GRCh38_v2.4.0.gff3",
+        blacklist=f"arriba/blacklist_hg38_GRCh38_{ARRIBA_RELEASE}.tsv.gz",
+        known_fusions=f"arriba/known_fusions_hg38_GRCh38_{ARRIBA_RELEASE}.tsv.gz",
+        cytobands=f"arriba/cytobands_hg38_GRCh38_{ARRIBA_RELEASE}.tsv",
+        protein_domains=f"arriba/protein_domains_hg38_GRCh38_{ARRIBA_RELEASE}.gff3",
     singularity:
         containers["arriba"]
     shell:

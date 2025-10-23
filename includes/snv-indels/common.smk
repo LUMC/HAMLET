@@ -9,7 +9,7 @@ containers = {
     "picard": "docker://quay.io/biocontainers/picard:3.3.0--hdfd78af_0",
     "varscan-2.4.2-samtools-1.3.1-tabix-0.2.6-grep-2.14": "docker://quay.io/biocontainers/mulled-v2-58936b48a08c4e06505165c6f560ec9460b431ea:ef260d10ee671f4c7bd8e783939839bb2e0b684e-0",
     "vardict": "docker://quay.io/biocontainers/vardict-java:1.8.3--hdfd78af_0",
-    "vep": "docker://quay.io/biocontainers/ensembl-vep:108.2--pl5321h4a94de4_0",
+    "vep": "docker://quay.io/biocontainers/ensembl-vep:115.2--pl5321h2a3209d_1",
     "star": "docker://quay.io/biocontainers/star:2.7.11b--h5ca1c30_5",
     "crimson": "docker://quay.io/biocontainers/crimson:1.1.0--pyh5e36f6f_0",
     "multiqc": "docker://quay.io/biocontainers/multiqc:1.31--pyhdfd78af_0",
@@ -23,8 +23,25 @@ if "snv-indels" in config:
 # Old features that are no longer supported
 if "bed_variant_call_regions" in config:
     msg = """
-    'bed_variant_call_regions' is no longer supported, regions of interest are
-    determined automatically from the GTF file.
+    'bed_variant_call_regions' is no longer supported, regions of interest are determined automatically from the GTF file.
+    """
+    raise DeprecationWarning(msg)
+
+if "ref_id_mapping" in config:
+    msg = """
+    'ref_id_mapping' is no longer supported, the mapping is determined automatically from the GTF file.
+    """
+    raise DeprecationWarning(msg)
+
+if "blacklist" in config:
+    msg = """
+    'blacklist' is no longer supported, please specify artifacts in the `known_variants` file.
+    """
+    raise DeprecationWarning(msg)
+
+if "vep_include_consequence" in config:
+    msg = """
+    'vep_include_consequence' is no longer supported.
     """
     raise DeprecationWarning(msg)
 
@@ -118,6 +135,7 @@ module_output = SimpleNamespace(
     bai=get_bai_output,
     counts=get_star_count,
     filter_vep=get_filter_vep,
+    id_mapping="id_mapping.txt",
     json=get_json,
     multiqc_files=multiqc_files(),
     multiqc_parquet="multiqc_snv_indels_data/multiqc.parquet",

@@ -13,11 +13,39 @@ defined in ``filter_criteria``, and annotated based on ``annotation_criteria``.
 
 The variants annotated by VEP are then filtered based on a number of different criteria:
 
-1. Variants that are present on the ``blacklist`` are excluded.
-2. Only variants that match at least one criteria in ``filter_criteria`` are included.
-3. Variant that have a population frequency of more than 1% in the ``gnomADe`` population are excluded.
+
+1. Variant that have a population frequency of more than 1% in the ``gnomADe`` population are excluded.
+2. Variants which are specified in ``known_variants`` will be included.
+3. Variants that match at least one criteria in ``filter_criteria`` or ``annotation_criteria`` are included.
+4. All other variants, and all variant annotations on other transcripts, will be excluded.
 
 Picard is used to generate various alignment statistics.
+
+Variant annotations
+-------------------
+By default, HAMLET comes with variant filters and annotations which are tuned towards diagnosing AML. When using the default variant filters and annotations, HAMLET uses the following definitions:
+
+.. list-table:: Configuration options
+  :widths: 30 70
+  :header-rows: 1
+
+  * - Annotation
+    - Definition
+  * - Known pathogenic
+    - This variant is known to be associated with AML
+  * - Pathogenic
+    - All evidence point to this variant being pathogenic for AML
+  * - Likely pathogenic
+    - This variant should be considered pathogenic, unless there is evidence to
+      the contrary (*e.g.* it is a known benign variant)
+  * - Possible pathogenic
+    - This variant should **not** be considered pathogenic, unless there is
+      additional evidence (*e.g.* it is a known pathogenic variant)
+  * - Discard
+    - This variant should not be considere pathogenic
+  * - Artifact
+    - This variant is most likely an artifact produced by the pipeline, *i.e.*
+      the variant is not truly present in the sample
 
 Input
 -----
@@ -34,6 +62,7 @@ The output of this module are a JSON file with an overview of the most important
 * A .bam and .bai per sample, which contain the aligned reads.
 * The filtered VEP output file (``filter_vep``), which contains the final set of filtered and annotated variants.
 * The ``counts`` file produced by STAR, which contains the coverage per gene.
+* Various quality control metrics produced by MultiQC.
 
 Configuration
 -------------
@@ -41,73 +70,85 @@ You can automatically generate a configuration for the fusion module using the `
 
 Example
 ^^^^^^^
-.. literalinclude:: ../../test/data/config/snv-indels.json
-   :language: json
 
-Note that the ``vep-cache`` entry is missing for this example file, which means
-that VEP will be run with only the ``fasta`` and ``gtf`` files as input. For the best performance, please
-specify a ``vep-cache`` folder as well.
+.. code:: bash
+
+   $ python3 utilities/create-config.py --module snv-indels HAMLET-data
+
+    {
+     "annotation_criteria": "HAMLET-data/annotation_criteria.tsv",
+     "annotation_refflat": "HAMLET-data/ucsc_gencode.refFlat",
+     "filter_criteria": "HAMLET-data/filter_criteria.tsv",
+     "genome_dict": "HAMLET-data/GCA_000001405.15_GRCh38_no_alt_analysis_set.dict",
+     "genome_fai": "HAMLET-data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.fai",
+     "genome_fasta": "HAMLET-data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna",
+     "gtf": "HAMLET-data/Homo_sapiens.GRCh38.115.chr.gtf",
+     "known_variants": "HAMLET-data/known_variants.tsv",
+     "min_variant_depth": 2,
+     "rrna_refflat": "HAMLET-data/ucsc_rrna.refFlat",
+     "star_index": "HAMLET-data/star-index",
+     "variant_allele_frequency": 0.05,
+     "vep_cache": "HAMLET-data"
+    }
+
+
+Note that although the ``vep-cache`` entry is optional, for the best
+performance, please specify a ``vep-cache`` folder as well.
 
 Configuration options
 ^^^^^^^^^^^^^^^^^^^^^
 .. list-table:: Configuration options
-  :widths: 30 80 15
+  :widths: 30 70 25
   :header-rows: 1
 
   * - Option
     - Description
     - Required
-  * - genome_fasta
-    - Reference genome, in FASTA format
-    - yes
-  * - genome_fai
-    - .fai index file for the reference fasta
-    - yes
-  * - genome_dict
-    - .dict index file for the reference fasta
-    - yes
-  * - star_index
-    - STAR index database
-    - yes
-  * - ref_id_mapping
-    - File of transcripts of interest
-    - yes
-  * - filter_criteria
-    - Criteria file to filter variants
-    - yes
   * - annotation_criteria
     - Criteria file to annotate variants
-    - yes
-  * - rrna_refflat
-    - File of rRNA transcripts
-    - yes
-  * - gtf
-    - GTF file with transcripts, used by STAR
     - yes
   * - annotation_refflat
     - File used to determine exon coverage
     - yes
-  * - blacklist
-    - File of blacklisted variants
+  * - filter_criteria
+    - Criteria file to filter variants
+    - yes
+  * - genome_dict
+    - .dict index file for the reference fasta
+    - yes
+  * - genome_fai
+    - .fai index file for the reference fasta
+    - yes
+  * - genome_fasta
+    - Reference genome, in FASTA format
+    - yes
+  * - gtf
+    - GTF file with transcripts, used by STAR
+    - yes
+  * - known_variants
+    - File containing known variants and their annotation
     - no
-  * - vep-cache
-    - Folder containing the VEP cache
-    - no
-  * - variant_allele_frequency
-    - Minimum variant allele frequency to call a variant
-    - no (default=0.05)
   * - min_variant_depth
     - Minimum read depth to call a variant
     - no (default=2)
-  * - known_variants
-    - File containing known varaints and their annotation
+  * - rrna_refflat
+    - File of rRNA transcripts
+    - yes
+  * - star_index
+    - STAR index database
+    - yes
+  * - variant_allele_frequency
+    - Minimum variant allele frequency to call a variant
+    - no (default=0.05)
+  * - vep-cache
+    - Folder containing the VEP cache
     - no
 
 Filter and annotation criteria
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 HAMLET include the ability to specify separate filter criteria for every
 transcript, based on the position and the VEP consequence of the variant. The
-criteria are used both the filter which variants will be part of the output
+criteria are used both to filter which variants will be part of the output
 (``filter_criteria``), and also annotate the identified variants
 (``annotation_criteria``).
 
@@ -130,7 +171,7 @@ supply HAMLET with annotations for specific variants via the ``known_variants``
 file. Annotations from this file have a higher priority than the annotations
 specified in ``annotation_criteria``.
 
-The used columns are ``variant`` and ``annotation``. These columns cannot be 
+The used columns are ``variant`` and ``annotation``. These columns cannot be
 empty.
 
 .. csv-table:: Example ``known_variants`` file, from the HAMLET tests

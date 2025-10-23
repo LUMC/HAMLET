@@ -19,7 +19,7 @@ Setup the environment
 The dependencies required for running the pipeline are listed in the provided ``environment.yml`` file. To use it, first make sure that you have `Conda <https://docs.conda.io/en/latest/miniconda.html>`_ installed on your system. Then, navigate to the HAMLET folder and set up the Conda virtual environment.
 
 .. code:: bash
-   
+
    # Navigate to the HAMLET folder, e.g.
    cd ~/Downloads/HAMLET
 
@@ -38,15 +38,15 @@ Download the reference files
 HAMLET uses a large number of reference files, in total around 90GB in size. These can be automatically downloaded using the following helper pipeline. Indexing the reference genome for use with STAR will take 60GB RAM and around two hours, so preferably run this step on a workstation or cluster and go on to the next step. The reference files will be placed in the HAMLET-data folder.
 
 .. code:: bash
-   
+
    # Generate the reference files
    snakemake \
-    --snakefile HAMLET/utilities/deps/Snakefile \
-    --profile HAMLET/cfg \
+    --snakefile utilities/deps/Snakefile \
+    --profile cfg \
     --directory HAMLET-data
 
   # Create a HAMLET configuration file
-  python3 HAMLET/utilities/create-config.py HAMLET-data
+  python3 utilities/create-config.py HAMLET-data
 
 
 Run the test suite
@@ -61,8 +61,10 @@ HAMLET comes with a test suite for almost every part of the pipeline, which can 
    # Test if HAMLET can parse the example configurations
    pytest --kwd --tag dry-run
 
-   # Only run the HAMLET pipeline on the most complete example data, and
-   # investigate the output files.
+   # Run the full HAMLET pipeline on the most complete example data
+   #
+   # Feel free to investigate the output files produced by the test:
+   #
    # - SRR8615409/hamlet_report.SRR8615409.pdf, the PDF report
    # - multiqc_hamlet.html, MultiQC report for all samples
    # - SRR8615409.summary.json, detailed JSON file

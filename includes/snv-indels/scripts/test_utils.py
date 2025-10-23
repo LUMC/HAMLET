@@ -1,5 +1,6 @@
 # Authors: Anne van der Grinten, Redmar van den Berg
 
+from typing import Any
 import pytest
 
 # Authors: Anne van der Grinten, Redmar van den Berg
@@ -10,39 +11,41 @@ from utils import (
     VEP,
     Location,
     Region,
+    region_contains,
     region_overlap,
     get_position,
 )
+
+@pytest.fixture
+def vep() -> VEP:
+    minimal_vep_record = {
+        "transcript_consequences": [
+            {
+                "consequence_terms": ["inframe_insertion"],
+                "hgvsg": "chr13:g.28034118_28034147dup",
+                "hgvsc": "ENST00000241453.1:c.1772_1801dup",
+                "hgvsp": "ENSP00000241453.1:p.Asp600_Leu601insHisValAspPheArgGluTyrGluTyrAsp",
+            },
+            {
+                "consequence_terms": [
+                    "inframe_insertion",
+                    "NMD_transcript_variant",
+                ],
+                "hgvsg": "chr13:g.28034118_28034147dup",
+                "hgvsc": "ENST00000380987.1:c.1772_1801dup",
+                "hgvsp": "ENSP00000370374.1:p.Asp600_Leu601insHisValAspPheArgGluTyrGluTyrAsp",
+            },
+        ]
+    }
+
+    return VEP(minimal_vep_record)
+
 
 
 class TestVariant:
     @pytest.fixture
     def variant(self) -> Variant:
         return Variant("ENST123.5:c.10A>T", consequences=["missense", "inframe"])
-
-    @pytest.fixture
-    def vep(self) -> VEP:
-        minimal_vep_record = {
-            "transcript_consequences": [
-                {
-                    "consequence_terms": ["inframe_insertion"],
-                    "hgvsg": "chr13:g.28034118_28034147dup",
-                    "hgvsc": "ENST00000241453.1:c.1772_1801dup",
-                    "hgvsp": "ENSP00000241453.1:p.Asp600_Leu601insHisValAspPheArgGluTyrGluTyrAsp",
-                },
-                {
-                    "consequence_terms": [
-                        "inframe_insertion",
-                        "NMD_transcript_variant",
-                    ],
-                    "hgvsg": "chr13:g.28034118_28034147dup",
-                    "hgvsc": "ENST00000380987.1:c.1772_1801dup",
-                    "hgvsp": "ENSP00000370374.1:p.Asp600_Leu601insHisValAspPheArgGluTyrGluTyrAsp",
-                },
-            ]
-        }
-
-        return minimal_vep_record
 
     def test_create_variant(self, variant: Variant) -> None:
         assert variant.hgvs == "ENST123.5:c.10A>T"
@@ -259,7 +262,7 @@ class TestVariant:
         v = Variant(variant, consequences=list())
         assert v.frame() == frame
 
-    FRAME_ERROR = [
+    NO_FRAME = [
         # Genomic
         "ENST:g.10A>T",
         # Protein
@@ -290,12 +293,27 @@ class TestVariant:
         "ENST:c.30_40-12delinsAT",
     ]
 
-    @pytest.mark.parametrize("variant", FRAME_ERROR)
-    def test_variant_frame_error(self, variant: str) -> None:
+    @pytest.mark.parametrize("variant", NO_FRAME)
+    def test_variant_no_frame(self, variant: str) -> None:
         """Test variants where frame() is not supported"""
         v = Variant(variant, consequences=[])
-        with pytest.raises(ValueError):
-            v.frame()
+        assert v.frame() == None
+
+    def test_variant_outside_cds_no_frame(self) -> None:
+        v=Variant("ENST1:c.-100A>T", consequences=[])
+        c=Criterion(
+            identifier="ENST1"
+
+        )
+        assert c.match(v)
+
+    def test_variant_outside_cds_does_not_match(self) -> None:
+        v=Variant("ENST1:c.-100A>T", consequences=[])
+        c=Criterion(
+            identifier="ENST1", frame=0
+
+        )
+        assert not c.match(v)
 
     def test_match_region(self, variant: Variant) -> None:
         """
@@ -354,6 +372,8 @@ class TestVariant:
             ),
         ]
         assert list(Variant.from_VEP(vep)) == expected
+
+
 
 
 class TestCriterion:
@@ -481,3 +501,100 @@ class TestCriterion:
         c = Criterion("ENST123", frame=1)
         v = Variant(variant, [])
         assert c.match(v) == expected
+
+    @pytest.mark.parametrize(
+        "c1, c2, expected",
+        [
+            # Test identifier equality
+            (Criterion("ENST"), Criterion("ENST"), True),
+            (Criterion("ENST0"), Criterion("ENST"), False),
+            # Test cooridinate equality
+            (Criterion("A", coordinate="c"), Criterion("A", coordinate="c"), True),
+            (Criterion("A", coordinate="c"), Criterion("A", coordinate="r"), False),
+            # Test consequence equality
+            (Criterion("A", consequence="A"), Criterion("A", consequence="A"), True),
+            (Criterion("A", consequence="A"), Criterion("A", consequence="B"), False),
+            # Test frame equality
+            (Criterion("A", frame=1), Criterion("A", frame=1), True),
+            (Criterion("A"), Criterion("A", frame=1), True),
+            (Criterion("A", frame=2), Criterion("A", frame=1), False),
+            # Test position containment
+            ## Equal positions are contained
+            (Criterion("A", start="1"), Criterion("A", start="1"), True),
+            # If a position is unset, it will contain a set position
+            (Criterion("A"), Criterion("A", start="1"), True),
+            # If a position is set, it cannot contain an unset position
+            (Criterion("A", start="1"), Criterion("A"), False),
+            # Equal positions are contained
+            (Criterion("A", start="1", end="2"), Criterion("A", start="1", end="2"), True),
+            # If a position is smaller, it cannot contain a bigger position
+            (Criterion("A", start="1"), Criterion("A", start="1", end="2"), False),
+            (Criterion("A", start="1", end="2"), Criterion("A"), False),
+            (Criterion("A", start="1"), Criterion("A", start="2"), False),
+            (Criterion("A", start="1", end="2"), Criterion("A", start="1"), True),
+            # Tests where the other criteria contains unset values
+            (Criterion("A"), Criterion("A", consequence="a"), True),
+            (Criterion("A"), Criterion("A", frame=1), True),
+            # Tests where the other criteria does not contain a consequence
+            (Criterion("A", consequence="a"), Criterion("A"), False),
+        ],
+    )
+    def test_criteria_containment(self, c1: Criterion, c2: Criterion, expected: bool) -> None:
+        """
+        GIVEN two Criteria
+        THEN determine if c1 is contained within c2
+        """
+        print()
+        print(f"{c1=}")
+        print(f"{c2=}")
+        assert c1.contains(c2) == expected
+
+    def test_criteria_containment_version_mismatch(self) -> None:
+        """
+        GIVEN two criteria with different version numbers
+        WHEN we check if there is containment
+        THEN we should raise a ValueError
+        """
+        c1 = Criterion("ENST.1")
+        c2 = Criterion("ENST.2")
+        with pytest.raises(ValueError):
+            c1.contains(c2)
+
+        c1 = Criterion("ENST")
+        c2 = Criterion("ENST.1")
+        with pytest.raises(ValueError):
+            c1.contains(c2)
+
+    @pytest.mark.parametrize(
+        "r1, r2, expected",
+        [
+            (Region(1, 1), Region(1, 1), True),
+            # Test containment when only one position is set
+            (Region(None, None), Region(None, None), True),
+            (Region(1, None), Region(None, None), False),
+            (Region(None, 1), Region(None, None), False),
+            (Region(None, None), Region(1, None), False),
+            (Region(None, None), Region(None, 1), False),
+            # Test containment when only one position is not set
+            (Region(None, 1), Region(1, 1), False),
+            (Region(1, None), Region(1, 1), False),
+            (Region(1, 1), Region(None, 1), False),
+            (Region(1, 1), Region(1, None), False),
+            # Equal regions are contained
+            (Region(1,2), Region(1,2), True),
+            # Smaller region is contained
+            (Region(1,2), Region(1,1), True),
+            # Region2 is before region1
+            (Region(1,2), Region(0,1), False),
+            # Region2 is bigger than region1
+            (Region(1,2), Region(1,3), False),
+            # Region2 is after region1
+            (Region(1,2), Region(2,3), False),
+        ]
+    )
+    def test_region_contains(self, r1: Region, r2: Region, expected: bool) -> None:
+        """
+        GIVEN two regions, r1 and r2
+        THEN determine if region 2 falls within region1
+        """
+        assert region_contains(r1, r2) == expected

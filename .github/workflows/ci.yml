@@ -11,7 +11,12 @@ defaults:
     # https://github.com/marketplace/actions/setup-miniconda#important.
     shell: bash -l {0}
 
+env:
+  APPTAINER_CACHEDIR: ${GITHUB_WORKSPACE}/.apptainer
+  SINGULARITY_CACHEDIR: ${GITHUB_WORKSPACE}/.singularity
+
 jobs:
+  # Run the quick tests first
   quick-tests:
     runs-on: ubuntu-latest
     strategy:
@@ -33,11 +38,7 @@ jobs:
           miniforge-version: latest
           activate-environment: HAMLET
           use-mamba: true
-
-      - name: Install apptainer
-        uses: eWaterCycle/setup-apptainer@v2
-        with:
-          apptainer-version: 1.3.6
+          channels: bioconda, conda-forge, defaults
 
       # This is used to invalidate the conda environment every week
       - name: Get year and week (for conda cache)
@@ -59,6 +60,11 @@ jobs:
         run: mamba env update -n HAMLET -f environment.yml
         if: steps.conda-cache.outputs.cache-hit != 'true'
 
+      - name: Install apptainer
+        uses: eWaterCycle/setup-apptainer@v2
+        with:
+          apptainer-version: 1.3.6
+
       - name: Run test in conda environment
         run: >-
           pytest --keep-workflow-wd-on-fail
@@ -78,15 +84,111 @@ jobs:
           for file in $(find /tmp -name log.err);
           do echo $file; cat $file; done'
 
-  functional-tests:
+  # Run this test first to ensure the singularity cache is populated
+  test-hamlet-chrM:
     needs: quick-tests
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Maximise build space
+        uses: easimon/maximize-build-space@v10
+        with:
+          root-reserve-mb: 30720
+          swap-size-mb: 1024
+          remove-android: 'true'
+          remove-dotnet: 'true'
+          remove-codeql: 'true'
+          overprovision-lvm: 'true'
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Print the environment
+        run: env
+
+      - name: Setup Miniforge
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniforge-version: latest
+          activate-environment: HAMLET
+          use-mamba: true
+          channels: bioconda, conda-forge, defaults
+
+      # This is used to invalidate the conda environment every week
+      - name: Get week number
+        id: get-date
+        run: echo "week=$(/bin/date -u '+%Y-w%V')" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Cache conda environment
+        id: conda-cache
+        uses: actions/cache@v4
+        env:
+          # Increase this value to manually invalidate the cache
+          CACHE_NUMBER: 0
+        with:
+          path: ${{ env.CONDA }}/envs
+          key: conda-${{ hashFiles('environment.yml') }}-${{ steps.get-date.outputs.week }}-${{ env.CACHE_NUMBER }}
+
+      - name: Update HAMLET environment
+        run: mamba env update -n HAMLET -f environment.yml
+        if: steps.conda-cache.outputs.cache-hit != 'true'
+
+      - name: Install apptainer
+        uses: eWaterCycle/setup-apptainer@v2
+        with:
+          apptainer-version: 1.3.6
+
+      - name: Cache singularity images
+        uses: actions/cache@v3
+        env:
+          # Increase this value to manually invalidate the cache
+          CACHE_NUMBER: 0
+        with:
+          path:
+            ~/.singularity/cache/snakemake
+          key: singularity-${{ hashFiles('**/common.smk') }}-${{ env.CACHE_NUMBER }}
+
+      - name: Run test in conda environment
+        run: >-
+          pytest --keep-workflow-wd
+          --tag test-hamlet-chrM
+
+      - name: Rename HAMLET PDF and MultiQC report
+        run: |
+          mv /tmp/pytest_workflow_*/test-hamlet-chrM/SRR8615409/hamlet_report.SRR8615409.pdf HAMLET-example-report.pdf
+          mv /tmp/pytest_workflow_*/test-hamlet-chrM/multiqc_hamlet.html HAMLET-example-MultiQC.html
+
+      - name: Upload example output files
+        uses: actions/upload-artifact@v4
+        with:
+          name: HAMLET-example
+          path: HAMLET-example*
+
+      - name: Check pytest stdout messages in case of failure
+        if: ${{ failure() }}
+        run: >-
+          bash -c '
+          for file in $(find /tmp -name log.out);
+          do echo $file; cat $file; done'
+
+      - name: Check pytest stderr messages in case of failure
+        if: ${{ failure() }}
+        run: >-
+          bash -c '
+          for file in $(find /tmp -name log.err);
+          do echo $file; cat $file; done'
+
+  # Run the functional tests in paralel, using the cached singularity images
+  functional-tests:
+    needs:
+      - quick-tests
+      - test-hamlet-chrM
+    runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
-      max-parallel: 1
       matrix:
         module:
-          - test-hamlet-chrM
           - qc-seq
           - snv-indels
           - itd
@@ -102,10 +204,14 @@ jobs:
           remove-android: 'true'
           remove-dotnet: 'true'
           remove-codeql: 'true'
+          overprovision-lvm: 'true'
 
       - uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Print the environment
+        run: env
 
       - name: Setup Miniforge
         uses: conda-incubator/setup-miniconda@v3
@@ -113,6 +219,7 @@ jobs:
           miniforge-version: latest
           activate-environment: HAMLET
           use-mamba: true
+          channels: bioconda, conda-forge, defaults
 
       # This is used to invalidate the conda environment every week
       - name: Get week number
@@ -154,26 +261,6 @@ jobs:
           pytest --keep-workflow-wd
           --tag ${{ matrix.module}}
           --tag functional
-
-      - name: Rename HAMLET PDF and MultiQC report
-        if: ${{ matrix.module == 'test-hamlet-chrM' }}
-        run: |
-          mv /tmp/pytest_workflow_*/test-hamlet-chrM/SRR8615409/hamlet_report.SRR8615409.pdf HAMLET-example-report.pdf
-          mv /tmp/pytest_workflow_*/test-hamlet-chrM/multiqc_hamlet.html HAMLET-example-MultiQC.html
-
-      - name: Upload example HAMLET report
-        if: ${{ matrix.module == 'test-hamlet-chrM' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: hamlet-report
-          path: HAMLET-example-report.pdf
-
-      - name: Upload example MultiQC report
-        if: ${{ matrix.module == 'test-hamlet-chrM' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: multiqc-report
-          path: HAMLET-example-MultiQC.html
 
       - name: Check pytest stdout messages in case of failure
         if: ${{ failure() }}

@@ -1,10 +1,6 @@
 include: "common.smk"
 
 
-localrules:
-    final_bamfile,
-
-
 rule all:
     input:
         bam=[module_output.bam(sample) for sample in samples],
@@ -12,6 +8,7 @@ rule all:
         filter_vep=[module_output.filter_vep(sample) for sample in samples],
         json=[module_output.json(sample) for sample in samples],
         multiqc="multiqc_snv_indels.html",
+        id_mapping=module_output.id_mapping,
 
 
 rule tmpdir:
@@ -51,7 +48,33 @@ rule call_regions:
         """
 
 
-rule align_vars:
+rule id_mapping:
+    """Make the id_mapping file based on the GTF and filter criteria"""
+    input:
+        gtf=config["gtf"],
+        filter_criteria=config["filter_criteria"],
+        annotation_criteria=config["annotation_criteria"],
+        known_variants=config.get("known_variants", []),
+        src=workflow.source_path("scripts/create_id_mapping.py"),
+    output:
+        txt=temporary("id_mapping.txt"),
+    log:
+        "log/id_mapping.txt",
+    container:
+        containers["mutalyzer"]
+    shell:
+        """
+        python3 {input.src} \
+            {input.gtf} \
+            --filter-file {input.filter_criteria} \
+            --annotation-file {input.annotation_criteria} \
+            --known-variants {input.known_variants} \
+            > {output.txt} \
+            2> {log}
+        """
+
+
+rule STAR:
     input:
         fq1=get_forward,
         fq2=get_reverse,
@@ -167,7 +190,7 @@ rule exon_cov:
         bai=module_output.bai,
         bed=".tmp.exon_cov_ref.bed",
         genome=".tmp.genome.txt",
-        idm=config["ref_id_mapping"],
+        idm=module_output.id_mapping,
         scr=workflow.source_path("scripts/aggr_exon_cov.py"),
     output:
         json="{sample}/snv-indels/{sample}.exon_cov_stats.json",
@@ -189,7 +212,7 @@ rule exon_cov:
         """
 
 
-rule call_vars:
+rule vardict:
     input:
         bam=module_output.bam,
         bai=module_output.bai,
@@ -279,7 +302,7 @@ rule picard_metrics:
         """
 
 
-rule annotate_vars:
+rule VEP:
     """Annotate variants using VEP"""
     input:
         vcf="{sample}/snv-indels/{sample}.raw.vcf.gz",
@@ -291,7 +314,7 @@ rule annotate_vars:
         vep="{sample}/snv-indels/{sample}.vep.txt.gz",
         stats="{sample}/snv-indels/{sample}.vep_stats.txt",
     log:
-        "log/annotate_vars.{sample}.txt",
+        "log/VEP.{sample}.txt",
     threads: 8
     container:
         containers["vep"]
@@ -315,7 +338,6 @@ rule annotate_vars:
             -i {input.vcf} \
             --fasta {input.genome_fasta} \
             ${{flags}} \
-            --verbose \
             --fork {threads} \
             --allele_number \
             --stats_text \
@@ -329,67 +351,28 @@ rule annotate_vars:
             --numbers \
             --merged \
             --everything \
+            --safe \
             --stats_file {output.stats} \
             --output_file STDOUT | gzip > {output.vep} \
             2> {log}
         """
 
 
-rule filter_vep:
+rule filter_annoate_vep:
     input:
+        scr=workflow.source_path("scripts/filter_annotate_vep.py"),
         vep="{sample}/snv-indels/{sample}.vep.txt.gz",
         filter_criteria=config["filter_criteria"],
-        scr=workflow.source_path("scripts/filter_vep.py"),
+        annotation_criteria=config["annotation_criteria"],
+        known_variants=config.get("known_variants", []),
         utils=workflow.source_path("scripts/utils.py"),
-        filter=workflow.source_path("scripts/filter_vep.py"),
-        blacklist=config.get("blacklist", []),
     params:
         population="gnomade",
         max_pop_af=0.01,
     output:
-        filtered=temporary("{sample}/snv-indels/{sample}.vep.filtered.txt.gz"),
-    log:
-        "log/filter_vep.{sample}.txt",
-    threads: 1
-    container:
-        containers["mutalyzer"]
-    shell:
-        """
-        set -e
-        set -o pipefail
-
-        # Make a pipe to enable reading the file with or without filtering
-        # based on the blacklist
-
-        readonly VEP=$(mktemp -u)
-        mkfifo $VEP
-
-        if [ -z "{input.blacklist}" ]; then
-            zcat {input.vep} > $VEP &
-        else
-            zcat {input.vep} | grep -vf {input.blacklist} > $VEP &
-        fi
-
-        python3 {input.scr} \
-            --vep $VEP \
-            --criteria {input.filter_criteria} \
-            --population {params.population} \
-            --frequency {params.max_pop_af} 2>>{log} \
-            | gzip > {output.filtered} 2>> {log}
-        """
-
-
-rule annotate_vep:
-    input:
-        vep="{sample}/snv-indels/{sample}.vep.filtered.txt.gz",
-        annotation_criteria=config["annotation_criteria"],
-        known_variants=config.get("known_variants", []),
-        scr=workflow.source_path("scripts/annotate_vep.py"),
-        utils=workflow.source_path("scripts/utils.py"),
-    output:
         annotated="{sample}/snv-indels/{sample}.vep.annotated.txt.gz",
     log:
-        "log/annotate_vep.{sample}.txt",
+        "log/filter_annotate_vep.{sample}.txt",
     threads: 1
     container:
         containers["mutalyzer"]
@@ -398,22 +381,20 @@ rule annotate_vep:
         set -e
         set -o pipefail
 
-        readonly VEP=$(mktemp -u)
-        mkfifo $VEP
-
-        zcat {input.vep} > $VEP &
-
         python3 {input.scr} \
-            --vep $VEP \
-            --annotations {input.annotation_criteria} \
-            --known-variants {input.known_variants} 2>>{log} \
+            --vep {input.vep} \
+            --filter-criteria {input.filter_criteria} \
+            --annotation-criteria {input.annotation_criteria} \
+            --known-variants {input.known_variants} \
+            --population {params.population} \
+            --frequency {params.max_pop_af} 2>>{log} \
             | gzip > {output.annotated} 2>> {log}
         """
 
 
 rule json_output:
     input:
-        id_mappings_path=config["ref_id_mapping"],
+        id_mappings_path=module_output.id_mapping,
         filter_vep=module_output.filter_vep,
         aln_stats="{sample}/snv-indels/{sample}.alignment_summary_metrics",
         rna_stats="{sample}/snv-indels/{sample}.rna_metrics",

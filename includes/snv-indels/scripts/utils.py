@@ -14,8 +14,10 @@ Location = namedtuple("Location", ["downstream", "position", "offset"])
 # Tuple to store a region
 Region = namedtuple("Region", ["start", "end"])
 
+
 class VEP(dict[str, Any]):
     """Class to work with VEP objects"""
+
     # From most to least severe, taken from the ensembl website
     # https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html
     severity = [
@@ -72,6 +74,35 @@ class VEP(dict[str, Any]):
                 if crit.match(variant):
                     filtered.append(tc)
                     break
+        self["transcript_consequences"] = filtered
+        self.update_most_severe()
+
+    def filter_annotate_transcripts(self, known_variants: dict[str, str], criteria: dict["Criterion", str], ) -> None:
+        """Filter and annotate the transcripts"""
+
+        filtered = list()
+        for transcript in self.get("transcript_consequences", list()):
+            # Make sure hgvsc is defined
+            hgvsc = transcript.get("hgvsc")
+
+            # If there is no HGVSC, we do nothing
+            if hgvsc is None:
+                continue
+
+            # If hgvsc is a known variant, we update the annotation
+            if hgvsc in known_variants:
+                transcript["annotation"] = known_variants[hgvsc]
+                filtered.append(transcript)
+                continue
+
+            # Otherwise, we check the criteria
+            variant = Variant(hgvsc, transcript["consequence_terms"])
+            for crit, annotation in criteria.items():
+                if crit.match(variant):
+                    transcript["annotation"] = annotation
+                    filtered.append(transcript)
+                    break
+
         self["transcript_consequences"] = filtered
         self.update_most_severe()
 
@@ -266,12 +297,12 @@ class Variant:
         else:
             raise NotImplementedError
 
-    def frame(self) -> int:
+    def frame(self) -> int | None:
         model = to_model(self.hgvs)
         # Determine if the coordinate system supports detecting the frame
         coordinate = model["coordinate_system"]
         if coordinate != "c":
-            raise ValueError("Determining the frame is only supported for c. variants")
+            return None
 
         variants = model["variants"]
         # No variant
@@ -284,9 +315,7 @@ class Variant:
         variant = variants[0]
         # Next, determine if the variant supports detecting the frame
         if self._outside_cds(variant["location"]):
-            raise ValueError(
-                "Determing the frame is only supported in the coding region"
-            )
+            return None
 
         return self.size() % 3
 
@@ -308,6 +337,9 @@ class Criterion:
         # Define the type of start and end
         self.start: Location | None
         self.end: Location | None
+
+        if end is not None and start is None:
+            raise ValueError("Please specify a start and end")
 
         if start is not None:
             # if end is not specified, set end equal to start
@@ -334,7 +366,7 @@ class Criterion:
         return (
             f"Criterion(identifier={self.identifier}, "
             f"coordinate={self.coordinate}, "
-            f"consequene={self.consequence}, "
+            f"consequence={self.consequence}, "
             f"start={self.start}, "
             f"end={self.end}, "
             f"frame={self.frame})"
@@ -343,13 +375,85 @@ class Criterion:
     def __repr__(self) -> str:
         return str(self)
 
+    def _contains_identifier(self, other: "Criterion") -> bool:
+        if self.identifier is None:
+            return True
+
+        # Check that the identifier versions match
+        id1, v1 = self.split_version(self.identifier)
+        id2, v2 = self.split_version(other.identifier)
+
+        # Identifiers do not match
+        if id1 != id2:
+            return False
+
+        # Version numbers do not match
+        if v1 != v2:
+            msg = f"Version mismatch between {self} and {other}"
+            raise ValueError(msg)
+
+        return self.identifier == other.identifier
+
+    def _contains_consequence(self, other: "Criterion") -> bool:
+        if self.consequence is None:
+            return True
+        else:
+            return self.consequence == other.consequence
+
+    def _contains_region(self, other: "Criterion") -> bool:
+        r1 = Region(self.start, self.end)
+        r2 = Region(other.start, other.end)
+        if r1 == (None, None):
+            return True
+        else:
+            return region_contains(r1, r2)
+
+    def _contains_frame(self, other: "Criterion") -> bool:
+        if self.frame is None:
+            return True
+        else:
+            return self.frame == other.frame
+
+    def contains(self, other: "Criterion") -> bool:
+        """Determine if other falls within self
+
+        In this context, this means that any Variant that matches other will
+        also match self.
+        """
+        if not isinstance(other, Criterion):
+            raise NotImplementedError
+
+
+        return (
+            self._contains_identifier(other)
+            and self.coordinate == other.coordinate
+            and self._contains_consequence(other)
+            and self._contains_region(other)
+            and self._contains_frame(other)
+        )
+
     def match(self, variant: Variant) -> bool:
-        return ( self.match_id(variant)
+        return (
+            self.match_id(variant)
             and self.match_coordinate(variant)
             and self.match_consequence(variant)
             and self.match_region(variant)
             and self.match_frame(variant)
         )
+
+    def split_version(self, identifier: str) -> Tuple[str, str]:
+        """Split the version from the identifier
+
+        Set version to 0 if there is no version
+        """
+        try:
+            id_, version = identifier.split(".")
+        # If there is no version (e.g. chr5), set version to 0
+        except ValueError:
+            id_ = identifier
+            version = "0"
+
+        return id_, version
 
     def match_id(self, variant: Variant) -> bool:
         """Determine if the identifier matches the variant
@@ -358,26 +462,12 @@ class Criterion:
         could indicate the use of incompatible reference seqeunces
         """
 
-        def split_version(variant_id: str) -> Tuple[str, str]:
-            """Split the version from the identifier
-
-            Set version to 0 if there is no version
-            """
-            try:
-                id_, version = variant_id.split(".")
-            # If there is no version (e.g. chr5), set version to 0
-            except ValueError:
-                id_ = variant_id
-                version = "0"
-
-            return id_, version
-
         # Get the variant id
         variant_id = variant.hgvs.split(":")[0]
         criterion_id = self.identifier
 
-        id1, v1 = split_version(variant_id)
-        id2, v2 = split_version(criterion_id)
+        id1, v1 = self.split_version(variant_id)
+        id2, v2 = self.split_version(criterion_id)
 
         if id1 != id2:
             return False
@@ -467,8 +557,37 @@ def region_overlap(region1: Region, region2: Region) -> bool:
         ]
     )
 
+def region_contains(region1: Region, region2: Region) -> bool:
+    """Determine of region1 contains region2
+
+        Note that both start and end of both regions can be None
+    """
+    # Determine if the start positions are set for region1 and region2
+    if region1.start is None and region2.start is not None:
+        return False
+    elif region1.start is not None and region2.start is None:
+        return False
+
+    # Determine if the end positions are set for self and other
+    if region1.end is None and region2.end is not None:
+        return False
+    elif region1.end is not None and region2.end is None:
+        return False
+
+    # If both regions are simply None
+    if region1 == (None, None) and region2 == (None, None):
+        return True
+
+    # Here, we know both regions do not contain any None
+    return bool(region1.start <= region2.start and region1.end >= region2.end)
+
 def read_criteria_file(criteria_file: str) -> OrderedDict[Criterion, str]:
-    """Read the criterions file"""
+    """Read the criteria and annotations from the criteria file
+
+    If the annotations column does not exist, all criteria will get an empty
+    string as annotation
+    """
+
     annotations: OrderedDict[Criterion, str] = OrderedDict()
 
     header = None
@@ -502,8 +621,35 @@ def read_criteria_file(criteria_file: str) -> OrderedDict[Criterion, str]:
                 end=d["end"],
                 frame=frame,
             )
-            annotation = d.get("annotation", "")
+            annotation = str(d.get("annotation", ""))
 
             annotations[c] = annotation
 
     return annotations
+
+def read_known_variants(fname: str) -> dict[str, str]:
+    known_variants = dict()
+    header = None
+    with open(fname) as fin:
+        for line in fin:
+            if line.startswith("#"):
+                continue
+
+            spline = line.strip("\n").split("\t")
+            if header is None:
+                header = spline
+                continue
+
+            # Read into dict, convert '' to None
+            d = {k: v if v else None for k, v in zip_longest(header, spline)}
+
+            # Check that the variant column is filled
+            variant = d.get("variant")
+            assert variant is not None
+
+            # Check that the annotation column is filled
+            annotation = d.get("annotation")
+            assert annotation is not None
+
+            known_variants[variant] = annotation
+    return known_variants

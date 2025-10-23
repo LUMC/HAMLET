@@ -6,6 +6,8 @@ import pathlib
 HOTSPOTS = [
         (8390, "Hotspot"),
         (8860, "known variant"),
+        (8566, "artifact"),
+        (8701, "artifact"),
 ]
 
 @pytest.mark.workflow('test-snv-indels-chrM')
