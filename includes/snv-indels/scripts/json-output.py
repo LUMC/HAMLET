@@ -123,14 +123,16 @@ def process_var_stats(path: str) -> dict[str, Any]:
     }
 
 
-IDM = dict[str, str|list[str]]
+IDM = dict[str, str | list[str]]
+
+
 def process_exon_cov_stats(path: str, idm: Sequence[IDM]) -> dict[str, Any]:
     with open(path, "r") as src:
         raw = json.load(src)
 
     tid_map = {item["gene_symbol"]: set(item["transcript_ids"]) for item in idm}
 
-    tempd: dict[str, Any]= {}
+    tempd: dict[str, Any] = {}
     for val in raw.values():
         gene = val.pop("gx")
         if gene not in tempd:
@@ -184,8 +186,13 @@ def idf_to_gene_symbol(id_mapping: Sequence[IDM]) -> dict[str, str]:
 
     return d
 
+
 VEP = dict[str, Any]
-def update_variant_overview(mapping: dict[str, str], vep: VEP, overview: DefaultDict[str, list[VEP]]) -> None:
+
+
+def update_variant_overview(
+    mapping: dict[str, str], vep: VEP, overview: DefaultDict[str, list[VEP]]
+) -> None:
     """Add the vep entry to overview"""
     symbol = get_gene_symbol(vep, mapping)
     overview[symbol].append(vep)
@@ -205,6 +212,8 @@ def get_gene_id(consequence: dict[str, str]) -> str:
 
 
 VariantOverview = dict[str, Any]
+
+
 def add_variant_overview(idm: Sequence[IDM], fn_csv: str) -> VariantOverview:
     idms = set([])
     for item in idm:
@@ -262,7 +271,9 @@ def add_variant_overview(idm: Sequence[IDM], fn_csv: str) -> VariantOverview:
     return rv
 
 
-def group_variants(id_mapping: Sequence[IDM], vep_txt: str) -> DefaultDict[str, list[VEP]]:
+def group_variants(
+    id_mapping: Sequence[IDM], vep_txt: str
+) -> DefaultDict[str, list[VEP]]:
     """Group variants by gene symbol"""
     mapping = idf_to_gene_symbol(id_mapping)
     overview: DefaultDict[str, list[VEP]] = defaultdict(list)

@@ -17,6 +17,8 @@ class Mapping:
 
 
 Attributes = dict[str, str]
+
+
 def read_attributes(fin: TextIOWrapper) -> Iterator[Attributes]:
     for line in fin:
         if line.startswith("#"):

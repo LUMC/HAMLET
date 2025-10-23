@@ -4,7 +4,7 @@ import sys
 
 
 class Bed:
-    def __init__(self: Bed, chrom:str, start:str, end: str) -> None:
+    def __init__(self: Bed, chrom: str, start: str, end: str) -> None:
         self.chrom = chrom
         self.start = int(start)
         self.end = int(end)
