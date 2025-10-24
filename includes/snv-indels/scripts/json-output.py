@@ -211,66 +211,6 @@ def get_gene_id(consequence: dict[str, str]) -> str:
     return consequence["gene_id"]
 
 
-VariantOverview = dict[str, Any]
-
-
-def add_variant_overview(idm: Sequence[IDM], fn_csv: str) -> VariantOverview:
-    idms = set([])
-    for item in idm:
-        gsym = item["gene_symbol"]
-        assert gsym not in idms, item
-        idms.add(gsym)
-
-    rv: VariantOverview = {}
-    with open(fn_csv, "r") as src:
-        reader = csv.DictReader(src)
-        for row in reader:
-            gs = row["gene_symbol"]
-            if gs not in idms:
-                continue
-            if gs not in rv:
-                rv[gs] = []
-
-            # Fields to include in the variant overview
-            report_fields = {
-                "CHROM",
-                "POS",
-                "REF",
-                "genotype",
-                "HGVSc",
-                "HGVSp",
-                "Existing_variation",
-                "FREQ",
-                "is_in_hotspot",
-                "PVAL",
-                "RD",
-                "AD",
-                "DP",
-            }
-            # Extract relevant fields
-            d = {k: v for k, v in row.items() if k in report_fields}
-
-            # Replace NA values with an empty string
-            d = {k: v if v != "NA" else "" for k, v in d.items()}
-
-            # Update field types
-            d["FREQ"] = float(d["FREQ"][:-1])  # Cut off %
-            d["is_in_hotspot"] = d["is_in_hotspot"] == "yes"
-            d["PVAL"] = float(d["PVAL"])
-
-            # Convert to int
-            for field in ["POS", "RD", "AD", "DP"]:
-                d[field] = int(d[field])
-            if not d["Existing_variation"]:
-                d["Existing_variation"] = list()
-            else:
-                d["Existing_variation"] = d["Existing_variation"].split(",")
-
-            rv[gs].append(d)
-
-    return rv
-
-
 def group_variants(
     id_mapping: Sequence[IDM], vep_txt: str
 ) -> DefaultDict[str, list[VEP]]:
