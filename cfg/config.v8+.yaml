@@ -52,3 +52,4 @@ set-resources:
 
   create_star_index:
     mem: 60G
+    cpus_per_task: 8

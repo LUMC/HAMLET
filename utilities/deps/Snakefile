@@ -182,6 +182,7 @@ rule create_star_index:
         overhang=149,
     output:
         directory("star-index"),
+    threads: 8,
     singularity:
         containers["star"]
     shell:
@@ -190,6 +191,7 @@ rule create_star_index:
         mkdir {output}
 
         STAR \
+            --runThreadN {threads} \
             --runMode genomeGenerate \
             --genomeDir {output} \
             --genomeFastaFiles {input.fasta} \
