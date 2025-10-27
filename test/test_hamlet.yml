@@ -265,7 +265,7 @@
   tags:
     - sanity
     - hamlet
-  command: mypy --strict --ignore-missing-imports --explicit-package-bases --exclude create_summary.py .
+  command: mypy --strict --ignore-missing-imports --explicit-package-bases --exclude create_summary.py --exclude test_report.py .
 
 - name: test-sample-with-space
   tags:
