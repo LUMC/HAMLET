@@ -32,6 +32,7 @@ v2.5.0-dev
 * Add support for tabulating AML subtype prediction to the ``hamlet_table.py`` script
 * Simplify the output of the ``hamlet_table.py`` script for variants
 * Update the filter and annotation criteria to include 46 genes
+* Reduce the size of the reference files to 35GB
 * Update MultiQC to 1.31
 * Update cutadapt from 5.0 to 5.1
 * Update sequali from 0.12 to 1.0.2

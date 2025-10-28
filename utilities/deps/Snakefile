@@ -55,7 +55,7 @@ rule all:
         expression_gtf=gtf_renamed,
         itd_folder="itd",
         genome_fasta=reference_fname,
-        star_index="star-index",
+        #star_index="star-index",
         inclusion_criteria="inclusion_criteria.tsv",
         annotation_criteria="annotation_criteria.tsv",
         known_variants="known_variants.tsv",
@@ -77,7 +77,7 @@ rule download_reference:
         """
         rm -f {output.fasta}.gz &&
         wget {params.url} &&
-        gzip -dc {output.fasta}.gz > {output.fasta}
+        gzip -d {output.fasta}.gz
         """
 
 
@@ -96,7 +96,7 @@ rule download_fai:
 
 rule download_gtf:
     output:
-        gtf_file,
+        temporary(gtf_file),
     params:
         settings["gtf"],
     singularity:
@@ -104,7 +104,7 @@ rule download_gtf:
     shell:
         """
         wget {params} &&
-        gunzip {output}.gz
+        gzip -d {output}.gz
         """
 
 
@@ -182,7 +182,6 @@ rule create_star_index:
         overhang=149,
     output:
         directory("star-index"),
-    threads: 8,
     singularity:
         containers["star"]
     shell:
@@ -191,7 +190,6 @@ rule create_star_index:
         mkdir {output}
 
         STAR \
-            --runThreadN {threads} \
             --runMode genomeGenerate \
             --genomeDir {output} \
             --genomeFastaFiles {input.fasta} \
@@ -297,7 +295,7 @@ rule download_vep_cache:
         ftp=settings["vep_cache"],
         fname=vep_cache_fname,
     output:
-        vep_cache_fname,
+        temporary(vep_cache_fname),
     singularity:
         containers["hamlet-scripts"]
     shell:

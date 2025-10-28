@@ -35,7 +35,7 @@ Additionally, `Singularity <https://docs.sylabs.io/guides/3.0/user-guide/install
 
 Download the reference files
 ============================
-HAMLET uses a large number of reference files, in total around 90GB in size. These can be automatically downloaded using the following helper pipeline. Indexing the reference genome for use with STAR will take 60GB RAM and around two hours, so preferably run this step on a workstation or cluster and go on to the next step. The reference files will be placed in the HAMLET-data folder.
+HAMLET uses a large number of reference files, in total around 35GB in size. These can be automatically downloaded using the following helper pipeline. Indexing the reference genome for use with STAR will take 60GB RAM and around two hours, so preferably run this step on a workstation or cluster and go on to the next step. The reference files will be placed in the HAMLET-data folder.
 
 .. code:: bash
 
