@@ -7,30 +7,30 @@ Changelog
 ..  This document is user facing. Please word the changes in such a way
 .. that users understand how the changes affect the new version.
 
-**********
-v2.5.0-dev
-**********
+******
+v2.5.0
+******
 
-* **Important: Please rebuild the HAMLET-data folder when updating to v2.5**
-* Allow every module to run with the full HAMLET configuration
-* Add option ``min_variant_depth`` to the snv-indels module to specify the
-  minimum number of reads to report a variant (default = 2)
-* The ``report_genes`` file for the fusion module is now optional
-* Encode all figures into the HTML report
-* Clean up intermediate MultiQC files
-* Truncate HGVS descriptions longer than 100 characters in the PDF report
-* Add support for specifying the frame of variant Criteria
-* Add additional annotation file ``known_variants`` to the snv-indels module
+* **Important: Please rebuild the HAMLET-data folder when updating to v2.5.0**
 * **Deprecate** the ``blacklist`` option in favour of ``known_variants``
 * **Deprecate** the ``ref_id_mapping`` option
 * **Deprecate** the ``vep_include_consequence`` option
-  **Rename** ``filter_criteria`` to ``inclusion_criteria``
-* Combine filtering and annotation of variants into a single step
+* **Rename** ``filter_criteria`` to ``inclusion_criteria``
+* Add option ``min_variant_depth`` to the snv-indels module to specify the
+  minimum number of reads to report a variant (default = 2)
+* Add support for specifying the frame of variant Criteria
+* Add additional annotation file ``known_variants`` to the snv-indels module
 * Add the ``--safe`` flag to VEP to ensure there are no hidden errors
 * Add support for tabulating gene expression data to the ``hamlet_table.py`` script
 * Add support for tabulating cell types to the ``hamlet_table.py`` script
 * Add support for tabulating AML subtype prediction to the ``hamlet_table.py`` script
 * Simplify the output of the ``hamlet_table.py`` script for variants
+* Allow every module to run with the full HAMLET configuration
+* The ``report_genes`` file for the fusion module is now optional
+* Encode all figures directly into the HTML report
+* Clean up intermediate MultiQC files
+* Truncate HGVS descriptions longer than 100 characters in the PDF report
+* Combine filtering and annotation of variants into a single step
 * Update the filter and annotation criteria to include 46 genes
 * Reduce the size of the reference files to 35GB
 * Update MultiQC to 1.31
@@ -38,7 +38,6 @@ v2.5.0-dev
 * Update sequali from 0.12 to 1.0.2
 * Update arriba from 2.4.0 to 2.5.1
 * Update VEP from 108 (2022) to 115 (2025)
-
 
 ******
 v2.4.0
