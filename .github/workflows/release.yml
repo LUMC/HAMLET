@@ -177,12 +177,7 @@ jobs:
         - name: Download example HAMLET report
           uses: actions/download-artifact@v4
           with:
-            name: hamlet-report
-
-        - name: Download example MultiQC report
-          uses: actions/download-artifact@v4
-          with:
-            name: multiqc-report
+            name: HAMLET-example
 
         - name: Create release
           env:
@@ -195,5 +190,4 @@ jobs:
               --notes-file release-notes.rst \
               HAMLET-${{ env.RELEASE_VERSION}}.tar.gz \
               HAMLET-manual-${{ env.RELEASE_VERSION }}.pdf \
-              HAMLET-example-report.pdf \
-              HAMLET-example-MultiQC.html
+              HAMLET-example*
