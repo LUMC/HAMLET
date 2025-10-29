@@ -55,7 +55,7 @@ rule all:
         expression_gtf=gtf_renamed,
         itd_folder="itd",
         genome_fasta=reference_fname,
-        #star_index="star-index",
+        star_index="star-index",
         inclusion_criteria="inclusion_criteria.tsv",
         annotation_criteria="annotation_criteria.tsv",
         known_variants="known_variants.tsv",

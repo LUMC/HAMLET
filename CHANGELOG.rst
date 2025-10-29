@@ -8,6 +8,11 @@ Changelog
 .. that users understand how the changes affect the new version.
 
 ******
+v2.5.1
+******
+* Fix a bug with the HAMLET-data folder
+
+******
 v2.5.0
 ******
 
