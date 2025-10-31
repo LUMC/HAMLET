@@ -18,38 +18,45 @@ rerun-incomplete: true
 default-resources:
   cpus_per_task: 1
   mem: 8G
-  runtime: 480 # Runtime in minutes
+  runtime: 1h
 
 set-resources:
   qc_seq_cutadapt:
     cpus_per_task: 8
+    runtime: 4h
 
   align_STAR:
     mem: 100G 
     cpus_per_task: 8
-    runtime: 2880
+    runtime: 4h
 
   align_exon_cov:
     mem: 120G
     cpus_per_task: 1
+    runtime: 4h
 
   align_vardict:
     mem: 120G
     cpus_per_task: 11
-    runtime: 2880
+    runtime: 4h
+
+  align_picard_metrics:
+    mem: 8G
+    runtime: 4h
 
   align_VEP:
     cpus_per_task: 8
+    runtime: 4h
 
   fusion_arriba:
     mem: 80G
     cpus_per_task: 1
-    runtime: 60
 
   itd_align_reads:
     cpus_per_task: 3
-    runtime: 1440
+    runtime: 4h
 
   create_star_index:
     mem: 60G
     cpus_per_task: 8
+    runtime: 4h
