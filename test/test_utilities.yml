@@ -11,3 +11,16 @@
     contains:
       - rule copy_arriba_database
       - rule split_seamless
+
+- name: test-hamlet-table-modules
+  tags:
+    - hamlet
+    - utilities
+  command: >
+    bash -c "
+    # Test snv module output
+
+    fname=test/data/output/v2/snv-indels-output.json
+
+    python3 utilities/hamlet_table.py variant ${fname}> variants.tsv
+    "

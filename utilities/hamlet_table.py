@@ -120,7 +120,15 @@ def print_variant_table(json_files: Sequence[str], write: Any = print) -> None:
         with open(fname) as fin:
             js = json.load(fin)
 
-        genes = js["modules"]["snv_indels"]["genes"]
+        if "modules" in js:
+            genes = js["modules"]["snv_indels"]["genes"]
+            name = (sample_name(js),)
+        elif "snv_indels" in js:
+            genes = js["snv_indels"]["genes"]
+            name = (sample_name(js["snv_indels"]),)
+        else:
+            raise RuntimeError("Unknown json format")
+
         for gene, variants in genes.items():
             for variant in variants:
                 # Dict to store all the column values we will print
@@ -130,7 +138,7 @@ def print_variant_table(json_files: Sequence[str], write: Any = print) -> None:
                     (var["id"] for var in variant.get("colocated_variants", []))
                 )
                 to_print = {
-                    "sample": sample_name(js),
+                    "sample": name,
                     "gene_name": gene,
                     "total_depth": variant["FORMAT"]["DP"],
                     "vaf": variant["FORMAT"]["AF"],

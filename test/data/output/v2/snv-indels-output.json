@@ -1,0 +1,1796 @@
+{
+  "snv_indels": {
+    "genes": {
+      "FLT3": [
+        {
+          "FORMAT": {
+            "AD": "716,1578",
+            "AF": "0.7083",
+            "ALD": "455,1122",
+            "DP": "2228",
+            "GT": "1/0",
+            "RD": "369,347",
+            "VD": "1578"
+          },
+          "INFO": {
+            "ADJAF": "0.5503",
+            "AF": "0.7083",
+            "BIAS": "2:2",
+            "DP": "2228",
+            "DUPRATE": "0",
+            "END": "28034117",
+            "HIAF": "1.0000",
+            "HICNT": "1572",
+            "HICOV": "1572",
+            "LSEQ": "CTCTTGGAAACTCCCATTTG",
+            "MQ": "251.3",
+            "MSI": "2",
+            "MSILEN": "2",
+            "NM": "0.5",
+            "ODDRATIO": "2.62105",
+            "PMEAN": "28.3",
+            "PSTD": "1",
+            "QSTD": "1",
+            "QUAL": "35.2",
+            "REFBIAS": "369:347",
+            "RSEQ": "GATCATATTCATATTCTCTG",
+            "SAMPLE": "SRR8615409",
+            "SBF": "0",
+            "SHIFT3": "30",
+            "SN": "314.4",
+            "SPANPAIR": "0",
+            "SPLITREAD": "0",
+            "TYPE": "Insertion",
+            "VARBIAS": "455:1122",
+            "VD": "1578"
+          },
+          "allele_string": "-/GATCATATTCATATTCTCTGAAATCAACGT",
+          "assembly_name": null,
+          "end": 28034117,
+          "id": ".",
+          "input": "chr13\t28034117\t.\tA\tAGATCATATTCATATTCTCTGAAATCAACGT\t373\tPASS\tSAMPLE=SRR8615409;TYPE=Insertion;DP=2228;END=28034117;VD=1578;AF=0.7083;BIAS=2:2;REFBIAS=369:347;VARBIAS=455:1122;PMEAN=28.3;PSTD=1;QUAL=35.2;QSTD=1;SBF=0;ODDRATIO=2.62105;MQ=251.3;SN=314.4;HIAF=1.0000;ADJAF=0.5503;SHIFT3=30;MSI=2;MSILEN=2;NM=0.5;HICNT=1572;HICOV=1572;LSEQ=CTCTTGGAAACTCCCATTTG;RSEQ=GATCATATTCATATTCTCTG;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/0:2228:1578:716,1578:0.7083:369,347:455,1122",
+          "most_severe_consequence": "inframe_insertion",
+          "seq_region_name": "chr13",
+          "start": 28034118,
+          "strand": 1,
+          "transcript_consequences": [
+            {
+              "allele_num": 1,
+              "amino_acids": "L/HVDFREYEYDL",
+              "annotation": "FLT3 in frame",
+              "biotype": "protein_coding",
+              "cdna_end": 1868,
+              "cdna_start": 1867,
+              "cds_end": 1802,
+              "cds_start": 1801,
+              "codons": "ctc/cACGTTGATTTCAGAGAATATGAATATGATCtc",
+              "consequence_terms": [
+                "inframe_insertion"
+              ],
+              "exon": "14/24",
+              "gene_id": "ENSG00000122025",
+              "gene_symbol": "FLT3",
+              "hgvsc": "ENST00000241453:c.1772_1801dup",
+              "hgvsg": "chr13:g.28034118_28034147dup",
+              "hgvsp": "ENSP00000241453.1:p.Asp600_Leu601insHisValAspPheArgGluTyrGluTyrAsp",
+              "impact": "MODERATE",
+              "protein_end": 601,
+              "protein_id": "ENSP00000241453",
+              "protein_start": 601,
+              "source": "vep.gtf.gz",
+              "strand": -1,
+              "transcript_id": "ENST00000241453",
+              "tsl": 1,
+              "variant_allele": "GATCATATTCATATTCTCTGAAATCAACGT"
+            }
+          ],
+          "variant_class": "insertion"
+        },
+        {
+          "FORMAT": {
+            "AD": "1359,445",
+            "AF": "0.2237",
+            "ALD": "185,259",
+            "DP": "1989",
+            "GT": "0/1",
+            "RD": "511,848",
+            "VD": "445"
+          },
+          "INFO": {
+            "ADJAF": "0.1699",
+            "AF": "0.2237",
+            "BIAS": "2:2",
+            "DP": "1989",
+            "DUPRATE": "0",
+            "END": "28034131",
+            "HIAF": "0.3338",
+            "HICNT": "445",
+            "HICOV": "1333",
+            "LSEQ": "CATTTGAGATCATATTCATA",
+            "MQ": "248.3",
+            "MSI": "2",
+            "MSILEN": "1",
+            "NM": "8.0",
+            "ODDRATIO": "1.18522732660124",
+            "PMEAN": "19",
+            "PSTD": "1",
+            "QSTD": "1",
+            "QUAL": "36",
+            "REFBIAS": "511:848",
+            "RSEQ": "TCTCTGAAATCAACGTAGAA",
+            "SAMPLE": "SRR8615409",
+            "SBF": "0.12985",
+            "SHIFT3": "33",
+            "SN": "890",
+            "SPANPAIR": "0",
+            "SPLITREAD": "445",
+            "TYPE": "Insertion",
+            "VARBIAS": "185:259",
+            "VD": "445"
+          },
+          "allele_string": "-/TCTCTGAAATCAACGTAGAAGTACTCATTA",
+          "assembly_name": null,
+          "end": 28034131,
+          "id": ".",
+          "input": "chr13\t28034131\t.\tT\tTTCTCTGAAATCAACGTAGAAGTACTCATTA\t316\tNM5.25\tSAMPLE=SRR8615409;TYPE=Insertion;DP=1989;END=28034131;VD=445;AF=0.2237;BIAS=2:2;REFBIAS=511:848;VARBIAS=185:259;PMEAN=19;PSTD=1;QUAL=36;QSTD=1;SBF=0.12985;ODDRATIO=1.18522732660124;MQ=248.3;SN=890;HIAF=0.3338;ADJAF=0.1699;SHIFT3=33;MSI=2;MSILEN=1;NM=8.0;HICNT=445;HICOV=1333;LSEQ=CATTTGAGATCATATTCATA;RSEQ=TCTCTGAAATCAACGTAGAA;DUPRATE=0;SPLITREAD=445;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t0/1:1989:445:1359,445:0.2237:511,848:185,259",
+          "most_severe_consequence": "inframe_insertion",
+          "seq_region_name": "chr13",
+          "start": 28034132,
+          "strand": 1,
+          "transcript_consequences": [
+            {
+              "allele_num": 1,
+              "amino_acids": "E/DNEYFYVDFRE",
+              "annotation": "known variant",
+              "biotype": "protein_coding",
+              "cdna_end": 1854,
+              "cdna_start": 1853,
+              "cds_end": 1788,
+              "cds_start": 1787,
+              "codons": "gaa/gaTAATGAGTACTTCTACGTTGATTTCAGAGAa",
+              "consequence_terms": [
+                "inframe_insertion"
+              ],
+              "exon": "14/24",
+              "gene_id": "ENSG00000122025",
+              "gene_symbol": "FLT3",
+              "hgvsc": "ENST00000241453:c.1758_1787dup",
+              "hgvsg": "chr13:g.28034135_28034164dup",
+              "hgvsp": "ENSP00000241453.1:p.Asp586_Arg595dup",
+              "impact": "MODERATE",
+              "protein_end": 596,
+              "protein_id": "ENSP00000241453",
+              "protein_start": 596,
+              "source": "vep.gtf.gz",
+              "strand": -1,
+              "transcript_id": "ENST00000241453",
+              "tsl": 1,
+              "variant_allele": "TCTCTGAAATCAACGTAGAAGTACTCATTA"
+            }
+          ],
+          "variant_class": "insertion"
+        },
+        {
+          "FORMAT": {
+            "AD": "1398,350",
+            "AF": "0.197",
+            "ALD": "153,197",
+            "DP": "1777",
+            "GT": "0/1",
+            "RD": "454,944",
+            "VD": "350"
+          },
+          "INFO": {
+            "ADJAF": "0.0163",
+            "AF": "0.197",
+            "BIAS": "2:2",
+            "DP": "1777",
+            "DUPRATE": "0",
+            "END": "28034155",
+            "HIAF": "0.1987",
+            "HICNT": "349",
+            "HICOV": "1756",
+            "LSEQ": "ATATTCTCTGAAATCAACGT",
+            "MQ": "247.8",
+            "MSI": "1",
+            "MSILEN": "1",
+            "NM": "4.1",
+            "ODDRATIO": "1.6144916772954",
+            "PMEAN": "10",
+            "PSTD": "1",
+            "QSTD": "1",
+            "QUAL": "38.4",
+            "REFBIAS": "454:944",
+            "RSEQ": "TCATTATCTGAGGAGCCGGT",
+            "SAMPLE": "SRR8615409",
+            "SBF": "0.0001",
+            "SHIFT3": "0",
+            "SN": "349",
+            "SPANPAIR": "0",
+            "SPLITREAD": "0",
+            "TYPE": "Complex",
+            "VARBIAS": "153:197",
+            "VD": "350"
+          },
+          "allele_string": "AGAAGTAC/GATCATAT",
+          "assembly_name": null,
+          "end": 28034155,
+          "id": ".",
+          "input": "chr13\t28034148\t.\tAGAAGTAC\tGATCATAT\t324\tPASS\tSAMPLE=SRR8615409;TYPE=Complex;DP=1777;END=28034155;VD=350;AF=0.197;BIAS=2:2;REFBIAS=454:944;VARBIAS=153:197;PMEAN=10;PSTD=1;QUAL=38.4;QSTD=1;SBF=0.0001;ODDRATIO=1.6144916772954;MQ=247.8;SN=349;HIAF=0.1987;ADJAF=0.0163;SHIFT3=0;MSI=1;MSILEN=1;NM=4.1;HICNT=349;HICOV=1756;LSEQ=ATATTCTCTGAAATCAACGT;RSEQ=TCATTATCTGAGGAGCCGGT;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t0/1:1777:350:1398,350:0.197:454,944:153,197",
+          "most_severe_consequence": "missense_variant",
+          "seq_region_name": "chr13",
+          "start": 28034148,
+          "strand": 1,
+          "transcript_consequences": [
+            {
+              "allele_num": 1,
+              "amino_acids": "EYFY/EYDH",
+              "annotation": "FLT3 in frame",
+              "biotype": "protein_coding",
+              "cdna_end": 1837,
+              "cdna_start": 1830,
+              "cds_end": 1771,
+              "cds_start": 1764,
+              "codons": "gaGTACTTCTac/gaATATGATCac",
+              "consequence_terms": [
+                "missense_variant"
+              ],
+              "exon": "14/24",
+              "gene_id": "ENSG00000122025",
+              "gene_symbol": "FLT3",
+              "hgvsc": "ENST00000241453:c.1764_1771delinsATATGATC",
+              "hgvsg": "chr13:g.28034148_28034155delinsGATCATAT",
+              "hgvsp": "ENSP00000241453.1:p.Phe590_Tyr591delinsAspHis",
+              "impact": "MODERATE",
+              "protein_end": 591,
+              "protein_id": "ENSP00000241453",
+              "protein_start": 588,
+              "source": "vep.gtf.gz",
+              "strand": -1,
+              "transcript_id": "ENST00000241453",
+              "tsl": 1,
+              "variant_allele": "GATCATAT"
+            }
+          ],
+          "variant_class": "substitution"
+        },
+        {
+          "FORMAT": {
+            "AD": "3,530",
+            "AF": "0.9851",
+            "ALD": "223,307",
+            "DP": "538",
+            "GT": "1/1",
+            "RD": "3,0",
+            "VD": "530"
+          },
+          "INFO": {
+            "ADJAF": "0.0056",
+            "AF": "0.9851",
+            "BIAS": "0:2",
+            "DP": "538",
+            "DUPRATE": "0",
+            "END": "28061947",
+            "HIAF": "0.9904",
+            "HICNT": "516",
+            "HICOV": "521",
+            "LSEQ": "CAGGAAATGTTCCCTGGGGC",
+            "MQ": "255",
+            "MSI": "1",
+            "MSILEN": "1",
+            "NM": "1.6",
+            "ODDRATIO": "0",
+            "PMEAN": "28.2",
+            "PSTD": "1",
+            "QSTD": "1",
+            "QUAL": "36.1",
+            "REFBIAS": "3:0",
+            "RSEQ": "TCGACCAGCACTTGCAGTGT",
+            "SAMPLE": "SRR8615409",
+            "SBF": "0.07565",
+            "SHIFT3": "0",
+            "SN": "36.857",
+            "SPANPAIR": "0",
+            "SPLITREAD": "0",
+            "TYPE": "SNV",
+            "VARBIAS": "223:307",
+            "VD": "530"
+          },
+          "allele_string": "G/A",
+          "assembly_name": null,
+          "end": 28061947,
+          "id": ".",
+          "input": "chr13\t28061947\t.\tG\tA\t326\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=538;END=28061947;VD=530;AF=0.9851;BIAS=0:2;REFBIAS=3:0;VARBIAS=223:307;PMEAN=28.2;PSTD=1;QUAL=36.1;QSTD=1;SBF=0.07565;ODDRATIO=0;MQ=255;SN=36.857;HIAF=0.9904;ADJAF=0.0056;SHIFT3=0;MSI=1;MSILEN=1;NM=1.6;HICNT=516;HICOV=521;LSEQ=CAGGAAATGTTCCCTGGGGC;RSEQ=TCGACCAGCACTTGCAGTGT;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:538:530:3,530:0.9851:3,0:223,307",
+          "most_severe_consequence": "synonymous_variant",
+          "seq_region_name": "chr13",
+          "start": 28061947,
+          "strand": 1,
+          "transcript_consequences": [
+            {
+              "allele_num": 1,
+              "amino_acids": "D",
+              "annotation": "FLT3 in frame",
+              "biotype": "protein_coding",
+              "cdna_end": 354,
+              "cdna_start": 354,
+              "cds_end": 288,
+              "cds_start": 288,
+              "codons": "gaC/gaT",
+              "consequence_terms": [
+                "synonymous_variant"
+              ],
+              "exon": "3/24",
+              "gene_id": "ENSG00000122025",
+              "gene_symbol": "FLT3",
+              "hgvsc": "ENST00000241453:c.288C>T",
+              "hgvsg": "chr13:g.28061947G>A",
+              "hgvsp": "ENSP00000241453.1:p.Asp96=",
+              "impact": "LOW",
+              "protein_end": 96,
+              "protein_id": "ENSP00000241453",
+              "protein_start": 96,
+              "source": "vep.gtf.gz",
+              "strand": -1,
+              "transcript_id": "ENST00000241453",
+              "tsl": 1,
+              "variant_allele": "A"
+            }
+          ],
+          "variant_class": "SNV"
+        },
+        {
+          "FORMAT": {
+            "AD": "0,465",
+            "AF": "0.9915",
+            "ALD": "13,452",
+            "DP": "469",
+            "GT": "1/1",
+            "RD": "0,0",
+            "VD": "465"
+          },
+          "INFO": {
+            "ADJAF": "0.0064",
+            "AF": "0.9915",
+            "BIAS": "0:1",
+            "DP": "469",
+            "DUPRATE": "0",
+            "END": "28100491",
+            "HIAF": "0.9955",
+            "HICNT": "445",
+            "HICOV": "447",
+            "LSEQ": "GCAGCGGCAGCTGGCCGCCG",
+            "MQ": "255",
+            "MSI": "1",
+            "MSILEN": "1",
+            "NM": "1.4",
+            "ODDRATIO": "0",
+            "PMEAN": "34.5",
+            "PSTD": "1",
+            "QSTD": "1",
+            "QUAL": "34.2",
+            "REFBIAS": "0:0",
+            "RSEQ": "CGCGCGCCAACGCCGGCATG",
+            "SAMPLE": "SRR8615409",
+            "SBF": "1",
+            "SHIFT3": "2",
+            "SN": "22.25",
+            "SPANPAIR": "0",
+            "SPLITREAD": "0",
+            "TYPE": "SNV",
+            "VARBIAS": "13:452",
+            "VD": "465"
+          },
+          "allele_string": "T/C",
+          "assembly_name": null,
+          "end": 28100491,
+          "id": ".",
+          "input": "chr13\t28100491\t.\tT\tC\t303\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=469;END=28100491;VD=465;AF=0.9915;BIAS=0:1;REFBIAS=0:0;VARBIAS=13:452;PMEAN=34.5;PSTD=1;QUAL=34.2;QSTD=1;SBF=1;ODDRATIO=0;MQ=255;SN=22.25;HIAF=0.9955;ADJAF=0.0064;SHIFT3=2;MSI=1;MSILEN=1;NM=1.4;HICNT=445;HICOV=447;LSEQ=GCAGCGGCAGCTGGCCGCCG;RSEQ=CGCGCGCCAACGCCGGCATG;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:469:465:0,465:0.9915:0,0:13,452",
+          "most_severe_consequence": "missense_variant",
+          "seq_region_name": "chr13",
+          "start": 28100491,
+          "strand": 1,
+          "transcript_consequences": [
+            {
+              "allele_num": 1,
+              "amino_acids": "D/G",
+              "annotation": "FLT3 in frame",
+              "biotype": "protein_coding",
+              "cdna_end": 86,
+              "cdna_start": 86,
+              "cds_end": 20,
+              "cds_start": 20,
+              "codons": "gAc/gGc",
+              "consequence_terms": [
+                "missense_variant"
+              ],
+              "exon": "1/24",
+              "gene_id": "ENSG00000122025",
+              "gene_symbol": "FLT3",
+              "hgvsc": "ENST00000241453:c.20A>G",
+              "hgvsg": "chr13:g.28100491T>C",
+              "hgvsp": "ENSP00000241453.1:p.Asp7Gly",
+              "impact": "MODERATE",
+              "protein_end": 7,
+              "protein_id": "ENSP00000241453",
+              "protein_start": 7,
+              "source": "vep.gtf.gz",
+              "strand": -1,
+              "transcript_id": "ENST00000241453",
+              "tsl": 1,
+              "variant_allele": "C"
+            }
+          ],
+          "variant_class": "SNV"
+        }
+      ],
+      "MT-ATP6": [
+        {
+          "FORMAT": {
+            "AD": "0,27",
+            "AF": "1",
+            "ALD": "14,13",
+            "DP": "27",
+            "GT": "1/1",
+            "RD": "0,0",
+            "VD": "27"
+          },
+          "INFO": {
+            "ADJAF": "0.1111",
+            "AF": "1",
+            "BIAS": "0:2",
+            "DP": "27",
+            "DUPRATE": "0",
+            "END": "8566",
+            "HIAF": "1.0000",
+            "HICNT": "23",
+            "HICOV": "23",
+            "LSEQ": "CTTCATTCATTGCCCCCACA",
+            "MQ": "255",
+            "MSI": "1",
+            "MSILEN": "1",
+            "NM": "2.9",
+            "ODDRATIO": "0",
+            "PMEAN": "28.7",
+            "PSTD": "1",
+            "QSTD": "1",
+            "QUAL": "31.8",
+            "REFBIAS": "0:0",
+            "RSEQ": "TCCTAGGCCTACCCGCCGCA",
+            "SAMPLE": "SRR8615409",
+            "SBF": "1",
+            "SHIFT3": "0",
+            "SN": "5.75",
+            "SPANPAIR": "0",
+            "SPLITREAD": "0",
+            "TYPE": "SNV",
+            "VARBIAS": "14:13",
+            "VD": "27"
+          },
+          "allele_string": "A/G",
+          "assembly_name": null,
+          "end": 8566,
+          "id": ".",
+          "input": "chrM\t8566\t.\tA\tG\t151\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=27;END=8566;VD=27;AF=1;BIAS=0:2;REFBIAS=0:0;VARBIAS=14:13;PMEAN=28.7;PSTD=1;QUAL=31.8;QSTD=1;SBF=1;ODDRATIO=0;MQ=255;SN=5.75;HIAF=1.0000;ADJAF=0.1111;SHIFT3=0;MSI=1;MSILEN=1;NM=2.9;HICNT=23;HICOV=23;LSEQ=CTTCATTCATTGCCCCCACA;RSEQ=TCCTAGGCCTACCCGCCGCA;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:27:27:0,27:1:0,0:14,13",
+          "most_severe_consequence": "missense_variant",
+          "seq_region_name": "chrM",
+          "start": 8566,
+          "strand": 1,
+          "transcript_consequences": [
+            {
+              "allele_num": 1,
+              "amino_acids": "I/V",
+              "annotation": "artifact",
+              "biotype": "protein_coding",
+              "cdna_end": 40,
+              "cdna_start": 40,
+              "cds_end": 40,
+              "cds_start": 40,
+              "codons": "Atc/Gtc",
+              "consequence_terms": [
+                "missense_variant"
+              ],
+              "exon": "1/1",
+              "gene_id": "ENSG00000198899",
+              "gene_symbol": "MT-ATP6",
+              "hgvsc": "ENST00000361899:c.40A>G",
+              "hgvsg": "chrM:g.8566A>G",
+              "hgvsp": "ENSP00000354632.1:p.Ile14Val",
+              "impact": "MODERATE",
+              "protein_end": 14,
+              "protein_id": "ENSP00000354632",
+              "protein_start": 14,
+              "source": "vep.gtf.gz",
+              "strand": 1,
+              "transcript_id": "ENST00000361899",
+              "variant_allele": "G"
+            }
+          ],
+          "variant_class": "SNV"
+        },
+        {
+          "FORMAT": {
+            "AD": "2,48",
+            "AF": "0.96",
+            "ALD": "18,30",
+            "DP": "50",
+            "GT": "1/1",
+            "RD": "0,2",
+            "VD": "48"
+          },
+          "INFO": {
+            "ADJAF": "0.02",
+            "AF": "0.96",
+            "BIAS": "0:2",
+            "DP": "50",
+            "DUPRATE": "0",
+            "END": "8701",
+            "HIAF": "0.9592",
+            "HICNT": "47",
+            "HICOV": "49",
+            "LSEQ": "TAACCTCAAAACAAATGATA",
+            "MQ": "255",
+            "MSI": "2",
+            "MSILEN": "1",
+            "NM": "2.5",
+            "ODDRATIO": "0",
+            "PMEAN": "27.9",
+            "PSTD": "1",
+            "QSTD": "1",
+            "QUAL": "36.4",
+            "REFBIAS": "0:2",
+            "RSEQ": "CCATACACAACACTAAAGGA",
+            "SAMPLE": "SRR8615409",
+            "SBF": "0.5298",
+            "SHIFT3": "1",
+            "SN": "47",
+            "SPANPAIR": "0",
+            "SPLITREAD": "0",
+            "TYPE": "SNV",
+            "VARBIAS": "18:30",
+            "VD": "48"
+          },
+          "allele_string": "A/G",
+          "assembly_name": null,
+          "end": 8701,
+          "id": ".",
+          "input": "chrM\t8701\t.\tA\tG\t203\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=50;END=8701;VD=48;AF=0.96;BIAS=0:2;REFBIAS=0:2;VARBIAS=18:30;PMEAN=27.9;PSTD=1;QUAL=36.4;QSTD=1;SBF=0.5298;ODDRATIO=0;MQ=255;SN=47;HIAF=0.9592;ADJAF=0.02;SHIFT3=1;MSI=2;MSILEN=1;NM=2.5;HICNT=47;HICOV=49;LSEQ=TAACCTCAAAACAAATGATA;RSEQ=CCATACACAACACTAAAGGA;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:50:48:2,48:0.96:0,2:18,30",
+          "most_severe_consequence": "missense_variant",
+          "seq_region_name": "chrM",
+          "start": 8701,
+          "strand": 1,
+          "transcript_consequences": [
+            {
+              "allele_num": 1,
+              "amino_acids": "T/A",
+              "annotation": "artifact",
+              "biotype": "protein_coding",
+              "cdna_end": 175,
+              "cdna_start": 175,
+              "cds_end": 175,
+              "cds_start": 175,
+              "codons": "Acc/Gcc",
+              "consequence_terms": [
+                "missense_variant"
+              ],
+              "exon": "1/1",
+              "gene_id": "ENSG00000198899",
+              "gene_symbol": "MT-ATP6",
+              "hgvsc": "ENST00000361899:c.175A>G",
+              "hgvsg": "chrM:g.8701A>G",
+              "hgvsp": "ENSP00000354632.1:p.Thr59Ala",
+              "impact": "MODERATE",
+              "protein_end": 59,
+              "protein_id": "ENSP00000354632",
+              "protein_start": 59,
+              "source": "vep.gtf.gz",
+              "strand": 1,
+              "transcript_id": "ENST00000361899",
+              "variant_allele": "G"
+            }
+          ],
+          "variant_class": "SNV"
+        },
+        {
+          "FORMAT": {
+            "AD": "0,13",
+            "AF": "1",
+            "ALD": "10,3",
+            "DP": "13",
+            "GT": "1/1",
+            "RD": "0,0",
+            "VD": "13"
+          },
+          "INFO": {
+            "ADJAF": "0.1538",
+            "AF": "1",
+            "BIAS": "0:2",
+            "DP": "13",
+            "DUPRATE": "0",
+            "END": "8860",
+            "HIAF": "1.0000",
+            "HICNT": "11",
+            "HICOV": "11",
+            "LSEQ": "CCATCCCCTTATGAGCGGGC",
+            "MQ": "255",
+            "MSI": "1",
+            "MSILEN": "1",
+            "NM": "2.8",
+            "ODDRATIO": "0",
+            "PMEAN": "20.8",
+            "PSTD": "1",
+            "QSTD": "1",
+            "QUAL": "33.5",
+            "REFBIAS": "0:0",
+            "RSEQ": "CAGTGATTATAGGCTTTCGC",
+            "SAMPLE": "SRR8615409",
+            "SBF": "1",
+            "SHIFT3": "0",
+            "SN": "5.5",
+            "SPANPAIR": "0",
+            "SPLITREAD": "0",
+            "TYPE": "SNV",
+            "VARBIAS": "10:3",
+            "VD": "13"
+          },
+          "allele_string": "A/G",
+          "assembly_name": null,
+          "end": 8860,
+          "id": ".",
+          "input": "chrM\t8860\t.\tA\tG\t123\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=13;END=8860;VD=13;AF=1;BIAS=0:2;REFBIAS=0:0;VARBIAS=10:3;PMEAN=20.8;PSTD=1;QUAL=33.5;QSTD=1;SBF=1;ODDRATIO=0;MQ=255;SN=5.5;HIAF=1.0000;ADJAF=0.1538;SHIFT3=0;MSI=1;MSILEN=1;NM=2.8;HICNT=11;HICOV=11;LSEQ=CCATCCCCTTATGAGCGGGC;RSEQ=CAGTGATTATAGGCTTTCGC;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:13:13:0,13:1:0,0:10,3",
+          "most_severe_consequence": "missense_variant",
+          "seq_region_name": "chrM",
+          "start": 8860,
+          "strand": 1,
+          "transcript_consequences": [
+            {
+              "allele_num": 1,
+              "amino_acids": "T/A",
+              "annotation": "known variant",
+              "biotype": "protein_coding",
+              "cdna_end": 334,
+              "cdna_start": 334,
+              "cds_end": 334,
+              "cds_start": 334,
+              "codons": "Aca/Gca",
+              "consequence_terms": [
+                "missense_variant"
+              ],
+              "exon": "1/1",
+              "gene_id": "ENSG00000198899",
+              "gene_symbol": "MT-ATP6",
+              "hgvsc": "ENST00000361899:c.334A>G",
+              "hgvsg": "chrM:g.8860A>G",
+              "hgvsp": "ENSP00000354632.1:p.Thr112Ala",
+              "impact": "MODERATE",
+              "protein_end": 112,
+              "protein_id": "ENSP00000354632",
+              "protein_start": 112,
+              "source": "vep.gtf.gz",
+              "strand": 1,
+              "transcript_id": "ENST00000361899",
+              "variant_allele": "G"
+            }
+          ],
+          "variant_class": "SNV"
+        }
+      ],
+      "MT-ATP8": [
+        {
+          "FORMAT": {
+            "AD": "0,27",
+            "AF": "1",
+            "ALD": "24,3",
+            "DP": "27",
+            "GT": "1/1",
+            "RD": "0,0",
+            "VD": "27"
+          },
+          "INFO": {
+            "ADJAF": "0.1852",
+            "AF": "1",
+            "BIAS": "0:2",
+            "DP": "27",
+            "DUPRATE": "0",
+            "END": "8390",
+            "HIAF": "1.0000",
+            "HICNT": "26",
+            "HICOV": "26",
+            "LSEQ": "CCCAACTAAATACTACCGTA",
+            "MQ": "255",
+            "MSI": "2",
+            "MSILEN": "1",
+            "NM": "4.1",
+            "ODDRATIO": "0",
+            "PMEAN": "8.2",
+            "PSTD": "1",
+            "QSTD": "1",
+            "QUAL": "35.2",
+            "REFBIAS": "0:0",
+            "RSEQ": "GGCCCACCATAATTACCCCC",
+            "SAMPLE": "SRR8615409",
+            "SBF": "1",
+            "SHIFT3": "0",
+            "SN": "26",
+            "SPANPAIR": "0",
+            "SPLITREAD": "0",
+            "TYPE": "SNV",
+            "VARBIAS": "24:3",
+            "VD": "27"
+          },
+          "allele_string": "T/A",
+          "assembly_name": null,
+          "end": 8390,
+          "id": ".",
+          "input": "chrM\t8390\t.\tT\tA\t167\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=27;END=8390;VD=27;AF=1;BIAS=0:2;REFBIAS=0:0;VARBIAS=24:3;PMEAN=8.2;PSTD=1;QUAL=35.2;QSTD=1;SBF=1;ODDRATIO=0;MQ=255;SN=26;HIAF=1.0000;ADJAF=0.1852;SHIFT3=0;MSI=2;MSILEN=1;NM=4.1;HICNT=26;HICOV=26;LSEQ=CCCAACTAAATACTACCGTA;RSEQ=GGCCCACCATAATTACCCCC;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:27:27:0,27:1:0,0:24,3",
+          "most_severe_consequence": "missense_variant",
+          "seq_region_name": "chrM",
+          "start": 8390,
+          "strand": 1,
+          "transcript_consequences": [
+            {
+              "allele_num": 1,
+              "amino_acids": "W/R",
+              "annotation": "Hotspot",
+              "biotype": "protein_coding",
+              "cdna_end": 25,
+              "cdna_start": 25,
+              "cds_end": 25,
+              "cds_start": 25,
+              "codons": "Tgg/Agg",
+              "consequence_terms": [
+                "missense_variant"
+              ],
+              "exon": "1/1",
+              "gene_id": "ENSG00000228253",
+              "gene_symbol": "MT-ATP8",
+              "hgvsc": "ENST00000361851:c.25T>A",
+              "hgvsg": "chrM:g.8390T>A",
+              "hgvsp": "ENSP00000355265.1:p.Trp9Arg",
+              "impact": "MODERATE",
+              "protein_end": 9,
+              "protein_id": "ENSP00000355265",
+              "protein_start": 9,
+              "source": "vep.gtf.gz",
+              "strand": 1,
+              "transcript_id": "ENST00000361851",
+              "variant_allele": "A"
+            }
+          ],
+          "variant_class": "SNV"
+        }
+      ],
+      "MT-CYB": [
+        {
+          "FORMAT": {
+            "AD": "0,9",
+            "AF": "1",
+            "ALD": "7,2",
+            "DP": "9",
+            "GT": "1/1",
+            "RD": "0,0",
+            "VD": "9"
+          },
+          "INFO": {
+            "ADJAF": "0.3333",
+            "AF": "1",
+            "BIAS": "0:2",
+            "DP": "9",
+            "DUPRATE": "0",
+            "END": "14766",
+            "HIAF": "1.0000",
+            "HICNT": "9",
+            "HICOV": "9",
+            "LSEQ": "AATGACCCCAATACGCAAAA",
+            "MQ": "255",
+            "MSI": "1",
+            "MSILEN": "1",
+            "NM": "1.8",
+            "ODDRATIO": "0",
+            "PMEAN": "16.8",
+            "PSTD": "1",
+            "QSTD": "1",
+            "QUAL": "32.7",
+            "REFBIAS": "0:0",
+            "RSEQ": "TAACCCCCTAATAAAATTAA",
+            "SAMPLE": "SRR8615409",
+            "SBF": "1",
+            "SHIFT3": "0",
+            "SN": "18",
+            "SPANPAIR": "0",
+            "SPLITREAD": "0",
+            "TYPE": "SNV",
+            "VARBIAS": "7:2",
+            "VD": "9"
+          },
+          "allele_string": "C/T",
+          "assembly_name": null,
+          "end": 14766,
+          "id": ".",
+          "input": "chrM\t14766\t.\tC\tT\t103\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=9;END=14766;VD=9;AF=1;BIAS=0:2;REFBIAS=0:0;VARBIAS=7:2;PMEAN=16.8;PSTD=1;QUAL=32.7;QSTD=1;SBF=1;ODDRATIO=0;MQ=255;SN=18;HIAF=1.0000;ADJAF=0.3333;SHIFT3=0;MSI=1;MSILEN=1;NM=1.8;HICNT=9;HICOV=9;LSEQ=AATGACCCCAATACGCAAAA;RSEQ=TAACCCCCTAATAAAATTAA;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:9:9:0,9:1:0,0:7,2",
+          "most_severe_consequence": "missense_variant",
+          "seq_region_name": "chrM",
+          "start": 14766,
+          "strand": 1,
+          "transcript_consequences": [
+            {
+              "allele_num": 1,
+              "amino_acids": "T/I",
+              "annotation": "",
+              "biotype": "protein_coding",
+              "cdna_end": 20,
+              "cdna_start": 20,
+              "cds_end": 20,
+              "cds_start": 20,
+              "codons": "aCt/aTt",
+              "consequence_terms": [
+                "missense_variant"
+              ],
+              "exon": "1/1",
+              "gene_id": "ENSG00000198727",
+              "gene_symbol": "MT-CYB",
+              "hgvsc": "ENST00000361789:c.20C>T",
+              "hgvsg": "chrM:g.14766C>T",
+              "hgvsp": "ENSP00000354554.1:p.Thr7Ile",
+              "impact": "MODERATE",
+              "protein_end": 7,
+              "protein_id": "ENSP00000354554",
+              "protein_start": 7,
+              "source": "vep.gtf.gz",
+              "strand": 1,
+              "transcript_id": "ENST00000361789",
+              "variant_allele": "T"
+            }
+          ],
+          "variant_class": "SNV"
+        },
+        {
+          "FORMAT": {
+            "AD": "0,34",
+            "AF": "1",
+            "ALD": "14,20",
+            "DP": "34",
+            "GT": "1/1",
+            "RD": "0,0",
+            "VD": "34"
+          },
+          "INFO": {
+            "ADJAF": "0.0882",
+            "AF": "1",
+            "BIAS": "0:2",
+            "DP": "34",
+            "DUPRATE": "0",
+            "END": "15326",
+            "HIAF": "1.0000",
+            "HICNT": "34",
+            "HICOV": "34",
+            "LSEQ": "TCATTATTGCAGCCCTAGCA",
+            "MQ": "255",
+            "MSI": "2",
+            "MSILEN": "2",
+            "NM": "1.8",
+            "ODDRATIO": "0",
+            "PMEAN": "25.3",
+            "PSTD": "1",
+            "QSTD": "1",
+            "QUAL": "35.2",
+            "REFBIAS": "0:0",
+            "RSEQ": "CACTCCACCTCCTATTCTTG",
+            "SAMPLE": "SRR8615409",
+            "SBF": "1",
+            "SHIFT3": "1",
+            "SN": "68",
+            "SPANPAIR": "0",
+            "SPLITREAD": "0",
+            "TYPE": "SNV",
+            "VARBIAS": "14:20",
+            "VD": "34"
+          },
+          "allele_string": "A/G",
+          "assembly_name": null,
+          "end": 15326,
+          "id": ".",
+          "input": "chrM\t15326\t.\tA\tG\t179\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=34;END=15326;VD=34;AF=1;BIAS=0:2;REFBIAS=0:0;VARBIAS=14:20;PMEAN=25.3;PSTD=1;QUAL=35.2;QSTD=1;SBF=1;ODDRATIO=0;MQ=255;SN=68;HIAF=1.0000;ADJAF=0.0882;SHIFT3=1;MSI=2;MSILEN=2;NM=1.8;HICNT=34;HICOV=34;LSEQ=TCATTATTGCAGCCCTAGCA;RSEQ=CACTCCACCTCCTATTCTTG;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:34:34:0,34:1:0,0:14,20",
+          "most_severe_consequence": "missense_variant",
+          "seq_region_name": "chrM",
+          "start": 15326,
+          "strand": 1,
+          "transcript_consequences": [
+            {
+              "allele_num": 1,
+              "amino_acids": "T/A",
+              "annotation": "",
+              "biotype": "protein_coding",
+              "cdna_end": 580,
+              "cdna_start": 580,
+              "cds_end": 580,
+              "cds_start": 580,
+              "codons": "Aca/Gca",
+              "consequence_terms": [
+                "missense_variant"
+              ],
+              "exon": "1/1",
+              "gene_id": "ENSG00000198727",
+              "gene_symbol": "MT-CYB",
+              "hgvsc": "ENST00000361789:c.580A>G",
+              "hgvsg": "chrM:g.15326A>G",
+              "hgvsp": "ENSP00000354554.1:p.Thr194Ala",
+              "impact": "MODERATE",
+              "protein_end": 194,
+              "protein_id": "ENSP00000354554",
+              "protein_start": 194,
+              "source": "vep.gtf.gz",
+              "strand": 1,
+              "transcript_id": "ENST00000361789",
+              "variant_allele": "G"
+            }
+          ],
+          "variant_class": "SNV"
+        },
+        {
+          "FORMAT": {
+            "AD": "0,26",
+            "AF": "1",
+            "ALD": "17,9",
+            "DP": "26",
+            "GT": "1/1",
+            "RD": "0,0",
+            "VD": "26"
+          },
+          "INFO": {
+            "ADJAF": "0.0385",
+            "AF": "1",
+            "BIAS": "0:2",
+            "DP": "26",
+            "DUPRATE": "0",
+            "END": "15431",
+            "HIAF": "1.0000",
+            "HICNT": "23",
+            "HICOV": "23",
+            "LSEQ": "CTTACTACACAATCAAAGAC",
+            "MQ": "255",
+            "MSI": "3",
+            "MSILEN": "1",
+            "NM": "1.6",
+            "ODDRATIO": "0",
+            "PMEAN": "25.5",
+            "PSTD": "1",
+            "QSTD": "1",
+            "QUAL": "32.6",
+            "REFBIAS": "0:0",
+            "RSEQ": "CCCTCGGCTTACTTCTCTTC",
+            "SAMPLE": "SRR8615409",
+            "SBF": "1",
+            "SHIFT3": "0",
+            "SN": "7.667",
+            "SPANPAIR": "0",
+            "SPLITREAD": "0",
+            "TYPE": "SNV",
+            "VARBIAS": "17:9",
+            "VD": "26"
+          },
+          "allele_string": "G/A",
+          "assembly_name": null,
+          "end": 15431,
+          "id": ".",
+          "input": "chrM\t15431\t.\tG\tA\t153\tPASS\tSAMPLE=SRR8615409;TYPE=SNV;DP=26;END=15431;VD=26;AF=1;BIAS=0:2;REFBIAS=0:0;VARBIAS=17:9;PMEAN=25.5;PSTD=1;QUAL=32.6;QSTD=1;SBF=1;ODDRATIO=0;MQ=255;SN=7.667;HIAF=1.0000;ADJAF=0.0385;SHIFT3=0;MSI=3;MSILEN=1;NM=1.6;HICNT=23;HICOV=23;LSEQ=CTTACTACACAATCAAAGAC;RSEQ=CCCTCGGCTTACTTCTCTTC;DUPRATE=0;SPLITREAD=0;SPANPAIR=0\tGT:DP:VD:AD:AF:RD:ALD\t1/1:26:26:0,26:1:0,0:17,9",
+          "most_severe_consequence": "missense_variant",
+          "seq_region_name": "chrM",
+          "start": 15431,
+          "strand": 1,
+          "transcript_consequences": [
+            {
+              "allele_num": 1,
+              "amino_acids": "A/T",
+              "annotation": "",
+              "biotype": "protein_coding",
+              "cdna_end": 685,
+              "cdna_start": 685,
+              "cds_end": 685,
+              "cds_start": 685,
+              "codons": "Gcc/Acc",
+              "consequence_terms": [
+                "missense_variant"
+              ],
+              "exon": "1/1",
+              "gene_id": "ENSG00000198727",
+              "gene_symbol": "MT-CYB",
+              "hgvsc": "ENST00000361789:c.685G>A",
+              "hgvsg": "chrM:g.15431G>A",
+              "hgvsp": "ENSP00000354554.1:p.Ala229Thr",
+              "impact": "MODERATE",
+              "protein_end": 229,
+              "protein_id": "ENSP00000354554",
+              "protein_start": 229,
+              "source": "vep.gtf.gz",
+              "strand": 1,
+              "transcript_id": "ENST00000361789",
+              "variant_allele": "A"
+            }
+          ],
+          "variant_class": "SNV"
+        }
+      ]
+    },
+    "metadata": {
+      "sample_name": "SRR8615409"
+    },
+    "stats": {
+      "aln": {
+        "num_aligned_bases": 5572176,
+        "num_aligned_reads": 56928,
+        "num_aligned_reads_proper_pairs": 56738,
+        "num_total_bases": 8863278,
+        "num_total_reads": 91410,
+        "pct_adapter": 1.1e-05,
+        "pct_aligned_bases_from_total": 62.868117190953505,
+        "pct_aligned_reads_from_total": 62.27765014768625,
+        "pct_aligned_reads_proper_pairs": 99.66624508150646,
+        "pct_chimeras": 0.004514,
+        "rate_indel": 3.1e-05,
+        "rate_mismatch": 0.002744,
+        "strand_balance": 0.499772
+      },
+      "cov": {
+        "FLT3": {
+          "ENST00000241453": [
+            {
+              "chrom": "chr13",
+              "end": 28004174,
+              "exon_num": 1,
+              "metrics": {
+                "avg": 1290.4039955604883,
+                "count": 901,
+                "frac_cov_at_least": {
+                  "10x": 0.9966703662597114,
+                  "20x": 0.9911209766925638,
+                  "30x": 0.9611542730299667,
+                  "40x": 0.9600443951165372,
+                  "50x": 0.9589345172031076,
+                  "8x": 0.9966703662597114
+                },
+                "max": 3259,
+                "median": 1519,
+                "min": 5,
+                "stdev": 1022.52611210647
+              },
+              "start": 28003273
+            },
+            {
+              "chrom": "chr13",
+              "end": 28014557,
+              "exon_num": 2,
+              "metrics": {
+                "avg": 3149.5377358490564,
+                "count": 106,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 4040,
+                "median": 3033.5,
+                "min": 2706,
+                "stdev": 376.7713762894088
+              },
+              "start": 28014451
+            },
+            {
+              "chrom": "chr13",
+              "end": 28015256,
+              "exon_num": 3,
+              "metrics": {
+                "avg": 3279.97,
+                "count": 100,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 3745,
+                "median": 3616.5,
+                "min": 2069,
+                "stdev": 564.7830987076885
+              },
+              "start": 28015156
+            },
+            {
+              "chrom": "chr13",
+              "end": 28015701,
+              "exon_num": 4,
+              "metrics": {
+                "avg": 2169.1339285714284,
+                "count": 112,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 2491,
+                "median": 2215.0,
+                "min": 1872,
+                "stdev": 153.96545157899152
+              },
+              "start": 28015589
+            },
+            {
+              "chrom": "chr13",
+              "end": 28018589,
+              "exon_num": 5,
+              "metrics": {
+                "avg": 2446.20325203252,
+                "count": 123,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 2713,
+                "median": 2480,
+                "min": 2114,
+                "stdev": 142.68634404252862
+              },
+              "start": 28018466
+            },
+            {
+              "chrom": "chr13",
+              "end": 28023477,
+              "exon_num": 6,
+              "metrics": {
+                "avg": 2636.0078125,
+                "count": 128,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 2993,
+                "median": 2596.0,
+                "min": 2394,
+                "stdev": 142.37548758843042
+              },
+              "start": 28023349
+            },
+            {
+              "chrom": "chr13",
+              "end": 28024943,
+              "exon_num": 7,
+              "metrics": {
+                "avg": 2318.3253012048194,
+                "count": 83,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 2662,
+                "median": 2508,
+                "min": 1681,
+                "stdev": 321.3769198245959
+              },
+              "start": 28024860
+            },
+            {
+              "chrom": "chr13",
+              "end": 28027241,
+              "exon_num": 8,
+              "metrics": {
+                "avg": 1720.577922077922,
+                "count": 154,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 1862,
+                "median": 1720.5,
+                "min": 1583,
+                "stdev": 70.1021460579384
+              },
+              "start": 28027087
+            },
+            {
+              "chrom": "chr13",
+              "end": 28028288,
+              "exon_num": 9,
+              "metrics": {
+                "avg": 1426.3153153153153,
+                "count": 111,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 1651,
+                "median": 1397,
+                "min": 1260,
+                "stdev": 96.92865060838983
+              },
+              "start": 28028177
+            },
+            {
+              "chrom": "chr13",
+              "end": 28033991,
+              "exon_num": 10,
+              "metrics": {
+                "avg": 1492.3619047619047,
+                "count": 105,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 1633,
+                "median": 1533,
+                "min": 1283,
+                "stdev": 100.75724098903072
+              },
+              "start": 28033886
+            },
+            {
+              "chrom": "chr13",
+              "end": 28034214,
+              "exon_num": 11,
+              "metrics": {
+                "avg": 1608.0075187969924,
+                "count": 133,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 2231,
+                "median": 1455,
+                "min": 1109,
+                "stdev": 364.26256963900244
+              },
+              "start": 28034081
+            },
+            {
+              "chrom": "chr13",
+              "end": 28034407,
+              "exon_num": 12,
+              "metrics": {
+                "avg": 1410.2897196261683,
+                "count": 107,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 1507,
+                "median": 1416,
+                "min": 1194,
+                "stdev": 69.07270019468473
+              },
+              "start": 28034300
+            },
+            {
+              "chrom": "chr13",
+              "end": 28035673,
+              "exon_num": 13,
+              "metrics": {
+                "avg": 1194.195530726257,
+                "count": 179,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 1282,
+                "median": 1205,
+                "min": 1072,
+                "stdev": 50.99725463114045
+              },
+              "start": 28035494
+            },
+            {
+              "chrom": "chr13",
+              "end": 28036043,
+              "exon_num": 14,
+              "metrics": {
+                "avg": 1259.6605504587155,
+                "count": 109,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 1396,
+                "median": 1264,
+                "min": 1129,
+                "stdev": 73.01905131710316
+              },
+              "start": 28035934
+            },
+            {
+              "chrom": "chr13",
+              "end": 28037288,
+              "exon_num": 15,
+              "metrics": {
+                "avg": 1028.076923076923,
+                "count": 104,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 1202,
+                "median": 982.5,
+                "min": 845,
+                "stdev": 117.45544020248306
+              },
+              "start": 28037184
+            },
+            {
+              "chrom": "chr13",
+              "end": 28048443,
+              "exon_num": 16,
+              "metrics": {
+                "avg": 779.9585798816568,
+                "count": 169,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 948,
+                "median": 802,
+                "min": 620,
+                "stdev": 100.39293960125275
+              },
+              "start": 28048274
+            },
+            {
+              "chrom": "chr13",
+              "end": 28049537,
+              "exon_num": 17,
+              "metrics": {
+                "avg": 744.4285714285714,
+                "count": 154,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 958,
+                "median": 696.0,
+                "min": 564,
+                "stdev": 146.3053864573775
+              },
+              "start": 28049383
+            },
+            {
+              "chrom": "chr13",
+              "end": 28049774,
+              "exon_num": 18,
+              "metrics": {
+                "avg": 690.7785714285715,
+                "count": 140,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 828,
+                "median": 692.0,
+                "min": 527,
+                "stdev": 90.71213603396065
+              },
+              "start": 28049634
+            },
+            {
+              "chrom": "chr13",
+              "end": 28050222,
+              "exon_num": 19,
+              "metrics": {
+                "avg": 589.953125,
+                "count": 128,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 747,
+                "median": 518.0,
+                "min": 444,
+                "stdev": 109.54349507383871
+              },
+              "start": 28050094
+            },
+            {
+              "chrom": "chr13",
+              "end": 28052674,
+              "exon_num": 20,
+              "metrics": {
+                "avg": 442.7076923076923,
+                "count": 130,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 462,
+                "median": 443.0,
+                "min": 420,
+                "stdev": 8.896864837435674
+              },
+              "start": 28052544
+            },
+            {
+              "chrom": "chr13",
+              "end": 28057462,
+              "exon_num": 21,
+              "metrics": {
+                "avg": 473.2155172413793,
+                "count": 116,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 524,
+                "median": 482.0,
+                "min": 415,
+                "stdev": 34.29686410674046
+              },
+              "start": 28057346
+            },
+            {
+              "chrom": "chr13",
+              "end": 28062069,
+              "exon_num": 22,
+              "metrics": {
+                "avg": 526.4975369458128,
+                "count": 203,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 615,
+                "median": 524,
+                "min": 470,
+                "stdev": 35.28657422641088
+              },
+              "start": 28061866
+            },
+            {
+              "chrom": "chr13",
+              "end": 28070612,
+              "exon_num": 23,
+              "metrics": {
+                "avg": 400.60655737704917,
+                "count": 122,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 1.0,
+                  "30x": 1.0,
+                  "40x": 1.0,
+                  "50x": 1.0,
+                  "8x": 1.0
+                },
+                "max": 528,
+                "median": 379.0,
+                "min": 293,
+                "stdev": 66.85429542033611
+              },
+              "start": 28070490
+            },
+            {
+              "chrom": "chr13",
+              "end": 28100576,
+              "exon_num": 24,
+              "metrics": {
+                "avg": 296.8348623853211,
+                "count": 109,
+                "frac_cov_at_least": {
+                  "10x": 0.8807339449541285,
+                  "20x": 0.8348623853211009,
+                  "30x": 0.8256880733944955,
+                  "40x": 0.8165137614678899,
+                  "50x": 0.8073394495412844,
+                  "8x": 0.8807339449541285
+                },
+                "max": 510,
+                "median": 353,
+                "min": 0,
+                "stdev": 185.45437263358357
+              },
+              "start": 28100467
+            }
+          ]
+        },
+        "MT-ATP6": {
+          "ENST00000361899": [
+            {
+              "chrom": "chrM",
+              "end": 9207,
+              "exon_num": 1,
+              "metrics": {
+                "avg": 46.17180616740088,
+                "count": 681,
+                "frac_cov_at_least": {
+                  "10x": 1.0,
+                  "20x": 0.947136563876652,
+                  "30x": 0.8472834067547724,
+                  "40x": 0.644640234948605,
+                  "50x": 0.47723935389133626,
+                  "8x": 1.0
+                },
+                "max": 75,
+                "median": 48,
+                "min": 14,
+                "stdev": 15.155027251630655
+              },
+              "start": 8526
+            }
+          ]
+        },
+        "MT-ATP8": {
+          "ENST00000361851": [
+            {
+              "chrom": "chrM",
+              "end": 8572,
+              "exon_num": 1,
+              "metrics": {
+                "avg": 77.45410628019323,
+                "count": 207,
+                "frac_cov_at_least": {
+                  "10x": 0.9420289855072463,
+                  "20x": 0.8985507246376812,
+                  "30x": 0.821256038647343,
+                  "40x": 0.7294685990338164,
+                  "50x": 0.6570048309178744,
+                  "8x": 0.9468599033816425
+                },
+                "max": 148,
+                "median": 71,
+                "min": 1,
+                "stdev": 46.10221410819626
+              },
+              "start": 8365
+            }
+          ]
+        },
+        "MT-CYB": {
+          "ENST00000361789": [
+            {
+              "chrom": "chrM",
+              "end": 15887,
+              "exon_num": 1,
+              "metrics": {
+                "avg": 21.108676599474144,
+                "count": 1141,
+                "frac_cov_at_least": {
+                  "10x": 0.9412795793163892,
+                  "20x": 0.5880806310254163,
+                  "30x": 0.15687992988606486,
+                  "40x": 0.0,
+                  "50x": 0.0,
+                  "8x": 0.9588080631025416
+                },
+                "max": 38,
+                "median": 23,
+                "min": 3,
+                "stdev": 7.880384491781021
+              },
+              "start": 14746
+            }
+          ]
+        }
+      },
+      "ins": {
+        "max_insert_size": 87932,
+        "median_absolute_deviation": 3082,
+        "median_insert_size": 3280,
+        "min_insert_size": 29
+      },
+      "rna": {
+        "median_3prime_bias": 0.407478,
+        "median_5prime_bias": 0.660142,
+        "median_5prime_to_3prime_bias": 1.261326,
+        "median_cv_coverage": 0.440391,
+        "normalized_cov": [
+          0.279614,
+          0.363616,
+          0.541726,
+          0.637553,
+          0.704254,
+          0.775607,
+          0.838853,
+          0.889572,
+          0.939707,
+          0.943879,
+          0.915589,
+          0.899338,
+          0.829359,
+          0.792347,
+          0.787702,
+          0.789065,
+          0.79783,
+          0.852309,
+          0.879755,
+          0.889352,
+          0.92371,
+          0.938309,
+          0.944275,
+          0.914308,
+          0.920612,
+          0.903018,
+          0.875626,
+          0.895701,
+          0.947305,
+          0.993343,
+          1.368444,
+          1.869677,
+          2.146823,
+          2.288557,
+          2.286658,
+          2.337933,
+          2.03313,
+          1.68739,
+          1.238985,
+          1.017149,
+          1.033586,
+          1.041003,
+          1.043334,
+          1.070043,
+          1.078571,
+          1.117128,
+          1.136806,
+          1.159402,
+          1.17068,
+          1.14997,
+          1.151455,
+          1.131427,
+          1.048246,
+          1.047915,
+          1.006723,
+          0.956925,
+          0.942634,
+          0.932128,
+          0.921329,
+          0.951188,
+          1.003714,
+          1.004173,
+          1.032459,
+          1.026963,
+          1.018576,
+          1.027228,
+          1.038959,
+          1.166382,
+          1.187458,
+          1.173848,
+          1.139745,
+          1.08799,
+          1.067051,
+          1.014977,
+          0.976294,
+          0.9533,
+          0.963856,
+          0.955391,
+          0.923195,
+          0.962687,
+          1.045428,
+          1.021701,
+          0.970617,
+          0.956473,
+          0.975279,
+          0.969661,
+          0.944271,
+          0.902109,
+          0.862137,
+          0.825065,
+          0.814308,
+          0.763647,
+          0.742117,
+          0.677407,
+          0.662378,
+          0.614062,
+          0.538848,
+          0.464052,
+          0.364254,
+          0.293801,
+          0.253024
+        ],
+        "num_coding_bases": 4570863,
+        "num_intergenic_bases": 5283,
+        "num_intronic_bases": 99568,
+        "num_mrna_bases": 5421326,
+        "num_ribosomal_bases": 50460,
+        "num_utr_bases": 850463,
+        "pct_coding_bases": 0.819645,
+        "pct_intergenic_bases": 0.000947,
+        "pct_intronic_bases": 0.017854,
+        "pct_mrna_bases": 0.97215,
+        "pct_ribosomal_bases": 0.9048464155009551,
+        "pct_utr_bases": 0.152505
+      },
+      "var": {
+        "coding_consequences": {
+          "inframe_insertion": 4,
+          "missense_variant": 22,
+          "stop_gained": 1,
+          "synonymous_variant": 34
+        },
+        "num_deletions": 3,
+        "num_insertions": 5,
+        "num_snvs": 87,
+        "per_chromosome": {},
+        "polyphen": {
+          "num_benign_variants": 0,
+          "num_possibly_damaging_variants": 0,
+          "num_probably_damaging_variants": 0,
+          "num_unknown_variants": 0
+        },
+        "sift": {
+          "num_deleterious_variants": 0,
+          "num_tolerated_variants": 0
+        }
+      }
+    }
+  }
+}
