@@ -197,11 +197,15 @@ def print_fusion_table(json_files: Sequence[str], write: Any = print) -> None:
         with open(js) as fin:
             data = json.load(fin)
 
-        sample = sample_name(data)
         if "modules" in data:  # HAMLET 2.0
             fusions = data["modules"]["fusion"]["events"]
+            sample = sample_name(data)
         elif "results" in data:  # HAMLET 1.0
             fusions = data["results"]["fusion"]["tables"]["intersection"]["top20"]
+            sample = sample_name(data)
+        elif "fusion" in data:  # Output of the fusion module
+            fusions = data["fusion"]["events"]
+            sample = sample_name(data["fusion"])
         else:
             raise ValueError
 

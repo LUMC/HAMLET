@@ -23,4 +23,10 @@
     fname=test/data/output/v2/snv-indels-output.json
 
     python3 utilities/hamlet_table.py variant ${fname}> variants.tsv
+
+    # Test fusion module output
+
+    fname=test/data/output/v2/fusion-output.json
+
+    python3 utilities/hamlet_table.py fusion ${fname}> fusion.tsv
     "
