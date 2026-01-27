@@ -122,10 +122,10 @@ def print_variant_table(json_files: Sequence[str], write: Any = print) -> None:
 
         if "modules" in js:
             genes = js["modules"]["snv_indels"]["genes"]
-            name = (sample_name(js),)
+            name = sample_name(js)
         elif "snv_indels" in js:
             genes = js["snv_indels"]["genes"]
-            name = (sample_name(js["snv_indels"]),)
+            name = sample_name(js["snv_indels"])
         else:
             raise RuntimeError("Unknown json format")
 

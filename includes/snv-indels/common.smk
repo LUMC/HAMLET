@@ -45,6 +45,12 @@ if "vep_include_consequence" in config:
     """
     raise DeprecationWarning(msg)
 
+if "filter_criteria" in config:
+    msg = """
+    'filter_criteria' is no longer supported, use 'inclusion_criteria' instead
+    """
+    raise DeprecationWarning(msg)
+
 # Put each sample name in a SimpleNamespace to mimic Snakemake wildcard usage
 # (e.g {wildcards.sample}). This is only used in the 'all' rule.
 samples = [SimpleNamespace(sample=sample) for sample in pep.sample_table["sample_name"]]

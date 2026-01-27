@@ -305,6 +305,21 @@
     contains:
       - "'vep_include_consequence' is no longer supported"
 
+- name: test-snv-indels-filter-criteria-deprecated
+  tags:
+    - sanity
+    - snv-indels
+  command: >
+    snakemake
+    --snakefile includes/snv-indels/Snakefile
+    --workflow-profile test
+    --dry-run
+    --configfile test/data/config/snv-indels-vep-cache.json
+    --config pepfile=test/pep/chrM-trio.csv filter_criteria=filterfile.tsv
+  exit_code: 1
+  stdout:
+    contains:
+      - "'filter_criteria' is no longer supported, use 'inclusion_criteria' instead"
 # Test that the id_mapping script works if the filter criteria contain no transcript versions
 - name: test-id-mapping-no-transcript-version
   tags:
