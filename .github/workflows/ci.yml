@@ -95,9 +95,11 @@ jobs:
         with:
           root-reserve-mb: 30720
           swap-size-mb: 1024
-          remove-android: 'true'
           remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
           remove-codeql: 'true'
+          remove-docker-images: 'true'
           overprovision-lvm: 'true'
 
       - uses: actions/checkout@v4
@@ -126,7 +128,7 @@ jobs:
         uses: actions/cache@v4
         env:
           # Increase this value to manually invalidate the cache
-          CACHE_NUMBER: 0
+          CACHE_NUMBER: 1
         with:
           path: ${{ env.CONDA }}/envs
           key: conda-${{ hashFiles('environment.yml') }}-${{ steps.get-date.outputs.week }}-${{ env.CACHE_NUMBER }}
@@ -144,7 +146,7 @@ jobs:
         uses: actions/cache@v3
         env:
           # Increase this value to manually invalidate the cache
-          CACHE_NUMBER: 0
+          CACHE_NUMBER: 1
         with:
           path:
             ~/.singularity/cache/snakemake
@@ -232,7 +234,7 @@ jobs:
         uses: actions/cache@v4
         env:
           # Increase this value to manually invalidate the cache
-          CACHE_NUMBER: 0
+          CACHE_NUMBER: 1
         with:
           path: ${{ env.CONDA }}/envs
           key: conda-${{ hashFiles('environment.yml') }}-${{ steps.get-date.outputs.week }}-${{ env.CACHE_NUMBER }}
@@ -250,7 +252,7 @@ jobs:
         uses: actions/cache@v3
         env:
           # Increase this value to manually invalidate the cache
-          CACHE_NUMBER: 0
+          CACHE_NUMBER: 1
         with:
           path:
             ~/.singularity/cache/snakemake
