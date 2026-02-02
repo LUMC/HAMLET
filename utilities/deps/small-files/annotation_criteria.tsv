@@ -1,18 +1,18 @@
 gene_name	transcript_id	consequence	start	end	frame	annotation
 NPM1	ENST00000296930.10	frameshift_variant	860	875	1	pathogenic
-NPM1	ENST00000296930.10					discard
+NPM1	ENST00000296930.10					likely benign
 FLT3	ENST00000241453.12	missense_variant	2491	2526		likely pathogenic (FLT3-TKD)
 FLT3	ENST00000241453.12	inframe_insertion	2491	2526		likely pathogenic (FLT3-TKD)
 FLT3	ENST00000241453.12	inframe_deletion	2491	2526		likely pathogenic (FLT3-TKD)
 FLT3	ENST00000241453.12	protein_altering_variant	2491	2526		likely pathogenic (FLT3-TKD)
 FLT3	ENST00000241453.12	inframe_insertion	1705	1942		likely pathogenic (FLT3-ITD)
-FLT3	ENST00000241453.12					discard
+FLT3	ENST00000241453.12					likely benign
 CEBPA	ENST00000498907.3	inframe_deletion	814	1077		pathogenic (bZIP inframe)
 CEBPA	ENST00000498907.3	inframe_insertion	814	1077		pathogenic (bZIP inframe)
 CEBPA	ENST00000498907.3	protein_altering_variant	814	1077		pathogenic (bZIP inframe)
 ASXL1	ENST00000375687.10	stop_gained	1720	4626		pathogenic
 ASXL1	ENST00000375687.10	frameshift_variant	1720	4626		pathogenic
-ASXL1	ENST00000375687.10					discard
+ASXL1	ENST00000375687.10					likely benign
 BCOR	ENST00000378444.9	frameshift_variant				pathogenic
 BCOR	ENST00000378444.9	stop_gained				pathogenic
 BCOR	ENST00000378444.9	stop_lost				pathogenic
@@ -53,14 +53,14 @@ SF3B1	ENST00000335508.11	missense_variant	1720	2370		possible pathogenic (HEAT)
 SF3B1	ENST00000335508.11	inframe_insertion	1720	2370		possible pathogenic (HEAT)
 SF3B1	ENST00000335508.11	inframe_deletion	1720	2370		possible pathogenic (HEAT)
 SF3B1	ENST00000335508.11	protein_altering_variant	1720	2370		possible pathogenic (HEAT)
-SF3B1	ENST00000335508.11	frameshift_variant				discard
-SF3B1	ENST00000335508.11	stop_gained				discard
-SF3B1	ENST00000335508.11	stop_lost				discard
+SF3B1	ENST00000335508.11	frameshift_variant				likely benign
+SF3B1	ENST00000335508.11	stop_gained				likely benign
+SF3B1	ENST00000335508.11	stop_lost				likely benign
 SRSF2	ENST00000359995.10	missense_variant	283	288		pathogenic
 SRSF2	ENST00000359995.10	inframe_insertion	283	288		pathogenic
 SRSF2	ENST00000359995.10	inframe_deletion	283	288		pathogenic
 SRSF2	ENST00000359995.10	protein_altering_variant	283	288		pathogenic
-SRSF2	ENST00000359995.10					discard
+SRSF2	ENST00000359995.10					likely benign
 STAG2	ENST00000371145.8	frameshift_variant				pathogenic
 STAG2	ENST00000371145.8	start_lost				pathogenic
 STAG2	ENST00000371145.8	stop_gained				pathogenic
@@ -74,7 +74,7 @@ U2AF1	ENST00000291552.9	missense_variant	466	477		possible pathogenic
 U2AF1	ENST00000291552.9	inframe_insertion	466	477		possible pathogenic
 U2AF1	ENST00000291552.9	inframe_deletion	466	477		possible pathogenic
 U2AF1	ENST00000291552.9	protein_altering_variant	466	477		possible pathogenic
-U2AF1	ENST00000291552.9					discard
+U2AF1	ENST00000291552.9					likely benign
 ZRSR2	ENST00000307771.8	frameshift_variant				pathogenic
 ZRSR2	ENST00000307771.8	start_lost				pathogenic
 ZRSR2	ENST00000307771.8	stop_gained				pathogenic
@@ -97,18 +97,18 @@ NRAS	ENST00000369535.5	missense_variant				possible pathogenic
 NRAS	ENST00000369535.5	inframe_insertion				possible pathogenic
 NRAS	ENST00000369535.5	inframe_deletion				possible pathogenic
 NRAS	ENST00000369535.5	protein_altering_variant				possible pathogenic
-NRAS	ENST00000369535.5	frameshift_variant				discard
-NRAS	ENST00000369535.5	stop_gained				discard
-NRAS	ENST00000369535.5	stop_lost				discard
+NRAS	ENST00000369535.5	frameshift_variant				likely benign
+NRAS	ENST00000369535.5	stop_gained				likely benign
+NRAS	ENST00000369535.5	stop_lost				likely benign
 KRAS	ENST00000256078.10	missense_variant	34	39		pathogenic
 KRAS	ENST00000256078.10	missense_variant	181	183		pathogenic
 KRAS	ENST00000256078.10	missense_variant				possible pathogenic
 KRAS	ENST00000256078.10	inframe_insertion				possible pathogenic
 KRAS	ENST00000256078.10	inframe_deletion				possible pathogenic
 KRAS	ENST00000256078.10	protein_altering_variant				possible pathogenic
-KRAS	ENST00000256078.10	frameshift_variant				discard
-KRAS	ENST00000256078.10	stop_gained				discard
-KRAS	ENST00000256078.10	stop_lost				discard
+KRAS	ENST00000256078.10	frameshift_variant				likely benign
+KRAS	ENST00000256078.10	stop_gained				likely benign
+KRAS	ENST00000256078.10	stop_lost				likely benign
 DDX41	ENST00000330503.12	missense_variant	1291	1701		likely pathogenic
 DDX41	ENST00000330503.12					possible pathogenic
 KIT	ENST00000288135.6	inframe_deletion	1246	1257		pathogenic
@@ -119,25 +119,25 @@ KIT	ENST00000288135.6	inframe_deletion				possible pathogenic
 KIT	ENST00000288135.6	inframe_insertion				possible pathogenic
 KIT	ENST00000288135.6	missense_variant				possible pathogenic
 KIT	ENST00000288135.6	protein_altering_variant				possible pathogenic
-KIT	ENST00000288135.6	frameshift_variant				discard
-KIT	ENST00000288135.6	stop_gained				discard
-KIT	ENST00000288135.6	stop_lost				discard
+KIT	ENST00000288135.6	frameshift_variant				likely benign
+KIT	ENST00000288135.6	stop_gained				likely benign
+KIT	ENST00000288135.6	stop_lost				likely benign
 BRAF	ENST00000646891.2	missense_variant	1768	1845		possible pathogenic
 BRAF	ENST00000646891.2	inframe_deletion	1768	1845		possible pathogenic
 BRAF	ENST00000646891.2	inframe_insertion	1768	1845		possible pathogenic
 BRAF	ENST00000646891.2	protein_altering_variant	1768	1845		possible pathogenic
-BRAF	ENST00000646891.2					discard
+BRAF	ENST00000646891.2					likely benign
 CALR	ENST00000316448.10	frameshift_variant	1090	1110	2	pathogenic (type-1 (like)
 CALR	ENST00000316448.10	frameshift_variant	1141	1251	2	pathogenic (type-2 (like)
 CALR	ENST00000316448.10	frameshift_variant	1111	1140	2	pathogenic (other)
-CALR	ENST00000316448.10					discard
+CALR	ENST00000316448.10					likely benign
 CBL	ENST00000264033.6		1096-2	1431+2		likely pathogenic (RING fingers)
-CBL	ENST00000264033.6					discard
+CBL	ENST00000264033.6					likely benign
 CSF3R	ENST00000373103.5	frameshift_variant	2041	2592		pathogenic (exon 17 truncating)
 CSF3R	ENST00000373103.5	stop_gained	2041	2592		pathogenic (exon 17 truncating)
 CSF3R	ENST00000373103.5	stop_lost	2041	2592		pathogenic (exon 17 truncating)
 CSF3R	ENST00000373103.5	missense_variant	1724	1864		possible pathogenic (exon 14 activating)
-CSF3R	ENST00000373103.5					discard
+CSF3R	ENST00000373103.5					likely benign
 DNMT3A	ENST00000321117.10	missense_variant	2644	2645		pathogenic
 DNMT3A	ENST00000321117.10	missense_variant				possible pathogenic
 DNMT3A	ENST00000321117.10	inframe_deletion				possible pathogenic
@@ -146,7 +146,7 @@ DNMT3A	ENST00000321117.10	frameshift_variant				possible pathogenic
 DNMT3A	ENST00000321117.10	stop_gained				possible pathogenic
 DNMT3A	ENST00000321117.10	stop_lost				possible pathogenic
 DNMT3A	ENST00000321117.10	protein_altering_variant				possible pathogenic
-ETNK1	ENST00000671733.1					discard (not known pathogenic)
+ETNK1	ENST00000671733.1					likely benign (not known pathogenic)
 ETV6	ENST00000396373.9	missense_variant				possible pathogenic
 ETV6	ENST00000396373.9	inframe_insertion				possible pathogenic
 ETV6	ENST00000396373.9	inframe_deletion				possible pathogenic
@@ -159,18 +159,18 @@ GATA2	ENST00000341105.7	stop_gained	-2	871+2		pathogenic
 GATA2	ENST00000341105.7	stop_lost	-2	871+2		pathogenic
 GATA2	ENST00000341105.7					likely pathogenic
 IDH1	ENST00000345146.7	missense_variant	394	395		pathogenic
-IDH1	ENST00000345146.7					discard
+IDH1	ENST00000345146.7					likely benign
 IDH2	ENST00000330062.8	missense_variant	418	420		pathogenic
 IDH2	ENST00000330062.8	missense_variant	514	516		pathogenic
-IDH2	ENST00000330062.8					discard
+IDH2	ENST00000330062.8					likely benign
 JAK2	ENST00000381652.4	missense_variant	1514	1641		likely pathogenic
 JAK2	ENST00000381652.4	inframe_insertion	1514	1641		likely pathogenic
 JAK2	ENST00000381652.4	inframe_deletion	1514	1641		likely pathogenic
 JAK2	ENST00000381652.4	protein_altering_variant	1514	1641		likely pathogenic
-JAK2	ENST00000381652.4	frameshift_variant				discard
-JAK2	ENST00000381652.4	stop_gained				discard
-JAK2	ENST00000381652.4	stop_lost				discard
-JAK2	ENST00000381652.4					discard
+JAK2	ENST00000381652.4	frameshift_variant				likely benign
+JAK2	ENST00000381652.4	stop_gained				likely benign
+JAK2	ENST00000381652.4	stop_lost				likely benign
+JAK2	ENST00000381652.4					likely benign
 NFE2	ENST00000435572.7	frameshift_variant				likely pathogenic
 NFE2	ENST00000435572.7	start_lost				likely pathogenic
 NFE2	ENST00000435572.7	stop_gained				likely pathogenic
@@ -184,7 +184,7 @@ PPM1D	ENST00000305921.8	frameshift_variant	1261-2	*2		pathogenic
 PPM1D	ENST00000305921.8	stop_gained	1261-2	*2		pathogenic
 PPM1D	ENST00000305921.8	stop_lost	1261-2	*2		pathogenic
 PPM1D	ENST00000305921.8	start_lost	1261-2	*2		pathogenic
-PPM1D	ENST00000305921.8					discard
+PPM1D	ENST00000305921.8					likely benign
 PTPN11	ENST00000351677.7	missense_variant	138	332		likely pathogenic
 PTPN11	ENST00000351677.7	inframe_deletion	138	332		possible pathogenic
 PTPN11	ENST00000351677.7	inframe_insertion	138	332		possible pathogenic
@@ -193,12 +193,12 @@ PTPN11	ENST00000351677.7	missense_variant	1448	1599		likely pathogenic
 PTPN11	ENST00000351677.7	inframe_insertion	1448	1599		possible pathogenic
 PTPN11	ENST00000351677.7	inframe_deletion	1448	1599		possible pathogenic
 PTPN11	ENST00000351677.7	protein_altering_variant	1448	1599		possible pathogenic
-PTPN11	ENST00000351677.7	frameshift_variant				discard
-PTPN11	ENST00000351677.7	stop_gained				discard
-PTPN11	ENST00000351677.7	stop_lost				discard
-PTPN11	ENST00000351677.7					discard
+PTPN11	ENST00000351677.7	frameshift_variant				likely benign
+PTPN11	ENST00000351677.7	stop_gained				likely benign
+PTPN11	ENST00000351677.7	stop_lost				likely benign
+PTPN11	ENST00000351677.7					likely benign
 SETBP1	ENST00000649279.2	missense_variant	2548	2730		possible pathogenic
-SETBP1	ENST00000649279.2					discard
+SETBP1	ENST00000649279.2					likely benign
 TET2	ENST00000380013.9	frameshift_variant				pathogenic
 TET2	ENST00000380013.9	start_lost				pathogenic
 TET2	ENST00000380013.9	stop_gained				pathogenic
@@ -207,7 +207,7 @@ TET2	ENST00000380013.9	missense_variant	3310	4443		possible pathogenic (cat. dom
 TET2	ENST00000380013.9	missense_variant	5527	6009		possible pathogenic (cat. dom)
 TET2	ENST00000380013.9					possible pathogenic
 UBA1	ENST00000335972.11	missense_variant				possible pathogenic (if VEXAS)
-UBA1	ENST00000335972.11					discard
+UBA1	ENST00000335972.11					likely benign
 WT1	ENST00000452863.10	frameshift_variant	1114	1264		pathogenic
 WT1	ENST00000452863.10	start_lost	1114	1264		pathogenic
 WT1	ENST00000452863.10	stop_gained	1114	1264		pathogenic
@@ -215,7 +215,7 @@ WT1	ENST00000452863.10	stop_lost	1114	1264		pathogenic
 WT1	ENST00000452863.10		1114	1264		
 WT1	ENST00000452863.10	missense_variant	1357	1446		possible pathogenic
 WT1	ENST00000452863.10		1357	1446		
-WT1	ENST00000452863.10					discard
+WT1	ENST00000452863.10					likely benign
 BCORL1	ENST00000540052.6					possible pathogenic
 CUX1	ENST00000292535.12					possible pathogenic
 GNB1	ENST00000378609.9					possible pathogenic
