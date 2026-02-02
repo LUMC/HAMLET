@@ -327,14 +327,14 @@ RAD21	ENST00000297338.7	inframe_insertion
 RAD21	ENST00000297338.7	inframe_deletion				
 RAD21	ENST00000297338.7	protein_altering_variant				
 RAD21	ENST00000297338.7	missense_variant				
-RUNX1b	ENST00000344691.8	stop_gained				
-RUNX1b	ENST00000344691.8	frameshift_variant				
-RUNX1b	ENST00000344691.8	stop_lost				
-RUNX1b	ENST00000344691.8	start_lost				
-RUNX1b	ENST00000344691.8	inframe_insertion				
-RUNX1b	ENST00000344691.8	inframe_deletion				
-RUNX1b	ENST00000344691.8	protein_altering_variant				
-RUNX1b	ENST00000344691.8	missense_variant				
+RUNX1b	ENST00000344691.8	stop_gained	-2	270+2		
+RUNX1b	ENST00000344691.8	frameshift_variant	-2	270+2		
+RUNX1b	ENST00000344691.8	stop_lost	-2	270+2		
+RUNX1b	ENST00000344691.8	start_lost	-2	270+2		
+RUNX1b	ENST00000344691.8	inframe_insertion	-2	270+2		
+RUNX1b	ENST00000344691.8	inframe_deletion	-2	270+2		
+RUNX1b	ENST00000344691.8	protein_altering_variant	-2	270+2		
+RUNX1b	ENST00000344691.8	missense_variant	-2	270+2		
 SETBP1	ENST00000649279.2	stop_gained				
 SETBP1	ENST00000649279.2	frameshift_variant				
 SETBP1	ENST00000649279.2	stop_lost				
@@ -343,22 +343,22 @@ SETBP1	ENST00000649279.2	inframe_insertion
 SETBP1	ENST00000649279.2	inframe_deletion				
 SETBP1	ENST00000649279.2	protein_altering_variant				
 SETBP1	ENST00000649279.2	missense_variant				
-TP53b	ENST00000420246.6	stop_gained				
-TP53b	ENST00000420246.6	frameshift_variant				
-TP53b	ENST00000420246.6	stop_lost				
-TP53b	ENST00000420246.6	start_lost				
-TP53b	ENST00000420246.6	inframe_insertion				
-TP53b	ENST00000420246.6	inframe_deletion				
-TP53b	ENST00000420246.6	protein_altering_variant				
-TP53b	ENST00000420246.6	missense_variant				
-TP53g	ENST00000455263.6	stop_gained				
-TP53g	ENST00000455263.6	frameshift_variant				
-TP53g	ENST00000455263.6	stop_lost				
-TP53g	ENST00000455263.6	start_lost				
-TP53g	ENST00000455263.6	inframe_insertion				
-TP53g	ENST00000455263.6	inframe_deletion				
-TP53g	ENST00000455263.6	protein_altering_variant				
-TP53g	ENST00000455263.6	missense_variant				
+TP53b	ENST00000420246.6	stop_gained	994-2	*2		
+TP53b	ENST00000420246.6	frameshift_variant	994-2	*2		
+TP53b	ENST00000420246.6	stop_lost	994-2	*2		
+TP53b	ENST00000420246.6	start_lost	994-2	*2		
+TP53b	ENST00000420246.6	inframe_insertion	994-2	*2		
+TP53b	ENST00000420246.6	inframe_deletion	994-2	*2		
+TP53b	ENST00000420246.6	protein_altering_variant	994-2	*2		
+TP53b	ENST00000420246.6	missense_variant	994-2	*2		
+TP53g	ENST00000455263.6	stop_gained	994-2	*2		
+TP53g	ENST00000455263.6	frameshift_variant	994-2	*2		
+TP53g	ENST00000455263.6	stop_lost	994-2	*2		
+TP53g	ENST00000455263.6	start_lost	994-2	*2		
+TP53g	ENST00000455263.6	inframe_insertion	994-2	*2		
+TP53g	ENST00000455263.6	inframe_deletion	994-2	*2		
+TP53g	ENST00000455263.6	protein_altering_variant	994-2	*2		
+TP53g	ENST00000455263.6	missense_variant	994-2	*2		
 UBA1	ENST00000335972.11	frameshift_variant				
 UBA1	ENST00000335972.11	stop_lost				
 UBA1	ENST00000335972.11	start_lost				
