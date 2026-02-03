@@ -44,8 +44,8 @@ By default, HAMLET comes with variant filters and annotations which are tuned to
   * - Possible pathogenic
     - This variant should **not** be considered pathogenic, unless there is
       additional evidence (*e.g.* it is a known pathogenic variant)
-  * - Discard
-    - This variant should not be considere pathogenic
+  * - Likely benign
+    - This variant should not be considered pathogenic
   * - Artifact
     - This variant is most likely an artifact produced by the pipeline, *i.e.*
       the variant is not truly present in the sample
