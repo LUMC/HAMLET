@@ -231,6 +231,7 @@ WT1	ENST00000452863.10		1114	1264
 WT1	ENST00000452863.10	missense_variant	1357	1446		possible pathogenic
 WT1	ENST00000452863.10		1357	1446		
 WT1	ENST00000452863.10					likely benign
+MPL	ENST00000372470.9					likely benign (not known pathogenic)
 BCORL1	ENST00000540052.6					possible pathogenic
 CUX1	ENST00000292535.12					possible pathogenic
 GNB1	ENST00000378609.9					possible pathogenic
