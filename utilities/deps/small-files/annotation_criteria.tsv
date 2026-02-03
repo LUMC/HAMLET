@@ -20,6 +20,9 @@ BCOR	ENST00000378444.9	missense_variant				possible pathogenic
 BCOR	ENST00000378444.9	inframe_deletion				possible pathogenic
 BCOR	ENST00000378444.9	inframe_insertion				possible pathogenic
 BCOR	ENST00000378444.9	protein_altering_variant				possible pathogenic
+EZH2	ENST00000320356.7	frameshift_variant				pathogenic
+EZH2	ENST00000320356.7	stop_gained				pathogenic
+EZH2	ENST00000320356.7	stop_lost				pathogenic
 EZH2	ENST00000320356.7	missense_variant	280	477		possible pathogenic (D1)
 EZH2	ENST00000320356.7	inframe_deletion	280	477		possible pathogenic (D1)
 EZH2	ENST00000320356.7	inframe_insertion	280	477		possible pathogenic (D1)
@@ -36,9 +39,7 @@ EZH2	ENST00000320356.7	missense_variant	1852	2253		possible pathogenic (SET)
 EZH2	ENST00000320356.7	inframe_deletion	1852	2253		possible pathogenic (SET)
 EZH2	ENST00000320356.7	inframe_insertion	1852	2253		possible pathogenic (SET)
 EZH2	ENST00000320356.7	protein_altering_variant	1852	2253		possible pathogenic (SET)
-EZH2	ENST00000320356.7	frameshift_variant				pathogenic
-EZH2	ENST00000320356.7	stop_gained				pathogenic
-EZH2	ENST00000320356.7	stop_lost				pathogenic
+EZH2	ENST00000320356.7					possible pathogenic
 RUNX1	ENST00000675419.1	frameshift_variant				pathogenic
 RUNX1	ENST00000675419.1	start_lost				pathogenic
 RUNX1	ENST00000675419.1	stop_gained				pathogenic
@@ -49,6 +50,10 @@ RUNX1	ENST00000675419.1	inframe_deletion	230	613		possible pathogenic (RUNT)
 RUNX1	ENST00000675419.1	protein_altering_variant	230	613		possible pathogenic (RUNT)
 RUNX1	ENST00000675419.1					possible pathogenic
 RUNX1b	ENST00000344691.8		-2	270+2		possible pathogenic (alt exon 4)
+SF3B1	ENST00000335508.11	missense_variant	1864	1869		pathogenic
+SF3B1	ENST00000335508.11	missense_variant	1873	1878		pathogenic
+SF3B1	ENST00000335508.11	missense_variant	1984	1986		pathogenic
+SF3B1	ENST00000335508.11	missense_variant	1996	1998		pathogenic
 SF3B1	ENST00000335508.11	missense_variant	1720	2370		possible pathogenic (HEAT)
 SF3B1	ENST00000335508.11	inframe_insertion	1720	2370		possible pathogenic (HEAT)
 SF3B1	ENST00000335508.11	inframe_deletion	1720	2370		possible pathogenic (HEAT)
@@ -56,6 +61,7 @@ SF3B1	ENST00000335508.11	protein_altering_variant	1720	2370		possible pathogenic
 SF3B1	ENST00000335508.11	frameshift_variant				likely benign
 SF3B1	ENST00000335508.11	stop_gained				likely benign
 SF3B1	ENST00000335508.11	stop_lost				likely benign
+SF3B1	ENST00000335508.11					likely benign
 SRSF2	ENST00000359995.10	missense_variant	283	288		pathogenic
 SRSF2	ENST00000359995.10	inframe_insertion	283	288		pathogenic
 SRSF2	ENST00000359995.10	inframe_deletion	283	288		pathogenic
@@ -131,7 +137,16 @@ CALR	ENST00000316448.10	frameshift_variant	1090	1110	2	pathogenic (type-1 (like)
 CALR	ENST00000316448.10	frameshift_variant	1141	1251	2	pathogenic (type-2 (like)
 CALR	ENST00000316448.10	frameshift_variant	1111	1140	2	pathogenic (other)
 CALR	ENST00000316448.10					likely benign
-CBL	ENST00000264033.6		1096-2	1431+2		likely pathogenic (RING fingers)
+CBL	ENST00000264033.6	missense_variant	1099	1101		likely pathogenic
+CBL	ENST00000264033.6	missense_variant	1111	1113		likely pathogenic
+CBL	ENST00000264033.6	missense_variant	1141	1152		likely pathogenic
+CBL	ENST00000264033.6	missense_variant	1186	1188		likely pathogenic
+CBL	ENST00000264033.6	missense_variant	1192	1194		likely pathogenic
+CBL	ENST00000264033.6	missense_variant	1210	1212		likely pathogenic
+CBL	ENST00000264033.6	missense_variant	1222	1224		likely pathogenic
+CBL	ENST00000264033.6	missense_variant	1246	1254		likely pathogenic
+CBL	ENST00000264033.6	missense_variant	1258	1260		likely pathogenic
+CBL	ENST00000264033.6		1096-2	1431+2		possible pathogenic (RING fingers)
 CBL	ENST00000264033.6					likely benign
 CSF3R	ENST00000373103.5	frameshift_variant	2041	2592		pathogenic (exon 17 truncating)
 CSF3R	ENST00000373103.5	stop_gained	2041	2592		pathogenic (exon 17 truncating)
@@ -139,21 +154,21 @@ CSF3R	ENST00000373103.5	stop_lost	2041	2592		pathogenic (exon 17 truncating)
 CSF3R	ENST00000373103.5	missense_variant	1724	1864		possible pathogenic (exon 14 activating)
 CSF3R	ENST00000373103.5					likely benign
 DNMT3A	ENST00000321117.10	missense_variant	2644	2645		pathogenic
+DNMT3A	ENST00000321117.10	frameshift_variant				likely pathogenic
+DNMT3A	ENST00000321117.10	stop_gained				likely pathogenic
+DNMT3A	ENST00000321117.10	stop_lost				likely pathogenic
 DNMT3A	ENST00000321117.10	missense_variant				possible pathogenic
 DNMT3A	ENST00000321117.10	inframe_deletion				possible pathogenic
 DNMT3A	ENST00000321117.10	inframe_insertion				possible pathogenic
-DNMT3A	ENST00000321117.10	frameshift_variant				possible pathogenic
-DNMT3A	ENST00000321117.10	stop_gained				possible pathogenic
-DNMT3A	ENST00000321117.10	stop_lost				possible pathogenic
 DNMT3A	ENST00000321117.10	protein_altering_variant				possible pathogenic
 ETNK1	ENST00000671733.1					likely benign (not known pathogenic)
+ETV6	ENST00000396373.9	frameshift_variant				likely pathogenic
+ETV6	ENST00000396373.9	stop_gained				likely pathogenic
+ETV6	ENST00000396373.9	stop_glost				likely pathogenic
 ETV6	ENST00000396373.9	missense_variant				possible pathogenic
 ETV6	ENST00000396373.9	inframe_insertion				possible pathogenic
 ETV6	ENST00000396373.9	inframe_deletion				possible pathogenic
 ETV6	ENST00000396373.9	protein_altering_variant				possible pathogenic
-ETV6	ENST00000396373.9	frameshift_variant				likely pathogenic
-ETV6	ENST00000396373.9	stop_gained				likely pathogenic
-ETV6	ENST00000396373.9	stop_glost				likely pathogenic
 GATA2	ENST00000341105.7	frameshift_variant	-2	871+2		pathogenic
 GATA2	ENST00000341105.7	stop_gained	-2	871+2		pathogenic
 GATA2	ENST00000341105.7	stop_lost	-2	871+2		pathogenic
@@ -206,7 +221,7 @@ TET2	ENST00000380013.9	start_lost				pathogenic
 TET2	ENST00000380013.9	missense_variant	3310	4443		possible pathogenic (cat. dom)
 TET2	ENST00000380013.9	missense_variant	5527	6009		possible pathogenic (cat. dom)
 TET2	ENST00000380013.9					possible pathogenic
-UBA1	ENST00000335972.11	missense_variant				possible pathogenic (if VEXAS)
+UBA1	ENST00000335972.11	missense_variant	118	176		possible pathogenic (if VEXAS)
 UBA1	ENST00000335972.11					likely benign
 WT1	ENST00000452863.10	frameshift_variant	1114	1264		pathogenic
 WT1	ENST00000452863.10	start_lost	1114	1264		pathogenic
