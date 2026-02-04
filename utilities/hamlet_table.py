@@ -26,7 +26,7 @@ def main(args: argparse.Namespace) -> None:
 
         modules = "variant fusion expression celltype aml_subtype".split()
         for m in modules:
-            fname = f"{args.output}/m.tsv"
+            fname = f"{args.output}/{m}.tsv"
             with open(fname, "wt") as fout:
                 write = functools.partial(print, file=fout)
                 functions[m](args.json_files, write)
