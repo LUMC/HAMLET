@@ -10,7 +10,8 @@ Changelog
 **********
 v2.5.2-dev
 **********
-
+* **Important: Please rebuild the HAMLET-data folder when updating to v2.5.2**
+* Update variant annotation and inclusion criteria
 
 ******
 v2.5.1
