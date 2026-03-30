@@ -20,9 +20,9 @@ rule arriba:
         discarded="{sample}/fusion/arriba/fusions.raw.discarded.tsv",
     log:
         "log/arriba.{sample}.txt",
-    threads: 1
     container:
         containers["arriba"]
+    threads: 1
     shell:
         """
         arriba \
@@ -49,9 +49,9 @@ rule filter_fusions:
         tsv="{sample}/fusion/arriba/fusions.tsv",
     log:
         "log/arriba_to_json.{sample}.txt",
-    threads: 1
     container:
         containers["arriba"]
+    threads: 1
     shell:
         """
         if [ -z {input.report_genes} ];then
@@ -78,9 +78,9 @@ rule plot_fusions:
         fusions="{sample}/fusion/arriba/fusions.pdf",
     log:
         "log/plot_fusions.{sample}.txt",
-    threads: 1
     container:
         containers["arriba"]
+    threads: 1
     shell:
         """
         draw_fusions.R \
@@ -101,9 +101,9 @@ rule split_fusion_plots:
         folder=directory("{sample}/fusion/arriba/plots"),
     log:
         "log/split_fusion_plots.{sample}.txt",
-    threads: 1
     container:
         containers["poppler"]
+    threads: 1
     shell:
         """
         mkdir -p {output.folder}
@@ -120,9 +120,9 @@ rule json_output:
         json="{sample}/fusion/fusion-output.json",
     log:
         "log/fusion_json_output.{sample}.txt",
-    threads: 1
     container:
         containers["arriba"]
+    threads: 1
     shell:
         """
         python3 {input.src} \

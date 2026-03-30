@@ -18,17 +18,17 @@ rule cutadapt:
         fq1="{sample}/qc-seq/{sample}-R1.fq.gz",
         fq2="{sample}/qc-seq/{sample}-R2.fq.gz",
         json="{sample}/qc-seq/{sample}.cutadapt.json",
-    params:
-        f_adapter=config["forward_adapter"],
-        r_adapter=config["reverse_adapter"],
     log:
         stdout="log/cutadapt.{sample}.out",
         stderr="log/cutadapt.{sample}.err",
         pigz1="log/cutadapt.pigz1.{sample}.err",
         pigz2="log/cutadapt.pigz2.{sample}.err",
-    threads: 8
     container:
         containers["cutadapt"]
+    threads: 8
+    params:
+        f_adapter=config["forward_adapter"],
+        r_adapter=config["reverse_adapter"],
     shell:
         """
         cutadapt \
@@ -57,9 +57,9 @@ rule sequali:
     log:
         stdout="log/sequali.{sample}.out.txt",
         stderr="log/sequali.{sample}.err.txt",
-    threads: 4
     container:
         containers["sequali"]
+    threads: 4
     shell:
         """
         mkdir -p $(dirname {output.json}) 2> {log.stderr} > {log.stdout}
@@ -77,9 +77,6 @@ rule multiqc:
     input:
         stats=module_output.multiqc_files,
         config=workflow.source_path("../../cfg/multiqc.yml"),
-    params:
-        depth=2,
-        modules=multiqc_modules(),
     output:
         html="multiqc_qc_seq.html",
         folder=directory("multiqc_qc_seq_data"),
@@ -89,6 +86,9 @@ rule multiqc:
         "log/qc_seq.multiqc.txt",
     container:
         containers["multiqc"]
+    params:
+        depth=2,
+        modules=multiqc_modules(),
     shell:
         """
         rm -f {output.filelist}

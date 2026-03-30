@@ -25,11 +25,11 @@ rule align_reads:
         bai="{sample}/itd/{sample}.itd.bai",
     log:
         "log/align_reads.{sample}.txt",
-    params:
-        rg="@RG\\tID:{sample}\\tSM:{sample}",
-    threads: 3
     container:
         containers["bwa-0.7.17-samtools-1.3.1-picard-2.9.2"]
+    threads: 3
+    params:
+        rg="@RG\\tID:{sample}\\tSM:{sample}",
     shell:
         """
         bwa mem \
@@ -58,15 +58,15 @@ rule detect_itd_kmt2a:
     output:
         csv="{sample}/itd/{sample}.kmt2a.csv",
         bg_csv="{sample}/itd/{sample}.kmt2a.bg.csv",
+    log:
+        "log/detect_itd_kmt2a.{sample}.txt",
+    container:
+        containers["rose"]
     params:
         # Region of interest for kmt2a ~ exon 2-10 in transcript coordinates.
         trx_name=config["kmt2a_name"],
         start=config["kmt2a_start"],
         end=config["kmt2a_end"],
-    log:
-        "log/detect_itd_kmt2a.{sample}.txt",
-    container:
-        containers["rose"]
     shell:
         """
         rose-dt \
@@ -107,15 +107,15 @@ rule detect_itd_flt3:
     output:
         csv="{sample}/itd/{sample}.flt3.csv",
         bg_csv="{sample}/itd/{sample}.flt3.bg.csv",
+    log:
+        "log/detect_itd_flt3.{sample}.txt",
+    container:
+        containers["rose"]
     params:
         # Region of interest for flt3 ~ exon 14-15 in transcript coordinates.
         trx_name=config["flt3_name"],
         start=config["flt3_start"],
         end=config["flt3_end"],
-    log:
-        "log/detect_itd_flt3.{sample}.txt",
-    container:
-        containers["rose"]
     shell:
         """
         rose-dt \

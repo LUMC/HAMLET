@@ -8,7 +8,6 @@ import pytest
 from collections import OrderedDict
 import copy
 
-
 Changelog = OrderedDict[str, Any]
 
 

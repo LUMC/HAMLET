@@ -6,7 +6,6 @@ import json
 import os
 from typing import Any, Dict
 
-
 fusion_partners = [
     "ABL",
     "AFDN",

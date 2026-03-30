@@ -185,14 +185,14 @@ rule create_summary:
         itd_json=itd.module_output.json,
         expression_json=expression.module_output.json,
         scr=workflow.source_path("scripts/create_summary.py"),
-    params:
-        pipeline_ver=PIPELINE_VERSION,
     output:
         js="{sample}/{sample}.summary.json",
     log:
         "log/create_summary.{sample}.txt",
     container:
         containers["hamlet-scripts"]
+    params:
+        pipeline_ver=PIPELINE_VERSION,
     shell:
         """
         python {input.scr} \
@@ -279,14 +279,14 @@ rule multiqc:
         expression_stats=expression.module_output.multiqc_parquet,
         config=workflow.source_path("cfg/multiqc.yml"),
         background=config.get("background_samples", []),
-    params:
-        exclude="dedup",
     output:
         html="multiqc_hamlet.html",
     log:
         "log/multiqc.txt",
     container:
         containers["multiqc"]
+    params:
+        exclude="dedup",
     shell:
         """
         multiqc \

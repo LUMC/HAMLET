@@ -14,10 +14,10 @@ rule all:
 rule tmpdir:
     output:
         temporary(directory("snv-indel-tmp")),
-    container:
-        containers["vardict"]
     log:
         "log/tmpdir.txt",
+    container:
+        containers["vardict"]
     shell:
         """
         mkdir -p {output} 2> {log}
@@ -79,6 +79,13 @@ rule STAR:
     output:
         bam="{sample}/snv-indels/{sample}.bam",
         gene_count="{sample}/snv-indels/{sample}.ReadsPerGene.out.tab",
+    log:
+        main="{sample}/snv-indels/Log.out",
+        progress="{sample}/snv-indels/Log.progress.out",
+        final="{sample}/snv-indels/Log.final.out",
+    container:
+        containers["star"]
+    threads: 8
     params:
         rg_sample=lambda wildcards: wildcards.sample,
         chim_segment=20,
@@ -86,13 +93,6 @@ rule STAR:
         alignInsertionFlush="Right",
         twopassMode="Basic",
         outBAMsortingBinsN=100,
-    log:
-        main="{sample}/snv-indels/Log.out",
-        progress="{sample}/snv-indels/Log.progress.out",
-        final="{sample}/snv-indels/Log.final.out",
-    threads: 8
-    container:
-        containers["star"]
     shell:
         """
         STAR \
@@ -217,6 +217,14 @@ rule vardict:
         tmp=rules.tmpdir.output,
     output:
         vcf="{sample}/snv-indels/{sample}.raw.vcf.gz",
+    log:
+        vardict="log/vardict.{sample}.txt",
+        strandbias="log/strandbias.{sample}.txt",
+        var2vcf="log/var2vcf.{sample}.txt",
+        gzip="log/gzip.{sample}.txt",
+    container:
+        containers["vardict"]
+    threads: 8
     params:
         min_af=config.get("variant_allele_frequency", 0.05),
         bed_chrom=1,
@@ -225,14 +233,6 @@ rule vardict:
         bed_gene=4,
         min_sv_len=10_000_000,
         min_variant_depth=config.get("min_variant_depth", 2),
-    log:
-        vardict="log/vardict.{sample}.txt",
-        strandbias="log/strandbias.{sample}.txt",
-        var2vcf="log/var2vcf.{sample}.txt",
-        gzip="log/gzip.{sample}.txt",
-    threads: 8
-    container:
-        containers["vardict"]
     shell:
         """
         export TMPDIR={input.tmp}
@@ -267,17 +267,17 @@ rule picard_metrics:
         ref_dict=config["genome_dict"],
         ref_rrna=config["rrna_refflat"],
         annot=config["annotation_refflat"],
-    params:
-        strand=get_strand_picard,
     output:
         alignment="{sample}/snv-indels/{sample}.alignment_summary_metrics",
         rna_seq="{sample}/snv-indels/{sample}.rna_metrics",
         insert_size="{sample}/snv-indels/{sample}.insert_size_metrics",
     log:
         "log/picard_metrics.{sample}.txt",
-    threads: 1
     container:
         containers["picard"]
+    threads: 1
+    params:
+        strand=get_strand_picard,
     shell:
         """
         picard -Xmx4G CollectMultipleMetrics \
@@ -304,16 +304,16 @@ rule VEP:
         vcf="{sample}/snv-indels/{sample}.raw.vcf.gz",
         genome_fasta=config["genome_fasta"],
         gtf=config["gtf"],
-    params:
-        vep_cache=config.get("vep_cache", ""),
     output:
         vep="{sample}/snv-indels/{sample}.vep.txt.gz",
         stats="{sample}/snv-indels/{sample}.vep_stats.txt",
     log:
         "log/VEP.{sample}.txt",
-    threads: 8
     container:
         containers["vep"]
+    threads: 8
+    params:
+        vep_cache=config.get("vep_cache", ""),
     shell:
         """
 
@@ -362,16 +362,16 @@ rule filter_annoate_vep:
         annotation_criteria=config["annotation_criteria"],
         known_variants=config.get("known_variants", []),
         utils=workflow.source_path("scripts/utils.py"),
-    params:
-        population="gnomade",
-        max_pop_af=0.01,
     output:
         annotated="{sample}/snv-indels/{sample}.vep.annotated.txt.gz",
     log:
         "log/filter_annotate_vep.{sample}.txt",
-    threads: 1
     container:
         containers["mutalyzer"]
+    threads: 1
+    params:
+        population="gnomade",
+        max_pop_af=0.01,
     shell:
         """
         set -e
@@ -422,9 +422,6 @@ rule multiqc:
     input:
         stats=module_output.multiqc_files,
         config=workflow.source_path("../../cfg/multiqc.yml"),
-    params:
-        depth=2,
-        modules=multiqc_modules(),
     output:
         html="multiqc_snv_indels.html",
         folder=directory("multiqc_snv_indels_data"),
@@ -434,6 +431,9 @@ rule multiqc:
         "log/snv_indels.multiqc.txt",
     container:
         containers["multiqc"]
+    params:
+        depth=2,
+        modules=multiqc_modules(),
     shell:
         """
         rm -f {output.filelist}

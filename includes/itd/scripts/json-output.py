@@ -5,7 +5,6 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List
 
-
 ITDresult = Dict[str, Any]
 
 

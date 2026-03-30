@@ -19,17 +19,17 @@ rule normalized_coverage:
         src=workflow.source_path("scripts/coverage.py"),
         # Needed to localize the gtf script to the cache
         utils=workflow.source_path("scripts/gtf.py"),
-    params:
-        housekeeping=config["housekeeping"],
-        genes_of_interest=config["genes_of_interest"],
     output:
         normalized="{sample}/expression/coverage.normalized.tsv",
         raw="{sample}/expression/coverage.tsv",
     log:
         "log/normalized_coverage.{sample}.txt",
-    threads: 1
     container:
         containers["pysam"]
+    threads: 1
+    params:
+        housekeeping=config["housekeeping"],
+        genes_of_interest=config["genes_of_interest"],
     shell:
         """
         # Calculate the normalized coverage
@@ -62,13 +62,13 @@ rule transform_counts:
         src=workflow.source_path("scripts/transform_counts.py"),
     output:
         tsv="{sample}/expression/by_strand.tsv",
-    params:
-        strandedness=get_strand,
     log:
         "log/transform_counts.{sample}.txt",
-    threads: 1
     container:
         containers["pysam"]
+    threads: 1
+    params:
+        strandedness=get_strand,
     shell:
         """
         python3 {input.src} \
@@ -92,9 +92,9 @@ rule seamless:
         cell_types_plot="{sample}/expression/seAMLess/cell-types.png",
     log:
         "log/seamless.{sample}.txt",
-    threads: 1
     container:
         containers["seamless"]
+    threads: 1
     shell:
         """
         outdir=$(dirname {output.deconvolution})
@@ -109,7 +109,7 @@ rule seamless:
 
 
 rule amlmapr:
-    """Predict the subtype of the sample using AMLmapR """
+    """Predict the subtype of the sample using AMLmapR"""
     input:
         counts="{sample}/expression/by_strand.tsv",
         src=workflow.source_path("scripts/AMLmapR_wrapper.R"),
@@ -117,9 +117,9 @@ rule amlmapr:
         clusters="{sample}/expression/AMLmapR/aml_cluster_predictions.csv",
     log:
         "log/amlmapr.{sample}.txt",
-    threads: 1
     container:
         containers["amlmapr"]
+    threads: 1
     shell:
         """
         outdir=$(dirname {output.clusters})
@@ -139,15 +139,15 @@ rule json_output:
         deconvolution=rules.seamless.output.deconvolution,
         cell_types_plot=rules.seamless.output.cell_types_plot,
         subtype=rules.amlmapr.output.clusters,
-    params:
-        strandedness=get_strand,
-        genes=config["report"],
     output:
         "{sample}/expression/expression-output.json",
     log:
         "log/expression.{sample}.txt",
     container:
         containers["pysam"]
+    params:
+        strandedness=get_strand,
+        genes=config["report"],
     shell:
         """
         python3 {input.src} \
@@ -168,18 +168,18 @@ rule merge_samples:
         counts=[module_output.normalized_expression(sample) for sample in samples],
         sample_json=[module_output.json(sample) for sample in samples],
         src=workflow.source_path("scripts/multiqc.py"),
-    params:
-        samples=[sample.sample for sample in samples],
-        strandedness=[get_strand(sample) for sample in samples],
     output:
         unstranded=temporary("merged_expression_unstranded_mqc.tsv"),
         stranded=temporary("merged_expression_stranded_mqc.tsv"),
         cell_types=temporary("merged_expression_cell_types_mqc.tsv"),
     log:
         "log/merge_samples.txt",
-    threads: 1
     container:
         containers["multiqc"]
+    threads: 1
+    params:
+        samples=[sample.sample for sample in samples],
+        strandedness=[get_strand(sample) for sample in samples],
     shell:
         """
         python3 {input.src} \
@@ -195,8 +195,6 @@ rule multiqc:
     input:
         stats=module_output.multiqc_files,
         config=workflow.source_path("../../cfg/multiqc.yml"),
-    params:
-        depth=2,
     output:
         html="multiqc_expression.html",
         folder=directory("multiqc_expression_data"),
@@ -206,6 +204,8 @@ rule multiqc:
         "log/expression.multiqc.txt",
     container:
         containers["multiqc"]
+    params:
+        depth=2,
     shell:
         """
         rm -f {output.filelist}

@@ -5,7 +5,6 @@ import argparse
 import os
 from typing import Any, cast
 
-
 ArribaResults = list[dict[str, Any]]
 
 

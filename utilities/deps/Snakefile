@@ -69,10 +69,10 @@ rule all:
 rule download_reference:
     output:
         fasta=reference_fname,
-    params:
-        url=settings["reference_url"],
     singularity:
         containers["hamlet-scripts"]
+    params:
+        url=settings["reference_url"],
     shell:
         """
         rm -f {output.fasta}.gz &&
@@ -84,10 +84,10 @@ rule download_reference:
 rule download_fai:
     output:
         reference_fai,
-    params:
-        settings["reference_fai"],
     singularity:
         containers["hamlet-scripts"]
+    params:
+        settings["reference_fai"],
     shell:
         """
         wget {params} -O {output}
@@ -97,10 +97,10 @@ rule download_fai:
 rule download_gtf:
     output:
         temporary(gtf_file),
-    params:
-        settings["gtf"],
     singularity:
         containers["hamlet-scripts"]
+    params:
+        settings["gtf"],
     shell:
         """
         wget {params} &&
@@ -111,10 +111,10 @@ rule download_gtf:
 rule download_seamless_data:
     output:
         seamless=temporary("expression/seAMLessData_0.1.0.tar.gz"),
-    params:
-        url="https://eonurk.github.io/drat/src/contrib/seAMLessData_0.1.0.tar.gz",
     singularity:
         containers["hamlet-scripts"]
+    params:
+        url="https://eonurk.github.io/drat/src/contrib/seAMLessData_0.1.0.tar.gz",
     shell:
         """
         mkdir -p $(dirname {output.seamless})
@@ -147,7 +147,7 @@ rule split_seamless:
 
 
 rule rewrite_gtf:
-    """ Add the 'chr' prefix to the chromosome names """
+    """Add the 'chr' prefix to the chromosome names"""
     input:
         gtf=rules.download_gtf.output,
         rewrite=workflow.source_path("scripts/rewrite-gtf.py"),
@@ -178,12 +178,12 @@ rule create_star_index:
     input:
         fasta=rules.download_reference.output.fasta,
         gtf=rules.rewrite_gtf.output.gtf,
-    params:
-        overhang=149,
     output:
         directory("star-index"),
     singularity:
         containers["star"]
+    params:
+        overhang=149,
     shell:
         """
         rm -rf {output}
@@ -248,7 +248,7 @@ rule copy_criteria_files:
 
 
 rule create_rRNA_refflat:
-    """ Taken from https://gist.github.com/b8307038/55fb526e72141fac9f0aa2bc0e1f5997 """
+    """Taken from https://gist.github.com/b8307038/55fb526e72141fac9f0aa2bc0e1f5997"""
     input:
         ref_dict=rules.create_dict.output,
         gtf=rules.rewrite_gtf.output,
@@ -291,13 +291,13 @@ rule copy_report_genes:
 
 
 rule download_vep_cache:
-    params:
-        ftp=settings["vep_cache"],
-        fname=vep_cache_fname,
     output:
         temporary(vep_cache_fname),
     singularity:
         containers["hamlet-scripts"]
+    params:
+        ftp=settings["vep_cache"],
+        fname=vep_cache_fname,
     shell:
         """
         wget {params.ftp}
