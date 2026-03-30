@@ -7,9 +7,10 @@ Changelog
 ..  This document is user facing. Please word the changes in such a way
 .. that users understand how the changes affect the new version.
 
-**********
-v2.5.2-dev
-**********
+******
+v2.5.2
+******
+
 * **Important: Please rebuild the HAMLET-data folder when updating to v2.5.2**
 * Update variant annotation and inclusion criteria
 
