@@ -46,8 +46,12 @@ def print_aml_subtype_table(json_files: Sequence[str], write: Any = print) -> No
     for js in json_files:
         with open(js) as fin:
             data = json.load(fin)
-            subtype = data["modules"]["expression"]["subtype"]
-            subtype["sample"] = subtype.pop("sample_id")
+            try:
+                subtype = data["modules"]["expression"]["subtype"]
+                subtype["sample"] = subtype.pop("sample_id")
+            except KeyError:
+                subtype = data["expression"]["subtype"]
+                subtype["sample"] = subtype.pop("sample_id")
 
             if header is None:
                 header = ["sample", "prediction", "pass_cutoff"]
@@ -64,8 +68,12 @@ def print_celltype_table(json_files: Sequence[str], write: Any = print) -> None:
     for js in json_files:
         with open(js) as fin:
             data = json.load(fin)
-            celltypes = data["modules"]["expression"]["cell-types"]
-            sample = sample_name(data)
+            try:
+                celltypes = data["modules"]["expression"]["cell-types"]
+                sample = sample_name(data)
+            except KeyError:
+                celltypes = data["expression"]["cell-types"]
+                sample = sample_name(data["expression"])
 
             if header is None:
                 header = list(celltypes["data"].keys())
@@ -82,8 +90,15 @@ def print_expression_table(json_files: Sequence[str], write: Any = print) -> Non
     for js in json_files:
         with open(js) as fin:
             data = json.load(fin)
-            expression = data["modules"]["expression"]["gene-expression"]
-            sample = sample_name(data)
+            if "modules" in data:
+                expression = data["modules"]["expression"]["gene-expression"]
+                sample = sample_name(data)
+            elif "expression" in data:
+                expression = data["expression"]["gene-expression"]
+                sample = sample_name(data["expression"])
+            else:
+                raise RuntimeError("Unknown json format")
+
             if genes is None:
                 genes = list(expression.keys())
 
