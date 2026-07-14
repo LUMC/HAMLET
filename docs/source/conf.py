@@ -14,7 +14,7 @@ latex_elements = {
 """
 }
 
-release = "v2.5.2"
+release = "v2.5.3-dev"
 version = ".".join(release.split(".")[0:2])
 
 # -- General configuration
