@@ -20,7 +20,7 @@ rule tmpdir:
         containers["vardict"]
     shell:
         """
-        mkdir -p {output} 2> {log}
+        mkdir -p {output} 2>{log}
         """
 
 
@@ -43,8 +43,8 @@ rule call_regions:
         containers["bedtools-2.27-grep-2.14-gawk-5.0-python-3.7"]
     shell:
         """
-        bash {input.src} {input.fasta} {input.gtf} 2> {log} |
-        python {input.sort_bed} > {output.bed} 2>> {log}
+        bash {input.src} {input.fasta} {input.gtf} 2>{log} \
+            | python {input.sort_bed} >{output.bed} 2>>{log}
         """
 
 
@@ -65,8 +65,8 @@ rule id_mapping:
         python3 {input.src} \
             {input.gtf} \
             --inclusion-criteria {input.inclusion_criteria} \
-            > {output.txt} \
-            2> {log}
+            >{output.txt} \
+            2>{log}
         """
 
 
@@ -136,7 +136,7 @@ rule index_bamfile:
         containers["varscan-2.4.2-samtools-1.3.1-tabix-0.2.6-grep-2.14"]
     shell:
         """
-        samtools index {input.bam} 2> {log}
+        samtools index {input.bam} 2>{log}
         """
 
 
@@ -152,11 +152,11 @@ rule genome_txt:
     shell:
         """
         cat {input.ref_dict} \
-        | grep -P "@SQ\\tSN:" \
-        | sed 's/@SQ\\tSN://' \
-        | sed 's/\\tLN:/\\t/' \
-        | cut -f1,2 \
-        > {output.genome} 2> {log}
+            | grep -P "@SQ\\tSN:" \
+            | sed 's/@SQ\\tSN://' \
+            | sed 's/\\tLN:/\\t/' \
+            | cut -f1,2 \
+                >{output.genome} 2>{log}
         """
 
 
@@ -173,10 +173,10 @@ rule exon_cov_ref:
     shell:
         """
         cat {input.ref_refflat} \
-         | grep -vP "chr.*(alt|random|fix)\t" \
-         | awk \'{{ split($10, starts, ","); split($11, ends, ","); for (i=1; i < length(starts); i++) {{ print $3"\\t"starts[i]"\\t"ends[i]"\\t"gensub(/(\.[0-9]+)/,"", "g", $2)"\\t"i"\\t"$4 }} }}\' \
-         | bedtools sort -faidx {input.ref_fai} \
-         > {output.bed} 2> {log}
+            | grep -vP "chr.*(alt|random|fix)\t" \
+            | awk \'{{ split($10, starts, ","); split($11, ends, ","); for (i=1; i < length(starts); i++) {{ print $3"\\t"starts[i]"\\t"ends[i]"\\t"gensub(/(\.[0-9]+)/,"", "g", $2)"\\t"i"\\t"$4 }} }}\' \
+            | bedtools sort -faidx {input.ref_fai} \
+                >{output.bed} 2>{log}
         """
 
 
@@ -201,10 +201,10 @@ rule exon_cov:
             -sorted \
             -g {input.genome} \
             -a {input.bed} \
-            -b {input.bam} 2> {log} \
-        | cut -f1,2,3,4,5,8,7 \
-        | python {input.scr} \
-            --id-mapping {input.idm} - {output.json} 2> {log}
+            -b {input.bam} 2>{log} \
+            | cut -f1,2,3,4,5,8,7 \
+            | python {input.scr} \
+                --id-mapping {input.idm} - {output.json} 2>{log}
         """
 
 
@@ -249,13 +249,10 @@ rule vardict:
             -L {params.min_sv_len} \
             -r {params.min_variant_depth} \
             -th {threads} \
-            {input.bed} 2> {log.vardict} \
-            |
-        teststrandbias.R 2> {log.strandbias} \
-            |
-        var2vcf_valid.pl -A 2> {log.var2vcf} \
-            |
-        gzip > {output.vcf} 2> {log.gzip}
+            {input.bed} 2>{log.vardict} \
+            | teststrandbias.R 2>{log.strandbias} \
+            | var2vcf_valid.pl -A 2>{log.var2vcf} \
+            | gzip >{output.vcf} 2>{log.gzip}
         """
 
 
@@ -293,8 +290,7 @@ rule picard_metrics:
             EXTRA_ARGUMENT="RnaSeqMetrics::STRAND_SPECIFICITY={params.strand}" \
             USE_JDK_DEFLATER=true \
             USE_JDK_INFLATER=true \
-            O={wildcards.sample}/snv-indels/{wildcards.sample} 2> {log}
-
+            O={wildcards.sample}/snv-indels/{wildcards.sample} 2>{log}
         """
 
 
@@ -316,18 +312,17 @@ rule VEP:
         vep_cache=config.get("vep_cache", ""),
     shell:
         """
-
         # Run from the GTF file if the vep_cache is not defined
         if [ -z "{params.vep_cache}" ]; then
 
-          # Prepare the GTF file for use by VEP
-          gtf={wildcards.sample}/snv-indels/vep.gtf
-          grep -v "#" {input.gtf} | sort -k1,1 -k4,4n -k5,5n -t$'\t' | bgzip -c > ${{gtf}}.gz
-          tabix ${{gtf}}.gz
+            # Prepare the GTF file for use by VEP
+            gtf={wildcards.sample}/snv-indels/vep.gtf
+            grep -v "#" {input.gtf} | sort -k1,1 -k4,4n -k5,5n -t$'\t' | bgzip -c >${{gtf}}.gz
+            tabix ${{gtf}}.gz
 
-          flags="--gtf ${{gtf}}.gz"
+            flags="--gtf ${{gtf}}.gz"
         else
-          flags="--offline --dir {params.vep_cache}"
+            flags="--offline --dir {params.vep_cache}"
         fi
 
         vep \
@@ -349,8 +344,8 @@ rule VEP:
             --everything \
             --safe \
             --stats_file {output.stats} \
-            --output_file STDOUT | gzip > {output.vep} \
-            2> {log}
+            --output_file STDOUT | gzip >{output.vep} \
+            2>{log}
         """
 
 
@@ -384,7 +379,7 @@ rule filter_annoate_vep:
             --known-variants {input.known_variants} \
             --population {params.population} \
             --frequency {params.max_pop_af} 2>>{log} \
-            | gzip > {output.annotated} 2>> {log}
+            | gzip >{output.annotated} 2>>{log}
         """
 
 
@@ -414,7 +409,7 @@ rule json_output:
             --insert_stats_path {input.insert_stats} \
             --exon_cov_stats_path {input.exon_cov_stats} \
             --sample {wildcards.sample} \
-            --vep_stats_path {input.vep_stats} > {output} 2> {log}
+            --vep_stats_path {input.vep_stats} >{output} 2>{log}
         """
 
 
@@ -439,17 +434,17 @@ rule multiqc:
         rm -f {output.filelist}
 
         for fname in {input.stats}; do
-            echo $fname >> {output.filelist}
+            echo $fname >>{output.filelist}
         done
 
         multiqc \
-        --force \
-        --dirs \
-        --dirs-depth {params.depth} \
-        --fullnames \
-        --fn_as_s_name \
-        --file-list {output.filelist} \
-        --config {input.config} \
-        {params.modules} \
-        --filename {output.html} 2> {log}
+            --force \
+            --dirs \
+            --dirs-depth {params.depth} \
+            --fullnames \
+            --fn_as_s_name \
+            --file-list {output.filelist} \
+            --config {input.config} \
+            {params.modules} \
+            --filename {output.html} 2>{log}
         """

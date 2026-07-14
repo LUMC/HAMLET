@@ -37,16 +37,16 @@ rule align_reads:
             -t {threads} \
             -L 2,2 \
             {input.fasta} \
-            {input.fq1:q} {input.fq2:q} 2> {log} \
-        | samtools view \
-            -Sbh \
-            -F 0x4 \
-            - \
-        | picard -Xmx4G SortSam \
-            I=/dev/stdin \
-            O={output.bam} \
-            SO=coordinate \
-            CREATE_INDEX=true
+            {input.fq1:q} {input.fq2:q} 2>{log} \
+            | samtools view \
+                -Sbh \
+                -F 0x4 \
+                - \
+            | picard -Xmx4G SortSam \
+                I=/dev/stdin \
+                O={output.bam} \
+                SO=coordinate \
+                CREATE_INDEX=true
         """
 
 
@@ -73,7 +73,7 @@ rule detect_itd_kmt2a:
             -r {params.trx_name}:{params.start}-{params.end} \
             --bg-counts {output.bg_csv} \
             {input.ref} \
-            {input.bam} > {output.csv} 2> {log}
+            {input.bam} >{output.csv} 2>{log}
         """
 
 
@@ -94,7 +94,7 @@ rule plot_itd_kmt2a:
             --mode per-event \
             {input.csv} \
             {input.bg_csv} \
-            {output.png} 2> {log}
+            {output.png} 2>{log}
         """
 
 
@@ -122,7 +122,7 @@ rule detect_itd_flt3:
             -r {params.trx_name}:{params.start}-{params.end} \
             --bg-counts {output.bg_csv} \
             {input.ref} \
-            {input.bam} > {output.csv} 2> {log}
+            {input.bam} >{output.csv} 2>{log}
         """
 
 
@@ -139,11 +139,10 @@ rule plot_itd_flt3:
     shell:
         """
         rose-dt-plot.py \
-             --sample-id {wildcards.sample} \
-             --mode per-event \
-             {input.csv} \
-             {input.bg_csv}\
-             {output.png} 2> {log}
+            --sample-id {wildcards.sample} \
+            --mode per-event \
+            {input.csv} \
+            {input.bg_csv} {output.png} 2>{log}
         """
 
 
@@ -167,5 +166,5 @@ rule json_output:
             {input.flt3_plot} \
             {input.kmt2a_csv} \
             {input.kmt2a_plot} \
-            --sample {wildcards.sample} > {output} 2> {log}
+            --sample {wildcards.sample} >{output} 2>{log}
         """

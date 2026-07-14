@@ -40,7 +40,7 @@ rule normalized_coverage:
             --gtf {input.gtf} \
             --bed {input.bed} \
             --genes {params.genes_of_interest} \
-            > {output.normalized} 2> {log}
+            >{output.normalized} 2>{log}
 
         # Extract the raw coverage counts
         python3 {input.src} \
@@ -51,7 +51,7 @@ rule normalized_coverage:
             --bed {input.bed} \
             --genes {params.genes_of_interest} \
             --raw \
-            > {output.raw} 2>> {log}
+            >{output.raw} 2>>{log}
         """
 
 
@@ -75,7 +75,7 @@ rule transform_counts:
             --counts {input.counts} \
             --strand {params.strandedness} \
             --sample {wildcards.sample} \
-            > {output.tsv} 2> {log}
+            >{output.tsv} 2>{log}
         """
 
 
@@ -104,7 +104,7 @@ rule seamless:
             --outdir $outdir \
             --counts {input.counts} \
             --sample-name {wildcards.sample} \
-            --verbose 2> {log}
+            --verbose 2>{log}
         """
 
 
@@ -127,7 +127,7 @@ rule amlmapr:
             --counts {input.counts} \
             --outdir $outdir \
             --sample-name {wildcards.sample} \
-            --verbose 2> {log}
+            --verbose 2>{log}
         """
 
 
@@ -159,7 +159,7 @@ rule json_output:
             --cell-types {input.cell_types_plot} \
             --subtype {input.subtype} \
             --sample {wildcards.sample} \
-            > {output} 2> {log}
+            >{output} 2>{log}
         """
 
 
@@ -186,8 +186,7 @@ rule merge_samples:
             --counts {input.counts} \
             --sample-json {input.sample_json} \
             --samples {params.samples} \
-            --strandedness {params.strandedness}\
-            2> {log}
+            --strandedness {params.strandedness} 2>{log}
         """
 
 
@@ -211,16 +210,16 @@ rule multiqc:
         rm -f {output.filelist}
 
         for fname in {input.stats}; do
-            echo $fname >> {output.filelist}
+            echo $fname >>{output.filelist}
         done
 
         multiqc \
-        --force \
-        --dirs \
-        --dirs-depth {params.depth} \
-        --fullnames \
-        --fn_as_s_name \
-        --file-list {output.filelist} \
-        --config {input.config} \
-        --filename {output.html} 2> {log}
+            --force \
+            --dirs \
+            --dirs-depth {params.depth} \
+            --fullnames \
+            --fn_as_s_name \
+            --file-list {output.filelist} \
+            --config {input.config} \
+            --filename {output.html} 2>{log}
         """

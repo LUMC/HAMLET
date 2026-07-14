@@ -34,7 +34,7 @@ rule arriba:
             -t {input.known_fusions} \
             -p {input.protein_domains} \
             -o {output.fusions} \
-            -O {output.discarded} 2> {log}
+            -O {output.discarded} 2>{log}
         """
 
 
@@ -54,14 +54,14 @@ rule filter_fusions:
     threads: 1
     shell:
         """
-        if [ -z {input.report_genes} ];then
-            python3 {input.to_json} {input.fusions}  > {output.json} 2> {log}
+        if [ -z {input.report_genes} ]; then
+            python3 {input.to_json} {input.fusions} >{output.json} 2>{log}
         else
             python3 {input.to_json} {input.fusions} \
-                    --report-genes {input.report_genes} > {output.json} 2> {log}
+                --report-genes {input.report_genes} >{output.json} 2>{log}
         fi
 
-        python3 {input.to_tsv} {output.json} > {output.tsv} 2>> {log}
+        python3 {input.to_tsv} {output.json} >{output.tsv} 2>>{log}
         """
 
 
@@ -84,13 +84,13 @@ rule plot_fusions:
     shell:
         """
         draw_fusions.R \
-          --fusions={input.fusions} \
-          --alignments={input.bam} \
-          --annotation={input.gtf} \
-          --cytobands={input.cytobands} \
-          --proteinDomains={input.protein_domains} \
-          --sampleName={wildcards.sample} \
-          --output={output.fusions} 2> {log}
+            --fusions={input.fusions} \
+            --alignments={input.bam} \
+            --annotation={input.gtf} \
+            --cytobands={input.cytobands} \
+            --proteinDomains={input.protein_domains} \
+            --sampleName={wildcards.sample} \
+            --output={output.fusions} 2>{log}
         """
 
 
@@ -126,7 +126,7 @@ rule json_output:
     shell:
         """
         python3 {input.src} \
-          {input.json} \
-          {input.plots} \
-          --sample {wildcards.sample} > {output} 2> {log}
+            {input.json} \
+            {input.plots} \
+            --sample {wildcards.sample} >{output} 2>{log}
         """

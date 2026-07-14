@@ -202,7 +202,7 @@ rule create_summary:
             --module {input.fusion_json} \
             --module {input.snv_indels_json} \
             --module {input.expression_json} \
-            --module {input.itd_json} > {output.js} 2>{log}
+            --module {input.itd_json} >{output.js} 2>{log}
         """
 
 
@@ -235,7 +235,7 @@ rule generate_report:
             --css-path {input.css} \
             --toc-path {input.toc} \
             {input.summary} \
-            --pdf-output {output} 2> {log}
+            --pdf-output {output} 2>{log}
         """
 
 
@@ -268,7 +268,7 @@ rule generate_html_report:
             --css-path {input.css} \
             --toc-path {input.toc} \
             {input.summary} \
-            --html-output {output} 2> {log}
+            --html-output {output} 2>{log}
         """
 
 
@@ -290,15 +290,15 @@ rule multiqc:
     shell:
         """
         multiqc \
-        --force \
-        --config {input.config} \
-        --exclude {params.exclude} \
-        --filename {output.html} \
-        {input.qc_stats} \
-        {input.snv_indel_stats} \
-        {input.expression_stats} \
-        {input.background} \
-        2> {log}
+            --force \
+            --config {input.config} \
+            --exclude {params.exclude} \
+            --filename {output.html} \
+            {input.qc_stats} \
+            {input.snv_indel_stats} \
+            {input.expression_stats} \
+            {input.background} \
+            2>{log}
         """
 
 
@@ -317,9 +317,9 @@ rule cleanup_multiqc:
         containers["multiqc"]
     shell:
         """
-        rm -rfv $(dirname {input.qc_stats}) 2>&1 >> {log}
-        rm -rfv $(dirname {input.snv_indel_stats}) 2>&1 >> {log}
-        rm -rfv $(dirname {input.expression_stats}) 2>&1 >> {log}
+        rm -rfv $(dirname {input.qc_stats}) 2>&1 >>{log}
+        rm -rfv $(dirname {input.snv_indel_stats}) 2>&1 >>{log}
+        rm -rfv $(dirname {input.expression_stats}) 2>&1 >>{log}
 
         touch {output.target}
         """
